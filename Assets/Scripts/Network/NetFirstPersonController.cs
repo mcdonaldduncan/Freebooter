@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using Unity.Netcode;
+using UnityEngine.Networking;
 
 public class NetFirstPersonController : NetworkBehaviour
 {
@@ -124,8 +125,6 @@ public class NetFirstPersonController : NetworkBehaviour
         playerCamera = GetComponentInChildren<Camera>();
         characterController = GetComponent<CharacterController>();
         playerRB = GetComponent<Rigidbody>();
-        playerCamera.enabled = netObj.IsLocalPlayer ? true : false;
-
         defaultYPosCamera = playerCamera.transform.localPosition.y;
 
         //Lock and hide cursor
@@ -135,13 +134,17 @@ public class NetFirstPersonController : NetworkBehaviour
         playerCamera.fieldOfView = fovDefault;
     }
 
-    
+    public override void OnNetworkSpawn()
+    {
+        playerCamera.enabled = IsLocalPlayer ? true : false;
+    }
+
 
     // Update is called once per frame
     void Update()
     {
-        
-
+        if (!IsLocalPlayer)
+            return;
         if (!playerOnSpecialMovement)
         {
             if (PlayerCanMove)
@@ -167,6 +170,7 @@ public class NetFirstPersonController : NetworkBehaviour
 
     private void OnEnable()
     {
+        
         //Subscribe methods to the input actions
         _input = new InputActions();
         _input.HumanoidLand.Enable();
@@ -183,6 +187,7 @@ public class NetFirstPersonController : NetworkBehaviour
 
     private void OnDisable()
     {
+        
         //Unsubscribe methods from the input actions
         _input.HumanoidLand.Walk.performed -= HandleWalkInput;
         _input.HumanoidLand.Walk.canceled -= HandleWalkInput;

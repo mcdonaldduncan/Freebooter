@@ -3351,7 +3351,12 @@ MonoBehaviour:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 1065631578}
     PlayerPrefab: {fileID: 5949848619265921490, guid: 2cda1aeb08edba8488bca699bcea9a6b, type: 3}
-    NetworkPrefabs: []
+    NetworkPrefabs:
+    - Override: 0
+      Prefab: {fileID: 3569606399630555516, guid: a9bedbc7bf5a6a940a8e7718c5b2b175, type: 3}
+      SourcePrefabToOverride: {fileID: 0}
+      SourceHashToOverride: 0
+      OverridingTargetPrefab: {fileID: 0}
     TickRate: 30
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0
