@@ -251,6 +251,93 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""HumanoidWall"",
+            ""id"": ""785a9132-29bf-4057-a865-974848bc13d1"",
+            ""actions"": [
+                {
+                    ""name"": ""Forward"",
+                    ""type"": ""Value"",
+                    ""id"": ""c68a9a01-09bc-4f91-ac2b-d5202c5bb9f3"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""WASD"",
+                    ""id"": ""cae4df78-4754-40cd-ae86-f3c1da7e70c4"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Forward"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""e3016547-f178-4074-ad50-ce7df2b00c08"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Forward"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                }
+            ]
+        },
+        {
+            ""name"": ""Gun"",
+            ""id"": ""a5fbc7d2-819b-4e63-b018-dca2e7907cb4"",
+            ""actions"": [
+                {
+                    ""name"": ""Shoot"",
+                    ""type"": ""Button"",
+                    ""id"": ""322af8b1-7c29-4948-b8a4-75a2dbbf6a87"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""ad61d8db-422c-4c66-8988-5afd2872a1cf"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""a684edf9-23cf-495f-bce1-371d6b3275a0"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e79d6955-37d6-4a32-9250-bd0b76936eae"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -262,6 +349,13 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         m_HumanoidLand_Dash = m_HumanoidLand.FindAction("Dash", throwIfNotFound: true);
         m_HumanoidLand_Jump = m_HumanoidLand.FindAction("Jump", throwIfNotFound: true);
         m_HumanoidLand_Restart = m_HumanoidLand.FindAction("Restart", throwIfNotFound: true);
+        // HumanoidWall
+        m_HumanoidWall = asset.FindActionMap("HumanoidWall", throwIfNotFound: true);
+        m_HumanoidWall_Forward = m_HumanoidWall.FindAction("Forward", throwIfNotFound: true);
+        // Gun
+        m_Gun = asset.FindActionMap("Gun", throwIfNotFound: true);
+        m_Gun_Shoot = m_Gun.FindAction("Shoot", throwIfNotFound: true);
+        m_Gun_Reload = m_Gun.FindAction("Reload", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -382,6 +476,80 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         }
     }
     public HumanoidLandActions @HumanoidLand => new HumanoidLandActions(this);
+
+    // HumanoidWall
+    private readonly InputActionMap m_HumanoidWall;
+    private IHumanoidWallActions m_HumanoidWallActionsCallbackInterface;
+    private readonly InputAction m_HumanoidWall_Forward;
+    public struct HumanoidWallActions
+    {
+        private @InputActions m_Wrapper;
+        public HumanoidWallActions(@InputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Forward => m_Wrapper.m_HumanoidWall_Forward;
+        public InputActionMap Get() { return m_Wrapper.m_HumanoidWall; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(HumanoidWallActions set) { return set.Get(); }
+        public void SetCallbacks(IHumanoidWallActions instance)
+        {
+            if (m_Wrapper.m_HumanoidWallActionsCallbackInterface != null)
+            {
+                @Forward.started -= m_Wrapper.m_HumanoidWallActionsCallbackInterface.OnForward;
+                @Forward.performed -= m_Wrapper.m_HumanoidWallActionsCallbackInterface.OnForward;
+                @Forward.canceled -= m_Wrapper.m_HumanoidWallActionsCallbackInterface.OnForward;
+            }
+            m_Wrapper.m_HumanoidWallActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Forward.started += instance.OnForward;
+                @Forward.performed += instance.OnForward;
+                @Forward.canceled += instance.OnForward;
+            }
+        }
+    }
+    public HumanoidWallActions @HumanoidWall => new HumanoidWallActions(this);
+
+    // Gun
+    private readonly InputActionMap m_Gun;
+    private IGunActions m_GunActionsCallbackInterface;
+    private readonly InputAction m_Gun_Shoot;
+    private readonly InputAction m_Gun_Reload;
+    public struct GunActions
+    {
+        private @InputActions m_Wrapper;
+        public GunActions(@InputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Shoot => m_Wrapper.m_Gun_Shoot;
+        public InputAction @Reload => m_Wrapper.m_Gun_Reload;
+        public InputActionMap Get() { return m_Wrapper.m_Gun; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(GunActions set) { return set.Get(); }
+        public void SetCallbacks(IGunActions instance)
+        {
+            if (m_Wrapper.m_GunActionsCallbackInterface != null)
+            {
+                @Shoot.started -= m_Wrapper.m_GunActionsCallbackInterface.OnShoot;
+                @Shoot.performed -= m_Wrapper.m_GunActionsCallbackInterface.OnShoot;
+                @Shoot.canceled -= m_Wrapper.m_GunActionsCallbackInterface.OnShoot;
+                @Reload.started -= m_Wrapper.m_GunActionsCallbackInterface.OnReload;
+                @Reload.performed -= m_Wrapper.m_GunActionsCallbackInterface.OnReload;
+                @Reload.canceled -= m_Wrapper.m_GunActionsCallbackInterface.OnReload;
+            }
+            m_Wrapper.m_GunActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Shoot.started += instance.OnShoot;
+                @Shoot.performed += instance.OnShoot;
+                @Shoot.canceled += instance.OnShoot;
+                @Reload.started += instance.OnReload;
+                @Reload.performed += instance.OnReload;
+                @Reload.canceled += instance.OnReload;
+            }
+        }
+    }
+    public GunActions @Gun => new GunActions(this);
     public interface IHumanoidLandActions
     {
         void OnWalk(InputAction.CallbackContext context);
@@ -389,5 +557,14 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         void OnDash(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnRestart(InputAction.CallbackContext context);
+    }
+    public interface IHumanoidWallActions
+    {
+        void OnForward(InputAction.CallbackContext context);
+    }
+    public interface IGunActions
+    {
+        void OnShoot(InputAction.CallbackContext context);
+        void OnReload(InputAction.CallbackContext context);
     }
 }
