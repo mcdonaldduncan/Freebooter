@@ -4,8 +4,11 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using Unity.Netcode;
 
-public class FirstPersonController : MonoBehaviour
+public class NetFirstPersonController : NetworkBehaviour
 {
+    NetworkVariable<Vector3> netPos = new NetworkVariable<Vector3>();
+    NetworkObject netObj;
+
     //properties used to help check whether player can use certain mechanics. These are mostly to keep the code clean and organized
     //Kind of a rudimentary/crude state machine
     public bool PlayerCanMove { get; private set; } = true;
@@ -117,9 +120,11 @@ public class FirstPersonController : MonoBehaviour
 
     void Awake()
     {
+        netObj = GetComponent<NetworkObject>();
         playerCamera = GetComponentInChildren<Camera>();
         characterController = GetComponent<CharacterController>();
         playerRB = GetComponent<Rigidbody>();
+        playerCamera.enabled = netObj.IsLocalPlayer ? true : false;
 
         defaultYPosCamera = playerCamera.transform.localPosition.y;
 
