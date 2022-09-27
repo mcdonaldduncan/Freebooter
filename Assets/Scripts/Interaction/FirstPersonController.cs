@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -9,6 +10,7 @@ public class FirstPersonController : MonoBehaviour
     //Kind of a rudimentary/crude state machine
     public bool PlayerCanMove { get; private set; } = true;
     public bool PlayerIsDashing { get; private set; }
+    public bool PlayerCanDash => dashesRemaining > dashesAllowed - dashesAllowed;
     //private bool PlayerIsSprinting => playerCanSprint && Input.GetKey(sprintKey) && !playerIsCrouching;
     //private bool PlayerShouldJump => Input.GetKeyDown(jumpKey) && characterController.isGrounded && !playerIsCrouching;
     //private bool PlayerShouldCrouch => Input.GetKeyDown(crouchKey) && !playerInCrouchAnimation && characterController.isGrounded;
@@ -22,6 +24,8 @@ public class FirstPersonController : MonoBehaviour
     //private bool playerCanSprint = true;
     [SerializeField]
     private bool playerCanJump = true;
+    [SerializeField]
+    private bool playerCanDash = true;
     //[SerializeField]
     //private bool playerCanCrouch = true;
     [SerializeField]
@@ -117,9 +121,17 @@ public class FirstPersonController : MonoBehaviour
 
     [Header("Dash Parameters")]
     [SerializeField]
+    private int dashesAllowed = 2;
+    [SerializeField]
+    private int dashesRemaining;
+    [SerializeField]
     private float dashSpeed = 0f;
+    [Tooltip("How long the player moves at dash speed for after they press the button")]
     [SerializeField]
     private float dashTime;
+    [Tooltip("Length in seconds of the dash cooldown")]
+    [SerializeField]
+    private float dashCooldownTime;
 
     [Header("State bools")]
     public bool basicMovement;
@@ -139,6 +151,7 @@ public class FirstPersonController : MonoBehaviour
 
     private bool playerIsSprinting;
     private bool playerDashing;
+    private bool dashOnCooldown;
 
     private float groundRayDistance = 1;
     private RaycastHit slopeHit;
@@ -173,6 +186,7 @@ public class FirstPersonController : MonoBehaviour
         state = MovementState.basic;
 
         remainingJumps = jumpsAllowed;
+        dashesRemaining = dashesAllowed;
     }
 
     // Update is called once per frame
@@ -308,9 +322,15 @@ public class FirstPersonController : MonoBehaviour
         //    }
         //}
 
-        if (characterController.velocity.z != 0 || characterController.velocity.x != 0)
+        if ((characterController.velocity.z != 0 || characterController.velocity.x != 0) && PlayerCanDash)
         {
+            StopCoroutine(DashCooldown());
+            dashesRemaining--;
             StartCoroutine(Dash());
+            //if (dashesRemaining < dashesAllowed)
+            //{
+            //    StartCoroutine(DashCooldown());
+            //}
         }
     }
 
@@ -333,6 +353,27 @@ public class FirstPersonController : MonoBehaviour
         }
 
         playerDashing = false;
+        if (dashesRemaining < dashesAllowed && !dashOnCooldown)
+        {
+            StartCoroutine(DashCooldown());
+        }
+    }
+
+    private IEnumerator DashCooldown()
+    {
+        dashOnCooldown = true;
+        yield return new WaitForSeconds(dashCooldownTime);
+        dashesRemaining++;
+        if (dashesRemaining < dashesAllowed)
+        {
+            StartCoroutine(DashCooldown());
+        }
+        else
+        {
+            dashOnCooldown = false;
+        }
+        Debug.Log("Cooldown complete!");
+
     }
 
     private void HandleMouseLook()
