@@ -469,8 +469,6 @@ public class FirstPersonController : MonoBehaviour
         HandleHeadbob();
         AdaptFOV();
 
-        //remainingJumps = jumpsAllowed;
-
         Vector3 wallNormal = wallRight ? rightWallHit.normal : leftWallHit.normal;
 
         Vector3 wallForward = Vector3.Cross(wallNormal, transform.up);
