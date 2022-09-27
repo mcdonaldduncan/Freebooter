@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -9,6 +10,7 @@ public class FirstPersonController : MonoBehaviour
     //Kind of a rudimentary/crude state machine
     public bool PlayerCanMove { get; private set; } = true;
     public bool PlayerIsDashing { get; private set; }
+    public bool PlayerCanDash => dashesRemaining > dashesAllowed - dashesAllowed;
     //private bool PlayerIsSprinting => playerCanSprint && Input.GetKey(sprintKey) && !playerIsCrouching;
     //private bool PlayerShouldJump => Input.GetKeyDown(jumpKey) && characterController.isGrounded && !playerIsCrouching;
     //private bool PlayerShouldCrouch => Input.GetKeyDown(crouchKey) && !playerInCrouchAnimation && characterController.isGrounded;
@@ -22,6 +24,8 @@ public class FirstPersonController : MonoBehaviour
     //private bool playerCanSprint = true;
     [SerializeField]
     private bool playerCanJump = true;
+    [SerializeField]
+    private bool playerCanDash = true;
     //[SerializeField]
     //private bool playerCanCrouch = true;
     [SerializeField]
@@ -59,6 +63,10 @@ public class FirstPersonController : MonoBehaviour
 
     //Parameters for jump height and gravity
     [Header("Jumping Parameters")]
+    [SerializeField]
+    private int jumpsAllowed = 2;
+    [SerializeField]
+    private int remainingJumps;
     [SerializeField]
     private float jumpForce = 8f;
     [SerializeField]
@@ -113,9 +121,17 @@ public class FirstPersonController : MonoBehaviour
 
     [Header("Dash Parameters")]
     [SerializeField]
+    private int dashesAllowed = 2;
+    [SerializeField]
+    private int dashesRemaining;
+    [SerializeField]
     private float dashSpeed = 0f;
+    [Tooltip("How long the player moves at dash speed for after they press the button")]
     [SerializeField]
     private float dashTime;
+    [Tooltip("Length in seconds of the dash cooldown")]
+    [SerializeField]
+    private float dashCooldownTime;
 
     [Header("State bools")]
     public bool basicMovement;
@@ -135,6 +151,7 @@ public class FirstPersonController : MonoBehaviour
 
     private bool playerIsSprinting;
     private bool playerDashing;
+    private bool dashOnCooldown;
 
     private float groundRayDistance = 1;
     private RaycastHit slopeHit;
@@ -167,6 +184,9 @@ public class FirstPersonController : MonoBehaviour
         _input = new InputActions();
 
         state = MovementState.basic;
+
+        remainingJumps = jumpsAllowed;
+        dashesRemaining = dashesAllowed;
     }
 
     // Update is called once per frame
@@ -212,6 +232,7 @@ public class FirstPersonController : MonoBehaviour
         //HumanoidWall
         _input.HumanoidWall.Forward.performed += HandleWallrunInput;
         _input.HumanoidWall.Forward.canceled += HandleWallrunInput;
+        _input.HumanoidWall.Jump.performed += HandleJump;
 
         //Gun
         _input.Gun.Shoot.performed += playerGun.Shoot;
@@ -232,6 +253,7 @@ public class FirstPersonController : MonoBehaviour
         //HumanoidWall
         _input.HumanoidWall.Forward.performed -= HandleWallrunInput;
         _input.HumanoidWall.Forward.canceled -= HandleWallrunInput;
+        _input.HumanoidWall.Jump.performed -= HandleJump;
 
         //Gun
         _input.Gun.Shoot.performed -= playerGun.Shoot;
@@ -300,9 +322,15 @@ public class FirstPersonController : MonoBehaviour
         //    }
         //}
 
-        if (characterController.velocity.z != 0 || characterController.velocity.x != 0)
+        if ((characterController.velocity.z != 0 || characterController.velocity.x != 0) && PlayerCanDash)
         {
+            StopCoroutine(DashCooldown());
+            dashesRemaining--;
             StartCoroutine(Dash());
+            //if (dashesRemaining < dashesAllowed)
+            //{
+            //    StartCoroutine(DashCooldown());
+            //}
         }
     }
 
@@ -325,6 +353,27 @@ public class FirstPersonController : MonoBehaviour
         }
 
         playerDashing = false;
+        if (dashesRemaining < dashesAllowed && !dashOnCooldown)
+        {
+            StartCoroutine(DashCooldown());
+        }
+    }
+
+    private IEnumerator DashCooldown()
+    {
+        dashOnCooldown = true;
+        yield return new WaitForSeconds(dashCooldownTime);
+        dashesRemaining++;
+        if (dashesRemaining < dashesAllowed)
+        {
+            StartCoroutine(DashCooldown());
+        }
+        else
+        {
+            dashOnCooldown = false;
+        }
+        Debug.Log("Cooldown complete!");
+
     }
 
     private void HandleMouseLook()
@@ -338,11 +387,11 @@ public class FirstPersonController : MonoBehaviour
 
     private void HandleJump(InputAction.CallbackContext context)
     {
+        remainingJumps--;
         //only jump if property conditions are met
-        if (characterController.isGrounded)
+        if (/*characterController.isGrounded ||*/ remainingJumps > 0)
         {
             moveDirection.y = jumpForce;
-            //wallrunController.CheckForWall(); //TODO uncomment this (don't forget you silly bastard)
         }
     }
 
@@ -382,6 +431,11 @@ public class FirstPersonController : MonoBehaviour
         if (!characterController.isGrounded && !playerDashing)
         {
             moveDirection.y -= gravity * Time.deltaTime;
+        }
+
+        if (remainingJumps < jumpsAllowed && characterController.isGrounded)
+        {
+            remainingJumps = jumpsAllowed;
         }
 
         //The direction in which the player moves based on input
@@ -439,6 +493,7 @@ public class FirstPersonController : MonoBehaviour
         {
             if (state == MovementState.wallrunning)
             {
+                remainingJumps = jumpsAllowed;
                 state = MovementState.basic;
             }
         }
