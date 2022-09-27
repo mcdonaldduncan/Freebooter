@@ -264,6 +264,15 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""aa4f3dbd-97be-40d0-b07b-8e84ae7648ed"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -288,6 +297,17 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""action"": ""Forward"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b076f9dc-43a7-4c00-a9ed-11400d022524"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -352,6 +372,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         // HumanoidWall
         m_HumanoidWall = asset.FindActionMap("HumanoidWall", throwIfNotFound: true);
         m_HumanoidWall_Forward = m_HumanoidWall.FindAction("Forward", throwIfNotFound: true);
+        m_HumanoidWall_Jump = m_HumanoidWall.FindAction("Jump", throwIfNotFound: true);
         // Gun
         m_Gun = asset.FindActionMap("Gun", throwIfNotFound: true);
         m_Gun_Shoot = m_Gun.FindAction("Shoot", throwIfNotFound: true);
@@ -481,11 +502,13 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_HumanoidWall;
     private IHumanoidWallActions m_HumanoidWallActionsCallbackInterface;
     private readonly InputAction m_HumanoidWall_Forward;
+    private readonly InputAction m_HumanoidWall_Jump;
     public struct HumanoidWallActions
     {
         private @InputActions m_Wrapper;
         public HumanoidWallActions(@InputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Forward => m_Wrapper.m_HumanoidWall_Forward;
+        public InputAction @Jump => m_Wrapper.m_HumanoidWall_Jump;
         public InputActionMap Get() { return m_Wrapper.m_HumanoidWall; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -498,6 +521,9 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @Forward.started -= m_Wrapper.m_HumanoidWallActionsCallbackInterface.OnForward;
                 @Forward.performed -= m_Wrapper.m_HumanoidWallActionsCallbackInterface.OnForward;
                 @Forward.canceled -= m_Wrapper.m_HumanoidWallActionsCallbackInterface.OnForward;
+                @Jump.started -= m_Wrapper.m_HumanoidWallActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_HumanoidWallActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_HumanoidWallActionsCallbackInterface.OnJump;
             }
             m_Wrapper.m_HumanoidWallActionsCallbackInterface = instance;
             if (instance != null)
@@ -505,6 +531,9 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @Forward.started += instance.OnForward;
                 @Forward.performed += instance.OnForward;
                 @Forward.canceled += instance.OnForward;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
             }
         }
     }
@@ -561,6 +590,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
     public interface IHumanoidWallActions
     {
         void OnForward(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
     }
     public interface IGunActions
     {

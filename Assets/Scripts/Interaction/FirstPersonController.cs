@@ -60,6 +60,10 @@ public class FirstPersonController : MonoBehaviour
     //Parameters for jump height and gravity
     [Header("Jumping Parameters")]
     [SerializeField]
+    private int jumpsAllowed = 2;
+    [SerializeField]
+    private int remainingJumps;
+    [SerializeField]
     private float jumpForce = 8f;
     [SerializeField]
     private float gravity = 30f;
@@ -167,6 +171,8 @@ public class FirstPersonController : MonoBehaviour
         _input = new InputActions();
 
         state = MovementState.basic;
+
+        remainingJumps = jumpsAllowed;
     }
 
     // Update is called once per frame
@@ -212,6 +218,7 @@ public class FirstPersonController : MonoBehaviour
         //HumanoidWall
         _input.HumanoidWall.Forward.performed += HandleWallrunInput;
         _input.HumanoidWall.Forward.canceled += HandleWallrunInput;
+        _input.HumanoidWall.Jump.performed += HandleJump;
 
         //Gun
         _input.Gun.Shoot.performed += playerGun.Shoot;
@@ -232,6 +239,7 @@ public class FirstPersonController : MonoBehaviour
         //HumanoidWall
         _input.HumanoidWall.Forward.performed -= HandleWallrunInput;
         _input.HumanoidWall.Forward.canceled -= HandleWallrunInput;
+        _input.HumanoidWall.Jump.performed -= HandleJump;
 
         //Gun
         _input.Gun.Shoot.performed -= playerGun.Shoot;
@@ -338,11 +346,11 @@ public class FirstPersonController : MonoBehaviour
 
     private void HandleJump(InputAction.CallbackContext context)
     {
+        remainingJumps--;
         //only jump if property conditions are met
-        if (characterController.isGrounded)
+        if (/*characterController.isGrounded ||*/ remainingJumps > 0)
         {
             moveDirection.y = jumpForce;
-            //wallrunController.CheckForWall(); //TODO uncomment this (don't forget you silly bastard)
         }
     }
 
@@ -382,6 +390,11 @@ public class FirstPersonController : MonoBehaviour
         if (!characterController.isGrounded && !playerDashing)
         {
             moveDirection.y -= gravity * Time.deltaTime;
+        }
+
+        if (remainingJumps < jumpsAllowed && characterController.isGrounded)
+        {
+            remainingJumps = jumpsAllowed;
         }
 
         //The direction in which the player moves based on input
@@ -439,6 +452,7 @@ public class FirstPersonController : MonoBehaviour
         {
             if (state == MovementState.wallrunning)
             {
+                remainingJumps = jumpsAllowed;
                 state = MovementState.basic;
             }
         }
@@ -454,6 +468,8 @@ public class FirstPersonController : MonoBehaviour
     {
         HandleHeadbob();
         AdaptFOV();
+
+        //remainingJumps = jumpsAllowed;
 
         Vector3 wallNormal = wallRight ? rightWallHit.normal : leftWallHit.normal;
 
