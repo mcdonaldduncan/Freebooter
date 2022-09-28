@@ -16,8 +16,9 @@ public class TurretBehaviour : MonoBehaviour
     Quaternion rotation;
     
     private float lastShot, ShootRate = .5f;
-    
-   
+
+    private float lastValidY = 0f;
+
     void Start()
     {
        state = TurretState.LookingForTarget;
@@ -43,9 +44,34 @@ public class TurretBehaviour : MonoBehaviour
     {
         if (Vector3.Distance(this.transform.position, target.transform.position) < range)
         { 
-          targetDiretion = transform.position - target.transform.position;
-          rotation = Quaternion.LookRotation(targetDiretion);
-          transform.rotation = Quaternion.Lerp(transform.rotation, rotation, speed * Time.deltaTime);
+            targetDiretion = transform.position - target.transform.position;
+
+            if (rotationType == TurretRotationType.full)
+            {
+                rotation = Quaternion.LookRotation(targetDiretion);
+            }
+            if (rotationType == TurretRotationType.half)
+            {
+                Vector3 tempRotation = Quaternion.LookRotation(targetDiretion).eulerAngles;
+
+                if (tempRotation.y <= 180 && tempRotation.y >= 0)
+                {
+                    lastValidY = tempRotation.y;
+                }
+
+                if (tempRotation.y < 0)
+                {
+                    tempRotation.y = lastValidY;
+                }
+                else if (tempRotation.y > 180)
+                {
+                    tempRotation.y = lastValidY;
+                }
+
+                rotation = Quaternion.Euler(tempRotation);
+            }
+            
+            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, speed * Time.deltaTime);
         }
        
     }
