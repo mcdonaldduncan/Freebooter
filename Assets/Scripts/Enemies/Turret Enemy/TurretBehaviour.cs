@@ -15,8 +15,7 @@ public class TurretBehaviour : MonoBehaviour
     Vector3 targetDiretion;
     Quaternion rotation;
     
-    private float lastShot, ShootRate = .3f;
-    bool resetBacktoFindingEnemies;
+    private float lastShot, ShootRate = .5f;
     
    
     void Start()
@@ -72,34 +71,33 @@ public class TurretBehaviour : MonoBehaviour
     }
     void Shoot() //Shoots at the player
     {
-            RaycastHit hit;
-            Debug.DrawRay(tip.transform.position, -targetDiretion, Color.red);
-            Physics.Raycast(tip.transform.position, -targetDiretion, out hit, range);
-        if (hit.collider != null)
+        RaycastHit hit;
+        Debug.DrawRay(tip.transform.position, -targetDiretion, Color.red);
+       
+        Physics.Raycast(tip.transform.position, -targetDiretion, out hit, range);
+        try
         {
-            if (hit.collider != null)
-            {
-                if (hit.collider.tag == target.tag)
-                {
-                    if (Time.time > ShootRate + lastShot)
-                    {
-
-                        Debug.Log("Player was shot, dealing damage.");
-                        lastShot = Time.time;
-                    }
-                }
-            }
-            else if (hit.collider.tag != target.tag || hit.collider != target) //if shooting at the player and not hitting the player, swap state to looking for target.
+         if (hit.collider.tag == target.tag)
+          {
+             if (Time.time > ShootRate + lastShot)
+             {
+               Debug.Log("Player was shot, dealing damage.");
+               lastShot = Time.time;
+             }
+          }
+            else
             {
                 StateLookingForTarget();
             }
-            else { }
         }
+        catch (System.Exception)
+        {
+         StateLookingForTarget();
         }
+    }
     void StateLookingForTarget() //swaps state to looking for target
     {
         state = TurretState.LookingForTarget;
-        resetBacktoFindingEnemies = !resetBacktoFindingEnemies;
     }
     void StateShootTarget() //swaps state to shooting target
     {
