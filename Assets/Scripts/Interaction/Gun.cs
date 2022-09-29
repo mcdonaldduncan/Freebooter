@@ -62,7 +62,7 @@ public class Gun : MonoBehaviour
                         Vector3 targetPosition = hitInfo.transform.position;
 
                         float distance = Vector3.Distance(targetPosition, gameObject.transform.position);
-                        damageableTarget.Damage(gunDamage / (Mathf.Abs(distance / 2)));
+                        damageableTarget.Damage(bulletDamage / (Mathf.Abs(distance / 2)));
 
                         Debug.Log($"{hitInfo.transform.name}: {damageableTarget.Health}");
                     }
@@ -111,7 +111,7 @@ public class Gun : MonoBehaviour
                             Vector3 targetPosition = hitInfo.transform.position;
 
                             float distance = Vector3.Distance(targetPosition, gameObject.transform.position);
-                            float totalDamage = Mathf.Abs(gunDamage / ((distance / 2)));
+                            float totalDamage = Mathf.Abs(bulletDamage / ((distance / 2)));
                             damageableTarget.Damage(totalDamage);
 
                             Debug.Log($"{hitInfo.transform.name}: {damageableTarget.Health}");
