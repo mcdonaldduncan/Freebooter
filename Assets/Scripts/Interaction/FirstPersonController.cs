@@ -389,7 +389,7 @@ public class FirstPersonController : MonoBehaviour
     {
         remainingJumps--;
         //only jump if property conditions are met
-        if (/*characterController.isGrounded ||*/ remainingJumps > 0)
+        if (remainingJumps > 0)
         {
             moveDirection.y = jumpForce;
         }

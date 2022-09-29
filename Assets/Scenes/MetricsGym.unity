@@ -4960,7 +4960,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh28198
+  m_Name: pb_Mesh36694
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -9665,6 +9665,38 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 297426593622482815, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
+      propertyPath: range
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
+      propertyPath: gunType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
+      propertyPath: gunDamage
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
+      propertyPath: shotGunBulletAmount
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
+      propertyPath: shotGunVerticalSpread
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
+      propertyPath: shotGunHorizontalSpread
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 297426594336726731, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
+      propertyPath: m_Name
+      value: gun
+      objectReference: {fileID: 0}
     - target: {fileID: 297426594678655172, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
       propertyPath: jumpForce
       value: 10
