@@ -132,6 +132,9 @@ public class FirstPersonController : MonoBehaviour
     [Tooltip("Length in seconds of the dash cooldown")]
     [SerializeField]
     private float dashCooldownTime;
+    [Tooltip("If player is holding dash and there are dashes remaining, how much time should there be between the dashes?")]
+    [SerializeField]
+    private float dashBetweenTime = 0.25f;
 
     [Header("State bools")]
     public bool basicMovement;
@@ -156,6 +159,8 @@ public class FirstPersonController : MonoBehaviour
 
     private float groundRayDistance = 1;
     private RaycastHit slopeHit;
+    private WaitForSeconds dashCooldownWait;
+    private WaitForSeconds dashBetweenWait;
 
     public static InputActions _input;
 
@@ -169,6 +174,9 @@ public class FirstPersonController : MonoBehaviour
     
     void Awake()
     {
+        dashCooldownWait = new WaitForSeconds(dashCooldownTime);
+        dashBetweenWait = new WaitForSeconds(dashBetweenTime);
+
         playerCamera = GetComponentInChildren<Camera>();
         characterController = GetComponent<CharacterController>();
         //playerRB = GetComponent<Rigidbody>();
@@ -353,7 +361,7 @@ public class FirstPersonController : MonoBehaviour
 
         if (playerShouldDash && PlayerCanDash)
         {
-            yield return new WaitForSeconds(0.25f);
+            yield return dashBetweenWait;
             StartCoroutine(Dash());
         }
 
@@ -367,7 +375,7 @@ public class FirstPersonController : MonoBehaviour
     private IEnumerator DashCooldown()
     {
         dashOnCooldown = true;
-        yield return new WaitForSeconds(dashCooldownTime);
+        yield return dashCooldownWait;
         dashesRemaining++;
         if (dashesRemaining > dashesAllowed)
         {

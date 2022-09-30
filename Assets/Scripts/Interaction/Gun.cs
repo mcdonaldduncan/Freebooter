@@ -36,6 +36,7 @@ public class Gun : MonoBehaviour
 
     private bool holdingTrigger;
 
+    private WaitForSeconds fireRateWait;
     private GameObject lineDrawer;
     private LineRenderer lineRenderer;
     private LinkedList<GunType> gunList;
@@ -46,6 +47,8 @@ public class Gun : MonoBehaviour
 
     private void Start()
     {
+        fireRateWait = new WaitForSeconds(fireRate);
+
         gunList = new LinkedList<GunType>();
         handGunNode = new LinkedListNode<GunType>(GunType.handGun);
         shotGunNode = new LinkedListNode<GunType>(GunType.shotGun);
@@ -246,7 +249,7 @@ public class Gun : MonoBehaviour
             Debug.DrawLine(shootFrom.transform.position, shootFrom.transform.position + direction * range, Color.red, 1f);
         }
 
-        yield return new WaitForSeconds(fireRate);
+        yield return fireRateWait;
 
         if (holdingTrigger)
         {
