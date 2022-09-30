@@ -178,7 +178,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 297426593622482813}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: 0.5
   m_Height: 2
   m_Direction: 1
@@ -256,7 +256,7 @@ MonoBehaviour:
   playerCanDash: 1
   playerCanHeadbob: 1
   walkSpeed: 6
-  wallRunSpeed: 8
+  wallRunSpeed: 10
   slopeSlideSpeed: 1
   fovDefault: 60
   fovSprint: 70
@@ -267,8 +267,8 @@ MonoBehaviour:
   lowerLookLimit: 80
   jumpsAllowed: 2
   remainingJumps: 0
-  jumpForce: 8
-  gravity: 30
+  jumpForce: 10
+  gravity: 25
   whatIsWall:
     serializedVersion: 2
     m_Bits: 72
@@ -286,7 +286,7 @@ MonoBehaviour:
   dashesRemaining: 0
   dashSpeed: 7
   dashTime: 0.125
-  dashCooldownTime: 0
+  dashCooldownTime: 3
   basicMovement: 0
   wallRunning: 0
 --- !u!136 &297426594678655173
@@ -345,9 +345,41 @@ PrefabInstance:
     m_TransformParent: {fileID: 297426593068676920}
     m_Modifications:
     - target: {fileID: 6555022338576666802, guid: bff76a39969238f46969d03c254ead18, type: 3}
+      propertyPath: range
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555022338576666802, guid: bff76a39969238f46969d03c254ead18, type: 3}
+      propertyPath: gunType
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555022338576666802, guid: bff76a39969238f46969d03c254ead18, type: 3}
+      propertyPath: fireRate
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555022338576666802, guid: bff76a39969238f46969d03c254ead18, type: 3}
       propertyPath: shootFrom
       value: 
       objectReference: {fileID: 297426593068676920}
+    - target: {fileID: 6555022338576666802, guid: bff76a39969238f46969d03c254ead18, type: 3}
+      propertyPath: shotGunBulletAmount
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555022338576666802, guid: bff76a39969238f46969d03c254ead18, type: 3}
+      propertyPath: autoGunVerticalSpread
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555022338576666802, guid: bff76a39969238f46969d03c254ead18, type: 3}
+      propertyPath: shotGunVerticalSpread
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555022338576666802, guid: bff76a39969238f46969d03c254ead18, type: 3}
+      propertyPath: autoGunHorizontalSpread
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555022338576666802, guid: bff76a39969238f46969d03c254ead18, type: 3}
+      propertyPath: shotGunHorizontalSpread
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6555022338576666806, guid: bff76a39969238f46969d03c254ead18, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -394,7 +426,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6555022338576666809, guid: bff76a39969238f46969d03c254ead18, type: 3}
       propertyPath: m_Name
-      value: Handgun
+      value: gun
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bff76a39969238f46969d03c254ead18, type: 3}
