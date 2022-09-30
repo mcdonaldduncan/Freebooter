@@ -325,7 +325,7 @@ public class FirstPersonController : MonoBehaviour
                 StartCoroutine(Dash());
             }
         }
-        else if (context.canceled)
+        if (context.canceled)
         {
             playerShouldDash = false;
             StopCoroutine(Dash());
@@ -343,7 +343,7 @@ public class FirstPersonController : MonoBehaviour
         moveDirection = (transform.TransformDirection(Vector3.right) * MoveInput.x) + (transform.TransformDirection(Vector3.forward) * MoveInput.y);
         moveDirection.y = 0;//moveDirectionY;
 
-        while (Time.time < startTime + dashTime)
+        while (Time.time < startTime + dashTime && playerShouldDash)
         {
             playerDashing = true;
             characterController.Move(moveDirection * dashSpeed * Time.deltaTime);
