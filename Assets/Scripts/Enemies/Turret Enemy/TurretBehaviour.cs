@@ -51,7 +51,7 @@ public class TurretBehaviour : MonoBehaviour
         float tempSpeed = speed;
         if (Vector3.Distance(this.transform.position, target.transform.position) < range)
         { 
-            targetDiretion = transform.position - target.transform.position;
+            targetDiretion = target.transform.position - transform.position;
 
             if (rotationType == TurretRotationType.full)
             {
@@ -96,8 +96,8 @@ public class TurretBehaviour : MonoBehaviour
     void LookForLineOfSight() //Shoots raycasts at the player and if it hits the player then it has line of sight
     {
         RaycastHit hit;
-        Debug.DrawRay(tip.transform.position, -targetDiretion, Color.green);
-        Physics.Raycast(tip.transform.position, -targetDiretion, out hit, range);
+        Debug.DrawRay(tip.transform.position, targetDiretion, Color.green);
+        Physics.Raycast(tip.transform.position, targetDiretion, out hit, range);
         if (hit.collider != null)
         {
             if (hit.collider.tag == target.tag)
@@ -115,9 +115,9 @@ public class TurretBehaviour : MonoBehaviour
     void Shoot() //Shoots at the player
     {
         RaycastHit hit;
-        Debug.DrawRay(tip.transform.position, -targetDiretion, Color.red);
+        Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
        
-        Physics.Raycast(tip.transform.position, -targetDiretion, out hit, range);
+        Physics.Raycast(tip.transform.position, targetDiretion, out hit, range);
         try
         {
          if (hit.collider.tag == target.tag)
