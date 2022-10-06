@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class HandGun : MonoBehaviour
@@ -41,24 +42,6 @@ public class HandGun : MonoBehaviour
                 Debug.Log($"Hit {hitInfo.transform.name}");
                 Debug.Log("Not an IDamageable");
             }
-
-            //if (hitInfo.transform.name != "Player")
-            //{
-            //    try
-            //    {
-            //        IDamageable damageableTarget = hitInfo.transform.GetComponent<IDamageable>();
-            //        Vector3 targetPosition = hitInfo.transform.position;
-
-            //        float distance = Vector3.Distance(targetPosition, gameObject.transform.position);
-            //        damageableTarget.Damage(bulletDamage / (Mathf.Abs(distance / 2)));
-
-            //        Debug.Log($"{hitInfo.transform.name}: {damageableTarget.Health}");
-            //    }
-            //    catch
-            //    {
-            //        Debug.Log("Not an IDamageable");
-            //    }
-            //}
         }
         else
         {
@@ -67,5 +50,18 @@ public class HandGun : MonoBehaviour
             lineRenderer.SetPosition(0, shootFrom.transform.position);
             lineRenderer.SetPosition(1, shootFrom.transform.position + direction * 10);
         }
+    }
+
+    public static void StartReload(GunHandler instance, HandGun handGun, WaitForSeconds reloadWait)
+    {
+        instance.StartCoroutine(handGun.Reload(instance, reloadWait));
+    }
+
+    private IEnumerator Reload(GunHandler instance, WaitForSeconds reloadWait)
+    {
+        instance.reloading = true;
+        yield return reloadWait;
+        instance.reloading = false;
+        instance.handGunCurrentAmmo = instance.handGunMaxAmmo;
     }
 }

@@ -235,6 +235,7 @@ public class FirstPersonController : MonoBehaviour
         _input.Gun.Shoot.performed += playerGun.Shoot;
         _input.Gun.Shoot.canceled += playerGun.Shoot;
         _input.Gun.SwitchWeapon.performed += playerGun.SwitchWeapon;
+        _input.Gun.Reload.performed += playerGun.Reload;
     }
 
     private void OnDisable()
@@ -259,6 +260,7 @@ public class FirstPersonController : MonoBehaviour
         _input.Gun.Shoot.performed -= playerGun.Shoot;
         _input.Gun.Shoot.canceled -= playerGun.Shoot;
         _input.Gun.SwitchWeapon.performed -= playerGun.SwitchWeapon;
+        _input.Gun.Reload.performed -= playerGun.Reload;
     }
 
     private void StateHandler()

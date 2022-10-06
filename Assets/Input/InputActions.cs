@@ -264,7 +264,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""249913cc-3ef7-4948-aa0b-8a6f6a388fa7"",
-                    ""path"": ""<Keyboard>/r"",
+                    ""path"": ""<Keyboard>/l"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -334,7 +334,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
             ]
         },
         {
-            ""name"": ""GunHandler"",
+            ""name"": ""Gun"",
             ""id"": ""a5fbc7d2-819b-4e63-b018-dca2e7907cb4"",
             ""actions"": [
                 {
@@ -415,8 +415,8 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         m_HumanoidWall = asset.FindActionMap("HumanoidWall", throwIfNotFound: true);
         m_HumanoidWall_Forward = m_HumanoidWall.FindAction("Forward", throwIfNotFound: true);
         m_HumanoidWall_Jump = m_HumanoidWall.FindAction("Jump", throwIfNotFound: true);
-        // GunHandler
-        m_Gun = asset.FindActionMap("GunHandler", throwIfNotFound: true);
+        // Gun
+        m_Gun = asset.FindActionMap("Gun", throwIfNotFound: true);
         m_Gun_Shoot = m_Gun.FindAction("Shoot", throwIfNotFound: true);
         m_Gun_Reload = m_Gun.FindAction("Reload", throwIfNotFound: true);
         m_Gun_SwitchWeapon = m_Gun.FindAction("SwitchWeapon", throwIfNotFound: true);
@@ -582,7 +582,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
     }
     public HumanoidWallActions @HumanoidWall => new HumanoidWallActions(this);
 
-    // GunHandler
+    // Gun
     private readonly InputActionMap m_Gun;
     private IGunActions m_GunActionsCallbackInterface;
     private readonly InputAction m_Gun_Shoot;

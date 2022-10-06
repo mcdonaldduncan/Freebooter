@@ -59,4 +59,17 @@ public class ShotGun : MonoBehaviour
             }
         }
     }
+
+    public static void StartReload(GunHandler instance, ShotGun shotGun, WaitForSeconds reloadWait)
+    {
+        instance.StartCoroutine(shotGun.Reload(instance, reloadWait));
+    }
+
+    private IEnumerator Reload(GunHandler instance, WaitForSeconds reloadWait)
+    {
+        instance.reloading = true;
+        yield return reloadWait;
+        instance.reloading = false;
+        instance.shotGunCurrentAmmo = instance.shotGunMaxAmmo;
+    }
 }
