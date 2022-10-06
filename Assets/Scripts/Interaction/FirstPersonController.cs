@@ -134,7 +134,7 @@ public class FirstPersonController : MonoBehaviour
     private float dashCooldownTime;
     [Tooltip("If player is holding dash and there are dashes remaining, how much time should there be between the dashes?")]
     [SerializeField]
-    private float dashBetweenTime = 0.25f;
+    private float dashBetweenTime;
 
     [Header("State bools")]
     public bool basicMovement;
@@ -143,7 +143,7 @@ public class FirstPersonController : MonoBehaviour
     private Camera playerCamera;
     private CharacterController characterController;
     //private Rigidbody playerRB;
-    private Gun playerGun;
+    private GunHandler playerGun;
 
     private Vector3 moveDirection;
     private Vector2 currentInput; //Whether player is moving vertically or horizontally along x and z planes
@@ -180,7 +180,7 @@ public class FirstPersonController : MonoBehaviour
         playerCamera = GetComponentInChildren<Camera>();
         characterController = GetComponent<CharacterController>();
         //playerRB = GetComponent<Rigidbody>();
-        playerGun = GetComponentInChildren<Gun>();
+        playerGun = GetComponentInChildren<GunHandler>();
 
         defaultYPosCamera = playerCamera.transform.localPosition.y;
 
@@ -231,7 +231,7 @@ public class FirstPersonController : MonoBehaviour
         _input.HumanoidWall.Forward.canceled += HandleWallrunInput;
         _input.HumanoidWall.Jump.performed += HandleJump;
 
-        //Gun
+        //GunHandler
         _input.Gun.Shoot.performed += playerGun.Shoot;
         _input.Gun.Shoot.canceled += playerGun.Shoot;
         _input.Gun.SwitchWeapon.performed += playerGun.SwitchWeapon;
@@ -255,7 +255,7 @@ public class FirstPersonController : MonoBehaviour
         _input.HumanoidWall.Forward.canceled -= HandleWallrunInput;
         _input.HumanoidWall.Jump.performed -= HandleJump;
 
-        //Gun
+        //GunHandler
         _input.Gun.Shoot.performed -= playerGun.Shoot;
         _input.Gun.Shoot.canceled -= playerGun.Shoot;
         _input.Gun.SwitchWeapon.performed -= playerGun.SwitchWeapon;
@@ -333,7 +333,7 @@ public class FirstPersonController : MonoBehaviour
                 StartCoroutine(Dash());
             }
         }
-        if (context.canceled)
+        else if (context.canceled)
         {
             playerShouldDash = false;
             StopCoroutine(Dash());
