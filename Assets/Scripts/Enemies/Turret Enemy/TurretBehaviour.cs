@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TurretBehaviour : MonoBehaviour
+public class TurretBehaviour : MonoBehaviour, IDamageable
 {
     [SerializeField] private GameObject target, body, tip, light;
     [SerializeField] private float speed, range;
@@ -19,7 +19,28 @@ public class TurretBehaviour : MonoBehaviour
     private float lastShot, ShootRate = .5f;
 
     private float lastValidY = 0f;
+    [SerializeField]
+    private float health;
 
+    public float Health { get { return health; } set { health = value; } }
+
+    public void Damage(float damageTaken)
+    {
+        Health -= damageTaken;
+        CheckForDeath();
+    }
+
+    public void CheckForDeath()
+    {
+        if (Health <= 0)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            return;
+        }
+    }
     void Start()
     {
        state = TurretState.LookingForTarget;
