@@ -4470,7 +4470,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh53750
+  m_Name: pb_Mesh79726
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -9821,11 +9821,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!4 &1795260582 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 297426593068676920, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-  m_PrefabInstance: {fileID: 297426593225497164}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1838087466
 GameObject:
   m_ObjectHideFlags: 0
@@ -12188,113 +12183,9 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 297426593068676925, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 297426593161032296, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 297426593622482813, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 297426593622482815, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: range
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: gunType
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: gunDamage
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: shootFrom
-      value: 
-      objectReference: {fileID: 1795260582}
-    - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: handGunRange
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: playerLayer.m_Bits
-      value: 256
-      objectReference: {fileID: 0}
-    - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: handGunBulletDamage
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: shotGunBulletAmount
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: autoGunVerticalSpread
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: handGunVerticalSpread
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: shotGunVerticalSpread
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: autoGunHorizontalSpread
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: handGunHorizontalSpread
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: shotGunHorizontalSpread
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 297426594336726731, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: m_Name
-      value: gun
-      objectReference: {fileID: 0}
-    - target: {fileID: 297426594336726731, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 297426594678655172, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: jumpForce
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 297426594678655172, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: wallRunSpeed
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 297426594678655172, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: dashBetweenTime
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 297426594678655172, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: dashCooldownTime
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 297426594678655172, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: whatIsWall.m_Bits
-      value: 64
-      objectReference: {fileID: 0}
     - target: {fileID: 297426594678655177, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
       propertyPath: m_Name
       value: PlayerNoNet
-      objectReference: {fileID: 0}
-    - target: {fileID: 297426594678655177, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 297426594678655179, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
       propertyPath: m_RootOrder
