@@ -132,6 +132,9 @@ public class FirstPersonController : MonoBehaviour
     [Tooltip("Length in seconds of the dash cooldown")]
     [SerializeField]
     private float dashCooldownTime;
+    [Tooltip("If player is holding dash and there are dashes remaining, how much time should there be between the dashes?")]
+    [SerializeField]
+    private float dashBetweenTime = 0.25f;
 
     [Header("State bools")]
     public bool basicMovement;
@@ -139,7 +142,7 @@ public class FirstPersonController : MonoBehaviour
 
     private Camera playerCamera;
     private CharacterController characterController;
-    private Rigidbody playerRB;
+    //private Rigidbody playerRB;
     private Gun playerGun;
 
     private Vector3 moveDirection;
@@ -149,12 +152,15 @@ public class FirstPersonController : MonoBehaviour
 
     private float rotationX = 0f; //Camera rotation for clamping
 
-    private bool playerIsSprinting;
+    //private bool playerIsSprinting;
     private bool playerDashing;
     private bool dashOnCooldown;
+    private bool playerShouldDash;
 
     private float groundRayDistance = 1;
     private RaycastHit slopeHit;
+    private WaitForSeconds dashCooldownWait;
+    private WaitForSeconds dashBetweenWait;
 
     public static InputActions _input;
 
@@ -168,9 +174,12 @@ public class FirstPersonController : MonoBehaviour
     
     void Awake()
     {
+        dashCooldownWait = new WaitForSeconds(dashCooldownTime);
+        dashBetweenWait = new WaitForSeconds(dashBetweenTime);
+
         playerCamera = GetComponentInChildren<Camera>();
         characterController = GetComponent<CharacterController>();
-        playerRB = GetComponent<Rigidbody>();
+        //playerRB = GetComponent<Rigidbody>();
         playerGun = GetComponentInChildren<Gun>();
 
         defaultYPosCamera = playerCamera.transform.localPosition.y;
@@ -196,25 +205,12 @@ public class FirstPersonController : MonoBehaviour
         {
             if (PlayerCanMove)
             {
-                //HandleWalkInput();
-                HandleMouseLook();
-
-                //if (playerCanCrouch)
-                //{
-                //    HandleCrouch();
-                //}
-
-                //Apply all the movement parameters that are found earlier in the frame (above in Update())
-                //if (OnSteepSlope()) SteepSlopeMovement();
                 CheckForWall();
                 StateHandler();
             }
         }
-        else if (playerOnSpecialMovement)
-        {
-            HandleMouseLook();
-        }
 
+        HandleMouseLook();
     }
 
     private void OnEnable()
@@ -226,6 +222,7 @@ public class FirstPersonController : MonoBehaviour
         _input.HumanoidLand.Walk.performed += HandleWalkInput;
         _input.HumanoidLand.Walk.canceled += HandleWalkInput;
         _input.HumanoidLand.Dash.performed += HandleDashInput;
+        _input.HumanoidLand.Dash.canceled += HandleDashInput;
         _input.HumanoidLand.Jump.performed += HandleJump;
         _input.HumanoidLand.Restart.performed += ReloadScene;
 
@@ -236,6 +233,8 @@ public class FirstPersonController : MonoBehaviour
 
         //Gun
         _input.Gun.Shoot.performed += playerGun.Shoot;
+        _input.Gun.Shoot.canceled += playerGun.Shoot;
+        _input.Gun.SwitchWeapon.performed += playerGun.SwitchWeapon;
     }
 
     private void OnDisable()
@@ -247,6 +246,7 @@ public class FirstPersonController : MonoBehaviour
         _input.HumanoidLand.Walk.performed -= HandleWalkInput;
         _input.HumanoidLand.Walk.canceled -= HandleWalkInput;
         _input.HumanoidLand.Dash.performed -= HandleDashInput;
+        _input.HumanoidLand.Dash.canceled -= HandleDashInput;
         _input.HumanoidLand.Jump.performed -= HandleJump;
         _input.HumanoidLand.Restart.performed -= ReloadScene;
 
@@ -257,6 +257,8 @@ public class FirstPersonController : MonoBehaviour
 
         //Gun
         _input.Gun.Shoot.performed -= playerGun.Shoot;
+        _input.Gun.Shoot.canceled -= playerGun.Shoot;
+        _input.Gun.SwitchWeapon.performed -= playerGun.SwitchWeapon;
     }
 
     private void StateHandler()
@@ -321,22 +323,27 @@ public class FirstPersonController : MonoBehaviour
         //        MoveInput = new Vector2(currentInput.x * walkSpeed, currentInput.y * walkSpeed);
         //    }
         //}
-
-        if ((characterController.velocity.z != 0 || characterController.velocity.x != 0) && PlayerCanDash)
+        if (context.performed)
         {
-            StopCoroutine(DashCooldown());
-            dashesRemaining--;
-            StartCoroutine(Dash());
-            //if (dashesRemaining < dashesAllowed)
-            //{
-            //    StartCoroutine(DashCooldown());
-            //}
+            playerShouldDash = true;
+
+            if ((characterController.velocity.z != 0 || characterController.velocity.x != 0) && PlayerCanDash)
+            {
+                StopCoroutine(DashCooldown());
+                StartCoroutine(Dash());
+            }
+        }
+        if (context.canceled)
+        {
+            playerShouldDash = false;
+            StopCoroutine(Dash());
         }
     }
 
 
     private IEnumerator Dash()
     {
+        dashesRemaining--;
         float startTime = Time.time;
 
         //The direction in which the player moves based on input
@@ -344,12 +351,18 @@ public class FirstPersonController : MonoBehaviour
         moveDirection = (transform.TransformDirection(Vector3.right) * MoveInput.x) + (transform.TransformDirection(Vector3.forward) * MoveInput.y);
         moveDirection.y = 0;//moveDirectionY;
 
-        while (Time.time < startTime + dashTime)
+        while (Time.time < startTime + dashTime && playerShouldDash)
         {
             playerDashing = true;
             characterController.Move(moveDirection * dashSpeed * Time.deltaTime);
 
             yield return null;
+        }
+
+        if (playerShouldDash && PlayerCanDash)
+        {
+            yield return dashBetweenWait;
+            StartCoroutine(Dash());
         }
 
         playerDashing = false;
@@ -362,8 +375,12 @@ public class FirstPersonController : MonoBehaviour
     private IEnumerator DashCooldown()
     {
         dashOnCooldown = true;
-        yield return new WaitForSeconds(dashCooldownTime);
+        yield return dashCooldownWait;
         dashesRemaining++;
+        if (dashesRemaining > dashesAllowed)
+        {
+            dashesRemaining = dashesAllowed;
+        }
         if (dashesRemaining < dashesAllowed)
         {
             StartCoroutine(DashCooldown());
@@ -373,7 +390,6 @@ public class FirstPersonController : MonoBehaviour
             dashOnCooldown = false;
         }
         Debug.Log("Cooldown complete!");
-
     }
 
     private void HandleMouseLook()
@@ -515,7 +531,7 @@ public class FirstPersonController : MonoBehaviour
         Vector3 wallForward = Vector3.Cross(wallNormal, transform.up);
 
         //The direction in which the player moves based on input
-        float moveDirectionY = moveDirection.y;
+        //float moveDirectionY = moveDirection.y;
         moveDirection = (transform.TransformDirection(wallForward) * MoveInput.x) + (transform.TransformDirection(Vector3.forward) * MoveInput.y);
         moveDirection.y = 0;
 

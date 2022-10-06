@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TurretBehaviour : MonoBehaviour
 {
-    [SerializeField] private GameObject target, body, tip;
+    [SerializeField] private GameObject target, body, tip, light;
     [SerializeField] private float speed, range;
     private enum TurretState {LookingForTarget, ShootTarget};
     [SerializeField] private TurretState state;
@@ -12,6 +12,7 @@ public class TurretBehaviour : MonoBehaviour
     [SerializeField] private TurretRotationType rotationType;
     [SerializeField] private float delayBeforeFirstShot;
 
+    private float distance;
     Vector3 targetDiretion;
     Quaternion rotation;
     
@@ -31,21 +32,26 @@ public class TurretBehaviour : MonoBehaviour
             case TurretState.LookingForTarget:
                 Aim();
                 LookForLineOfSight();
+                light.GetComponent<Light>().color = Color.green;
+                //Debug.DrawRay();
                 break;
             case TurretState.ShootTarget:
                 Aim();
                 Shoot();
+                light.GetComponent<Light>().color = Color.yellow;
+
                 break;
             default:
                 break;
         }
+        distance = Vector3.Distance(this.transform.position, target.transform.position);
     }
     void Aim() //This is pointing the torret towards the player as long as he is in range
     {
         float tempSpeed = speed;
         if (Vector3.Distance(this.transform.position, target.transform.position) < range)
         { 
-            targetDiretion = transform.position - target.transform.position;
+            targetDiretion = target.transform.position - transform.position;
 
             if (rotationType == TurretRotationType.full)
             {
@@ -90,15 +96,14 @@ public class TurretBehaviour : MonoBehaviour
     void LookForLineOfSight() //Shoots raycasts at the player and if it hits the player then it has line of sight
     {
         RaycastHit hit;
-        Debug.DrawRay(tip.transform.position, -targetDiretion, Color.green);
-        Physics.Raycast(tip.transform.position, -targetDiretion, out hit, range);
+        Debug.DrawRay(tip.transform.position, targetDiretion, Color.green);
+        Physics.Raycast(tip.transform.position, targetDiretion, out hit, range);
         if (hit.collider != null)
         {
             if (hit.collider.tag == target.tag)
             { 
             Debug.Log("Player Detected");
-            StartCoroutine(Delay());
-        
+            Invoke("StateShootTarget",2);
             }
             else if (hit.collider.tag != target.tag)
             {
@@ -110,9 +115,9 @@ public class TurretBehaviour : MonoBehaviour
     void Shoot() //Shoots at the player
     {
         RaycastHit hit;
-        Debug.DrawRay(tip.transform.position, -targetDiretion, Color.red);
+        Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
        
-        Physics.Raycast(tip.transform.position, -targetDiretion, out hit, range);
+        Physics.Raycast(tip.transform.position, targetDiretion, out hit, range);
         try
         {
          if (hit.collider.tag == target.tag)
@@ -140,10 +145,5 @@ public class TurretBehaviour : MonoBehaviour
     void StateShootTarget() //swaps state to shooting target
     {
         state = TurretState.ShootTarget;
-    }
-    IEnumerator Delay() //Creating a delay before the first shot to give the player time to react
-    {
-        yield return new WaitForSeconds(delayBeforeFirstShot);
-        StateShootTarget();
     }
 }
