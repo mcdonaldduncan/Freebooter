@@ -9,6 +9,16 @@ using Random = UnityEngine.Random;
 
 public class GunHandler : MonoBehaviour
 {
+    public int HandGunCurrentAmmo { get { return handGunCurrentAmmo; } set { handGunCurrentAmmo = value; } }
+    public int HandGunMaxAmmo { get { return handGunMaxAmmo; } }
+    public int ShotGunCurrentAmmo { get { return shotGunCurrentAmmo; } set { shotGunCurrentAmmo = value; } }
+    public int ShotGunMaxAmmo { get { return shotGunMaxAmmo; } }
+    public int AutoGunCurrentAmmo { get { return autoGunCurrentAmmo; } set { autoGunCurrentAmmo = value; } }
+    public int AutoGunMaxAmmo { get { return autoGunMaxAmmo; } }
+
+    public bool Reloading { get { return reloading; } set { reloading = value; } }
+    public bool InfiniteAmmo { get { return infiniteAmmo; } }
+
     [SerializeField]
     private enum GunType
     {
@@ -23,17 +33,17 @@ public class GunHandler : MonoBehaviour
     [SerializeField] private Transform shootFrom;
     [SerializeField] private LayerMask playerLayer;
     [SerializeField] private TextMeshProUGUI ammoText;
+    [SerializeField] private bool reloading;
+    [SerializeField] private bool infiniteAmmo;
     private int ammoUI;
-    public bool reloading;
-    public bool infiniteAmmo;
 
 
     [Header("Handgun Parameters")]
     [SerializeField] private float handGunBulletDamage = 10f;
     [SerializeField] private float handGunVerticalSpread;
     [SerializeField] private float handGunHorizontalSpread;
-    public int handGunCurrentAmmo;
-    public int handGunMaxAmmo;
+    [SerializeField] private int handGunCurrentAmmo;
+    [SerializeField] private int handGunMaxAmmo;
     [SerializeField] private float handGunReloadTime;
 
     [Header("Shotgun Parameters")]
@@ -44,16 +54,16 @@ public class GunHandler : MonoBehaviour
     [SerializeField] private float shotGunVerticalSpread;
     [Tooltip("Increase for wider horizontal spread. This will be used to a find a random number between the negative of this and the positive.")]
     [SerializeField] private float shotGunHorizontalSpread;
-    public int shotGunCurrentAmmo;
-    public int shotGunMaxAmmo;
+    [SerializeField] private int shotGunCurrentAmmo;
+    [SerializeField] private int shotGunMaxAmmo;
     [SerializeField] private float shotGunReloadTime;
 
     [Header("Autogun Parameters")]
     [SerializeField] private float autoGunBulletDamage = 10f;
     [SerializeField] private float autoGunHorizontalSpread;
     [SerializeField] private float autoGunVerticalSpread;
-    public int autoGunCurrentAmmo;
-    public int autoGunMaxAmmo;
+    [SerializeField] private int autoGunCurrentAmmo;
+    [SerializeField] private int autoGunMaxAmmo;
     [SerializeField] private float autoGunReloadTime;
     [SerializeField] private float fireRate;
 

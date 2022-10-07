@@ -15,7 +15,7 @@ public class AutoGun : MonoBehaviour
             holdingTrigger = false;
             instance.StopCoroutine(autoGun.ShootAutoGun(instance, autoGun, shootFrom, gameObject, layerToIgnore, fireRateWait, bulletDamage, verticalSpread, horizontalSpread));
         }
-        else if (context.performed && !instance.reloading)
+        else if (context.performed && !instance.Reloading)
         {
             holdingTrigger = true;
 
@@ -25,11 +25,11 @@ public class AutoGun : MonoBehaviour
 
     private IEnumerator ShootAutoGun(GunHandler instance, AutoGun autoGun, Transform shootFrom, GameObject gameObject, LayerMask layerToIgnore, WaitForSeconds fireRateWait, float bulletDamage, float verticalSpread, float horizontalSpread)
     {
-        if (!instance.reloading && instance.autoGunCurrentAmmo > 0)
+        if (!instance.Reloading && instance.AutoGunCurrentAmmo > 0)
         {
-            if (!instance.infiniteAmmo)
+            if (!instance.InfiniteAmmo)
             {
-                instance.autoGunCurrentAmmo--;
+                instance.AutoGunCurrentAmmo--;
             }
             GameObject lineDrawer = new GameObject();
             LineRenderer lineRenderer = lineDrawer.AddComponent<LineRenderer>();
@@ -83,7 +83,7 @@ public class AutoGun : MonoBehaviour
 
             yield return fireRateWait;
 
-            if (holdingTrigger && !instance.reloading)
+            if (holdingTrigger && !instance.Reloading)
             {
                 instance.StartCoroutine(autoGun.ShootAutoGun(instance, autoGun, shootFrom, gameObject, layerToIgnore, fireRateWait, bulletDamage, verticalSpread, horizontalSpread));
             }
@@ -97,9 +97,9 @@ public class AutoGun : MonoBehaviour
 
     private IEnumerator Reload(GunHandler instance, WaitForSeconds reloadWait)
     {
-        instance.reloading = true;
+        instance.Reloading = true;
         yield return reloadWait;
-        instance.reloading = false;
-        instance.autoGunCurrentAmmo = instance.autoGunMaxAmmo;
+        instance.Reloading = false;
+        instance.AutoGunCurrentAmmo = instance.AutoGunMaxAmmo;
     }
 }

@@ -59,9 +59,9 @@ public class HandGun : MonoBehaviour
 
     private IEnumerator Reload(GunHandler instance, WaitForSeconds reloadWait)
     {
-        instance.reloading = true;
+        instance.Reloading = true;
         yield return reloadWait;
-        instance.reloading = false;
-        instance.handGunCurrentAmmo = instance.handGunMaxAmmo;
+        instance.Reloading = false;
+        instance.HandGunCurrentAmmo = instance.HandGunMaxAmmo;
     }
 }

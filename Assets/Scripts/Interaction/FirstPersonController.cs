@@ -4,19 +4,21 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-public class FirstPersonController : MonoBehaviour
+public class FirstPersonController : MonoBehaviour, IDamageable
 {
     //properties used to help check whether player can use certain mechanics. These are mostly to keep the code clean and organized
     //Kind of a rudimentary/crude state machine
+    public float Health { get { return health; } set { health = value; } }
     public bool PlayerCanMove { get; private set; } = true;
     public bool PlayerIsDashing { get; private set; }
     public bool PlayerCanDash => dashesRemaining > dashesAllowed - dashesAllowed;
     //private bool PlayerIsSprinting => playerCanSprint && Input.GetKey(sprintKey) && !playerIsCrouching;
-    //private bool PlayerShouldJump => Input.GetKeyDown(jumpKey) && characterController.isGrounded && !playerIsCrouching;
     //private bool PlayerShouldCrouch => Input.GetKeyDown(crouchKey) && !playerInCrouchAnimation && characterController.isGrounded;
 
     //Checks used to see if player is able to use mechanics.
     [Header("Functional Options")]
+    [SerializeField]
+    private float health;
     [Tooltip("Is the player in the middle of a special movement, i.e. ladder climbing?")]
     [SerializeField]
     public bool playerOnSpecialMovement = false;
@@ -556,6 +558,20 @@ public class FirstPersonController : MonoBehaviour
 
         //move the player based on the parameters gathered in the "Handle-" functions
         characterController.Move(moveDirection * Time.deltaTime);
+    }
+
+    public void Damage(float damageTaken)
+    {
+        Health -= damageTaken;
+        CheckForDeath();
+    }
+
+    public void CheckForDeath()
+    {
+        if (Health <= 0)
+        {
+            //player dead
+        }
     }
 
     //KEEPING THIS INCASE WE WANT TO ADD CROUCHING
