@@ -68,12 +68,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerOnSpecialMovement: 0
-  playerCanJump: 1
-  playerCanDash: 1
-  playerCanHeadbob: 1
-  walkSpeed: 6
-  wallRunSpeed: 10
-  slopeSlideSpeed: 1
+  playerCanJump: 0
+  playerCanDash: 0
+  playerCanHeadbob: 0
+  walkSpeed: 0
+  wallRunSpeed: 0
+  slopeSlideSpeed: 0
   fovDefault: 60
   fovSprint: 70
   fovIncrement: 5
@@ -81,9 +81,9 @@ MonoBehaviour:
   lookSpeedY: 2
   upperLookLimit: 80
   lowerLookLimit: 80
-  jumpsAllowed: 2
+  jumpsAllowed: 0
   remainingJumps: 0
-  jumpForce: 10
+  jumpForce: 0
   gravity: 25
   whatIsWall:
     serializedVersion: 2
@@ -98,9 +98,9 @@ MonoBehaviour:
   orientation: {fileID: 5031688759751859488}
   walkBobSpeed: 14
   walkBobAmount: 0.05
-  dashesAllowed: 2
+  dashesAllowed: 0
   dashesRemaining: 0
-  dashSpeed: 7
+  dashSpeed: 0
   dashTime: 0.125
   dashCooldownTime: 3
   dashBetweenTime: 0.25
