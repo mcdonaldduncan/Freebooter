@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1640413053150933904}
   - component: {fileID: 6618592613885953580}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Point Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -103,7 +103,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7936307943014886291}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Tip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: 7936307943029315749}
   - component: {fileID: 7936307943029315748}
   - component: {fileID: 7936307943029315751}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -235,7 +235,7 @@ GameObject:
   - component: {fileID: 7936307943212430893}
   - component: {fileID: 7936307943212430892}
   - component: {fileID: 7936307943212430895}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Muzzle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -332,7 +332,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7936307943233775800}
   - component: {fileID: 7936307943233775801}
-  m_Layer: 0
+  - component: {fileID: 1978383265}
+  m_Layer: 9
   m_Name: TurretBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -368,7 +369,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8eae2d91e7874444b8d0de5a39d0ad64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  target: {fileID: 297426594678655177, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
   body: {fileID: 7936307943233775803}
   tip: {fileID: 7936307943014886290}
   light: {fileID: 5774120490667646057}
@@ -377,6 +378,21 @@ MonoBehaviour:
   state: 0
   rotationType: 0
   delayBeforeFirstShot: 0
+  health: 150
+--- !u!136 &1978383265
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7936307943233775803}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.6830406
+  m_Height: 1.9453571
+  m_Direction: 1
+  m_Center: {x: 0.18304062, y: -0.28963792, z: 0}
 --- !u!1 &7936307943390632097
 GameObject:
   m_ObjectHideFlags: 0
@@ -389,7 +405,7 @@ GameObject:
   - component: {fileID: 7936307943390632109}
   - component: {fileID: 7936307943390632108}
   - component: {fileID: 7936307943390632111}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -487,7 +503,7 @@ GameObject:
   - component: {fileID: 7936307943554682116}
   - component: {fileID: 7936307943554682119}
   - component: {fileID: 7936307943554682118}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: BaseFoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -581,7 +597,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7936307944237820729}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Turret
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -595,7 +611,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7936307944237820728}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 44.330128, y: 1.9891893, z: -5.794946}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

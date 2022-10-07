@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class SoldierEnemyScript : MonoBehaviour
+public class SoldierEnemyScript : MonoBehaviour, IDamageable
 {
     
     private enum SoldierState {guard, wanderer, chase, originalSpot};
     [Tooltip("/ Guard = Stand in one place until the player breaks line of sight / Wanderer = walks around / Chase = when the soldier goes after the enemy")]
     [SerializeField] private SoldierState st;
-    [SerializeField] private SoldierState origianlst;
+    private SoldierState origianlst;
     [SerializeField] private GameObject target, tip, light, visionPoint;
     [SerializeField] private float rotationspeed, range;
     [SerializeField] private NavMeshAgent agent; 
@@ -150,7 +150,7 @@ public class SoldierEnemyScript : MonoBehaviour
         else if (Vector3.Distance(this.transform.position, wanderSpots[i].transform.position) >= wanderSpotOffset)
         {
           agent.SetDestination(wanderSpots[i].transform.position);
-          Debug.Log(wanderSpots[i].transform.position);
+          //Debug.Log(wanderSpots[i].transform.position);
         }
         
     }
