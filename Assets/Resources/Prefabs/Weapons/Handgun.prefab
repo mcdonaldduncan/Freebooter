@@ -143,6 +143,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69435ff81482609459dfc197ab4d1175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gunDamage: 100
-  range: 10
+  gunType: 1
   shootFrom: {fileID: 0}
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  handGunBulletDamage: 20
+  handGunVerticalSpread: 0
+  handGunHorizontalSpread: 0
+  shotGunBulletDamage: 10
+  shotGunBulletAmount: 12
+  shotGunVerticalSpread: 10
+  shotGunHorizontalSpread: 10
+  autoGunBulletDamage: 10
+  autoGunHorizontalSpread: 0
+  autoGunVerticalSpread: 0
+  fireRate: 0.2
+  longGunBulletDamage: 10
+  gunInventory: []
