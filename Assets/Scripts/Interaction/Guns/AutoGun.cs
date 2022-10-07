@@ -27,7 +27,10 @@ public class AutoGun : MonoBehaviour
     {
         if (!instance.reloading && instance.autoGunCurrentAmmo > 0)
         {
-            instance.autoGunCurrentAmmo--;
+            if (!instance.infiniteAmmo)
+            {
+                instance.autoGunCurrentAmmo--;
+            }
             GameObject lineDrawer = new GameObject();
             LineRenderer lineRenderer = lineDrawer.AddComponent<LineRenderer>();
             lineRenderer.startWidth = 0.1f;

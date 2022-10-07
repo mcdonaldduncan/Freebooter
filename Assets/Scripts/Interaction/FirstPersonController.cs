@@ -52,6 +52,8 @@ public class FirstPersonController : MonoBehaviour
 
     //Parameters for looking around with mouse
     [Header("Look Parameters")]
+    [SerializeField]
+    private bool restrictHorizontal;
     [SerializeField, Range(1, 10)]
     private float lookSpeedX = 2f;
     [SerializeField, Range(1, 10)]
@@ -60,6 +62,10 @@ public class FirstPersonController : MonoBehaviour
     private float upperLookLimit = 80f;
     [SerializeField, Range(1, 100)]
     private float lowerLookLimit = 80f;
+    [SerializeField, Range(1, 100)]
+    private float leftLookLimit = 80f;
+    [SerializeField, Range(1, 100)]
+    private float rightLookLimit = 80f;
 
     //Parameters for jump height and gravity
     [Header("Jumping Parameters")]
@@ -151,6 +157,7 @@ public class FirstPersonController : MonoBehaviour
     public Vector2 MoveInput { get; private set; }
 
     private float rotationX = 0f; //Camera rotation for clamping
+    private float rotationY = 0f;
 
     //private bool playerIsSprinting;
     private bool playerDashing;
@@ -396,11 +403,21 @@ public class FirstPersonController : MonoBehaviour
 
     private void HandleMouseLook()
     {
-        //rotate camera around X and Y axis, and rotate player around x axis
         rotationX -= Input.GetAxis("Mouse Y") * lookSpeedY;
-        rotationX = Mathf.Clamp(rotationX, -upperLookLimit, lowerLookLimit); //clamp camera
-        playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
-        transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeedX, 0);
+        rotationX = Mathf.Clamp(rotationX, -upperLookLimit, lowerLookLimit);
+
+        if (restrictHorizontal)
+        {
+            //rotate camera around X and Y axis, and rotate player around x axis
+            rotationY += Input.GetAxis("Mouse X") * lookSpeedX;
+            rotationY = Mathf.Clamp(rotationY, -leftLookLimit, rightLookLimit);//clamp camera
+            playerCamera.transform.localRotation = Quaternion.Euler(rotationX, rotationY, 0);
+        }
+        else
+        {
+            playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
+            transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeedX, 0);
+        }
     }
 
     private void HandleJump(InputAction.CallbackContext context)

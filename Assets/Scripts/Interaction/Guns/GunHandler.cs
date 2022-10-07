@@ -25,6 +25,7 @@ public class GunHandler : MonoBehaviour
     [SerializeField] private TextMeshProUGUI ammoText;
     private int ammoUI;
     public bool reloading;
+    public bool infiniteAmmo;
 
 
     [Header("Handgun Parameters")]
@@ -138,13 +139,19 @@ public class GunHandler : MonoBehaviour
         if ((gunType == GunType.handGun || gunType == GunType.longGun) && context.performed && handGunCurrentAmmo > 0 && !reloading)
         {
             HandGun.Shoot(shootFrom, gameObject, playerLayer, handGunBulletDamage, handGunVerticalSpread, handGunHorizontalSpread);
-            handGunCurrentAmmo--;
+            if (!infiniteAmmo)
+            {
+                handGunCurrentAmmo--;
+            }
         }
         
         if (gunType == GunType.shotGun && context.performed && shotGunCurrentAmmo > 0 && !reloading)
         {
             ShotGun.Shoot(shootFrom, gameObject, playerLayer, shotGunBulletDamage, shotGunBulletAmount, shotGunVerticalSpread, shotGunHorizontalSpread);
-            shotGunCurrentAmmo--;
+            if (!infiniteAmmo)
+            {
+                shotGunCurrentAmmo--;
+            }
         }
     }
 
