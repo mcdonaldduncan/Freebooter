@@ -326,21 +326,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69435ff81482609459dfc197ab4d1175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gunType: 1
-  shootFrom: {fileID: 297426593068676920}
+  currentGun: 0
+  shootFrom: {fileID: 297426593161032297}
+  fpsCam: {fileID: 297426593068676927}
   playerLayer:
     serializedVersion: 2
     m_Bits: 256
-  handGunBulletDamage: 20
+  ammoText: {fileID: 0}
+  reloading: 0
+  infiniteAmmo: 0
+  handGunBulletDamage: 40
   handGunVerticalSpread: 0
   handGunHorizontalSpread: 0
-  shotGunBulletDamage: 10
+  handGunCurrentAmmo: 0
+  handGunMaxAmmo: 10
+  handGunReloadTime: 3
+  shotGunBulletDamage: 30
   shotGunBulletAmount: 12
   shotGunVerticalSpread: 10
   shotGunHorizontalSpread: 10
-  autoGunBulletDamage: 10
+  shotGunCurrentAmmo: 0
+  shotGunMaxAmmo: 12
+  shotGunReloadTime: 5
+  autoGunBulletDamage: 25
   autoGunHorizontalSpread: 0
   autoGunVerticalSpread: 0
+  autoGunCurrentAmmo: 0
+  autoGunMaxAmmo: 30
+  autoGunReloadTime: 5
   fireRate: 0.2
   longGunBulletDamage: 10
   gunInventory: []
@@ -411,6 +424,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f132a42815b4b44598aa50e8cc680f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 100
   playerOnSpecialMovement: 0
   playerCanJump: 1
   playerCanDash: 1
@@ -421,10 +435,13 @@ MonoBehaviour:
   fovDefault: 60
   fovSprint: 70
   fovIncrement: 5
+  restrictHorizontal: 0
   lookSpeedX: 2
   lookSpeedY: 2
   upperLookLimit: 80
   lowerLookLimit: 80
+  leftLookLimit: 80
+  rightLookLimit: 80
   jumpsAllowed: 2
   remainingJumps: 0
   jumpForce: 10
