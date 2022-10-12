@@ -28,7 +28,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
 
     public float Health { get { return health; } set { health = value; } }
 
-    public void Damage(float damageTaken)
+    public void TakeDamage(float damageTaken)
     {
         Health -= damageTaken;
         CheckForDeath();

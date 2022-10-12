@@ -3,9 +3,18 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class HandGun : MonoBehaviour
+public class HandGun : MonoBehaviour, IGun
 {
-    public static void Shoot(Transform shootFrom, GameObject gameObject, LayerMask layerToIgnore, float bulletDamage, float verticalSpread, float horizontalSpread)
+    private void OnEnable()
+    {
+        GunHandler.weaponSwitched += OnWeaponSwitch;
+    }
+    private void OnDisable()
+    {
+        GunHandler.weaponSwitched -= OnWeaponSwitch;
+    }
+
+    public static void Shoot(Camera fpsCam, Transform shootFrom, GameObject gameObject, LayerMask layerToIgnore, float bulletDamage, float verticalSpread, float horizontalSpread)
     {
         RaycastHit hitInfo;
 
@@ -14,13 +23,17 @@ public class HandGun : MonoBehaviour
         lineRenderer.startWidth = 0.1f;
         lineRenderer.endWidth = 0.1f;
 
+        Vector3 aimSpot = fpsCam.transform.position;
+        aimSpot += fpsCam.transform.forward * 30f;
+        shootFrom.LookAt(aimSpot);
+
         Vector3 direction = shootFrom.transform.forward; // your initial aim.
         Vector3 spread = Vector3.zero;
         spread += shootFrom.transform.up * Random.Range(-verticalSpread, verticalSpread);
         spread += shootFrom.transform.right * Random.Range(-horizontalSpread, horizontalSpread);
         direction += spread.normalized; //* Random.Range(0f, 0.2f);
 
-        if (Physics.Raycast(shootFrom.transform.position, direction, out hitInfo, 100f, ~layerToIgnore))
+        if (Physics.Raycast(shootFrom.transform.position, direction, out hitInfo, float.MaxValue, ~layerToIgnore))
         {
             lineRenderer.material.color = Color.green;
             lineRenderer.SetPosition(0, shootFrom.transform.position);
@@ -33,7 +46,7 @@ public class HandGun : MonoBehaviour
                 Vector3 targetPosition = hitInfo.transform.position;
 
                 float distance = Vector3.Distance(targetPosition, gameObject.transform.position);
-                damageableTarget.Damage(bulletDamage / (Mathf.Abs(distance / 2)));
+                damageableTarget.TakeDamage(bulletDamage / (Mathf.Abs(distance / 2)));
 
                 Debug.Log($"{hitInfo.transform.name}: {damageableTarget.Health}");
             }
@@ -57,11 +70,21 @@ public class HandGun : MonoBehaviour
         instance.StartCoroutine(handGun.Reload(instance, reloadWait));
     }
 
-    private IEnumerator Reload(GunHandler instance, WaitForSeconds reloadWait)
+    public IEnumerator Reload(GunHandler instance, WaitForSeconds reloadWait)
     {
         instance.Reloading = true;
         yield return reloadWait;
+        if (instance.Reloading)
+        {
+            instance.Reloading = false;
+            instance.HandGunCurrentAmmo = instance.HandGunMaxAmmo;
+        }
+    }
+
+    private void OnWeaponSwitch(GunHandler instance, IGun handGun, WaitForSeconds reloadWait)
+    {
+        Debug.Log("Stopping Reload");
         instance.Reloading = false;
-        instance.HandGunCurrentAmmo = instance.HandGunMaxAmmo;
+        StopCoroutine(handGun.Reload(instance, reloadWait));
     }
 }

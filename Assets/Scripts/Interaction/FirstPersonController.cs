@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
+//TODO I'll abstract all this at some point lol
 public class FirstPersonController : MonoBehaviour, IDamageable
 {
     //properties used to help check whether player can use certain mechanics. These are mostly to keep the code clean and organized
@@ -347,11 +348,12 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         else if (context.canceled)
         {
             playerShouldDash = false;
-            StopCoroutine(Dash());
+            playerDashing = false;
+            //StopCoroutine(Dash());
         }
     }
 
-
+    //TODO: Figure out why there's a weird stutter when falling after cancelling before second dash in midair
     private IEnumerator Dash()
     {
         dashesRemaining--;
@@ -375,11 +377,13 @@ public class FirstPersonController : MonoBehaviour, IDamageable
             yield return dashBetweenWait;
             StartCoroutine(Dash());
         }
-
-        playerDashing = false;
-        if (dashesRemaining < dashesAllowed && !dashOnCooldown)
+        else
         {
-            StartCoroutine(DashCooldown());
+            playerDashing = false;
+            if (dashesRemaining < dashesAllowed && !dashOnCooldown)
+            {
+                StartCoroutine(DashCooldown());
+            }
         }
     }
 
@@ -560,9 +564,10 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         characterController.Move(moveDirection * Time.deltaTime);
     }
 
-    public void Damage(float damageTaken)
+    public void TakeDamage(float damageTaken)
     {
         Health -= damageTaken;
+        Debug.Log($"Player Health: { health }");
         CheckForDeath();
     }
 
@@ -570,7 +575,8 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     {
         if (Health <= 0)
         {
-            //player dead
+            Debug.Log("Player died!");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 

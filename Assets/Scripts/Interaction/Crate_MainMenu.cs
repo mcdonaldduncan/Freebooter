@@ -40,7 +40,7 @@ public class Crate_MainMenu : MonoBehaviour, IDamageable
         }
     }
 
-    public void Damage(float damageTaken)
+    public void TakeDamage(float damageTaken)
     {
         Health -= damageTaken;
         CheckForDeath();

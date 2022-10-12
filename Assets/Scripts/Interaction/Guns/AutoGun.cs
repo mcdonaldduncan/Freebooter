@@ -4,9 +4,18 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-public class AutoGun : MonoBehaviour
+public class AutoGun : MonoBehaviour, IGun
 {
     private static bool holdingTrigger;
+
+    private void OnEnable()
+    {
+        GunHandler.weaponSwitched += OnWeaponSwitch;
+    }
+    private void OnDisable()
+    {
+        GunHandler.weaponSwitched -= OnWeaponSwitch;
+    }
 
     public static void Shoot(GunHandler instance, AutoGun autoGun, Transform shootFrom, GameObject gameObject, LayerMask layerToIgnore, InputAction.CallbackContext context, WaitForSeconds fireRateWait, float bulletDamage, float verticalSpread, float horizontalSpread)
     {
@@ -35,8 +44,11 @@ public class AutoGun : MonoBehaviour
             LineRenderer lineRenderer = lineDrawer.AddComponent<LineRenderer>();
             lineRenderer.startWidth = 0.1f;
             lineRenderer.endWidth = 0.1f;
+            
+            Vector3 aimSpot = instance.FPSCam.transform.position;
+            aimSpot += instance.FPSCam.transform.forward * 30f;
+            shootFrom.LookAt(aimSpot);
 
-            Debug.Log("Shooting bullet");
             Vector3 direction = shootFrom.transform.forward; // your initial aim.
             Vector3 spread = Vector3.zero;
             spread += shootFrom.transform.up * Random.Range(-verticalSpread, verticalSpread);
@@ -45,7 +57,7 @@ public class AutoGun : MonoBehaviour
 
             RaycastHit hitInfo;
 
-            if (Physics.Raycast(shootFrom.transform.position, direction, out hitInfo, 100f, ~layerToIgnore))
+            if (Physics.Raycast(shootFrom.transform.position, direction, out hitInfo, float.MaxValue, ~layerToIgnore))
             {
 
                 Debug.DrawLine(shootFrom.transform.position, hitInfo.point, Color.green, 1f);
@@ -62,10 +74,10 @@ public class AutoGun : MonoBehaviour
 
                         float distance = Vector3.Distance(targetPosition, gameObject.transform.position);
                         float totalDamage = Mathf.Abs(bulletDamage / ((distance / 2)));
-                        damageableTarget.Damage(totalDamage);
+                        damageableTarget.TakeDamage(totalDamage);
 
                         Debug.Log($"{hitInfo.transform.name}: {damageableTarget.Health}");
-                        Debug.Log($"Damage Dealt: {totalDamage}");
+                        Debug.Log($"TakeDamage Dealt: {totalDamage}");
                     }
                     catch
                     {
@@ -95,11 +107,16 @@ public class AutoGun : MonoBehaviour
         instance.StartCoroutine(autoGun.Reload(instance, reloadWait));
     }
 
-    private IEnumerator Reload(GunHandler instance, WaitForSeconds reloadWait)
+    public IEnumerator Reload(GunHandler instance, WaitForSeconds reloadWait)
     {
         instance.Reloading = true;
         yield return reloadWait;
         instance.Reloading = false;
         instance.AutoGunCurrentAmmo = instance.AutoGunMaxAmmo;
+    }
+
+    private void OnWeaponSwitch(GunHandler instance, IGun autoGun, WaitForSeconds reloadWait)
+    {
+        StopCoroutine(autoGun.Reload(instance, reloadWait));
     }
 }

@@ -23,7 +23,7 @@ public class Inquisitor : MonoBehaviour, IDamageable
         potentialTargets = FindObjectsOfType<FirstPersonController>().Select(item => item.transform).ToList();
     }
 
-    public void Damage(float damageTaken)
+    public void TakeDamage(float damageTaken)
     {
         if (orbits.Any())
             return;

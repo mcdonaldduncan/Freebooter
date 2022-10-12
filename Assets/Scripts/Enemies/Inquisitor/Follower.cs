@@ -66,7 +66,7 @@ public class Follower : MonoBehaviour
         //{
         //    if (_IDamageables[i] == null)
         //        continue;
-        //    _IDamageables[i].Damage(damage * Time.deltaTime);
+        //    _IDamageables[i].TakeDamage(damage * Time.deltaTime);
         //}
         if (!isInitialized)
             return;
@@ -92,7 +92,7 @@ public class Follower : MonoBehaviour
         try
         {
             IDamageable damageable = other.transform.GetComponent<IDamageable>();
-            damageable.Damage(damage * Time.deltaTime);
+            damageable.TakeDamage(damage * Time.deltaTime);
             Debug.Log($"{other.transform.name}: {damageable.Health}");
         }
         catch

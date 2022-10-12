@@ -6,7 +6,7 @@ public interface IDamageable
 {
     public float Health { get; set; }
 
-    void Damage(float damageTaken);
+    void TakeDamage(float damageTaken);
 
     void CheckForDeath();
 }
