@@ -67,6 +67,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f132a42815b4b44598aa50e8cc680f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 0
   playerOnSpecialMovement: 0
   playerCanJump: 0
   playerCanDash: 0
@@ -77,10 +78,13 @@ MonoBehaviour:
   fovDefault: 60
   fovSprint: 70
   fovIncrement: 5
+  restrictHorizontal: 1
   lookSpeedX: 2
   lookSpeedY: 2
-  upperLookLimit: 80
-  lowerLookLimit: 80
+  upperLookLimit: 50
+  lowerLookLimit: 40
+  leftLookLimit: 60
+  rightLookLimit: 35
   jumpsAllowed: 0
   remainingJumps: 0
   jumpForce: 0
@@ -332,7 +336,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6555022338576666802, guid: bff76a39969238f46969d03c254ead18, type: 3}
       propertyPath: gunType
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555022338576666802, guid: bff76a39969238f46969d03c254ead18, type: 3}
+      propertyPath: ammoText
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6555022338576666802, guid: bff76a39969238f46969d03c254ead18, type: 3}
       propertyPath: fireRate
@@ -346,6 +354,34 @@ PrefabInstance:
       propertyPath: shootFrom
       value: 
       objectReference: {fileID: 5031688761362768595}
+    - target: {fileID: 6555022338576666802, guid: bff76a39969238f46969d03c254ead18, type: 3}
+      propertyPath: infiniteAmmo
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555022338576666802, guid: bff76a39969238f46969d03c254ead18, type: 3}
+      propertyPath: autoGunMaxAmmo
+      value: 999
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555022338576666802, guid: bff76a39969238f46969d03c254ead18, type: 3}
+      propertyPath: handGunMaxAmmo
+      value: 999
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555022338576666802, guid: bff76a39969238f46969d03c254ead18, type: 3}
+      propertyPath: shotGunMaxAmmo
+      value: 999
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555022338576666802, guid: bff76a39969238f46969d03c254ead18, type: 3}
+      propertyPath: autoGunReloadTime
+      value: 999
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555022338576666802, guid: bff76a39969238f46969d03c254ead18, type: 3}
+      propertyPath: handGunCurrentAmmo
+      value: 999
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555022338576666802, guid: bff76a39969238f46969d03c254ead18, type: 3}
+      propertyPath: shotGunCurrentAmmo
+      value: 999
+      objectReference: {fileID: 0}
     - target: {fileID: 6555022338576666802, guid: bff76a39969238f46969d03c254ead18, type: 3}
       propertyPath: shotGunBulletAmount
       value: 12
