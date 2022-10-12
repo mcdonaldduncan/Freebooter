@@ -53,6 +53,8 @@ public class GunHandler : MonoBehaviour
     [SerializeField] private int handGunCurrentAmmo;
     [SerializeField] private int handGunMaxAmmo;
     [SerializeField] private float handGunReloadTime;
+    [Tooltip("This will offset how the shot is centered from the tip of the gun")]
+    [SerializeField] private float handGunAimOffset = 15f;
 
     [Header("Shotgun Parameters")]
     [Tooltip("This will apply to EACH 'bullet' the shotgun fires")]
@@ -65,6 +67,8 @@ public class GunHandler : MonoBehaviour
     [SerializeField] private int shotGunCurrentAmmo;
     [SerializeField] private int shotGunMaxAmmo;
     [SerializeField] private float shotGunReloadTime;
+    [Tooltip("This will offset how the shot is centered from the tip of the gun")]
+    [SerializeField] private float shotGunAimOffset = 15f;
 
     [Header("Autogun Parameters")]
     [SerializeField] private float autoGunBulletDamage = 10f;
@@ -74,6 +78,8 @@ public class GunHandler : MonoBehaviour
     [SerializeField] private int autoGunMaxAmmo;
     [SerializeField] private float autoGunReloadTime;
     [SerializeField] private float fireRate;
+    [Tooltip("This will offset how the shot is centered from the tip of the gun")]
+    [SerializeField] private float autoGunAimOffset = 15f;
 
     [Header("Longgun Parameters")]
     [SerializeField] private float longGunBulletDamage = 10f;
@@ -168,8 +174,6 @@ public class GunHandler : MonoBehaviour
 
     public void SwitchWeapon(InputAction.CallbackContext context)
     {
-        WaitForSeconds reloadToInvoke = null;
-
         if (currentGun != guns.Last())
         {
             currentGun = guns[Array.IndexOf(guns, currentGun) + 1];
@@ -179,9 +183,13 @@ public class GunHandler : MonoBehaviour
             currentGun = guns[0];
         }
 
-        reloadToInvoke = gunReloadWaitDict[currentGun];
+        if (reloading)
+        {
+            WaitForSeconds reloadToInvoke = gunReloadWaitDict[currentGun];
 
-        weaponSwitched?.Invoke(this, gunDict[Array.IndexOf(guns, currentGun)], reloadToInvoke);
+            weaponSwitched?.Invoke(this, gunDict[Array.IndexOf(guns, currentGun)], reloadToInvoke);
+        }
+
         Debug.Log($"Equipped gun: {currentGun.ToString()}");
     }
 
@@ -189,11 +197,11 @@ public class GunHandler : MonoBehaviour
     {
         if (currentGun == GunType.autoGun && autoGunCurrentAmmo > 0 && !reloading)
         {
-            AutoGun.Shoot(this, autoGun, shootFrom, gameObject, playerLayer, context, fireRateWait, autoGunBulletDamage, autoGunVerticalSpread, autoGunHorizontalSpread);
+            AutoGun.Shoot(this, autoGun, shootFrom, gameObject, playerLayer, context, fireRateWait, autoGunBulletDamage, autoGunVerticalSpread, autoGunHorizontalSpread, autoGunAimOffset);
         }
         if ((currentGun == GunType.handGun || currentGun == GunType.longGun) && context.performed && handGunCurrentAmmo > 0 && !reloading)
         {
-            HandGun.Shoot(fpsCam, shootFrom, gameObject, playerLayer, handGunBulletDamage, handGunVerticalSpread, handGunHorizontalSpread);
+            HandGun.Shoot(fpsCam, shootFrom, gameObject, playerLayer, handGunBulletDamage, handGunVerticalSpread, handGunHorizontalSpread, handGunAimOffset);
             if (!infiniteAmmo)
             {
                 handGunCurrentAmmo--;
@@ -202,7 +210,7 @@ public class GunHandler : MonoBehaviour
         
         if (currentGun == GunType.shotGun && context.performed && shotGunCurrentAmmo > 0 && !reloading)
         {
-            ShotGun.Shoot(fpsCam, shootFrom, gameObject, playerLayer, shotGunBulletDamage, shotGunBulletAmount, shotGunVerticalSpread, shotGunHorizontalSpread);
+            ShotGun.Shoot(fpsCam, shootFrom, gameObject, playerLayer, shotGunBulletDamage, shotGunBulletAmount, shotGunVerticalSpread, shotGunHorizontalSpread, shotGunAimOffset);
             if (!infiniteAmmo)
             {
                 shotGunCurrentAmmo--;

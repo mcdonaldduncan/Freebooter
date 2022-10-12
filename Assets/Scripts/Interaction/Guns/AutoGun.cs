@@ -17,22 +17,22 @@ public class AutoGun : MonoBehaviour, IGun
         GunHandler.weaponSwitched -= OnWeaponSwitch;
     }
 
-    public static void Shoot(GunHandler instance, AutoGun autoGun, Transform shootFrom, GameObject gameObject, LayerMask layerToIgnore, InputAction.CallbackContext context, WaitForSeconds fireRateWait, float bulletDamage, float verticalSpread, float horizontalSpread)
+    public static void Shoot(GunHandler instance, AutoGun autoGun, Transform shootFrom, GameObject gameObject, LayerMask layerToIgnore, InputAction.CallbackContext context, WaitForSeconds fireRateWait, float bulletDamage, float verticalSpread, float horizontalSpread, float aimOffset)
     {
         if (context.canceled)
         {
             holdingTrigger = false;
-            instance.StopCoroutine(autoGun.ShootAutoGun(instance, autoGun, shootFrom, gameObject, layerToIgnore, fireRateWait, bulletDamage, verticalSpread, horizontalSpread));
+            instance.StopCoroutine(autoGun.ShootAutoGun(instance, autoGun, shootFrom, gameObject, layerToIgnore, fireRateWait, bulletDamage, verticalSpread, horizontalSpread, aimOffset));
         }
         else if (context.performed && !instance.Reloading)
         {
             holdingTrigger = true;
 
-            instance.StartCoroutine(autoGun.ShootAutoGun(instance, autoGun, shootFrom, gameObject, layerToIgnore, fireRateWait, bulletDamage, verticalSpread, horizontalSpread));
+            instance.StartCoroutine(autoGun.ShootAutoGun(instance, autoGun, shootFrom, gameObject, layerToIgnore, fireRateWait, bulletDamage, verticalSpread, horizontalSpread, aimOffset));
         }
     }
 
-    private IEnumerator ShootAutoGun(GunHandler instance, AutoGun autoGun, Transform shootFrom, GameObject gameObject, LayerMask layerToIgnore, WaitForSeconds fireRateWait, float bulletDamage, float verticalSpread, float horizontalSpread)
+    private IEnumerator ShootAutoGun(GunHandler instance, AutoGun autoGun, Transform shootFrom, GameObject gameObject, LayerMask layerToIgnore, WaitForSeconds fireRateWait, float bulletDamage, float verticalSpread, float horizontalSpread, float aimOffset)
     {
         if (!instance.Reloading && instance.AutoGunCurrentAmmo > 0)
         {
@@ -46,7 +46,7 @@ public class AutoGun : MonoBehaviour, IGun
             lineRenderer.endWidth = 0.1f;
             
             Vector3 aimSpot = instance.FPSCam.transform.position;
-            aimSpot += instance.FPSCam.transform.forward * 30f;
+            aimSpot += instance.FPSCam.transform.forward * aimOffset;
             shootFrom.LookAt(aimSpot);
 
             Vector3 direction = shootFrom.transform.forward; // your initial aim.
@@ -97,7 +97,7 @@ public class AutoGun : MonoBehaviour, IGun
 
             if (holdingTrigger && !instance.Reloading)
             {
-                instance.StartCoroutine(autoGun.ShootAutoGun(instance, autoGun, shootFrom, gameObject, layerToIgnore, fireRateWait, bulletDamage, verticalSpread, horizontalSpread));
+                instance.StartCoroutine(autoGun.ShootAutoGun(instance, autoGun, shootFrom, gameObject, layerToIgnore, fireRateWait, bulletDamage, verticalSpread, horizontalSpread, aimOffset));
             }
         }
     }

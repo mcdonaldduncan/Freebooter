@@ -14,7 +14,7 @@ public class ShotGun : MonoBehaviour, IGun
         GunHandler.weaponSwitched -= OnWeaponSwitch;
     }
 
-    public static void Shoot(Camera fpsCam, Transform shootFrom, GameObject gameObject, LayerMask layerToIgnore, float bulletDamage, float shotGunBulletAmount, float verticalSpread, float horizontalSpread)
+    public static void Shoot(Camera fpsCam, Transform shootFrom, GameObject gameObject, LayerMask layerToIgnore, float bulletDamage, float shotGunBulletAmount, float verticalSpread, float horizontalSpread, float aimOffset)
     {
         for (int i = 0; i < shotGunBulletAmount; i++)
         {
@@ -24,7 +24,7 @@ public class ShotGun : MonoBehaviour, IGun
             lineRenderer.endWidth = 0.1f;
 
             Vector3 aimSpot = fpsCam.transform.position;
-            aimSpot += fpsCam.transform.forward * 30f;
+            aimSpot += fpsCam.transform.forward * aimOffset;
             shootFrom.LookAt(aimSpot);
 
             Vector3 direction = shootFrom.transform.forward; // your initial aim.

@@ -514,6 +514,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         characterController.Move(moveDirection * Time.deltaTime);
     }
 
+    //TODO: Consider using OverlapSpheres instead of raycasts as this might help with stutter
     private void CheckForWall()
     {
         //Parameters in order: start point, direction, store hit info, distance, layermask
