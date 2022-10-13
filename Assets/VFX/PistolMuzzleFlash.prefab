@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5050686683678626758}
   - component: {fileID: 5161121784220697574}
   m_Layer: 0
-  m_Name: MuzzleFlash
+  m_Name: PistolMuzzleFlash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -285,8 +285,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 1.5
-      minScalar: 0.5
+      scalar: 0.5
+      minScalar: 0.2
       maxCurve:
         serializedVersion: 2
         m_Curve:
