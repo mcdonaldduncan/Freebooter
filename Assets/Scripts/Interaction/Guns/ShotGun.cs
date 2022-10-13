@@ -14,7 +14,7 @@ public class ShotGun : MonoBehaviour, IGun
         GunHandler.weaponSwitched -= OnWeaponSwitch;
     }
 
-    public static void Shoot(Camera fpsCam, Transform shootFrom, GameObject gameObject, LayerMask layerToIgnore, float bulletDamage, float shotGunBulletAmount, float verticalSpread, float horizontalSpread, float aimOffset)
+    public static void Shoot(Camera fpsCam, Transform shootFrom, GameObject gameObject, LayerMask layerToIgnore, float bulletDamage, float shotGunBulletAmount, float verticalSpread, float horizontalSpread, float aimOffset, GameObject hitenemy, GameObject hitNONenemy)
     {
         for (int i = 0; i < shotGunBulletAmount; i++)
         {
@@ -56,10 +56,14 @@ public class ShotGun : MonoBehaviour, IGun
 
                         Debug.Log($"{hitInfo.transform.name}: {damageableTarget.Health}");
                         Debug.Log($"TakeDamage Dealt: {totalDamage}");
+                        Instantiate(hitenemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                        //hitenemy.Play();
                     }
                     catch
                     {
                         Debug.Log("Not an IDamageable");
+                        Instantiate(hitNONenemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                        //hitNONenemy.Play();
                     }
                 }
             }

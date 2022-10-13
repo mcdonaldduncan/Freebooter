@@ -17,22 +17,22 @@ public class AutoGun : MonoBehaviour, IGun
         GunHandler.weaponSwitched -= OnWeaponSwitch;
     }
 
-    public static void Shoot(GunHandler instance, AutoGun autoGun, Transform shootFrom, GameObject gameObject, LayerMask layerToIgnore, InputAction.CallbackContext context, WaitForSeconds fireRateWait, float bulletDamage, float verticalSpread, float horizontalSpread, float aimOffset)
+    public static void Shoot(GunHandler instance, AutoGun autoGun, Transform shootFrom, GameObject gameObject, LayerMask layerToIgnore, InputAction.CallbackContext context, WaitForSeconds fireRateWait, float bulletDamage, float verticalSpread, float horizontalSpread, float aimOffset, GameObject hitEnemy, GameObject HitNONEnemy)
     {
         if (context.canceled)
         {
             holdingTrigger = false;
-            instance.StopCoroutine(autoGun.ShootAutoGun(instance, autoGun, shootFrom, gameObject, layerToIgnore, fireRateWait, bulletDamage, verticalSpread, horizontalSpread, aimOffset));
+            instance.StopCoroutine(autoGun.ShootAutoGun(instance, autoGun, shootFrom, gameObject, layerToIgnore, fireRateWait, bulletDamage, verticalSpread, horizontalSpread, aimOffset,hitEnemy,HitNONEnemy));
         }
         else if (context.performed && !instance.Reloading)
         {
             holdingTrigger = true;
 
-            instance.StartCoroutine(autoGun.ShootAutoGun(instance, autoGun, shootFrom, gameObject, layerToIgnore, fireRateWait, bulletDamage, verticalSpread, horizontalSpread, aimOffset));
+            instance.StartCoroutine(autoGun.ShootAutoGun(instance, autoGun, shootFrom, gameObject, layerToIgnore, fireRateWait, bulletDamage, verticalSpread, horizontalSpread, aimOffset, hitEnemy, HitNONEnemy));
         }
     }
 
-    private IEnumerator ShootAutoGun(GunHandler instance, AutoGun autoGun, Transform shootFrom, GameObject gameObject, LayerMask layerToIgnore, WaitForSeconds fireRateWait, float bulletDamage, float verticalSpread, float horizontalSpread, float aimOffset)
+    private IEnumerator ShootAutoGun(GunHandler instance, AutoGun autoGun, Transform shootFrom, GameObject gameObject, LayerMask layerToIgnore, WaitForSeconds fireRateWait, float bulletDamage, float verticalSpread, float horizontalSpread, float aimOffset, GameObject hitEnemy, GameObject hitNONenemy)
     {
         if (!instance.Reloading && instance.AutoGunCurrentAmmo > 0)
         {
@@ -78,10 +78,12 @@ public class AutoGun : MonoBehaviour, IGun
 
                         Debug.Log($"{hitInfo.transform.name}: {damageableTarget.Health}");
                         Debug.Log($"TakeDamage Dealt: {totalDamage}");
+                        Instantiate(hitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
                     }
                     catch
                     {
                         Debug.Log("Not an IDamageable");
+                        Instantiate(hitNONenemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
                     }
                 }
             }
@@ -97,7 +99,7 @@ public class AutoGun : MonoBehaviour, IGun
 
             if (holdingTrigger && !instance.Reloading)
             {
-                instance.StartCoroutine(autoGun.ShootAutoGun(instance, autoGun, shootFrom, gameObject, layerToIgnore, fireRateWait, bulletDamage, verticalSpread, horizontalSpread, aimOffset));
+                instance.StartCoroutine(autoGun.ShootAutoGun(instance, autoGun, shootFrom, gameObject, layerToIgnore, fireRateWait, bulletDamage, verticalSpread, horizontalSpread, aimOffset, hitEnemy, hitNONenemy));
             }
         }
     }

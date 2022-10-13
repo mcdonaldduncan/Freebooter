@@ -14,7 +14,7 @@ public class HandGun : MonoBehaviour, IGun
         GunHandler.weaponSwitched -= OnWeaponSwitch;
     }
 
-    public static void Shoot(Camera fpsCam, Transform shootFrom, GameObject gameObject, LayerMask layerToIgnore, float bulletDamage, float verticalSpread, float horizontalSpread, float aimOffset)
+    public static void Shoot(Camera fpsCam, Transform shootFrom, GameObject gameObject, LayerMask layerToIgnore, float bulletDamage, float verticalSpread, float horizontalSpread, float aimOffset, GameObject hitenemy, GameObject hitNONenemy)
     {
         RaycastHit hitInfo;
 
@@ -49,11 +49,14 @@ public class HandGun : MonoBehaviour, IGun
                 damageableTarget.TakeDamage(bulletDamage / (Mathf.Abs(distance / 2)));
 
                 Debug.Log($"{hitInfo.transform.name}: {damageableTarget.Health}");
+                Instantiate(hitenemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+
             }
             catch
             {
                 Debug.Log($"Hit {hitInfo.transform.name}");
                 Debug.Log("Not an IDamageable");
+                Instantiate(hitNONenemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
             }
         }
         else
@@ -64,7 +67,7 @@ public class HandGun : MonoBehaviour, IGun
             lineRenderer.SetPosition(1, shootFrom.transform.position + direction * 10);
         }
     }
-
+    
     public static void StartReload(GunHandler instance, HandGun handGun, WaitForSeconds reloadWait)
     {
         instance.StartCoroutine(handGun.Reload(instance, reloadWait));

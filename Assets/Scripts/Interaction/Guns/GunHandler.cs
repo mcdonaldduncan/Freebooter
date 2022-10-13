@@ -107,6 +107,10 @@ public class GunHandler : MonoBehaviour
     private Dictionary<int, IGun> gunDict;
     private Dictionary<GunType, WaitForSeconds> gunReloadWaitDict;
 
+    //Particle Effects for the bullet collision.
+    [SerializeField] private GameObject hitEnemy;
+    [SerializeField] private GameObject hitNONEnemy;
+
     private void Awake()
     {
         autoGun = gameObject.AddComponent<AutoGun>();
@@ -197,11 +201,11 @@ public class GunHandler : MonoBehaviour
     {
         if (currentGun == GunType.autoGun && autoGunCurrentAmmo > 0 && !reloading)
         {
-            AutoGun.Shoot(this, autoGun, shootFrom, gameObject, playerLayer, context, fireRateWait, autoGunBulletDamage, autoGunVerticalSpread, autoGunHorizontalSpread, autoGunAimOffset);
+            AutoGun.Shoot(this, autoGun, shootFrom, gameObject, playerLayer, context, fireRateWait, autoGunBulletDamage, autoGunVerticalSpread, autoGunHorizontalSpread, autoGunAimOffset, hitEnemy, hitNONEnemy);
         }
         if ((currentGun == GunType.handGun || currentGun == GunType.longGun) && context.performed && handGunCurrentAmmo > 0 && !reloading)
         {
-            HandGun.Shoot(fpsCam, shootFrom, gameObject, playerLayer, handGunBulletDamage, handGunVerticalSpread, handGunHorizontalSpread, handGunAimOffset);
+            HandGun.Shoot(fpsCam, shootFrom, gameObject, playerLayer, handGunBulletDamage, handGunVerticalSpread, handGunHorizontalSpread, handGunAimOffset,hitEnemy,hitNONEnemy);
             if (!infiniteAmmo)
             {
                 handGunCurrentAmmo--;
@@ -210,14 +214,13 @@ public class GunHandler : MonoBehaviour
         
         if (currentGun == GunType.shotGun && context.performed && shotGunCurrentAmmo > 0 && !reloading)
         {
-            ShotGun.Shoot(fpsCam, shootFrom, gameObject, playerLayer, shotGunBulletDamage, shotGunBulletAmount, shotGunVerticalSpread, shotGunHorizontalSpread, shotGunAimOffset);
+            ShotGun.Shoot(fpsCam, shootFrom, gameObject, playerLayer, shotGunBulletDamage, shotGunBulletAmount, shotGunVerticalSpread, shotGunHorizontalSpread, shotGunAimOffset,hitEnemy,hitNONEnemy);
             if (!infiniteAmmo)
             {
                 shotGunCurrentAmmo--;
             }
         }
     }
-
     public void Reload(InputAction.CallbackContext context)
     {
         if (currentGun == GunType.autoGun && autoGunCurrentAmmo < autoGunMaxAmmo && !reloading)
