@@ -56,14 +56,14 @@ public class ShotGun : MonoBehaviour, IGun
 
                         Debug.Log($"{hitInfo.transform.name}: {damageableTarget.Health}");
                         Debug.Log($"TakeDamage Dealt: {totalDamage}");
-                        Instantiate(hitenemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-                        //hitenemy.Play();
+                        var p =Instantiate(hitenemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                        Destroy(p, 1);
                     }
                     catch
                     {
                         Debug.Log("Not an IDamageable");
-                        Instantiate(hitNONenemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-                        //hitNONenemy.Play();
+                        var p = Instantiate(hitNONenemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                        Destroy(p, 1);
                     }
                 }
             }

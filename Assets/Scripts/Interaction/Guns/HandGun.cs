@@ -49,14 +49,16 @@ public class HandGun : MonoBehaviour, IGun
                 damageableTarget.TakeDamage(bulletDamage / (Mathf.Abs(distance / 2)));
 
                 Debug.Log($"{hitInfo.transform.name}: {damageableTarget.Health}");
-                Instantiate(hitenemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                var p = Instantiate(hitenemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                Destroy(p, 1);
 
             }
             catch
             {
                 Debug.Log($"Hit {hitInfo.transform.name}");
                 Debug.Log("Not an IDamageable");
-                Instantiate(hitNONenemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                var p = Instantiate(hitNONenemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                Destroy(p,1);
             }
         }
         else
