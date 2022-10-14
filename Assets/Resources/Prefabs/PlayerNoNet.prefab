@@ -341,6 +341,7 @@ MonoBehaviour:
   handGunCurrentAmmo: 0
   handGunMaxAmmo: 10
   handGunReloadTime: 3
+  handGunAimOffset: 15
   shotGunBulletDamage: 30
   shotGunBulletAmount: 12
   shotGunVerticalSpread: 10
@@ -348,6 +349,7 @@ MonoBehaviour:
   shotGunCurrentAmmo: 0
   shotGunMaxAmmo: 12
   shotGunReloadTime: 5
+  shotGunAimOffset: 15
   autoGunBulletDamage: 25
   autoGunHorizontalSpread: 0
   autoGunVerticalSpread: 0
@@ -355,8 +357,11 @@ MonoBehaviour:
   autoGunMaxAmmo: 30
   autoGunReloadTime: 5
   fireRate: 0.2
+  autoGunAimOffset: 15
   longGunBulletDamage: 10
   gunInventory: []
+  hitEnemy: {fileID: 8781331233716584084, guid: e48bb5898f7e7a347aa4ffb1f06b9b11, type: 3}
+  hitNONEnemy: {fileID: 122632, guid: 47a6eaf00da4f324a9167c487dff2f4c, type: 3}
 --- !u!1 &297426594678655177
 GameObject:
   m_ObjectHideFlags: 0

@@ -42,8 +42,8 @@ public class AutoGun : MonoBehaviour, IGun
             }
             GameObject lineDrawer = new GameObject();
             LineRenderer lineRenderer = lineDrawer.AddComponent<LineRenderer>();
-            lineRenderer.startWidth = 0.1f;
-            lineRenderer.endWidth = 0.1f;
+            lineRenderer.startWidth = 0.025f;
+            lineRenderer.endWidth = 0.025f;
             
             Vector3 aimSpot = instance.FPSCam.transform.position;
             aimSpot += instance.FPSCam.transform.forward * aimOffset;
