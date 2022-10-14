@@ -38,6 +38,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
     {
         if (Health <= 0)
         {
+            this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
             Destroy(gameObject);
         }
         else

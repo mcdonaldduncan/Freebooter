@@ -2,18 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OnDestroyCheckForDrops : MonoBehaviour
+public class CheckForDrops : MonoBehaviour
 {
     PowerUpManager powerUpManager;
     GameObject powerUpManagerGO;
+    IDamageable d;
+    bool checkOnce = true;
+    
     private void Start()
     {
         powerUpManagerGO = GameObject.Find("PowerUP_Manager");
         powerUpManager = powerUpManagerGO.GetComponent<PowerUpManager>();
     }
-    private void OnDestroy()
+    public void DropOrNot()
     {
-        powerUpManager.CheckForDrops(this.transform);
-        Debug.Log("called");
+        if (checkOnce == true)
+        {
+            powerUpManager.CheckForDrops(this.transform);
+            checkOnce = false;
+        }  
     }
 }

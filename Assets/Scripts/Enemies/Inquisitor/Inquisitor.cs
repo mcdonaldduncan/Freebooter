@@ -36,6 +36,7 @@ public class Inquisitor : MonoBehaviour, IDamageable
     {
         if (Health <= 0)
         {
+            this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
             Debug.Log("Inquisitor Destroyed");
             Destroy(gameObject);
         }
