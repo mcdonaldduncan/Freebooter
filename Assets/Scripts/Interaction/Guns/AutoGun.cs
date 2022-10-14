@@ -17,6 +17,7 @@ public class AutoGun : MonoBehaviour, IGun
         GunHandler.weaponSwitched -= OnWeaponSwitch;
     }
 
+    //Doesn't need to be static anymore since this script is added as a component now
     public static void Shoot(GunHandler instance, AutoGun autoGun, Transform shootFrom, GameObject gameObject, LayerMask layerToIgnore, InputAction.CallbackContext context, WaitForSeconds fireRateWait, float bulletDamage, float verticalSpread, float horizontalSpread, float aimOffset, GameObject hitEnemy, GameObject HitNONEnemy)
     {
         if (context.canceled)
