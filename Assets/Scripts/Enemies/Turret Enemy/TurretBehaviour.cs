@@ -47,7 +47,7 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
        state = TurretState.LookingForTarget;
        rotationType = TurretRotationType.full;
     }
-    void Update()
+    void FixedUpdate()
     {
         switch (state) //handles what the turret shhould be doing at cetain states.
         {

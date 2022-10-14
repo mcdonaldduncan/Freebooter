@@ -54,7 +54,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
         originalrot = this.transform.rotation;
     }
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         switch (st)
         {
@@ -84,16 +84,12 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
     void Aim() //This is pointing the soldier towards the player as long as he is in range
     {
         float tempSpeed = rotationspeed;
-        rotation = Quaternion.LookRotation(targetDiretion);
         if (Vector3.Distance(this.transform.position, target.transform.position) < range)
         {
             targetDiretion = target.transform.position - transform.position;
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, new Quaternion(0, rotation.y, 0, rotation.w), tempSpeed * Time.deltaTime * rotationspeed);
+            rotation = Quaternion.LookRotation(targetDiretion);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, tempSpeed * Time.deltaTime * 180);
         }
-       
-            // Lerp can be somewhat low performance because it starts dealing with extremely small increments at the end,
-            // rotateTowards keeps the movement constant in degree/second
-            
     }
     
     void LineOfSightWithPlayer()

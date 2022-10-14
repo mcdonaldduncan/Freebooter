@@ -52,7 +52,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable
         originalrot = this.transform.rotation;
     }
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         switch (st)
         {
@@ -86,7 +86,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable
         {
             targetDiretion = target.transform.position - transform.position;
             rotation = Quaternion.LookRotation(targetDiretion);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, 360);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, tempSpeed * Time.deltaTime * 180);
         }
 
     }
