@@ -3,14 +3,31 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Random = UnityEngine.Random;
 
 public class GunHandler : MonoBehaviour
 {
-    [SerializeField]
-    private enum GunType
+    //TODO: Consider making ammo properties in interface and implementing into different guntypes, as this would prevent the need for passing so many parameters
+    public GunType CurrentGun { get { return currentGun; } }
+    public Camera FPSCam { get { return fpsCam; } }
+
+    public int HandGunCurrentAmmo { get { return handGunCurrentAmmo; } set { handGunCurrentAmmo = value; } }
+    public int HandGunMaxAmmo { get { return handGunMaxAmmo; } }
+    public int ShotGunCurrentAmmo { get { return shotGunCurrentAmmo; } set { shotGunCurrentAmmo = value; } }
+    public int ShotGunMaxAmmo { get { return shotGunMaxAmmo; } }
+    public int AutoGunCurrentAmmo { get { return autoGunCurrentAmmo; } set { autoGunCurrentAmmo = value; } }
+    public int AutoGunMaxAmmo { get { return autoGunMaxAmmo; } }
+
+    public bool Reloading { get { return reloading; } set { reloading = value; } }
+    public bool InfiniteAmmo { get { return infiniteAmmo; } }
+
+    public delegate void GunSwitchDelegate(GunHandler instance, IGun gun, WaitForSeconds reloadWait);
+    public static GunSwitchDelegate weaponSwitched;
+
+    public enum GunType
     {
         handGun,
         shotGun,
@@ -19,21 +36,25 @@ public class GunHandler : MonoBehaviour
     }
 
     [Header("Gun Handler Parameters")]
-    [SerializeField] private GunType gunType;
+    [SerializeField] private GunType currentGun;
     [SerializeField] private Transform shootFrom;
+    [SerializeField] private Camera fpsCam;
     [SerializeField] private LayerMask playerLayer;
     [SerializeField] private TextMeshProUGUI ammoText;
+    [SerializeField] private bool reloading;
+    [SerializeField] private bool infiniteAmmo;
     private int ammoUI;
-    public bool reloading;
 
 
     [Header("Handgun Parameters")]
     [SerializeField] private float handGunBulletDamage = 10f;
     [SerializeField] private float handGunVerticalSpread;
     [SerializeField] private float handGunHorizontalSpread;
-    public int handGunCurrentAmmo;
-    public int handGunMaxAmmo;
+    [SerializeField] private int handGunCurrentAmmo;
+    [SerializeField] private int handGunMaxAmmo;
     [SerializeField] private float handGunReloadTime;
+    [Tooltip("This will offset how the shot is centered from the tip of the gun")]
+    [SerializeField] private float handGunAimOffset = 15f;
 
     [Header("Shotgun Parameters")]
     [Tooltip("This will apply to EACH 'bullet' the shotgun fires")]
@@ -43,18 +64,22 @@ public class GunHandler : MonoBehaviour
     [SerializeField] private float shotGunVerticalSpread;
     [Tooltip("Increase for wider horizontal spread. This will be used to a find a random number between the negative of this and the positive.")]
     [SerializeField] private float shotGunHorizontalSpread;
-    public int shotGunCurrentAmmo;
-    public int shotGunMaxAmmo;
+    [SerializeField] private int shotGunCurrentAmmo;
+    [SerializeField] private int shotGunMaxAmmo;
     [SerializeField] private float shotGunReloadTime;
+    [Tooltip("This will offset how the shot is centered from the tip of the gun")]
+    [SerializeField] private float shotGunAimOffset = 15f;
 
     [Header("Autogun Parameters")]
     [SerializeField] private float autoGunBulletDamage = 10f;
     [SerializeField] private float autoGunHorizontalSpread;
     [SerializeField] private float autoGunVerticalSpread;
-    public int autoGunCurrentAmmo;
-    public int autoGunMaxAmmo;
+    [SerializeField] private int autoGunCurrentAmmo;
+    [SerializeField] private int autoGunMaxAmmo;
     [SerializeField] private float autoGunReloadTime;
     [SerializeField] private float fireRate;
+    [Tooltip("This will offset how the shot is centered from the tip of the gun")]
+    [SerializeField] private float autoGunAimOffset = 15f;
 
     [Header("Longgun Parameters")]
     [SerializeField] private float longGunBulletDamage = 10f;
@@ -77,22 +102,48 @@ public class GunHandler : MonoBehaviour
     private WaitForSeconds shotGunReloadWait;
     private WaitForSeconds autoGunReloadWait;
 
-    private void Start()
+    private Renderer gunRenderer;
+
+    private Dictionary<int, IGun> gunDict;
+    private Dictionary<GunType, WaitForSeconds> gunReloadWaitDict;
+
+    //Particle Effects for the bullet collision.
+    [SerializeField] private GameObject hitEnemy;
+    [SerializeField] private GameObject hitNONEnemy;
+
+    private void Awake()
     {
-        handGunCurrentAmmo = handGunMaxAmmo;
-        shotGunCurrentAmmo = shotGunMaxAmmo;
-        autoGunCurrentAmmo = autoGunMaxAmmo;
+        autoGun = gameObject.AddComponent<AutoGun>();
+        handGun = gameObject.AddComponent<HandGun>();
+        shotGun = gameObject.AddComponent<ShotGun>();
+
+        gunDict = new Dictionary<int, IGun>();
+        gunReloadWaitDict = new Dictionary<GunType, WaitForSeconds>();
 
         fireRateWait = new WaitForSeconds(fireRate);
         handGunReloadWait = new WaitForSeconds(handGunReloadTime);
         shotGunReloadWait = new WaitForSeconds(shotGunReloadTime);
         autoGunReloadWait = new WaitForSeconds(autoGunReloadTime);
 
-        autoGun = new AutoGun();
-        handGun = new HandGun();
-        shotGun = new ShotGun();
+        gunRenderer = gameObject.GetComponent<Renderer>();
 
         lineDrawer = new GameObject();
+    }
+
+    private void Start()
+    {
+        handGunCurrentAmmo = handGunMaxAmmo;
+        shotGunCurrentAmmo = shotGunMaxAmmo;
+        autoGunCurrentAmmo = autoGunMaxAmmo;
+
+        gunDict.Add(Array.IndexOf(guns, GunType.handGun), handGun);
+        gunDict.Add(Array.IndexOf(guns, GunType.shotGun), shotGun);
+        gunDict.Add(Array.IndexOf(guns, GunType.autoGun), autoGun);
+
+        gunReloadWaitDict.Add(GunType.handGun, handGunReloadWait);
+        gunReloadWaitDict.Add(GunType.shotGun, shotGunReloadWait);
+        gunReloadWaitDict.Add(GunType.autoGun, autoGunReloadWait);
+
         lineRenderer = lineDrawer.AddComponent<LineRenderer>();
         lineRenderer.startWidth = 0.1f;
         lineRenderer.endWidth = 0.1f;
@@ -100,15 +151,24 @@ public class GunHandler : MonoBehaviour
 
     private void Update()
     {
-        if (gunType == GunType.autoGun)
+        if (reloading)
+        {
+            gunRenderer.material.color = Color.red;
+        }
+        else
+        {
+            gunRenderer.material.color = default;
+        }
+
+        if (currentGun == GunType.autoGun)
         {
             ammoUI = autoGunCurrentAmmo;
         }
-        else if (gunType == GunType.handGun)
+        else if (currentGun == GunType.handGun)
         {
             ammoUI = handGunCurrentAmmo;
         }
-        else if (gunType == GunType.shotGun)
+        else if (currentGun == GunType.shotGun)
         {
             ammoUI = shotGunCurrentAmmo;
         }
@@ -118,49 +178,62 @@ public class GunHandler : MonoBehaviour
 
     public void SwitchWeapon(InputAction.CallbackContext context)
     {
-        if (gunType != guns.Last())
+        if (currentGun != guns.Last())
         {
-            gunType = guns[Array.IndexOf(guns, gunType) + 1];
+            currentGun = guns[Array.IndexOf(guns, currentGun) + 1];
         }
         else
         {
-            gunType = guns[0];
+            currentGun = guns[0];
         }
-        Debug.Log($"Equipped gun: {gunType.ToString()}");
+
+        if (reloading)
+        {
+            WaitForSeconds reloadToInvoke = gunReloadWaitDict[currentGun];
+
+            weaponSwitched?.Invoke(this, gunDict[Array.IndexOf(guns, currentGun)], reloadToInvoke);
+        }
+
+        Debug.Log($"Equipped gun: {currentGun.ToString()}");
     }
 
     public void Shoot(InputAction.CallbackContext context)
     {
-        if (gunType == GunType.autoGun && autoGunCurrentAmmo > 0 && !reloading)
+        if (currentGun == GunType.autoGun && autoGunCurrentAmmo > 0 && !reloading)
         {
-            AutoGun.Shoot(this, autoGun, shootFrom, gameObject, playerLayer, context, fireRateWait, autoGunBulletDamage, autoGunVerticalSpread, autoGunHorizontalSpread);
+            AutoGun.Shoot(this, autoGun, shootFrom, gameObject, playerLayer, context, fireRateWait, autoGunBulletDamage, autoGunVerticalSpread, autoGunHorizontalSpread, autoGunAimOffset, hitEnemy, hitNONEnemy);
         }
-        if ((gunType == GunType.handGun || gunType == GunType.longGun) && context.performed && handGunCurrentAmmo > 0 && !reloading)
+        if ((currentGun == GunType.handGun || currentGun == GunType.longGun) && context.performed && handGunCurrentAmmo > 0 && !reloading)
         {
-            HandGun.Shoot(shootFrom, gameObject, playerLayer, handGunBulletDamage, handGunVerticalSpread, handGunHorizontalSpread);
-            handGunCurrentAmmo--;
+            HandGun.Shoot(fpsCam, shootFrom, gameObject, playerLayer, handGunBulletDamage, handGunVerticalSpread, handGunHorizontalSpread, handGunAimOffset,hitEnemy,hitNONEnemy);
+            if (!infiniteAmmo)
+            {
+                handGunCurrentAmmo--;
+            }
         }
         
-        if (gunType == GunType.shotGun && context.performed && shotGunCurrentAmmo > 0 && !reloading)
+        if (currentGun == GunType.shotGun && context.performed && shotGunCurrentAmmo > 0 && !reloading)
         {
-            ShotGun.Shoot(shootFrom, gameObject, playerLayer, shotGunBulletDamage, shotGunBulletAmount, shotGunVerticalSpread, shotGunHorizontalSpread);
-            shotGunCurrentAmmo--;
+            ShotGun.Shoot(fpsCam, shootFrom, gameObject, playerLayer, shotGunBulletDamage, shotGunBulletAmount, shotGunVerticalSpread, shotGunHorizontalSpread, shotGunAimOffset,hitEnemy,hitNONEnemy);
+            if (!infiniteAmmo)
+            {
+                shotGunCurrentAmmo--;
+            }
         }
     }
-
     public void Reload(InputAction.CallbackContext context)
     {
-        if (gunType == GunType.autoGun && autoGunCurrentAmmo < autoGunMaxAmmo && !reloading)
+        if (currentGun == GunType.autoGun && autoGunCurrentAmmo < autoGunMaxAmmo && !reloading)
         {
             AutoGun.StartReload(this, autoGun, autoGunReloadWait);
         }
 
-        if (gunType == GunType.handGun && handGunCurrentAmmo < handGunMaxAmmo && !reloading)
+        if (currentGun == GunType.handGun && handGunCurrentAmmo < handGunMaxAmmo && !reloading)
         {
             HandGun.StartReload(this, handGun, handGunReloadWait);
         }
 
-        if (gunType == GunType.shotGun && shotGunCurrentAmmo < shotGunMaxAmmo && !reloading)
+        if (currentGun == GunType.shotGun && shotGunCurrentAmmo < shotGunMaxAmmo && !reloading)
         {
             ShotGun.StartReload(this, shotGun, shotGunReloadWait);
         }

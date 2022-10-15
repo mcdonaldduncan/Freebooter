@@ -3,16 +3,30 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class ShotGun : MonoBehaviour
+public class ShotGun : MonoBehaviour, IGun
 {
-    public static void Shoot(Transform shootFrom, GameObject gameObject, LayerMask layerToIgnore, float bulletDamage, float shotGunBulletAmount, float verticalSpread, float horizontalSpread)
+    private void OnEnable()
+    {
+        GunHandler.weaponSwitched += OnWeaponSwitch;
+    }
+    private void OnDisable()
+    {
+        GunHandler.weaponSwitched -= OnWeaponSwitch;
+    }
+
+    //Doesn't need to be static anymore since this script is added as a component now
+    public static void Shoot(Camera fpsCam, Transform shootFrom, GameObject gameObject, LayerMask layerToIgnore, float bulletDamage, float shotGunBulletAmount, float verticalSpread, float horizontalSpread, float aimOffset, GameObject hitenemy, GameObject hitNONenemy)
     {
         for (int i = 0; i < shotGunBulletAmount; i++)
         {
             GameObject lineDrawer = new GameObject();
             LineRenderer lineRenderer = lineDrawer.AddComponent<LineRenderer>();
-            lineRenderer.startWidth = 0.1f;
-            lineRenderer.endWidth = 0.1f;
+            lineRenderer.startWidth = 0.025f;
+            lineRenderer.endWidth = 0.025f;
+
+            Vector3 aimSpot = fpsCam.transform.position;
+            aimSpot += fpsCam.transform.forward * aimOffset;
+            shootFrom.LookAt(aimSpot);
 
             Vector3 direction = shootFrom.transform.forward; // your initial aim.
             Vector3 spread = Vector3.zero;
@@ -22,7 +36,7 @@ public class ShotGun : MonoBehaviour
 
             RaycastHit hitInfo;
 
-            if (Physics.Raycast(shootFrom.transform.position, direction, out hitInfo, 100f, ~layerToIgnore))
+            if (Physics.Raycast(shootFrom.transform.position, direction, out hitInfo, float.MaxValue, ~layerToIgnore))
             {
 
                 Debug.DrawLine(shootFrom.transform.position, hitInfo.point, Color.green, 1f);
@@ -39,14 +53,18 @@ public class ShotGun : MonoBehaviour
 
                         float distance = Vector3.Distance(targetPosition, gameObject.transform.position);
                         float totalDamage = Mathf.Abs(bulletDamage / ((distance / 2)));
-                        damageableTarget.Damage(totalDamage);
+                        damageableTarget.TakeDamage(totalDamage);
 
                         Debug.Log($"{hitInfo.transform.name}: {damageableTarget.Health}");
-                        Debug.Log($"Damage Dealt: {totalDamage}");
+                        Debug.Log($"TakeDamage Dealt: {totalDamage}");
+                        var p =Instantiate(hitenemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                        Destroy(p, 1);
                     }
                     catch
                     {
                         Debug.Log("Not an IDamageable");
+                        var p = Instantiate(hitNONenemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                        Destroy(p, 1);
                     }
                 }
             }
@@ -65,11 +83,16 @@ public class ShotGun : MonoBehaviour
         instance.StartCoroutine(shotGun.Reload(instance, reloadWait));
     }
 
-    private IEnumerator Reload(GunHandler instance, WaitForSeconds reloadWait)
+    public IEnumerator Reload(GunHandler instance, WaitForSeconds reloadWait)
     {
-        instance.reloading = true;
+        instance.Reloading = true;
         yield return reloadWait;
-        instance.reloading = false;
-        instance.shotGunCurrentAmmo = instance.shotGunMaxAmmo;
+        instance.Reloading = false;
+        instance.ShotGunCurrentAmmo = instance.ShotGunMaxAmmo;
+    }
+
+    private void OnWeaponSwitch(GunHandler instance, IGun shotGun, WaitForSeconds reloadWait)
+    {
+        StopCoroutine(shotGun.Reload(instance, reloadWait));
     }
 }

@@ -23,7 +23,7 @@ public class Inquisitor : MonoBehaviour, IDamageable
         potentialTargets = FindObjectsOfType<FirstPersonController>().Select(item => item.transform).ToList();
     }
 
-    public void Damage(float damageTaken)
+    public void TakeDamage(float damageTaken)
     {
         if (orbits.Any())
             return;
@@ -36,6 +36,7 @@ public class Inquisitor : MonoBehaviour, IDamageable
     {
         if (Health <= 0)
         {
+            this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
             Debug.Log("Inquisitor Destroyed");
             Destroy(gameObject);
         }

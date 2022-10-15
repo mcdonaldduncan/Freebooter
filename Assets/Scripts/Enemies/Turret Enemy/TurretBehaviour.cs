@@ -24,7 +24,7 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
 
     public float Health { get { return health; } set { health = value; } }
 
-    public void Damage(float damageTaken)
+    public void TakeDamage(float damageTaken)
     {
         Health -= damageTaken;
         CheckForDeath();
@@ -34,6 +34,7 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
     {
         if (Health <= 0)
         {
+            this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
             Destroy(gameObject);
         }
         else
@@ -46,7 +47,7 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
        state = TurretState.LookingForTarget;
        rotationType = TurretRotationType.full;
     }
-    void Update()
+    void FixedUpdate()
     {
         switch (state) //handles what the turret shhould be doing at cetain states.
         {

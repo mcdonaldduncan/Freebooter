@@ -10,19 +10,29 @@ public class Crate_MainMenu : MonoBehaviour, IDamageable
 
     public float Health { get { return health; } set { health = value; } }
 
-    public UnityEvent TriggerEventOnDestroy;
+    public UnityEvent TriggerEventOnDisable;
 
-    [SerializeField]
-    private GameObject myPrefab;
+    //[SerializeField]
+    //private GameObject myPrefab;
 
-    [SerializeField]
-    private Vector3 prefabPosition;
+    //[SerializeField]
+    //private Vector3 gameObjectPosition;
+
+    private RigidbodyConstraints defaultConstraints;
+    private Vector3 defaultPosition;
+
+    private void Start()
+    {
+        defaultConstraints = this.gameObject.GetComponent<Rigidbody>().constraints;
+        defaultPosition = this.gameObject.transform.position;
+    }
 
     public void CheckForDeath()
     {
         if (Health <= 0)
         {
-            Destroy(gameObject);
+            DisableAllComponents();
+            TriggerEventOnDisable.Invoke();
         }
         else
         {
@@ -30,20 +40,25 @@ public class Crate_MainMenu : MonoBehaviour, IDamageable
         }
     }
 
-    public void Damage(float damageTaken)
+    public void TakeDamage(float damageTaken)
     {
         Health -= damageTaken;
         CheckForDeath();
     }
 
-    private void OnDestroy()
+    private void DisableAllComponents()
     {
-        if (!this.gameObject.scene.isLoaded) return;
-        TriggerEventOnDestroy.Invoke();
+        this.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+        this.gameObject.GetComponent<MeshRenderer>().enabled = false;
+        this.gameObject.GetComponent<MeshCollider>().enabled = false;
     }
 
-    public void InstantiatePrefab()
+    public void ReturnToDefaults()
     {
-        Instantiate(myPrefab, prefabPosition, Quaternion.identity);
+        Health = 1f;
+        this.gameObject.GetComponent<Rigidbody>().constraints = defaultConstraints;
+        this.gameObject.transform.position = defaultPosition;
+        this.gameObject.GetComponent<MeshRenderer>().enabled = true;
+        this.gameObject.GetComponent<MeshCollider>().enabled = true;
     }
 }

@@ -4,19 +4,22 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-public class FirstPersonController : MonoBehaviour
+//TODO I'll abstract all this at some point lol
+public class FirstPersonController : MonoBehaviour, IDamageable
 {
     //properties used to help check whether player can use certain mechanics. These are mostly to keep the code clean and organized
     //Kind of a rudimentary/crude state machine
+    public float Health { get { return health; } set { health = value; } }
     public bool PlayerCanMove { get; private set; } = true;
     public bool PlayerIsDashing { get; private set; }
     public bool PlayerCanDash => dashesRemaining > dashesAllowed - dashesAllowed;
     //private bool PlayerIsSprinting => playerCanSprint && Input.GetKey(sprintKey) && !playerIsCrouching;
-    //private bool PlayerShouldJump => Input.GetKeyDown(jumpKey) && characterController.isGrounded && !playerIsCrouching;
     //private bool PlayerShouldCrouch => Input.GetKeyDown(crouchKey) && !playerInCrouchAnimation && characterController.isGrounded;
 
     //Checks used to see if player is able to use mechanics.
     [Header("Functional Options")]
+    [SerializeField]
+    private float health;
     [Tooltip("Is the player in the middle of a special movement, i.e. ladder climbing?")]
     [SerializeField]
     public bool playerOnSpecialMovement = false;
@@ -52,6 +55,8 @@ public class FirstPersonController : MonoBehaviour
 
     //Parameters for looking around with mouse
     [Header("Look Parameters")]
+    [SerializeField]
+    private bool restrictHorizontal;
     [SerializeField, Range(1, 10)]
     private float lookSpeedX = 2f;
     [SerializeField, Range(1, 10)]
@@ -60,6 +65,10 @@ public class FirstPersonController : MonoBehaviour
     private float upperLookLimit = 80f;
     [SerializeField, Range(1, 100)]
     private float lowerLookLimit = 80f;
+    [SerializeField, Range(1, 100)]
+    private float leftLookLimit = 80f;
+    [SerializeField, Range(1, 100)]
+    private float rightLookLimit = 80f;
 
     //Parameters for jump height and gravity
     [Header("Jumping Parameters")]
@@ -151,6 +160,7 @@ public class FirstPersonController : MonoBehaviour
     public Vector2 MoveInput { get; private set; }
 
     private float rotationX = 0f; //Camera rotation for clamping
+    private float rotationY = 0f;
 
     //private bool playerIsSprinting;
     private bool playerDashing;
@@ -338,11 +348,12 @@ public class FirstPersonController : MonoBehaviour
         else if (context.canceled)
         {
             playerShouldDash = false;
-            StopCoroutine(Dash());
+            playerDashing = false;
+            //StopCoroutine(Dash());
         }
     }
 
-
+    //TODO: Figure out why there's a weird stutter when falling after cancelling before second dash in midair
     private IEnumerator Dash()
     {
         dashesRemaining--;
@@ -366,11 +377,13 @@ public class FirstPersonController : MonoBehaviour
             yield return dashBetweenWait;
             StartCoroutine(Dash());
         }
-
-        playerDashing = false;
-        if (dashesRemaining < dashesAllowed && !dashOnCooldown)
+        else
         {
-            StartCoroutine(DashCooldown());
+            playerDashing = false;
+            if (dashesRemaining < dashesAllowed && !dashOnCooldown)
+            {
+                StartCoroutine(DashCooldown());
+            }
         }
     }
 
@@ -396,11 +409,21 @@ public class FirstPersonController : MonoBehaviour
 
     private void HandleMouseLook()
     {
-        //rotate camera around X and Y axis, and rotate player around x axis
         rotationX -= Input.GetAxis("Mouse Y") * lookSpeedY;
-        rotationX = Mathf.Clamp(rotationX, -upperLookLimit, lowerLookLimit); //clamp camera
-        playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
-        transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeedX, 0);
+        rotationX = Mathf.Clamp(rotationX, -upperLookLimit, lowerLookLimit);
+
+        if (restrictHorizontal)
+        {
+            //rotate camera around X and Y axis, and rotate player around x axis
+            rotationY += Input.GetAxis("Mouse X") * lookSpeedX;
+            rotationY = Mathf.Clamp(rotationY, -leftLookLimit, rightLookLimit);//clamp camera
+            playerCamera.transform.localRotation = Quaternion.Euler(rotationX, rotationY, 0);
+        }
+        else
+        {
+            playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
+            transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeedX, 0);
+        }
     }
 
     private void HandleJump(InputAction.CallbackContext context)
@@ -491,6 +514,7 @@ public class FirstPersonController : MonoBehaviour
         characterController.Move(moveDirection * Time.deltaTime);
     }
 
+    //TODO: Consider using OverlapSpheres instead of raycasts as this might help with stutter
     private void CheckForWall()
     {
         //Parameters in order: start point, direction, store hit info, distance, layermask
@@ -539,6 +563,22 @@ public class FirstPersonController : MonoBehaviour
 
         //move the player based on the parameters gathered in the "Handle-" functions
         characterController.Move(moveDirection * Time.deltaTime);
+    }
+
+    public void TakeDamage(float damageTaken)
+    {
+        Health -= damageTaken;
+        Debug.Log($"Player Health: { health }");
+        CheckForDeath();
+    }
+
+    public void CheckForDeath()
+    {
+        if (Health <= 0)
+        {
+            Debug.Log("Player died!");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
     }
 
     //KEEPING THIS INCASE WE WANT TO ADD CROUCHING

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class SoldierEnemyScript : MonoBehaviour
+public class SoldierEnemyScript : MonoBehaviour, IDamageable
 {
     
     private enum SoldierState {guard, wanderer, chase, originalSpot};
     [Tooltip("/ Guard = Stand in one place until the player breaks line of sight / Wanderer = walks around / Chase = when the soldier goes after the enemy")]
     [SerializeField] private SoldierState st;
-    [SerializeField] private SoldierState origianlst;
+    private SoldierState origianlst;
     [SerializeField] private GameObject target, tip, light, visionPoint;
     [SerializeField] private float rotationspeed, range;
     [SerializeField] private NavMeshAgent agent; 
@@ -28,7 +28,7 @@ public class SoldierEnemyScript : MonoBehaviour
 
     public float Health { get { return health; } set { health = value; } }
 
-    public void Damage(float damageTaken)
+    public void TakeDamage(float damageTaken)
     {
         Health -= damageTaken;
         CheckForDeath();
@@ -38,6 +38,7 @@ public class SoldierEnemyScript : MonoBehaviour
     {
         if (Health <= 0)
         {
+            this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
             Destroy(gameObject);
         }
         else
@@ -53,7 +54,7 @@ public class SoldierEnemyScript : MonoBehaviour
         originalrot = this.transform.rotation;
     }
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         switch (st)
         {
@@ -83,16 +84,12 @@ public class SoldierEnemyScript : MonoBehaviour
     void Aim() //This is pointing the soldier towards the player as long as he is in range
     {
         float tempSpeed = rotationspeed;
-        rotation = Quaternion.LookRotation(targetDiretion);
         if (Vector3.Distance(this.transform.position, target.transform.position) < range)
         {
             targetDiretion = target.transform.position - transform.position;
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, new Quaternion(0, rotation.y, 0, rotation.w), tempSpeed * Time.deltaTime * rotationspeed);
+            rotation = Quaternion.LookRotation(targetDiretion);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, tempSpeed * Time.deltaTime * 180);
         }
-       
-            // Lerp can be somewhat low performance because it starts dealing with extremely small increments at the end,
-            // rotateTowards keeps the movement constant in degree/second
-            
     }
     
     void LineOfSightWithPlayer()
@@ -150,7 +147,7 @@ public class SoldierEnemyScript : MonoBehaviour
         else if (Vector3.Distance(this.transform.position, wanderSpots[i].transform.position) >= wanderSpotOffset)
         {
           agent.SetDestination(wanderSpots[i].transform.position);
-          Debug.Log(wanderSpots[i].transform.position);
+          //Debug.Log(wanderSpots[i].transform.position);
         }
         
     }

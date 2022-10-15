@@ -243,6 +243,8 @@ GameObject:
   - component: {fileID: 3157978275881535246}
   - component: {fileID: 3157978275881535245}
   - component: {fileID: 3157978275881535244}
+  - component: {fileID: 705889269763705924}
+  - component: {fileID: 255220982}
   m_Layer: 9
   m_Name: SimpleSoldier
   m_TagString: Untagged
@@ -279,8 +281,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4ca285f011d447448bed18f84fbd965, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  st: 0
-  origianlst: 0
+  st: 1
   target: {fileID: 0}
   tip: {fileID: 3157978277362481391}
   light: {fileID: 3157978277342298331}
@@ -318,6 +319,32 @@ NavMeshAgent:
   m_BaseOffset: 0.89
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!136 &705889269763705924
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3157978275881535235}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.6768493
+  m_Height: 2.0935314
+  m_Direction: 1
+  m_Center: {x: -1.526355e-18, y: -0.052378535, z: 0.0005956888}
+--- !u!114 &255220982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3157978275881535235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b6371196a28d04468bd146636a4f6c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3157978276197552509
 GameObject:
   m_ObjectHideFlags: 0
@@ -403,7 +430,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3157978276382255860}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 19.940008, y: 2.1400003, z: -1.149998}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
