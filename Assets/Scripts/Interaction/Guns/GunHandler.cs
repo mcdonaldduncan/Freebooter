@@ -22,7 +22,7 @@ public class GunHandler : MonoBehaviour
     public int AutoGunMaxAmmo { get { return autoGunMaxAmmo; } }
 
     public bool Reloading { get { return reloading; } set { reloading = value; } }
-    public bool InfiniteAmmo { get { return infiniteAmmo; } }
+    public bool InfiniteAmmo; //{ get { return infiniteAmmo; } }
 
     public delegate void GunSwitchDelegate(GunHandler instance, IGun gun, WaitForSeconds reloadWait);
     public static GunSwitchDelegate weaponSwitched;
@@ -237,5 +237,13 @@ public class GunHandler : MonoBehaviour
         {
             ShotGun.StartReload(this, shotGun, shotGunReloadWait);
         }
+    }
+    public void InfAmmoActive()
+    {
+        infiniteAmmo = true;
+    }
+    public void InfAmmoInactive()
+    {
+        infiniteAmmo = false;
     }
 }
