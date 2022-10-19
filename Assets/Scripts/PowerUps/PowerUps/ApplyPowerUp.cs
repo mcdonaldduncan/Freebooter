@@ -13,10 +13,14 @@ public class ApplyPowerUp : MonoBehaviour
     [SerializeField] private GameObject PowerUpManagerGO;
     public float duration;
     bool oneTouch = false;
+
+    
+
+    
     // Start is called before the first frame update
     void Start()
     {
-        powerUpManager = PowerUpManagerGO.GetComponent<PowerUpManager>();
+        //powerUpManager = PowerUpManagerGO.GetComponent<PowerUpManager>();
         duration = 30;
     }
    
@@ -24,6 +28,8 @@ public class ApplyPowerUp : MonoBehaviour
     {
         if (oneTouch == false && other.tag == "Player")
         {
+            // the switch here is reduntant, you check the power type in intake data
+            /*
             switch (pt)
             {
                 case PowerType.Ammo:
@@ -38,6 +44,8 @@ public class ApplyPowerUp : MonoBehaviour
                 default:
                     break;
             }
+            */
+            PowerUpManager.Instance.IntakeData(duration, pt);
             oneTouch = true;
         }   
     }

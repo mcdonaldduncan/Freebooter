@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using static ApplyPowerUp;
 
-public class PowerUpManager : MonoBehaviour
+public class PowerUpManager : Singleton<PowerUpManager>
 {
     [SerializeField] private List<GameObject> powerups = new List<GameObject>();
     [SerializeField] private float dropRate;
@@ -20,6 +21,7 @@ public class PowerUpManager : MonoBehaviour
     [SerializeField] private Image Ammoimg, HealthImg, SpeedImg;
     float acr = .4f, alc, hcr = .4f, hlc, scr = .4f, slc;
     float healRate = 1.5f, lastHealed;
+
 
     void Start()
     {
@@ -46,7 +48,7 @@ public class PowerUpManager : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        Debug.Log("ApplyEffectSpeed!!!" + SpeedDuration + SpeedTimer + SpeedAPP);
+        //Debug.Log("ApplyEffectSpeed!!!" + SpeedDuration + SpeedTimer + SpeedAPP);
     }
     private void Update()
     {
@@ -54,11 +56,20 @@ public class PowerUpManager : MonoBehaviour
         UpdateTXT();
         Blink();
     }
+
+    // This method is UpdateTXT() but it also handles the timers
     void UpdateTXT()
     {
-        if (AmmoApp == false) { AmmoTXT.text = $""; }
-        else { AmmoTXT.text = $"{AmmoTimer.ToString("0.00")}"; AmmoTimer -= Time.deltaTime; Ammoimg.enabled = true; }
+        // in line statements dont need brackets
+        if (AmmoApp == false) AmmoTXT.text = $"";
+        else 
+        { 
+            AmmoTXT.text = $"{AmmoTimer.ToString("0.00")}"; 
+            AmmoTimer -= Time.deltaTime; 
+            Ammoimg.enabled = true; 
+        }
 
+        // This is not very readable
         if (HealthApp == false) { HealthTXT.text = $""; }
         else { HealthTXT.text = $"{HealthTimer.ToString("0.00")}"; HealthTimer -= Time.deltaTime; HealthImg.enabled = true; }
 
@@ -88,7 +99,7 @@ public class PowerUpManager : MonoBehaviour
             RemoveHealing();
             HealthImg.enabled = false;
         }
-        if (SpeedTimer > 0 &&SpeedAPP == true)
+        if (SpeedTimer > 0 && SpeedAPP == true)
         {
             ApplyEffectSpeed();
             Debug.Log("ApplyEffectSpeed();");
@@ -194,19 +205,19 @@ public class PowerUpManager : MonoBehaviour
             case ApplyPowerUp.PowerType.Ammo:
                 
                 AmmoDuration = d;
-                this.AmmoTimer = d;
-                this.AmmoApp = true;
+                AmmoTimer = d;
+                AmmoApp = true;
                 break;
             case ApplyPowerUp.PowerType.Health:
               
-                this.HealthDuration = d;
-                this.HealthTimer = d;
-                this.HealthApp = true;
+                HealthDuration = d;
+                HealthApp = true;
+                HealthTimer = d;
                 break;
             case ApplyPowerUp.PowerType.Speed:
                
-                this.SpeedDuration = d;
-                this.SpeedTimer = d;
+                SpeedDuration = d;
+                SpeedTimer = d;
                 SpeedAPP = true;
                 Debug.Log("ApplyEffectSpeed!!!" +SpeedDuration+SpeedTimer + SpeedAPP);
                 break;
