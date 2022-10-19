@@ -14,6 +14,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     public bool PlayerCanMove { get; private set; } = true;
     public bool PlayerIsDashing { get; private set; }
     public bool PlayerCanDash => dashesRemaining > dashesAllowed - dashesAllowed;
+    private bool DashShouldCooldown => dashesRemaining < dashesAllowed;
     //private bool PlayerIsSprinting => playerCanSprint && Input.GetKey(sprintKey) && !playerIsCrouching;
     //private bool PlayerShouldCrouch => Input.GetKeyDown(crouchKey) && !playerInCrouchAnimation && characterController.isGrounded;
 
@@ -145,6 +146,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     [Tooltip("If player is holding dash and there are dashes remaining, how much time should there be between the dashes?")]
     [SerializeField]
     private float dashBetweenTime;
+    private float dashCooldownStartTime;
 
     [Header("State bools")]
     public bool basicMovement;
@@ -219,6 +221,10 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         {
             if (PlayerCanMove)
             {
+                if (DashShouldCooldown)
+                {
+                    DashCooldown();
+                }
                 CheckForWall();
                 StateHandler();
             }
@@ -345,7 +351,6 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
             if ((characterController.velocity.z != 0 || characterController.velocity.x != 0) && PlayerCanDash)
             {
-                StopCoroutine(DashCooldown());
                 StartCoroutine(Dash());
             }
         }
@@ -353,7 +358,6 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         {
             playerShouldDash = false;
             playerDashing = false;
-            //StopCoroutine(Dash());
         }
     }
 
@@ -362,6 +366,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     {
         dashesRemaining--;
         float startTime = Time.time;
+        dashCooldownStartTime = startTime;
 
         //The direction in which the player moves based on input
         float moveDirectionY = moveDirection.y;
@@ -384,31 +389,17 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         else
         {
             playerDashing = false;
-            if (dashesRemaining < dashesAllowed && !dashOnCooldown)
-            {
-                StartCoroutine(DashCooldown());
-            }
         }
     }
 
-    private IEnumerator DashCooldown()
+    private void DashCooldown()
     {
-        dashOnCooldown = true;
-        yield return dashCooldownWait;
-        dashesRemaining++;
-        if (dashesRemaining > dashesAllowed)
+        if (dashCooldownStartTime + dashCooldownTime < Time.time && DashShouldCooldown)
         {
-            dashesRemaining = dashesAllowed;
+            dashesRemaining++;
+            dashCooldownStartTime = Time.time;
+            Debug.Log("Cooldown Complete!");
         }
-        if (dashesRemaining < dashesAllowed)
-        {
-            StartCoroutine(DashCooldown());
-        }
-        else
-        {
-            dashOnCooldown = false;
-        }
-        Debug.Log("Cooldown complete!");
     }
 
     private void HandleMouseLook()
