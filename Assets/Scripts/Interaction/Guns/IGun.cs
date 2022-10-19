@@ -16,7 +16,9 @@ public interface IGun
     GameObject HitNonEnemy { get; set; }
     float ReloadTime { get; set; }
     int CurrentAmmo { get; set; }
+    int CurrentMaxAmmo { get; }
     CanvasGroup GunReticle { get; set; }
+    TrailRenderer BulletTrail { get; set; }
 
     //void Shoot();
     IEnumerator Reload(WaitForSeconds reloadWait);

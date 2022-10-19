@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.InputSystem;
 
 public class AutoGun : MonoBehaviour, IGun
@@ -18,7 +19,9 @@ public class AutoGun : MonoBehaviour, IGun
     public GameObject HitNonEnemy { get; set; }
     public float ReloadTime { get; set; }
     public int CurrentAmmo { get { return GunManager.AutoGunCurrentAmmo; } set { GunManager.AutoGunCurrentAmmo = value; } }
+    public int CurrentMaxAmmo { get { return GunManager.AutoGunMaxAmmo; } }
     public CanvasGroup GunReticle { get; set; }
+    public TrailRenderer BulletTrail { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
 
     private bool CanShoot => lastShotTime + FireRate < Time.time && holdingTrigger && CurrentAmmo > 0;
@@ -75,10 +78,6 @@ public class AutoGun : MonoBehaviour, IGun
             {
                 CurrentAmmo--;
             }
-            GameObject lineDrawer = new GameObject();
-            LineRenderer lineRenderer = lineDrawer.AddComponent<LineRenderer>();
-            lineRenderer.startWidth = 0.025f;
-            lineRenderer.endWidth = 0.025f;
 
             Vector3 aimSpot = GunManager.FPSCam.transform.position;
             aimSpot += GunManager.FPSCam.transform.forward * AimOffset;
@@ -95,10 +94,8 @@ public class AutoGun : MonoBehaviour, IGun
             if (Physics.Raycast(ShootFrom.transform.position, direction, out hitInfo, float.MaxValue, ~LayerToIgnore))
             {
 
-                Debug.DrawLine(ShootFrom.transform.position, hitInfo.point, Color.green, 1f);
-                lineRenderer.material.color = Color.green;
-                lineRenderer.SetPosition(0, ShootFrom.transform.position);
-                lineRenderer.SetPosition(1, hitInfo.point);
+                TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, Quaternion.identity);
+                StartCoroutine(SpawnTrail(trail, hitInfo, aimSpot));
 
                 if (hitInfo.transform.name != "Player")
                 {
@@ -124,16 +121,31 @@ public class AutoGun : MonoBehaviour, IGun
                     }
                 }
             }
-            else
-            {
-                lineRenderer.material.color = Color.red;
-                lineRenderer.SetPosition(0, ShootFrom.transform.position);
-                lineRenderer.SetPosition(1, ShootFrom.transform.position + direction * 10);
-                Debug.DrawLine(ShootFrom.transform.position, ShootFrom.transform.position + direction * 10, Color.red, 1f);
-            }
 
             lastShotTime = Time.time;
         }
+    }
+    private IEnumerator SpawnTrail(TrailRenderer trail, RaycastHit hitInfo, Vector3 aimSpot)
+    {
+        float time = 0;
+
+        ParticleSystem bulletTrail = trail.GetComponent<ParticleSystem>();
+
+        trail.transform.LookAt(aimSpot);
+
+        Vector3 startPosition = trail.transform.position;
+
+        while (trail.transform.position != hitInfo.point)
+        {
+            trail.transform.position = Vector3.Lerp(startPosition, hitInfo.point, time);
+            time += Time.deltaTime / trail.time;
+
+            yield return null;
+        }
+
+        trail.transform.position = hitInfo.point;
+
+        Destroy(trail);
     }
 
     //public void StartReload()

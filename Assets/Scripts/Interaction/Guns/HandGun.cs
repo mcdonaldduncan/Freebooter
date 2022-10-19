@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEditor.Build.Content;
 using UnityEngine;
@@ -18,7 +19,9 @@ public class HandGun : MonoBehaviour, IGun
     public GameObject HitNonEnemy { get; set; }
     public float ReloadTime { get; set; }
     public int CurrentAmmo { get { return GunManager.HandGunCurrentAmmo; } set { GunManager.HandGunCurrentAmmo = value; } }
+    public int CurrentMaxAmmo { get { return GunManager.HandGunMaxAmmo; } }
     public CanvasGroup GunReticle { get; set; }
+    public TrailRenderer BulletTrail { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
 
     private bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading;
@@ -51,11 +54,6 @@ public class HandGun : MonoBehaviour, IGun
         {
             RaycastHit hitInfo;
 
-            GameObject lineDrawer = new GameObject();
-            LineRenderer lineRenderer = lineDrawer.AddComponent<LineRenderer>();
-            lineRenderer.startWidth = 0.025f;
-            lineRenderer.endWidth = 0.025f;
-
             Vector3 aimSpot = GunManager.FPSCam.transform.position;
             aimSpot += GunManager.FPSCam.transform.forward * this.AimOffset;
             this.ShootFrom.LookAt(aimSpot);
@@ -66,11 +64,11 @@ public class HandGun : MonoBehaviour, IGun
             spread += ShootFrom.transform.right * Random.Range(-HorizontalSpread, HorizontalSpread);
             direction += spread.normalized; //* Random.Range(0f, 0.2f);
 
+
             if (Physics.Raycast(ShootFrom.transform.position, direction, out hitInfo, float.MaxValue, ~LayerToIgnore))
             {
-                lineRenderer.material.color = Color.green;
-                lineRenderer.SetPosition(0, ShootFrom.transform.position);
-                lineRenderer.SetPosition(1, hitInfo.point);
+                TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, Quaternion.identity);
+                StartCoroutine(SpawnTrail(trail, hitInfo, aimSpot));
 
                 Debug.DrawLine(ShootFrom.transform.position, hitInfo.point, Color.green, 1f);
                 try
@@ -82,24 +80,17 @@ public class HandGun : MonoBehaviour, IGun
                     damageableTarget.TakeDamage(BulletDamage / (Mathf.Abs(distance / 2)));
 
                     Debug.Log($"{hitInfo.transform.name}: {damageableTarget.Health}");
-                    var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                    var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.point));
                     Destroy(p, 1);
 
                 }
                 catch
                 {
-                    //Debug.Log($"Hit {hitInfo.transform.name}");
                     Debug.Log("Not an IDamageable");
-                    var p = Instantiate(HitNonEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+
+                    var p = Instantiate(HitNonEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.point));
                     Destroy(p, 1);
                 }
-            }
-            else
-            {
-                Debug.DrawLine(ShootFrom.transform.position, ShootFrom.transform.forward + direction * 10, Color.red, 1f);
-                lineRenderer.material.color = Color.red;
-                lineRenderer.SetPosition(0, ShootFrom.transform.position);
-                lineRenderer.SetPosition(1, ShootFrom.transform.position + direction * 10);
             }
 
             if (!GunManager.InfiniteAmmo)
@@ -109,6 +100,29 @@ public class HandGun : MonoBehaviour, IGun
 
             lastShotTime = Time.time;
         }
+    }
+
+    private IEnumerator SpawnTrail(TrailRenderer trail, RaycastHit hitInfo, Vector3 aimSpot)
+    {
+        float time = 0;
+
+        ParticleSystem bulletTrail = trail.GetComponent<ParticleSystem>();
+
+        trail.transform.LookAt(aimSpot);
+
+        Vector3 startPosition = trail.transform.position;
+
+        while (trail.transform.position != hitInfo.point)
+        {
+            trail.transform.position = Vector3.Lerp(startPosition, hitInfo.point, time);
+            time += Time.deltaTime / trail.time;
+
+            yield return null;
+        }
+
+        trail.transform.position = hitInfo.point;
+
+        Destroy(trail);
     }
 
     //public void StartReload()

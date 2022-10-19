@@ -42,6 +42,7 @@ public class GunHandler : MonoBehaviour
     [SerializeField] private Camera fpsCam;
     [SerializeField] private LayerMask playerLayer;
     [SerializeField] private TextMeshProUGUI ammoText;
+    [SerializeField] private TrailRenderer bulletTrail;
     [SerializeField] private bool reloading;
     [SerializeField] private bool infiniteAmmo;
     private int currentGunAmmo;
@@ -150,6 +151,7 @@ public class GunHandler : MonoBehaviour
         gun.LayerToIgnore = this.playerLayer;
         gun.HitEnemy = this.hitEnemy;
         gun.HitNonEnemy = this.hitNONEnemy;
+        gun.BulletTrail = this.bulletTrail;
 
         if (gun is AutoGun)
         {
@@ -173,7 +175,7 @@ public class GunHandler : MonoBehaviour
         }
         if (gun is ShotGun)
         {
-            gun.FireRate = this.shotGunFireRate; //TODO Add a firerate to shotgun and also get rid of coroutine cooldowns
+            gun.FireRate = this.shotGunFireRate; //TODO get rid of coroutine reloads
             gun.BulletDamage = this.shotGunBulletDamage;
             gun.VerticalSpread = this.shotGunVerticalSpread;
             gun.HorizontalSpread = this.shotGunHorizontalSpread;
@@ -222,7 +224,7 @@ public class GunHandler : MonoBehaviour
 
         currentGunAmmo = currentGun.CurrentAmmo;
 
-        ammoText.text = $"Ammo: {currentGunAmmo}";
+        ammoText.text = $"Ammo: {currentGunAmmo}/{currentGun.CurrentMaxAmmo}";
     }
 
     public void SwitchWeapon(InputAction.CallbackContext context)

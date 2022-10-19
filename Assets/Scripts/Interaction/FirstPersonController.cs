@@ -10,7 +10,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     //properties used to help check whether player can use certain mechanics. These are mostly to keep the code clean and organized
     //Kind of a rudimentary/crude state machine
     public float MaxHealth { get { return Maxhealth; } set { Maxhealth = value; } }
-    public float Health { get { return health; } set { health = MaxHealth; } }
+    public float Health { get { return health; } set { health = value; } }
     public bool PlayerCanMove { get; private set; } = true;
     public bool PlayerIsDashing { get; private set; }
     public bool PlayerCanDash => dashesRemaining > dashesAllowed - dashesAllowed;

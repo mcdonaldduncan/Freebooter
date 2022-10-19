@@ -19,7 +19,9 @@ public class ShotGun : MonoBehaviour, IGun
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
     private float ShotGunBulletAmount { get { return GunManager.ShotGunBulletAmount; } }
     public int CurrentAmmo { get { return GunManager.ShotGunCurrentAmmo; } set { GunManager.ShotGunCurrentAmmo = value; } }
+    public int CurrentMaxAmmo { get { return GunManager.ShotGunMaxAmmo; } }
     public CanvasGroup GunReticle { get; set; }
+    public TrailRenderer BulletTrail { get; set; }
 
     private bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading;
 
@@ -51,11 +53,6 @@ public class ShotGun : MonoBehaviour, IGun
         {
             for (int i = 0; i < ShotGunBulletAmount; i++)
             {
-                GameObject lineDrawer = new GameObject();
-                LineRenderer lineRenderer = lineDrawer.AddComponent<LineRenderer>();
-                lineRenderer.startWidth = 0.025f;
-                lineRenderer.endWidth = 0.025f;
-
                 Vector3 aimSpot = GunManager.FPSCam.transform.position;
                 aimSpot += GunManager.FPSCam.transform.forward * this.AimOffset;
                 this.ShootFrom.LookAt(aimSpot);
@@ -70,11 +67,8 @@ public class ShotGun : MonoBehaviour, IGun
 
                 if (Physics.Raycast(ShootFrom.transform.position, direction, out hitInfo, float.MaxValue, ~LayerToIgnore))
                 {
-
-                    Debug.DrawLine(ShootFrom.transform.position, hitInfo.point, Color.green, 1f);
-                    lineRenderer.material.color = Color.green;
-                    lineRenderer.SetPosition(0, ShootFrom.transform.position);
-                    lineRenderer.SetPosition(1, hitInfo.point);
+                    TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, Quaternion.identity);
+                    StartCoroutine(SpawnTrail(trail, hitInfo, aimSpot));
 
                     if (hitInfo.transform.name != "Player")
                     {
@@ -100,13 +94,6 @@ public class ShotGun : MonoBehaviour, IGun
                         }
                     }
                 }
-                else
-                {
-                    lineRenderer.material.color = Color.red;
-                    lineRenderer.SetPosition(0, ShootFrom.transform.position);
-                    lineRenderer.SetPosition(1, ShootFrom.transform.position + direction * 10);
-                    Debug.DrawLine(ShootFrom.transform.position, ShootFrom.transform.position + direction * 10, Color.red, 1f);
-                }
             }
 
             if (!GunManager.InfiniteAmmo)
@@ -116,6 +103,29 @@ public class ShotGun : MonoBehaviour, IGun
 
             lastShotTime = Time.time;
         }
+    }
+
+    private IEnumerator SpawnTrail(TrailRenderer trail, RaycastHit hitInfo, Vector3 aimSpot)
+    {
+        float time = 0;
+
+        ParticleSystem bulletTrail = trail.GetComponent<ParticleSystem>();
+
+        trail.transform.LookAt(aimSpot);
+
+        Vector3 startPosition = trail.transform.position;
+
+        while (trail.transform.position != hitInfo.point)
+        {
+            trail.transform.position = Vector3.Lerp(startPosition, hitInfo.point, time);
+            time += Time.deltaTime / trail.time;
+
+            yield return null;
+        }
+
+        trail.transform.position = hitInfo.point;
+
+        Destroy(trail);
     }
 
     //public void StartReload()
