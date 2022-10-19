@@ -15,9 +15,10 @@ public interface IGun
     GameObject HitEnemy { get; set; }
     GameObject HitNonEnemy { get; set; }
     float ReloadTime { get; set; }
-    //bool Reloading { get; set; }
+    int CurrentAmmo { get; set; }
+    CanvasGroup GunReticle { get; set; }
 
     //void Shoot();
-    IEnumerator Reload(GunHandler instance, WaitForSeconds reloadWait);
+    IEnumerator Reload(WaitForSeconds reloadWait);
     //IEnumerator SpawnTrail(TrailRenderer trail, RaycastHit hit);
 }

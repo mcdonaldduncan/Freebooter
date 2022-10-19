@@ -17,18 +17,22 @@ public class AutoGun : MonoBehaviour, IGun
     public GameObject HitEnemy { get; set; }
     public GameObject HitNonEnemy { get; set; }
     public float ReloadTime { get; set; }
+    public int CurrentAmmo { get { return GunManager.AutoGunCurrentAmmo; } set { GunManager.AutoGunCurrentAmmo = value; } }
+    public CanvasGroup GunReticle { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
 
-    private bool CanShoot => lastShotTime + FireRate < Time.time && holdingTrigger;
+    private bool CanShoot => lastShotTime + FireRate < Time.time && holdingTrigger && CurrentAmmo > 0;
 
     private static bool holdingTrigger;
     private float lastShotTime;
     private float reloadStartTime;
+    private Coroutine reloadCo;
 
     private void Update()
     {
         if (CanShoot)
         {
+            Debug.Log($"Holding Trigger: {holdingTrigger}");
             Shoot();
         }
         //if (GunManager.Reloading)
@@ -69,7 +73,7 @@ public class AutoGun : MonoBehaviour, IGun
         {
             if (!GunManager.InfiniteAmmo)
             {
-                GunManager.AutoGunCurrentAmmo--;
+                CurrentAmmo--;
             }
             GameObject lineDrawer = new GameObject();
             LineRenderer lineRenderer = lineDrawer.AddComponent<LineRenderer>();
@@ -147,9 +151,20 @@ public class AutoGun : MonoBehaviour, IGun
     //    }
     //}
 
-    private void OnWeaponSwitch(GunHandler instance, IGun autoGun, WaitForSeconds reloadWait)
+
+    //fix bug that doesn't restart canceled reload    
+    public void StartReload(WaitForSeconds reloadWait)
     {
-        StopCoroutine(autoGun.Reload(instance, reloadWait));
+        reloadCo = GunManager.StartCoroutine(this.Reload(reloadWait));
+    }
+
+    private void OnWeaponSwitch(WaitForSeconds reloadWait)
+    {
+        if (reloadCo != null)
+        {
+            GunManager.StopCoroutine(reloadCo);
+            GunManager.Reloading = false;
+        }
         holdingTrigger = false;
         
         //if (GunManager.Reloading)
@@ -157,18 +172,21 @@ public class AutoGun : MonoBehaviour, IGun
         //    GunManager.Reloading = false;
         //}
     }
-    
-    public static void StartReload(GunHandler instance, AutoGun autoGun, WaitForSeconds reloadWait)
-    {
-        instance.StartCoroutine(autoGun.Reload(instance, reloadWait));
-    }
 
-    public IEnumerator Reload(GunHandler instance, WaitForSeconds reloadWait)
+    public IEnumerator Reload(WaitForSeconds reloadWait)
     {
-        instance.Reloading = true;
+        GunManager.Reloading = true;
         yield return reloadWait;
-        instance.Reloading = false;
-        instance.AutoGunCurrentAmmo = instance.AutoGunMaxAmmo;
+        if (GunManager.Reloading)
+        {
+            GunManager.Reloading = false;
+            GunManager.AutoGunCurrentAmmo = GunManager.AutoGunMaxAmmo;
+            Debug.Log("Reloaded!");
+        }
+        else
+        {
+            Debug.Log($"Reloading was canceled");
+        }
     }
 
     //private IEnumerator ShootAutoGun()

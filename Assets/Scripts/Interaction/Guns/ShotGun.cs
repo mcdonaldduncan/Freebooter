@@ -17,12 +17,15 @@ public class ShotGun : MonoBehaviour, IGun
     public GameObject HitNonEnemy { get; set; }
     public float ReloadTime { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
-    private float ShotGunBulletAmount { get { return GunManager.ShotGunBulletAmount; }  }
+    private float ShotGunBulletAmount { get { return GunManager.ShotGunBulletAmount; } }
+    public int CurrentAmmo { get { return GunManager.ShotGunCurrentAmmo; } set { GunManager.ShotGunCurrentAmmo = value; } }
+    public CanvasGroup GunReticle { get; set; }
 
     private bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading;
 
     private float lastShotTime;
     private float reloadStartTime;
+    private Coroutine reloadCo;
 
     //private void Update()
     //{
@@ -108,7 +111,7 @@ public class ShotGun : MonoBehaviour, IGun
 
             if (!GunManager.InfiniteAmmo)
             {
-                GunManager.ShotGunCurrentAmmo--;
+                CurrentAmmo--;
             }
 
             lastShotTime = Time.time;
@@ -130,26 +133,30 @@ public class ShotGun : MonoBehaviour, IGun
     //    }
     //}
 
-    public static void StartReload(GunHandler instance, ShotGun shotGun, WaitForSeconds reloadWait)
+    public void StartReload(WaitForSeconds reloadWait)
     {
-        instance.StartCoroutine(shotGun.Reload(instance, reloadWait));
+        reloadCo = GunManager.StartCoroutine(this.Reload(reloadWait));
     }
 
-    public IEnumerator Reload(GunHandler instance, WaitForSeconds reloadWait)
+    public IEnumerator Reload(WaitForSeconds reloadWait)
     {
-        instance.Reloading = true;
+        GunManager.Reloading = true;
         yield return reloadWait;
-        instance.Reloading = false;
-        instance.ShotGunCurrentAmmo = instance.ShotGunMaxAmmo;
+        GunManager.Reloading = false;
+        GunManager.ShotGunCurrentAmmo = GunManager.ShotGunMaxAmmo;
     }
 
-    private void OnWeaponSwitch(GunHandler instance, IGun shotGun, WaitForSeconds reloadWait)
+    private void OnWeaponSwitch(WaitForSeconds reloadWait)
     {
         //if (GunManager.Reloading)
         //{
         //    GunManager.Reloading = false;
         //}
 
-        StopCoroutine(shotGun.Reload(instance, reloadWait));
+        if (reloadCo != null)
+        {
+            GunManager.StopCoroutine(reloadCo);
+            GunManager.Reloading = false;
+        }
     }
 }
