@@ -39,6 +39,8 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     [Header("Movement Parameters")]
     public float walkSpeed = 6; // Changed to public so powerups can affec this variable
     public float wallRunSpeed = 12f; // Changed to public so powerups can affec this variable
+    public float owalkspeed = 6; // Changed to public so powerups can affec this variable
+    public float owallspeed = 12f; // Changed to public so powerups can affec this variable
     //[SerializeField]
     //private float sprintSpeed = 6f;
     //[SerializeField]
