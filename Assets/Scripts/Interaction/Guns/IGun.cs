@@ -19,6 +19,7 @@ public interface IGun
     int CurrentMaxAmmo { get; }
     CanvasGroup GunReticle { get; set; }
     TrailRenderer BulletTrail { get; set; }
+    AudioClip GunShotAudio { get; set; }
 
     //void Shoot();
     IEnumerator Reload(WaitForSeconds reloadWait);

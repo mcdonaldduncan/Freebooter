@@ -22,6 +22,7 @@ public class AutoGun : MonoBehaviour, IGun
     public int CurrentMaxAmmo { get { return GunManager.AutoGunMaxAmmo; } }
     public CanvasGroup GunReticle { get; set; }
     public TrailRenderer BulletTrail { get; set; }
+    public AudioClip GunShotAudio { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
 
     private bool CanShoot => lastShotTime + FireRate < Time.time && holdingTrigger && CurrentAmmo > 0;
@@ -92,7 +93,7 @@ public class AutoGun : MonoBehaviour, IGun
             RaycastHit hitInfo;
 
 
-            GunManager.GunShotAudioSource.PlayOneShot(GunManager.GunShotAudio);
+            GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
 
             if (Physics.Raycast(ShootFrom.transform.position, direction, out hitInfo, float.MaxValue, ~LayerToIgnore))
             {

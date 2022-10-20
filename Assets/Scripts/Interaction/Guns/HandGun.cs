@@ -22,6 +22,7 @@ public class HandGun : MonoBehaviour, IGun
     public int CurrentMaxAmmo { get { return GunManager.HandGunMaxAmmo; } }
     public CanvasGroup GunReticle { get; set; }
     public TrailRenderer BulletTrail { get; set; }
+    public AudioClip GunShotAudio { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
 
     private bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading;
@@ -64,7 +65,7 @@ public class HandGun : MonoBehaviour, IGun
             spread += ShootFrom.transform.right * Random.Range(-HorizontalSpread, HorizontalSpread);
             direction += spread.normalized; //* Random.Range(0f, 0.2f);
 
-            GunManager.GunShotAudioSource.PlayOneShot(GunManager.GunShotAudio);
+            GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
 
             if (Physics.Raycast(ShootFrom.transform.position, direction, out hitInfo, float.MaxValue, ~LayerToIgnore))
             {

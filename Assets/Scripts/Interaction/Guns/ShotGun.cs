@@ -22,6 +22,7 @@ public class ShotGun : MonoBehaviour, IGun
     public int CurrentMaxAmmo { get { return GunManager.ShotGunMaxAmmo; } }
     public CanvasGroup GunReticle { get; set; }
     public TrailRenderer BulletTrail { get; set; }
+    public AudioClip GunShotAudio { get; set; }
 
     private bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading;
 
@@ -51,7 +52,7 @@ public class ShotGun : MonoBehaviour, IGun
     {
         if (CanShoot)
         {
-            GunManager.GunShotAudioSource.PlayOneShot(GunManager.GunShotAudio);
+            GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
             for (int i = 0; i < ShotGunBulletAmount; i++)
             {
                 Vector3 aimSpot = GunManager.FPSCam.transform.position;

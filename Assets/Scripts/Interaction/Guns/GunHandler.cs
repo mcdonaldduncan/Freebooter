@@ -13,7 +13,6 @@ public class GunHandler : MonoBehaviour
     //TODO: Consider making ammo properties in interface and implementing into different guntypes, as this would prevent the need for passing so many parameters
     public GunType CurrentGun { get { return currentGunState; } }
     public Camera FPSCam { get { return fpsCam; } }
-    public AudioClip GunShotAudio { get { return gunShotAudio; } }
     public AudioSource GunShotAudioSource { get { return gunShotAudioSource; } }
 
     public int HandGunCurrentAmmo { get { return handGunCurrentAmmo; } set { handGunCurrentAmmo = value; } }
@@ -47,7 +46,6 @@ public class GunHandler : MonoBehaviour
     [SerializeField] private TrailRenderer bulletTrail;
     [SerializeField] private bool reloading;
     [SerializeField] private bool infiniteAmmo;
-    [SerializeField] private AudioClip gunShotAudio;
     private int currentGunAmmo;
     private AudioSource gunShotAudioSource;
 
@@ -63,6 +61,7 @@ public class GunHandler : MonoBehaviour
     [Tooltip("This will offset how the shot is centered from the tip of the gun")]
     [SerializeField] private float handGunAimOffset = 15f;
     [SerializeField] private CanvasGroup handGunReticle;
+    [SerializeField] private AudioClip handGunShotAudio;
 
     [Header("Shotgun Parameters")]
     [Tooltip("This will apply to EACH 'bullet' the shotgun fires")]
@@ -79,6 +78,7 @@ public class GunHandler : MonoBehaviour
     [Tooltip("This will offset how the shot is centered from the tip of the gun")]
     [SerializeField] private float shotGunAimOffset = 15f;
     [SerializeField] private CanvasGroup shotGunReticle;
+    [SerializeField] private AudioClip shotGunShotAudio;
 
     [Header("Autogun Parameters")]
     [SerializeField] private float autoGunBulletDamage = 10f;
@@ -91,6 +91,7 @@ public class GunHandler : MonoBehaviour
     [Tooltip("This will offset how the shot is centered from the tip of the gun")]
     [SerializeField] private float autoGunAimOffset = 15f;
     [SerializeField] private CanvasGroup autoGunReticle;
+    [SerializeField] private AudioClip autoGunShotAudio;
 
     [Header("Longgun Parameters")]
     [SerializeField] private float longGunBulletDamage = 10f;
@@ -168,6 +169,7 @@ public class GunHandler : MonoBehaviour
             gun.AimOffset = this.autoGunAimOffset;
             gun.ReloadTime = this.autoGunReloadTime;
             gun.GunReticle = this.autoGunReticle;
+            gun.GunShotAudio = this.autoGunShotAudio;
         }
         if (gun is HandGun)
         {
@@ -178,6 +180,7 @@ public class GunHandler : MonoBehaviour
             gun.AimOffset = this.handGunAimOffset;
             gun.ReloadTime = this.handGunReloadTime;
             gun.GunReticle = this.handGunReticle;
+            gun.GunShotAudio = this.handGunShotAudio;
         }
         if (gun is ShotGun)
         {
@@ -188,6 +191,7 @@ public class GunHandler : MonoBehaviour
             gun.AimOffset = this.shotGunAimOffset;
             gun.ReloadTime = this.shotGunReloadTime;
             gun.GunReticle = this.shotGunReticle;
+            gun.GunShotAudio = this.shotGunShotAudio;
         }
     }
 

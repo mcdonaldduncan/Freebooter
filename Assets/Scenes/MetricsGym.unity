@@ -4498,11 +4498,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!225 &493089355 stripped
-CanvasGroup:
-  m_CorrespondingSourceObject: {fileID: 2291571642965968571, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-  m_PrefabInstance: {fileID: 297426593225497164}
-  m_PrefabAsset: {fileID: 0}
 --- !u!43 &609725070
 Mesh:
   m_ObjectHideFlags: 0
@@ -7750,11 +7745,6 @@ MonoBehaviour:
 --- !u!1 &1326009836 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 297426594678655177, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-  m_PrefabInstance: {fileID: 297426593225497164}
-  m_PrefabAsset: {fileID: 0}
---- !u!225 &1434267703 stripped
-CanvasGroup:
-  m_CorrespondingSourceObject: {fileID: 2291208426676616775, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
   m_PrefabInstance: {fileID: 297426593225497164}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1513086994
@@ -11669,11 +11659,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!225 &2114559395 stripped
-CanvasGroup:
-  m_CorrespondingSourceObject: {fileID: 6976750457327859168, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-  m_PrefabInstance: {fileID: 297426593225497164}
-  m_PrefabAsset: {fileID: 0}
 --- !u!43 &2127213757
 Mesh:
   m_ObjectHideFlags: 0
@@ -11846,45 +11831,17 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: fireRate
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: hitEnemy
+      propertyPath: autoGunShotAudio
       value: 
-      objectReference: {fileID: 8781331233716584084, guid: e48bb5898f7e7a347aa4ffb1f06b9b11, type: 3}
+      objectReference: {fileID: 8300000, guid: aa41d7a175e94544ba3a9e4684092689, type: 3}
     - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: bulletTrail
+      propertyPath: handGunShotAudio
       value: 
-      objectReference: {fileID: 3822495795310971056, guid: b2f558980faf30246a11b5d0a206d0e8, type: 3}
+      objectReference: {fileID: 8300000, guid: aa41d7a175e94544ba3a9e4684092689, type: 3}
     - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: hitNONEnemy
+      propertyPath: shotGunShotAudio
       value: 
-      objectReference: {fileID: 122632, guid: 47a6eaf00da4f324a9167c487dff2f4c, type: 3}
-    - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: autoFireRate
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: autoGunReticle
-      value: 
-      objectReference: {fileID: 493089355}
-    - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: handGunReticle
-      value: 
-      objectReference: {fileID: 2114559395}
-    - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: shotGunReticle
-      value: 
-      objectReference: {fileID: 1434267703}
-    - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: shotGunFireRate
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 297426594336726720, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: bulletTrailSpeed
-      value: 100
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 8300000, guid: c15d23ec2ec14b949aa86c30705b3da5, type: 3}
     - target: {fileID: 297426594678655177, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
       propertyPath: m_Name
       value: PlayerNoNet
@@ -11932,18 +11889,6 @@ PrefabInstance:
     - target: {fileID: 297426594678655179, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1753155993619821166, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3902221969693268187, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6670239643687008521, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
