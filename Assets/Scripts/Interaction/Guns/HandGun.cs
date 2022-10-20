@@ -64,11 +64,13 @@ public class HandGun : MonoBehaviour, IGun
             spread += ShootFrom.transform.right * Random.Range(-HorizontalSpread, HorizontalSpread);
             direction += spread.normalized; //* Random.Range(0f, 0.2f);
 
+            GunManager.GunShotAudioSource.PlayOneShot(GunManager.GunShotAudio);
 
             if (Physics.Raycast(ShootFrom.transform.position, direction, out hitInfo, float.MaxValue, ~LayerToIgnore))
             {
+
                 TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, Quaternion.identity);
-                StartCoroutine(SpawnTrail(trail, hitInfo, aimSpot));
+                StartCoroutine(SpawnTrail(trail, hitInfo.point, aimSpot));
 
                 Debug.DrawLine(ShootFrom.transform.position, hitInfo.point, Color.green, 1f);
                 if (hitInfo.transform.name != "Player")
@@ -104,6 +106,12 @@ public class HandGun : MonoBehaviour, IGun
                     }
                 }
             }
+            else
+            {
+                Debug.Log("Didn't hit anything");
+                TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, Quaternion.identity);
+                StartCoroutine(SpawnTrail(trail, ShootFrom.transform.position + direction * 10, aimSpot));
+            }
 
             if (!GunManager.InfiniteAmmo)
             {
@@ -114,25 +122,23 @@ public class HandGun : MonoBehaviour, IGun
         }
     }
 
-    private IEnumerator SpawnTrail(TrailRenderer trail, RaycastHit hitInfo, Vector3 aimSpot)
+    private IEnumerator SpawnTrail(TrailRenderer trail, Vector3 endPoint, Vector3 aimSpot)
     {
         float time = 0;
-
-        ParticleSystem bulletTrail = trail.GetComponent<ParticleSystem>();
 
         trail.transform.LookAt(aimSpot);
 
         Vector3 startPosition = trail.transform.position;
 
-        while (trail.transform.position != hitInfo.point)
+        while (trail.transform.position != endPoint)
         {
-            trail.transform.position = Vector3.Lerp(startPosition, hitInfo.point, time);
+            trail.transform.position = Vector3.Lerp(startPosition, endPoint, time);
             time += Time.deltaTime / trail.time;
 
             yield return null;
         }
 
-        trail.transform.position = hitInfo.point;
+        trail.transform.position = endPoint;
 
         Destroy(trail);
     }
