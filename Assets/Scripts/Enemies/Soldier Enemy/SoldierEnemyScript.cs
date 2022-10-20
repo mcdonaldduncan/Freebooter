@@ -10,7 +10,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
     [Tooltip("/ Guard = Stand in one place until the player breaks line of sight / Wanderer = walks around / Chase = when the soldier goes after the enemy")]
     [SerializeField] private SoldierState st;
     private SoldierState origianlst;
-    [SerializeField] private GameObject target, tip, light, visionPoint;
+    [SerializeField] private GameObject target, tip, light, visionPoint, body;
     [SerializeField] private float rotationspeed, range;
     [SerializeField] private NavMeshAgent agent; 
     Vector3 targetDiretion, originalPos;
@@ -23,11 +23,12 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
     int i = 0;
     bool changeDir = false;
 
-    [SerializeField]
-    private float health;
+   
+    public TrailRenderer BulletTrail;
+    [SerializeField] private float Damage;
 
     public float Health { get { return health; } set { health = value; } }
-
+    [SerializeField] private float health;
     public void TakeDamage(float damageTaken)
     {
         Health -= damageTaken;
@@ -38,17 +39,14 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
     {
         if (Health <= 0)
         {
-            this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
-            Destroy(gameObject);
-        }
-        else
-        {
-            return;
+            //this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
+            Destroy(this.gameObject);
         }
     }
 
     private void Start()
     {
+        target = GameObject.FindWithTag("Player");
         origianlst = st;
         originalPos = transform.position;
         originalrot = this.transform.rotation;
@@ -88,7 +86,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
         {
             targetDiretion = target.transform.position - transform.position;
             rotation = Quaternion.LookRotation(targetDiretion);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, tempSpeed * Time.deltaTime * 180);
+            body.transform.rotation = Quaternion.RotateTowards(body.transform.rotation, rotation, tempSpeed * Time.deltaTime * 180);
         }
     }
     
@@ -123,7 +121,12 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
             {
                 if (Time.time > ShootRate + lastShot)
                 {
+                    var bt = Instantiate(BulletTrail, tip.transform.position, rotation);
+                    bt.GetComponent<MoveForward>().origin = this.gameObject.transform.rotation;
+                    bt.GetComponent<MoveForward>().target = target;
+                    //bt.GetComponent<MoveForward>().damage = Damage;
                     Debug.Log("Player was shot, dealing damage.");
+                    target.GetComponent<FirstPersonController>().TakeDamage(Damage);
                     lastShot = Time.time;
                 }
             }

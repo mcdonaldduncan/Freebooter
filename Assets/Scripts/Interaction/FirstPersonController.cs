@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,17 +10,19 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 {
     //properties used to help check whether player can use certain mechanics. These are mostly to keep the code clean and organized
     //Kind of a rudimentary/crude state machine
+    public float MaxHealth { get { return Maxhealth; } set { Maxhealth = value; } }
     public float Health { get { return health; } set { health = value; } }
     public bool PlayerCanMove { get; private set; } = true;
     public bool PlayerIsDashing { get; private set; }
     public bool PlayerCanDash => dashesRemaining > dashesAllowed - dashesAllowed;
+    private bool DashShouldCooldown => dashesRemaining < dashesAllowed;
     //private bool PlayerIsSprinting => playerCanSprint && Input.GetKey(sprintKey) && !playerIsCrouching;
     //private bool PlayerShouldCrouch => Input.GetKeyDown(crouchKey) && !playerInCrouchAnimation && characterController.isGrounded;
 
     //Checks used to see if player is able to use mechanics.
     [Header("Functional Options")]
     [SerializeField]
-    private float health;
+    private float Maxhealth, health;
     [Tooltip("Is the player in the middle of a special movement, i.e. ladder climbing?")]
     [SerializeField]
     public bool playerOnSpecialMovement = false;
@@ -36,10 +39,10 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
     //parameters for different movement speeds
     [Header("Movement Parameters")]
-    [SerializeField]
-    private float walkSpeed = 3f;
-    [SerializeField]
-    private float wallRunSpeed = 6f;
+    public float walkSpeed = 6; // Changed to public so powerups can affec this variable
+    public float wallRunSpeed = 12f; // Changed to public so powerups can affec this variable
+    public float owalkspeed = 6; // Changed to public so powerups can affec this variable
+    public float owallspeed = 12f; // Changed to public so powerups can affec this variable
     //[SerializeField]
     //private float sprintSpeed = 6f;
     //[SerializeField]
@@ -144,6 +147,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     [Tooltip("If player is holding dash and there are dashes remaining, how much time should there be between the dashes?")]
     [SerializeField]
     private float dashBetweenTime;
+    private float dashCooldownStartTime;
 
     [Header("State bools")]
     public bool basicMovement;
@@ -184,6 +188,9 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     
     void Awake()
     {
+        walkSpeed = 6;
+        wallRunSpeed = 12;
+        health = Maxhealth;
         dashCooldownWait = new WaitForSeconds(dashCooldownTime);
         dashBetweenWait = new WaitForSeconds(dashBetweenTime);
 
@@ -215,6 +222,10 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         {
             if (PlayerCanMove)
             {
+                if (DashShouldCooldown)
+                {
+                    DashCooldown();
+                }
                 CheckForWall();
                 StateHandler();
             }
@@ -341,7 +352,6 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
             if ((characterController.velocity.z != 0 || characterController.velocity.x != 0) && PlayerCanDash)
             {
-                StopCoroutine(DashCooldown());
                 StartCoroutine(Dash());
             }
         }
@@ -349,7 +359,6 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         {
             playerShouldDash = false;
             playerDashing = false;
-            //StopCoroutine(Dash());
         }
     }
 
@@ -358,6 +367,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     {
         dashesRemaining--;
         float startTime = Time.time;
+        dashCooldownStartTime = startTime;
 
         //The direction in which the player moves based on input
         float moveDirectionY = moveDirection.y;
@@ -380,31 +390,17 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         else
         {
             playerDashing = false;
-            if (dashesRemaining < dashesAllowed && !dashOnCooldown)
-            {
-                StartCoroutine(DashCooldown());
-            }
         }
     }
 
-    private IEnumerator DashCooldown()
+    private void DashCooldown()
     {
-        dashOnCooldown = true;
-        yield return dashCooldownWait;
-        dashesRemaining++;
-        if (dashesRemaining > dashesAllowed)
+        if (dashCooldownStartTime + dashCooldownTime < Time.time && DashShouldCooldown)
         {
-            dashesRemaining = dashesAllowed;
+            dashesRemaining++;
+            dashCooldownStartTime = Time.time;
+            Debug.Log("Cooldown Complete!");
         }
-        if (dashesRemaining < dashesAllowed)
-        {
-            StartCoroutine(DashCooldown());
-        }
-        else
-        {
-            dashOnCooldown = false;
-        }
-        Debug.Log("Cooldown complete!");
     }
 
     private void HandleMouseLook()
@@ -570,6 +566,15 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         Health -= damageTaken;
         Debug.Log($"Player Health: { health }");
         CheckForDeath();
+    }
+    public void HealthRegen(float heal)
+    {
+        health += heal;
+        if (health > MaxHealth)
+        {
+            health = MaxHealth;
+        }
+        Debug.Log($"Player healed. Current health is {health}");
     }
 
     public void CheckForDeath()
