@@ -72,21 +72,30 @@ public class ShotGun : MonoBehaviour, IGun
 
                     if (hitInfo.transform.name != "Player")
                     {
-                        try
+                        IDamageable damageableTarget = hitInfo.transform.GetComponent<IDamageable>();
+                        if (damageableTarget != null)
                         {
-                            IDamageable damageableTarget = hitInfo.transform.GetComponent<IDamageable>();
-                            Vector3 targetPosition = hitInfo.transform.position;
+                            try
+                            {
+                                Vector3 targetPosition = hitInfo.transform.position;
 
-                            float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);
-                            float totalDamage = Mathf.Abs(BulletDamage / ((distance / 2)));
-                            damageableTarget.TakeDamage(totalDamage);
+                                var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                                Destroy(p, 1);
+                                float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);
+                                float totalDamage = Mathf.Abs(BulletDamage / ((distance / 2)));
+                                damageableTarget.TakeDamage(totalDamage);
 
-                            Debug.Log($"{hitInfo.transform.name}: {damageableTarget.Health}");
-                            Debug.Log($"TakeDamage Dealt: {totalDamage}");
-                            var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-                            Destroy(p, 1);
+                                Debug.Log($"{hitInfo.transform.name}: {damageableTarget.Health}");
+                                Debug.Log($"TakeDamage Dealt: {totalDamage}");
+                            }
+                            catch
+                            {
+                                var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                                Destroy(p, 1);
+                            }
+
                         }
-                        catch
+                        else
                         {
                             Debug.Log("Not an IDamageable");
                             var p = Instantiate(HitNonEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));

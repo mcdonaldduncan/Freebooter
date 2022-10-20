@@ -13,6 +13,7 @@ public class GunHandler : MonoBehaviour
     //TODO: Consider making ammo properties in interface and implementing into different guntypes, as this would prevent the need for passing so many parameters
     public GunType CurrentGun { get { return currentGunState; } }
     public Camera FPSCam { get { return fpsCam; } }
+    public AudioClip[] HitEnemySounds { get { return hitEnemySounds; } }
 
     public int HandGunCurrentAmmo { get { return handGunCurrentAmmo; } set { handGunCurrentAmmo = value; } }
     public int HandGunMaxAmmo { get { return handGunMaxAmmo; } }
@@ -45,6 +46,7 @@ public class GunHandler : MonoBehaviour
     [SerializeField] private TrailRenderer bulletTrail;
     [SerializeField] private bool reloading;
     [SerializeField] private bool infiniteAmmo;
+    [SerializeField] private AudioClip[] hitEnemySounds;
     private int currentGunAmmo;
 
 
