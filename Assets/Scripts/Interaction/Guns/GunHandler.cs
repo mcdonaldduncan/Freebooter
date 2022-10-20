@@ -11,7 +11,7 @@ using Random = UnityEngine.Random;
 public class GunHandler : MonoBehaviour
 {
     //TODO: Consider making ammo properties in interface and implementing into different guntypes, as this would prevent the need for passing so many parameters
-    public GunType CurrentGun { get { return currentGunState; } }
+    public IGun CurrentGun { get { return currentGun; } }
     public Camera FPSCam { get { return fpsCam; } }
     public AudioSource GunShotAudioSource { get { return gunShotAudioSource; } }
 
@@ -253,12 +253,8 @@ public class GunHandler : MonoBehaviour
         currentGun = gunDict[Array.IndexOf(guns, currentGunState)];
         currentGun.GunReticle.alpha = 1;
 
-        if (reloading)
-        {
-            WaitForSeconds reloadToInvoke = gunReloadWaitDict[currentGunState];
-
-            weaponSwitched?.Invoke(reloadToInvoke);
-        }
+        WaitForSeconds reloadToInvoke = gunReloadWaitDict[currentGunState];
+        weaponSwitched?.Invoke(reloadToInvoke);
 
         Debug.Log($"Equipped gun: {currentGunState.ToString()}");
     }

@@ -13,11 +13,13 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable
     [SerializeField] private float damageToDeal;
     [SerializeField] private GameObject player;
     [SerializeField] private float timeBetweenHits;
+    [SerializeField] private float distanceToStartFollow;
 
     private FirstPersonController playerController;
     private Collider playerCollider;    
     private NavMeshAgent navMeshAgent;
     private float mostRecentHit;
+    private float distanceToPlayer;
 
     private void Awake()
     {
@@ -32,7 +34,9 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable
 
     private void Update()
     {
-        if (!ignorePlayer)
+        distanceToPlayer = Vector3.Distance(gameObject.transform.position, player.transform.position);
+
+        if (!ignorePlayer && distanceToPlayer <= distanceToStartFollow)
         {
             navMeshAgent.destination = player.transform.position;
         }

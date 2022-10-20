@@ -25,18 +25,18 @@ public class AutoGun : MonoBehaviour, IGun
     public AudioClip GunShotAudio { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
 
-    private bool CanShoot => lastShotTime + FireRate < Time.time && holdingTrigger && CurrentAmmo > 0;
+    private bool CanShoot => lastShotTime + FireRate < Time.time && CurrentAmmo > 0 && GunManager.CurrentGun is AutoGun;
 
-    private static bool holdingTrigger;
+    private bool holdingTrigger;
     private float lastShotTime;
     private float reloadStartTime;
     private Coroutine reloadCo;
 
     private void Update()
     {
-        if (CanShoot)
+        if (CanShoot && this.holdingTrigger)
         {
-            Debug.Log($"Holding Trigger: {holdingTrigger}");
+            //Debug.Log($"Holding Trigger: {holdingTrigger}");
             Shoot();
         }
         //if (GunManager.Reloading)
@@ -60,12 +60,12 @@ public class AutoGun : MonoBehaviour, IGun
     {
         if (context.canceled)
         {
-            holdingTrigger = false;
+            this.holdingTrigger = false;
             //GunManager.StopCoroutine(this.ShootAutoGun());
         }
-        else if (context.performed && !GunManager.Reloading)
+        else if (context.performed)
         {
-            holdingTrigger = true;
+            this.holdingTrigger = true;
 
             //GunManager.StartCoroutine(this.ShootAutoGun());
         }
@@ -190,12 +190,12 @@ public class AutoGun : MonoBehaviour, IGun
 
     private void OnWeaponSwitch(WaitForSeconds reloadWait)
     {
+        this.holdingTrigger = false;
         if (reloadCo != null)
         {
             GunManager.StopCoroutine(reloadCo);
             GunManager.Reloading = false;
         }
-        holdingTrigger = false;
         
         //if (GunManager.Reloading)
         //{
