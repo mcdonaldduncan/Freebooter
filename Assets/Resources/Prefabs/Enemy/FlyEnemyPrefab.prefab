@@ -139,6 +139,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9014040487749469228}
+  - component: {fileID: 1731908634}
   m_Layer: 0
   m_Name: FlyEnemyPrefab
   m_TagString: Untagged
@@ -164,6 +165,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!195 &1731908634
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9014040487749469227}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 3.48
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &9014040488091691167
 GameObject:
   m_ObjectHideFlags: 0
@@ -367,7 +390,6 @@ GameObject:
   - component: {fileID: 9014040488476938559}
   - component: {fileID: 9014040488476938556}
   - component: {fileID: 9014040488476938528}
-  - component: {fileID: 9014040488476938529}
   - component: {fileID: 1877736308}
   m_Layer: 0
   m_Name: FlyEnemy
@@ -384,7 +406,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9014040488476938554}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.8, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -474,7 +496,7 @@ MonoBehaviour:
   visionPoint: {fileID: 9014040488091691167}
   rotationspeed: 15
   range: 20
-  agent: {fileID: 9014040488476938529}
+  agent: {fileID: 1731908634}
   wanderSpots:
   - {fileID: 9014040487129825756}
   - {fileID: 9014040488200987484}
@@ -483,28 +505,6 @@ MonoBehaviour:
   delayBeforeMove: 2
   originalPosOFFSET: 6
   health: 150
---- !u!195 &9014040488476938529
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9014040488476938554}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 1
-  m_BaseOffset: 3.84
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!114 &1877736308
 MonoBehaviour:
   m_ObjectHideFlags: 0

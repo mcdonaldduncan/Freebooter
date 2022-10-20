@@ -39,7 +39,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
         if (Health <= 0)
         {
             this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
-            Destroy(gameObject);
+            Destroy(gameObject.transform.parent.gameObject);
         }
         else
         {
@@ -49,6 +49,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
 
     private void Start()
     {
+        target = GameObject.FindWithTag("Player");
         origianlst = st;
         originalPos = transform.position;
         originalrot = this.transform.rotation;

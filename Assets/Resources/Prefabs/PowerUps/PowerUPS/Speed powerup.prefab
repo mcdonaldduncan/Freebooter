@@ -572,7 +572,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7765114133680488030}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -646,13 +646,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pt: 2
+  powerUpManager: {fileID: 0}
   Player: {fileID: 0}
+  PowerUpManagerGO: {fileID: 4474517036099315396, guid: 12bb28d72d617974381be34cf8f4ec2d, type: 3}
   gunHandler: {fileID: 0}
   firstPersonController: {fileID: 0}
   speedboostMultiplier: 2
   duration: 30
   healAmmount: 15
-  timer: 0
+  timer: 30
   blinktimer: 0
   txt: {fileID: 0}
   img: {fileID: 0}

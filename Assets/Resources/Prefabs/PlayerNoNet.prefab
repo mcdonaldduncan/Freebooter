@@ -57,7 +57,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.01
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -439,6 +439,8 @@ MonoBehaviour:
   playerCanHeadbob: 1
   walkSpeed: 6
   wallRunSpeed: 12
+  owalkspeed: 6
+  owallspeed: 12
   slopeSlideSpeed: 1
   fovDefault: 60
   fovSprint: 70
@@ -515,7 +517,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7639462216728828972}
   - component: {fileID: 3935407912403896590}
-  - component: {fileID: 415331575472387062}
+  - component: {fileID: 486488286}
   m_Layer: 5
   m_Name: AmmoPowerUp
   m_TagString: Untagged
@@ -552,14 +554,14 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 834645104715201901}
   m_CullTransparentMesh: 1
---- !u!114 &415331575472387062
+--- !u!114 &486488286
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 834645104715201901}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -572,7 +574,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 4cbc95fc59307364fac6d9618372d3c8, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -633,7 +635,7 @@ GameObject:
   - component: {fileID: 2538351866942586501}
   - component: {fileID: 7520688932914248028}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: HealthTXT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -687,7 +689,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 15
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -768,7 +770,7 @@ GameObject:
   - component: {fileID: 4461143661620716510}
   - component: {fileID: 5007762414611288680}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: MSTXT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -822,7 +824,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 15
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -901,7 +903,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8424634261648464006}
   - component: {fileID: 672665742121388460}
-  - component: {fileID: 1546331689323013690}
+  - component: {fileID: 1785079734}
   m_Layer: 5
   m_Name: HealthPowerUp
   m_TagString: Untagged
@@ -938,14 +940,14 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3724845368549195453}
   m_CullTransparentMesh: 1
---- !u!114 &1546331689323013690
+--- !u!114 &1785079734
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3724845368549195453}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -958,7 +960,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 0fdbb38a42d8a8946a5a1aa8d93bc316, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -978,7 +980,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6916291685329601772}
   - component: {fileID: 2458582316780284889}
-  - component: {fileID: 5265682752229352250}
+  - component: {fileID: 1071756089}
   m_Layer: 5
   m_Name: MoveSpeedPowerUp
   m_TagString: Untagged
@@ -1015,14 +1017,14 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4380496501884636297}
   m_CullTransparentMesh: 1
---- !u!114 &5265682752229352250
+--- !u!114 &1071756089
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4380496501884636297}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -1035,7 +1037,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: caee16761aaf38243b7cff0c0291aa3f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1057,7 +1059,7 @@ GameObject:
   - component: {fileID: 3898213831261520357}
   - component: {fileID: 705685983530247490}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: AmmoTXT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1111,7 +1113,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 15
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
