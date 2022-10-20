@@ -47,6 +47,7 @@ public class ApplyPowerUp : MonoBehaviour
             */
             PowerUpManager.Instance.IntakeData(duration, pt);
             oneTouch = true;
+            Destroy(this.gameObject);
         }   
     }
 }
