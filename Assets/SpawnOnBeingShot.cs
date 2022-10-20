@@ -10,12 +10,6 @@ public class SpawnOnBeingShot : MonoBehaviour, IDamageable
     private float health;
 
     public float Health { get { return health; } set { health = value; } }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        spawnHere = GameObject.Find("spawnHere").transform;
-    }
     public void TakeDamage(float damageTaken)
     {
         if (spawnedEnemy == null)

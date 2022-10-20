@@ -19,11 +19,13 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
     private float lastShot, ShootRate = .5f;
 
     private float lastValidY = 0f;
-    [SerializeField]
-    private float health;
+   
+
+    public TrailRenderer BulletTrail;
+    [SerializeField] private float Damage;
 
     public float Health { get { return health; } set { health = value; } }
-
+    [SerializeField] private float health;
     public void TakeDamage(float damageTaken)
     {
         Health -= damageTaken;
@@ -34,17 +36,14 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
     {
         if (Health <= 0)
         {
-            this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
-            Destroy(gameObject);
-        }
-        else
-        {
-            return;
+            //this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
+            Destroy(this.gameObject);
         }
     }
     void Start()
     {
-       state = TurretState.LookingForTarget;
+        target = GameObject.FindWithTag("Player");
+        state = TurretState.LookingForTarget;
        rotationType = TurretRotationType.full;
     }
     void FixedUpdate()
@@ -106,12 +105,12 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
 
                 rotation = Quaternion.Euler(tempRotation);
             }
-            
+
             // Lerp can be somewhat low performance because it starts dealing with extremely small increments at the end,
             // rotateTowards keeps the movement constant in degree/second
 
             //transform.rotation = Quaternion.Lerp(transform.rotation, rotation, tempSpeed * Time.deltaTime);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, tempSpeed * Time.deltaTime * 180);
+            body.transform.rotation = Quaternion.RotateTowards(body.transform.rotation, rotation, tempSpeed * Time.deltaTime * 180);
         }
        
     }
@@ -146,9 +145,14 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
           {
              if (Time.time > ShootRate + lastShot)
              {
-               Debug.Log("Player was shot, dealing damage.");
-               lastShot = Time.time;
-             }
+                    var bt = Instantiate(BulletTrail, tip.transform.position, rotation);
+                    bt.GetComponent<MoveForward>().origin = body.gameObject.transform.rotation;
+                    bt.GetComponent<MoveForward>().target = target;
+                    //bt.GetComponent<MoveForward>().damage = Damage;
+                    Debug.Log("Player was shot, dealing damage.");
+                    target.GetComponent<FirstPersonController>().TakeDamage(Damage);
+                    lastShot = Time.time;
+                }
           }
             else
             {
