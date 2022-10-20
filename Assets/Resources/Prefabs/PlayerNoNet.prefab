@@ -337,7 +337,6 @@ MonoBehaviour:
   bulletTrail: {fileID: 3822495795310971056, guid: b2f558980faf30246a11b5d0a206d0e8, type: 3}
   reloading: 0
   infiniteAmmo: 0
-  gunShotAudio: {fileID: 8300000, guid: aa41d7a175e94544ba3a9e4684092689, type: 3}
   handGunBulletDamage: 40
   handGunVerticalSpread: 0
   handGunHorizontalSpread: 0
@@ -347,6 +346,7 @@ MonoBehaviour:
   handGunFireRate: 0
   handGunAimOffset: 15
   handGunReticle: {fileID: 6976750457327859168}
+  handGunShotAudio: {fileID: 8300000, guid: aa41d7a175e94544ba3a9e4684092689, type: 3}
   shotGunBulletDamage: 30
   shotGunBulletAmount: 12
   shotGunVerticalSpread: 10
@@ -357,6 +357,7 @@ MonoBehaviour:
   shotGunFireRate: 1
   shotGunAimOffset: 15
   shotGunReticle: {fileID: 2291208426676616775}
+  shotGunShotAudio: {fileID: 8300000, guid: c15d23ec2ec14b949aa86c30705b3da5, type: 3}
   autoGunBulletDamage: 25
   autoGunHorizontalSpread: 0
   autoGunVerticalSpread: 0
@@ -366,6 +367,7 @@ MonoBehaviour:
   autoFireRate: 0.2
   autoGunAimOffset: 15
   autoGunReticle: {fileID: 2291571642965968571}
+  autoGunShotAudio: {fileID: 8300000, guid: aa41d7a175e94544ba3a9e4684092689, type: 3}
   longGunBulletDamage: 10
   gunInventory: []
   hitEnemy: {fileID: 8781331233716584084, guid: e48bb5898f7e7a347aa4ffb1f06b9b11, type: 3}
