@@ -61,6 +61,7 @@ public class GunHandler : MonoBehaviour
     [SerializeField] private float handGunAimOffset = 15f;
     [SerializeField] private CanvasGroup handGunReticle;
     [SerializeField] private AudioClip handGunShotAudio;
+    [SerializeField] private GameObject handGunModel;
 
     [Header("Shotgun Parameters")]
     [Tooltip("This will apply to EACH 'bullet' the shotgun fires")]
@@ -78,6 +79,7 @@ public class GunHandler : MonoBehaviour
     [SerializeField] private float shotGunAimOffset = 15f;
     [SerializeField] private CanvasGroup shotGunReticle;
     [SerializeField] private AudioClip shotGunShotAudio;
+    [SerializeField] private GameObject shotGunModel;
 
     [Header("Autogun Parameters")]
     [SerializeField] private float autoGunBulletDamage = 10f;
@@ -192,17 +194,16 @@ public class GunHandler : MonoBehaviour
             gun.GunReticle = this.shotGunReticle;
             gun.GunShotAudio = this.shotGunShotAudio;
         }
+
+        gun.GunReticle.alpha = 0;
     }
 
     private void Start()
     {
-        handGunReticle.alpha = 0;
-        shotGunReticle.alpha = 0;
-        autoGunReticle.alpha = 0;
 
-        handGunCurrentAmmo = handGunMaxAmmo;
-        shotGunCurrentAmmo = shotGunMaxAmmo;
-        autoGunCurrentAmmo = autoGunMaxAmmo;
+        handGun.CurrentAmmo = handGunMaxAmmo;
+        shotGun.CurrentAmmo = shotGunMaxAmmo;
+        autoGun.CurrentAmmo = autoGunMaxAmmo;
 
         gunDict.Add(Array.IndexOf(guns, GunType.handGun), handGun);
         gunDict.Add(Array.IndexOf(guns, GunType.shotGun), shotGun);
@@ -215,6 +216,11 @@ public class GunHandler : MonoBehaviour
         lineRenderer = lineDrawer.AddComponent<LineRenderer>();
         lineRenderer.startWidth = 0.1f;
         lineRenderer.endWidth = 0.1f;
+
+
+        //handGun.GunReticle.alpha = 0;
+        //shotGun.GunReticle.alpha = 0;
+        //autoGun.GunReticle.alpha = 0;
 
         currentGun = gunDict[Array.IndexOf(guns, currentGunState)];
         currentGun.GunReticle.alpha = 1;
@@ -238,6 +244,7 @@ public class GunHandler : MonoBehaviour
 
     public void SwitchWeapon(InputAction.CallbackContext context)
     {
+
         currentGun.GunReticle.alpha = 0;
 
         if (currentGunState != guns.Last())
@@ -254,6 +261,18 @@ public class GunHandler : MonoBehaviour
 
         WaitForSeconds reloadToInvoke = gunReloadWaitDict[currentGunState];
         weaponSwitched?.Invoke(reloadToInvoke);
+
+
+        //if (currentGun is HandGun)
+        //{
+        //    shotGunModel.SetActive(false);
+        //    handGunModel.SetActive(true);
+        //}
+        //else if (currentGun is ShotGun)
+        //{
+        //    handGunModel.SetActive(false);
+        //    shotGunModel.SetActive(true);
+        //}
 
         Debug.Log($"Equipped gun: {currentGunState.ToString()}");
     }

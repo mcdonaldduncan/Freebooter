@@ -22,7 +22,7 @@ public class ReticleScale : MonoBehaviour
         reticleRenderer = GetComponent<CanvasRenderer>();
         reticleCanvas = GetComponent<CanvasGroup>();
 
-        reticleCanvas.alpha = 1f;
+        //reticleCanvas.alpha = 1f;
         
     }
 
