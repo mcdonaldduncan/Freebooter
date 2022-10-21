@@ -67,6 +67,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f132a42815b4b44598aa50e8cc680f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Maxhealth: 0
   health: 0
   playerOnSpecialMovement: 0
   playerCanJump: 0
@@ -74,6 +75,8 @@ MonoBehaviour:
   playerCanHeadbob: 0
   walkSpeed: 0
   wallRunSpeed: 0
+  owalkspeed: 6
+  owallspeed: 12
   slopeSlideSpeed: 0
   fovDefault: 60
   fovSprint: 70
@@ -83,8 +86,8 @@ MonoBehaviour:
   lookSpeedY: 2
   upperLookLimit: 50
   lowerLookLimit: 40
-  leftLookLimit: 60
-  rightLookLimit: 35
+  leftLookLimit: 45
+  rightLookLimit: 30
   jumpsAllowed: 0
   remainingJumps: 0
   jumpForce: 0
