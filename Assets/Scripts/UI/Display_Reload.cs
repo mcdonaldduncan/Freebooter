@@ -14,11 +14,13 @@ public class Display_Reload : MonoBehaviour
         text.enabled = false;
     }
 
-     void Update()
+    void Update()
     {
-         if(Cgun.CurrentGun.CurrentAmmo <= Cgun.CurrentGun.CurrentMaxAmmo * .25)
+
+
+        if(Cgun.CurrentGun.CurrentAmmo <= Cgun.CurrentGun.CurrentMaxAmmo * .25)
         {
-            text.enabled = true;
+        text.enabled = true;
         }
         else if(Cgun.CurrentGun.CurrentAmmo > Cgun.CurrentGun.CurrentMaxAmmo * .25)
         {

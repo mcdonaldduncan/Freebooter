@@ -197,7 +197,7 @@ public class NetworkPlayerController : NetworkBehaviour, IDamageable
     {
         playerCamera.enabled = IsLocalPlayer ? true : false;
         audioListener.enabled = IsLocalPlayer ? true : false;
-        //playerGun.enabled = IsLocalPlayer ? true : false;
+        playerGun.enabled = IsLocalPlayer ? true : false;
         canvas.enabled = IsLocalPlayer ? true : false;
         TargetManager.Instance.FindTargets();
     }

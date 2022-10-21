@@ -3,13 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Random = UnityEngine.Random;
 
-public class GunHandler : NetworkBehaviour
+public class GunHandler : MonoBehaviour
 {
     //TODO: Consider making ammo properties in interface and implementing into different guntypes, as this would prevent the need for passing so many parameters
     public IGun CurrentGun { get { return currentGun; } }
@@ -63,7 +62,6 @@ public class GunHandler : NetworkBehaviour
     [SerializeField] private float handGunAimOffset = 15f;
     [SerializeField] private CanvasGroup handGunReticle;
     [SerializeField] private AudioClip handGunShotAudio;
-    [SerializeField] private GameObject handGunModel;
 
     [Header("Shotgun Parameters")]
     [Tooltip("This will apply to EACH 'bullet' the shotgun fires")]
@@ -81,7 +79,6 @@ public class GunHandler : NetworkBehaviour
     [SerializeField] private float shotGunAimOffset = 15f;
     [SerializeField] private CanvasGroup shotGunReticle;
     [SerializeField] private AudioClip shotGunShotAudio;
-    [SerializeField] private GameObject shotGunModel;
 
     [Header("Autogun Parameters")]
     [SerializeField] private float autoGunBulletDamage = 10f;
@@ -154,13 +151,6 @@ public class GunHandler : NetworkBehaviour
 
     }
 
-    public override void OnNetworkSpawn()
-    {
-        if (!IsOwner)
-        {
-
-        }
-    }
 
     private void PopulateGunProperties(IGun gun)
     {
@@ -204,16 +194,17 @@ public class GunHandler : NetworkBehaviour
             gun.GunReticle = this.shotGunReticle;
             gun.GunShotAudio = this.shotGunShotAudio;
         }
-
-        gun.GunReticle.alpha = 0;
     }
 
     private void Start()
     {
+        handGunReticle.alpha = 0;
+        shotGunReticle.alpha = 0;
+        autoGunReticle.alpha = 0;
 
-        handGun.CurrentAmmo = handGunMaxAmmo;
-        shotGun.CurrentAmmo = shotGunMaxAmmo;
-        autoGun.CurrentAmmo = autoGunMaxAmmo;
+        handGunCurrentAmmo = handGunMaxAmmo;
+        shotGunCurrentAmmo = shotGunMaxAmmo;
+        autoGunCurrentAmmo = autoGunMaxAmmo;
 
         gunDict.Add(Array.IndexOf(guns, GunType.handGun), handGun);
         gunDict.Add(Array.IndexOf(guns, GunType.shotGun), shotGun);
@@ -226,11 +217,6 @@ public class GunHandler : NetworkBehaviour
         lineRenderer = lineDrawer.AddComponent<LineRenderer>();
         lineRenderer.startWidth = 0.1f;
         lineRenderer.endWidth = 0.1f;
-
-
-        //handGun.GunReticle.alpha = 0;
-        //shotGun.GunReticle.alpha = 0;
-        //autoGun.GunReticle.alpha = 0;
 
         currentGun = gunDict[Array.IndexOf(guns, currentGunState)];
         currentGun.GunReticle.alpha = 1;
@@ -254,7 +240,6 @@ public class GunHandler : NetworkBehaviour
 
     public void SwitchWeapon(InputAction.CallbackContext context)
     {
-
         currentGun.GunReticle.alpha = 0;
 
         if (currentGunState != guns.Last())
@@ -272,18 +257,6 @@ public class GunHandler : NetworkBehaviour
         WaitForSeconds reloadToInvoke = gunReloadWaitDict[currentGunState];
         weaponSwitched?.Invoke(reloadToInvoke);
 
-
-        //if (currentGun is HandGun)
-        //{
-        //    shotGunModel.SetActive(false);
-        //    handGunModel.SetActive(true);
-        //}
-        //else if (currentGun is ShotGun)
-        //{
-        //    handGunModel.SetActive(false);
-        //    shotGunModel.SetActive(true);
-        //}
-
         Debug.Log($"Equipped gun: {currentGunState.ToString()}");
     }
 
@@ -293,7 +266,6 @@ public class GunHandler : NetworkBehaviour
         //{
         //    currentGun.Shoot()
         //}
-        if (!IsOwner) return;
 
         if (currentGunState == GunType.autoGun)
         {
@@ -316,7 +288,6 @@ public class GunHandler : NetworkBehaviour
         //{
         //    currentGun.Shoot()
         //}
-        if (IsOwner) return;
 
         if (currentGunState == GunType.autoGun)
         {
@@ -353,7 +324,6 @@ public class GunHandler : NetworkBehaviour
 
     public void Reload(InputAction.CallbackContext context)
     {
-        if (!IsOwner) return;
 
         if (currentGunState == GunType.autoGun && autoGunCurrentAmmo < autoGunMaxAmmo && !reloading)
         {

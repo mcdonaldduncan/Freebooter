@@ -656,6 +656,8 @@ MonoBehaviour:
   dashBetweenTime: 0.25
   basicMovement: 0
   wallRunning: 0
+  playerGun: {fileID: 0}
+  playerGun2: {fileID: 0}
 --- !u!1 &834645104715201901
 GameObject:
   m_ObjectHideFlags: 0
@@ -1342,6 +1344,18 @@ PrefabInstance:
       propertyPath: playerController
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 652801065352701344, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 879643474443029076, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3054767799062013784, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 3072037810348470484, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -1438,6 +1452,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: -34.3
       objectReference: {fileID: 0}
+    - target: {fileID: 5592566713663173566, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: Cgun
+      value: 
+      objectReference: {fileID: 297426594336726720}
+    - target: {fileID: 5592566713663173566, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6418156229257029174, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
       propertyPath: m_LocalPosition.x
       value: -275
@@ -1445,6 +1467,14 @@ PrefabInstance:
     - target: {fileID: 6418156229257029174, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
       propertyPath: m_LocalPosition.z
       value: 66
+      objectReference: {fileID: 0}
+    - target: {fileID: 8625978846625241113, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8666182881432768100, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: m_RootOrder
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1476683241220888901, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
