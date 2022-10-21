@@ -5,18 +5,15 @@ using UnityEngine;
 
 public class FlyEnemy : MonoBehaviour, IDamageable
 {
-
     private enum SoldierState { guard, wanderer, chase, originalSpot };
     [Tooltip("/ Guard = Stand in one place until the player breaks line of sight / Wanderer = walks around / Chase = when the soldier goes after the enemy")]
     [SerializeField] private SoldierState st;
     private SoldierState origianlst;
-    [SerializeField] private GameObject tip, light, visionPoint, body;
+    [SerializeField] private GameObject target, tip, light, visionPoint, body;
     [SerializeField] private float rotationspeed, range;
     [SerializeField] private UnityEngine.AI.NavMeshAgent agent;
     Vector3 targetDiretion, originalPos;
     Quaternion rotation, originalrot;
-
-    private NetworkPlayerController target;
 
     [SerializeField] List<Transform> wanderSpots = new List<Transform>();
     [Tooltip("Distance to current wander spot before the player moves to next wander spot.")]
@@ -25,7 +22,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable
     int i = 0;
     bool changeDir = false;
     [SerializeField]
-   
+
     public TrailRenderer BulletTrail;
     [SerializeField] private float Damage;
 
@@ -47,54 +44,11 @@ public class FlyEnemy : MonoBehaviour, IDamageable
     }
     private void Start()
     {
+        target = GameObject.FindWithTag("Player");
         origianlst = st;
         originalPos = transform.position;
         originalrot = this.transform.rotation;
     }
-
-    private void Update()
-    {
-        FindTarget();
-    }
-
-    void FindTarget()
-    {
-        if (TargetManager.Instance == null) return;
-
-        
-
-        float distanceToPlayer1 = 0;
-        float distanceToPlayer2 = 0;
-        for (int i = 0; i < TargetManager.Instance.targets.Length; i++)
-        {
-            if (i == 0)
-            {
-                distanceToPlayer1 = Vector3.Distance(gameObject.transform.position, TargetManager.Instance.targets[i].transform.position);
-                if (distanceToPlayer1 < range && target != null)
-                {
-                    return;
-                }
-            }
-            else
-            {
-                distanceToPlayer2 = Vector3.Distance(gameObject.transform.position, TargetManager.Instance.targets[i].transform.position);
-                if (distanceToPlayer2 < range && target != null)
-                {
-                    return;
-                }
-            }
-        }
-        if (distanceToPlayer1 > distanceToPlayer2)
-        {
-            target = TargetManager.Instance.targets[0];
-        }
-        if (distanceToPlayer2 > distanceToPlayer1)
-        {
-            target = TargetManager.Instance.targets[1];
-        }
-
-    }
-
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -168,7 +122,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable
                 {
                     var bt = Instantiate(BulletTrail, tip.transform.position, rotation);
                     bt.GetComponent<MoveForward>().origin = this.gameObject.transform.rotation;
-                    bt.GetComponent<MoveForward>().target = target.gameObject;
+                    bt.GetComponent<MoveForward>().target = target;
                     //bt.GetComponent<MoveForward>().damage = Damage;
                     Debug.Log("Player was shot, dealing damage.");
                     target.GetComponent<FirstPersonController>().TakeDamage(Damage);
@@ -240,7 +194,4 @@ public class FlyEnemy : MonoBehaviour, IDamageable
     {
         st = origianlst;
     }
-
-
-    
 }
