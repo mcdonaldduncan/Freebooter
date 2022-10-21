@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Rendering;
@@ -23,7 +22,7 @@ public class ReticleScale : MonoBehaviour
         reticleRenderer = GetComponent<CanvasRenderer>();
         reticleCanvas = GetComponent<CanvasGroup>();
 
-        reticleCanvas.alpha = 1f;
+        //reticleCanvas.alpha = 1f;
         
     }
 

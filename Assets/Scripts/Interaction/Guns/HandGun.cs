@@ -1,8 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
-using Unity.VisualScripting;
-using UnityEditor.Build.Content;
 using UnityEngine;
 
 public class HandGun : MonoBehaviour, IGun
@@ -10,7 +7,7 @@ public class HandGun : MonoBehaviour, IGun
     public GunHandler GunManager { get; set; }
     public Transform ShootFrom { get; set; }
     public LayerMask LayerToIgnore { get; set; }
-    public float FireRate { get; set; } 
+    public float FireRate { get; set; }
     public float BulletDamage { get; set; }
     public float VerticalSpread { get; set; }
     public float HorizontalSpread { get; set; }
