@@ -282,44 +282,45 @@ public class GunHandler : MonoBehaviour
         }
     }
 
-    public void ShootOther(InputAction.CallbackContext context)
-    {
-        //if (currentGunAmmo > 0 && !reloading)
-        //{
-        //    currentGun.Shoot()
-        //}
+    // network stuff do not delete
+    //public void ShootOther(InputAction.CallbackContext context)
+    //{
+    //    //if (currentGunAmmo > 0 && !reloading)
+    //    //{
+    //    //    currentGun.Shoot()
+    //    //}
 
-        if (currentGunState == GunType.autoGun)
-        {
-            autoGun.ShootTriggered(context);
-        }
-        if ((currentGunState == GunType.handGun || currentGunState == GunType.longGun) && context.performed && handGunCurrentAmmo > 0 && !reloading)
-        {
-            handGun.Shoot();
-        }
+    //    if (currentGunState == GunType.autoGun)
+    //    {
+    //        autoGun.ShootTriggered(context);
+    //    }
+    //    if ((currentGunState == GunType.handGun || currentGunState == GunType.longGun) && context.performed && handGunCurrentAmmo > 0 && !reloading)
+    //    {
+    //        handGun.Shoot();
+    //    }
 
-        if (currentGunState == GunType.shotGun && context.performed && shotGunCurrentAmmo > 0 && !reloading)
-        {
-            shotGun.Shoot();
-        }
-    }
+    //    if (currentGunState == GunType.shotGun && context.performed && shotGunCurrentAmmo > 0 && !reloading)
+    //    {
+    //        shotGun.Shoot();
+    //    }
+    //}
 
 
-    [ServerRpc(RequireOwnership = false)]
-    void SyncShootingServerRPC()
-    {
-        SyncShootingClientRPC();
-    }
+    //[ServerRpc(RequireOwnership = false)]
+    //void SyncShootingServerRPC()
+    //{
+    //    SyncShootingClientRPC();
+    //}
 
-    [ClientRpc]
-    void SyncShootingClientRPC()
-    {
-        var gunHandlers = FindObjectsOfType<GunHandler>();
-        foreach (GunHandler gh in gunHandlers)
-        {
-            //gh.ShootOther();
-        }
-    }
+    //[ClientRpc]
+    //void SyncShootingClientRPC()
+    //{
+    //    var gunHandlers = FindObjectsOfType<GunHandler>();
+    //    foreach (GunHandler gh in gunHandlers)
+    //    {
+    //        //gh.ShootOther();
+    //    }
+    //}
 
 
     public void Reload(InputAction.CallbackContext context)
