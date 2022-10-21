@@ -119,6 +119,8 @@ public class NetFirstPersonController : NetworkBehaviour
 
     private InputActions _input;
 
+   
+
     void Awake()
     {
         netObj = GetComponent<NetworkObject>();
