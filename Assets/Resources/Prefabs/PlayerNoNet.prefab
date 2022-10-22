@@ -349,7 +349,6 @@ MonoBehaviour:
   handGunAimOffset: 15
   handGunReticle: {fileID: 6976750457327859168}
   handGunShotAudio: {fileID: 8300000, guid: aa41d7a175e94544ba3a9e4684092689, type: 3}
-  handGunModel: {fileID: 640006171159207122}
   shotGunBulletDamage: 30
   shotGunBulletAmount: 12
   shotGunVerticalSpread: 10
@@ -361,7 +360,6 @@ MonoBehaviour:
   shotGunAimOffset: 15
   shotGunReticle: {fileID: 2291208426676616775}
   shotGunShotAudio: {fileID: 8300000, guid: c15d23ec2ec14b949aa86c30705b3da5, type: 3}
-  shotGunModel: {fileID: 640006171448310634}
   autoGunBulletDamage: 25
   autoGunHorizontalSpread: 0
   autoGunVerticalSpread: 0
@@ -1373,11 +1371,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0a86d0ded4b367c418e884df43d64e1e, type: 3}
   m_PrefabInstance: {fileID: 297426593193501059}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &640006171159207122 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 0a86d0ded4b367c418e884df43d64e1e, type: 3}
-  m_PrefabInstance: {fileID: 297426593193501059}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &297426593481410107
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1460,11 +1453,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4e4711e09ab9ece43ad7f311f0813aa4, type: 3}
   m_PrefabInstance: {fileID: 297426593481410107}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &640006171448310634 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4e4711e09ab9ece43ad7f311f0813aa4, type: 3}
-  m_PrefabInstance: {fileID: 297426593481410107}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3351445538836964475
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1478,11 +1466,11 @@ PrefabInstance:
       objectReference: {fileID: 297426594678655172}
     - target: {fileID: 879643474443029076, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3054767799062013784, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3072037810348470484, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
       propertyPath: m_Pivot.x
@@ -1580,6 +1568,26 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: -34.30005
       objectReference: {fileID: 0}
+    - target: {fileID: 4352794833334648421, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: m_Color.b
+      value: 0.20392157
+      objectReference: {fileID: 0}
+    - target: {fileID: 4352794833334648421, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4352794833334648421, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5165234575298932934, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: m_Color.b
+      value: 0.9607843
+      objectReference: {fileID: 0}
+    - target: {fileID: 5165234575298932934, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5592566713663173566, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
       propertyPath: Cgun
       value: 
@@ -1594,7 +1602,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8625978846625241113, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8666182881432768100, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
       propertyPath: m_RootOrder
