@@ -16,11 +16,12 @@ public class MoveForward : MonoBehaviour
         {
             targetDiretion = target.transform.position - transform.position;
             transform.rotation = origin;
-            Destroy(this, 4);
+            
         }
         catch (System.Exception)
         {
         }
+        Destroy(this.gameObject, 4);
     }
 
     // Update is called once per frame

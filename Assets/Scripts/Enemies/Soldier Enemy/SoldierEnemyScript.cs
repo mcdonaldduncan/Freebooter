@@ -169,10 +169,15 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
     void ChasePlayer()
     {
        var dist = Vector3.Distance(this.transform.position, target.transform.position);
-       if ( dist < range &&  dist > range/2)
+        if (dist <= range/2)
+        {
+            agent.ResetPath();
+        }
+       else if ( dist < range &&  dist > range/1.25)
        {
             agent.SetDestination(target.transform.position);
        }
+
     }
     void StateChase() //swaps state to Chase
     {

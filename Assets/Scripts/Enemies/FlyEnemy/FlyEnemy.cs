@@ -5,16 +5,16 @@ using UnityEngine;
 
 public class FlyEnemy : MonoBehaviour, IDamageable
 {
-    private enum SoldierState { guard, wanderer, chase, originalSpot };
+    private enum SoldierState { guard, wanderer, chase, originalSpot, Relocating };
     [Tooltip("/ Guard = Stand in one place until the player breaks line of sight / Wanderer = walks around / Chase = when the soldier goes after the enemy")]
     [SerializeField] private SoldierState st;
     private SoldierState origianlst;
-    [SerializeField] private GameObject target, tip, light, visionPoint, body;
+    [SerializeField] private GameObject target, tip, light, visionPoint, body,SensorR,SensorL;
     [SerializeField] private float rotationspeed, range;
     [SerializeField] private UnityEngine.AI.NavMeshAgent agent;
     Vector3 targetDiretion, originalPos;
     Quaternion rotation, originalrot;
-
+    
     [SerializeField] List<Transform> wanderSpots = new List<Transform>();
     [Tooltip("Distance to current wander spot before the player moves to next wander spot.")]
     [SerializeField] private float wanderSpotOffset = 1f, delayBeforeMove = 2, originalPosOFFSET = 1f;
@@ -72,6 +72,11 @@ public class FlyEnemy : MonoBehaviour, IDamageable
                 break;
             case (SoldierState.originalSpot):
                 ReturnToOriginalSpot();
+                break;
+            case SoldierState.Relocating:
+                //Im collaing Relocate() somehwere else to not call it many times in update
+                Aim();
+                Shoot();
                 break;
             default:
                 break;
@@ -176,6 +181,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable
     void StateChase() //swaps state to Chase
     {
         st = SoldierState.chase;
+        Invoke("RecolcateState", 5);
     }
     void StateReturnOriginalSpot()
     {
@@ -193,5 +199,48 @@ public class FlyEnemy : MonoBehaviour, IDamageable
     void ReturnToOriginalState()
     {
         st = origianlst;
+    }
+    void RecolcateState()
+    {
+        st = SoldierState.Relocating;
+        Relocate();
+
+    }
+    void Relocate()
+    {
+        var pos = this.transform.position;
+        float dist = range / 2;
+        if (Right(pos, dist) == true)
+        {
+            agent.SetDestination(new Vector3(pos.x + dist, pos.y, pos.z));
+        }
+        else if (Left(pos, dist) == true)
+        {
+            agent.SetDestination(new Vector3(pos.x - dist, pos.y, pos.z + dist));
+        }
+        StateChase();
+        
+    }
+    bool Right(Vector3 pos, float dist)
+    {
+        RaycastHit hit;
+        Debug.DrawRay(SensorR.transform.position, Vector3.right, Color.blue);
+        Physics.Raycast(SensorR.transform.position, Vector3.right, out hit, range / 2);
+        if (hit.collider == null)
+        {
+            return true;
+        }
+        return false;
+    }
+    bool Left(Vector3 pos, float dist)
+    {
+        RaycastHit hit;
+        Debug.DrawRay(SensorL.transform.position, -Vector3.right, Color.blue);
+        Physics.Raycast(SensorR.transform.position, -Vector3.right, out hit, range / 2);
+        if (hit.collider == null)
+        {
+            return true;
+        }
+        return false;
     }
 }
