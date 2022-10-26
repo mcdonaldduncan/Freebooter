@@ -382,10 +382,13 @@ public class FirstPersonController : MonoBehaviour, IDamageable
             yield return null;
         }
 
-        if (playerShouldDash && PlayerCanDash)
+        if (PlayerCanDash)
         {
             yield return dashBetweenWait;
-            StartCoroutine(Dash());
+            if (playerShouldDash)
+            {
+                StartCoroutine(Dash());
+            }
         }
         else
         {
