@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -28,8 +29,8 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     public bool playerOnSpecialMovement = false;
     //[SerializeField]
     //private bool playerCanSprint = true;
-    [SerializeField]
-    private bool playerCanJump = true;
+    //[SerializeField]
+    //private bool playerCanJump = true;
     [SerializeField]
     private bool playerCanDash = true;
     //[SerializeField]
@@ -78,16 +79,15 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     [SerializeField]
     private int jumpsAllowed = 2;
     [SerializeField]
-    private int remainingJumps;
-    [SerializeField]
     private float jumpForce = 8f;
     [SerializeField]
     private float gravity = 30f;
+    private int remainingJumps;
 
     [Header("Wallrunning Parameters")]
     [SerializeField] private LayerMask whatIsWall;
     [SerializeField] private LayerMask whatIsGround;
-    [SerializeField] private float wallRunForce;
+    [SerializeField] private float wallRunGravity;
     [SerializeField] private float maxWallRunTime;
     [SerializeField] private float wallCheckDistance;
     [SerializeField] private float minJumpHeight;
@@ -424,11 +424,14 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
     private void HandleJump(InputAction.CallbackContext context)
     {
-        remainingJumps--;
         //only jump if property conditions are met
-        if (remainingJumps > 0)
+        if (!characterController.isGrounded || characterController.isGrounded)
         {
-            moveDirection.y = jumpForce;
+            if (remainingJumps > 0)
+            {
+                moveDirection.y = jumpForce;
+                remainingJumps--;
+            }
         }
     }
 
@@ -464,15 +467,13 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         HandleHeadbob();
         AdaptFOV();
 
+        Debug.Log($"Remaining Jumps: {remainingJumps}");
+        Debug.Log($"Player Grounded: {characterController.isGrounded}");
+
         //make sure the player is on the ground if applying gravity (after pressing Jump)
         if (!characterController.isGrounded && !playerDashing)
         {
             moveDirection.y -= gravity * Time.deltaTime;
-        }
-
-        if (remainingJumps < jumpsAllowed && characterController.isGrounded)
-        {
-            remainingJumps = jumpsAllowed;
         }
 
         //The direction in which the player moves based on input
@@ -484,6 +485,11 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
         //move the player based on the parameters gathered in the "Handle-" functions
         characterController.Move(moveDirection * Time.deltaTime);
+
+        if (characterController.isGrounded && remainingJumps < jumpsAllowed)
+        {
+            remainingJumps = jumpsAllowed;
+        }
     }
 
     private bool OnSteepSlope()
@@ -524,6 +530,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         {
             if (state != MovementState.wallrunning)
             {
+                remainingJumps = jumpsAllowed;
                 state = MovementState.wallrunning;
             }
         }
@@ -552,13 +559,23 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
         Vector3 wallForward = Vector3.Cross(wallNormal, transform.up);
 
+        if (!characterController.isGrounded && !playerDashing)
+        {
+            moveDirection.y -= wallRunGravity * Time.deltaTime;
+        }
+
         //The direction in which the player moves based on input
-        //float moveDirectionY = moveDirection.y;
+        float moveDirectionY = moveDirection.y;
         moveDirection = (transform.TransformDirection(wallForward) * MoveInput.x) + (transform.TransformDirection(Vector3.forward) * MoveInput.y);
-        moveDirection.y = 0;
+        moveDirection.y = moveDirectionY;
 
         //move the player based on the parameters gathered in the "Handle-" functions
         characterController.Move(moveDirection * Time.deltaTime);
+
+        if (characterController.isGrounded && remainingJumps < jumpsAllowed)
+        {
+            remainingJumps = jumpsAllowed;
+        }
     }
 
     public void TakeDamage(float damageTaken)
