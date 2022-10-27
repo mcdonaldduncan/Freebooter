@@ -499,6 +499,8 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     {
         if (!characterController.isGrounded) return false;
 
+        if (!characterController.isGrounded && moveDirection.y == 0) return true;
+
         if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, (characterController.height / 2) + groundRayDistance))
         {
             float slopeAngle = Vector3.Angle(slopeHit.normal, Vector3.up);
@@ -533,6 +535,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         {
             if (state != MovementState.wallrunning)
             {
+                moveDirection.y = 0;
                 remainingJumps = jumpsAllowed;
                 state = MovementState.wallrunning;
             }
@@ -541,7 +544,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         {
             if (state == MovementState.wallrunning)
             {
-                remainingJumps = jumpsAllowed;
+                //remainingJumps = jumpsAllowed;
                 state = MovementState.basic;
             }
         }
@@ -550,7 +553,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     private void HandleWallrunInput(InputAction.CallbackContext context)
     {
         currentInput = (context.ReadValue<Vector2>());
-        MoveInput = new Vector2(currentInput.x * wallRunSpeed, currentInput.y * wallRunSpeed);
+        MoveInput = new Vector2(/*currentInput.x * wallRunSpeed*/0, currentInput.y * wallRunSpeed);
     }
 
     private void ApplyFinalWallrunMovements()
@@ -562,15 +565,12 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
         Vector3 wallForward = Vector3.Cross(wallNormal, transform.up);
 
-        if (!characterController.isGrounded && !playerDashing)
-        {
-            moveDirection.y -= wallRunGravity * Time.deltaTime;
-        }
+        moveDirection.y -= wallRunGravity * Time.deltaTime;
 
         //The direction in which the player moves based on input
         float moveDirectionY = moveDirection.y;
         moveDirection = (transform.TransformDirection(wallForward) * MoveInput.x) + (transform.TransformDirection(Vector3.forward) * MoveInput.y);
-        moveDirection.y = moveDirectionY;
+        moveDirection.y = -Mathf.Abs(moveDirectionY);
 
         //move the player based on the parameters gathered in the "Handle-" functions
         characterController.Move(moveDirection * Time.deltaTime);
