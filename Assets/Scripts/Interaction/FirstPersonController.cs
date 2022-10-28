@@ -15,8 +15,11 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     public float Health { get { return health; } set { health = value; } }
     public bool PlayerCanMove { get; private set; } = true;
     public bool PlayerIsDashing { get; private set; }
-    public bool PlayerCanDash => dashesRemaining > dashesAllowed - dashesAllowed;
+    private bool CanDoNextDash => lastDashEnd + timeBetweenDashes < Time.time;
     private bool DashShouldCooldown => dashesRemaining < dashesAllowed;
+    private bool NonZeroVelocity => characterController.velocity.z != 0 || characterController.velocity.x != 0;
+    private bool PlayerHasDashes => dashesRemaining > dashesAllowed - dashesAllowed;
+    public bool PlayerCanDash => PlayerHasDashes && NonZeroVelocity;
     //private bool PlayerIsSprinting => playerCanSprint && Input.GetKey(sprintKey) && !playerIsCrouching;
     //private bool PlayerShouldCrouch => Input.GetKeyDown(crouchKey) && !playerInCrouchAnimation && characterController.isGrounded;
 
@@ -147,6 +150,9 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     [Tooltip("If player is holding dash and there are dashes remaining, how much time should there be between the dashes?")]
     [SerializeField]
     private float dashBetweenTime;
+    private float dashStartTime;
+    private float lastDashEnd;
+    private float timeBetweenDashes;
     private float dashCooldownStartTime;
 
     [Header("State bools")]
@@ -188,8 +194,6 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     
     void Awake()
     {
-        walkSpeed = 6;
-        wallRunSpeed = 12;
         health = Maxhealth;
         dashCooldownWait = new WaitForSeconds(dashCooldownTime);
         dashBetweenWait = new WaitForSeconds(dashBetweenTime);
@@ -222,6 +226,14 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         {
             if (PlayerCanMove)
             {
+                //if (playerShouldDash && PlayerHasDashes)
+                //{
+                //    BeginDash();
+                //    if (playerDashing)
+                //    {
+                //        Dash();
+                //    }
+                //}
                 if (DashShouldCooldown)
                 {
                     DashCooldown();
@@ -348,9 +360,10 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         //}
         if (context.performed)
         {
+            //InitiateDash();
             playerShouldDash = true;
 
-            if ((characterController.velocity.z != 0 || characterController.velocity.x != 0) && PlayerCanDash)
+            if (/*(characterController.velocity.z != 0 || characterController.velocity.x != 0) &&*/ PlayerCanDash)
             {
                 StartCoroutine(Dash());
             }
@@ -362,22 +375,71 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         }
     }
 
-    //TODO: Figure out why there's a weird stutter when falling after cancelling before second dash in midair
+    //private void BeginDash()
+    //{
+    //    if (CanDoNextDash)
+    //    {
+    //        if (!playerDashing)
+    //        {
+    //            playerDashing = true;
+    //            dashesRemaining--;
+    //            dashStartTime = Time.time;
+    //            dashCooldownStartTime = dashStartTime;
+
+    //            moveDirection = (transform.TransformDirection(Vector3.right) * MoveInput.x) + (transform.TransformDirection(Vector3.forward) * MoveInput.y);
+    //            moveDirection.y = 0;
+    //        }
+    //    }
+    //    else
+    //    {
+    //        playerDashing = false;
+    //    }
+    //}
+
+    //private void Dash()
+    //{
+    //    if (dashStartTime + dashTime > Time.time && PlayerCanDash && playerDashing)
+    //    {
+    //        characterController.Move(moveDirection * dashSpeed * Time.deltaTime);
+    //    }
+    //    else
+    //    {
+    //        lastDashEnd = Time.time;
+    //        playerDashing = false;
+    //    }
+    //}
+
+    //private void InitiateDash()
+    //{
+    //    dashesRemaining--;
+    //    dashStartTime = Time.time;
+    //    dashCooldownStartTime = dashStartTime;
+
+    //    moveDirection = (transform.TransformDirection(Vector3.right) * MoveInput.x) + (transform.TransformDirection(Vector3.forward) * MoveInput.y);
+    //    moveDirection.y = 0;
+    //}
+
+    //private void DoTheDash()
+    //{
+
+    //}
+
+    //TODO: Doesn't need to be a coroutine
     private IEnumerator Dash()
     {
         dashesRemaining--;
         float startTime = Time.time;
         dashCooldownStartTime = startTime;
 
-        //The direction in which the player moves based on input
-        float moveDirectionY = moveDirection.y;
         moveDirection = (transform.TransformDirection(Vector3.right) * MoveInput.x) + (transform.TransformDirection(Vector3.forward) * MoveInput.y);
-        moveDirection.y = 0;//moveDirectionY;
+        moveDirection.y = 0;
 
-        while (Time.time < startTime + dashTime && playerShouldDash)
+        while (Time.time < startTime + dashTime) //&& playerShouldDash)
         {
             playerDashing = true;
             characterController.Move(moveDirection * dashSpeed * Time.deltaTime);
+
+            lastDashEnd = Time.time;
 
             yield return null;
         }
@@ -470,9 +532,6 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         HandleHeadbob();
         AdaptFOV();
 
-        Debug.Log($"Remaining Jumps: {remainingJumps}");
-        Debug.Log($"Player Grounded: {characterController.isGrounded}");
-
         //make sure the player is on the ground if applying gravity (after pressing Jump)
         if (!characterController.isGrounded && !playerDashing)
         {
@@ -530,21 +589,27 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
         verticalInput = Input.GetAxisRaw("Vertical");
 
-        //State 1 - Wallrunning
+        //If the raycast has detected a wall and the player is not touching the ground
         if ((wallLeft || wallRight) && verticalInput > 0 && !characterController.isGrounded)
         {
+            //Reset the jumps as if the player has touched the ground
+            remainingJumps = jumpsAllowed;
+
+            //If the player is not currently in the wallRunning state
             if (state != MovementState.wallrunning)
             {
+                //Make sure the player can't climb the wall
                 moveDirection.y = 0;
-                remainingJumps = jumpsAllowed;
+                //Set the state to wallRunning
                 state = MovementState.wallrunning;
             }
         }
         else
         {
+            //If a wall is not detected and if the player is currently in the wallrunning state
             if (state == MovementState.wallrunning)
             {
-                //remainingJumps = jumpsAllowed;
+                //Set the state back to the basic movement state
                 state = MovementState.basic;
             }
         }
@@ -553,7 +618,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     private void HandleWallrunInput(InputAction.CallbackContext context)
     {
         currentInput = (context.ReadValue<Vector2>());
-        MoveInput = new Vector2(/*currentInput.x * wallRunSpeed*/0, currentInput.y * wallRunSpeed);
+        MoveInput = new Vector2(0, currentInput.y * wallRunSpeed); //Make sure the player can't move up the wall
     }
 
     private void ApplyFinalWallrunMovements()
@@ -561,10 +626,13 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         HandleHeadbob();
         AdaptFOV();
 
+        //Get of the normal of the surface ray hit on the right or left wall
         Vector3 wallNormal = wallRight ? rightWallHit.normal : leftWallHit.normal;
 
+        //Get the cross product of the wallNormal and the up direction of the player transform
         Vector3 wallForward = Vector3.Cross(wallNormal, transform.up);
 
+        //apply gravity
         moveDirection.y -= wallRunGravity * Time.deltaTime;
 
         //The direction in which the player moves based on input
@@ -575,6 +643,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         //move the player based on the parameters gathered in the "Handle-" functions
         characterController.Move(moveDirection * Time.deltaTime);
 
+        //if the player is on the ground, and they have less than max jumps, reset the remaining jumps to the maximum (for double jumping)
         if (characterController.isGrounded && remainingJumps < jumpsAllowed)
         {
             remainingJumps = jumpsAllowed;
