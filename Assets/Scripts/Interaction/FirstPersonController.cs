@@ -82,10 +82,19 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     [SerializeField]
     private int jumpsAllowed = 2;
     [SerializeField]
+    private float maxJumpTime;
+    [SerializeField]
     private float jumpForce = 8f;
     [SerializeField]
+    private float secondJumpForce = 16f;
+    [SerializeField]
     private float gravity = 30f;
+    private float finalJumpForce;
     private int remainingJumps;
+    private bool jumpedOnce;
+    private bool jumpStarted;
+    private bool holdingJump;
+    private float holdJumpTimer;
 
     [Header("Wallrunning Parameters")]
     [SerializeField] private LayerMask whatIsWall;
@@ -161,7 +170,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
     private Camera playerCamera;
     private CharacterController characterController;
-    //private Rigidbody playerRB;
+    private Rigidbody playerRB;
     private GunHandler playerGun;
 
     private Vector3 moveDirection;
@@ -200,7 +209,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
         playerCamera = GetComponentInChildren<Camera>();
         characterController = GetComponent<CharacterController>();
-        //playerRB = GetComponent<Rigidbody>();
+        playerRB = GetComponent<Rigidbody>();
         playerGun = GetComponentInChildren<GunHandler>();
 
         defaultYPosCamera = playerCamera.transform.localPosition.y;
@@ -234,6 +243,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
                 //        Dash();
                 //    }
                 //}
+                Debug.Log($"Jump Started: {jumpStarted}");
                 if (DashShouldCooldown)
                 {
                     DashCooldown();
@@ -246,6 +256,16 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         HandleMouseLook();
     }
 
+    private void FixedUpdate()
+    {
+        if (holdingJump && holdJumpTimer < maxJumpTime)
+        {
+            //Debug.Log($"Jumps Remaining: {remainingJumps} | Jumped Once: {jumpedOnce} | Final Jump Force: {finalJumpForce}");
+            moveDirection.y = finalJumpForce;
+            holdJumpTimer += Time.fixedDeltaTime;
+        }
+    }
+
     private void OnEnable()
     {
         //Subscribe methods to the input actions
@@ -256,7 +276,8 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         _input.HumanoidLand.Walk.canceled += HandleWalkInput;
         _input.HumanoidLand.Dash.performed += HandleDashInput;
         _input.HumanoidLand.Dash.canceled += HandleDashInput;
-        _input.HumanoidLand.Jump.performed += HandleJump;
+        _input.HumanoidLand.Jump.started += HandleJump;
+        _input.HumanoidLand.Jump.canceled += HandleJump;
         _input.HumanoidLand.Restart.performed += ReloadScene;
 
         //HumanoidWall
@@ -281,7 +302,8 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         _input.HumanoidLand.Walk.canceled -= HandleWalkInput;
         _input.HumanoidLand.Dash.performed -= HandleDashInput;
         _input.HumanoidLand.Dash.canceled -= HandleDashInput;
-        _input.HumanoidLand.Jump.performed -= HandleJump;
+        _input.HumanoidLand.Jump.started -= HandleJump;
+        _input.HumanoidLand.Jump.canceled -= HandleJump;
         _input.HumanoidLand.Restart.performed -= ReloadScene;
 
         //HumanoidWall
@@ -489,13 +511,25 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
     private void HandleJump(InputAction.CallbackContext context)
     {
-        //only jump if property conditions are met
-        if (!characterController.isGrounded || characterController.isGrounded)
+        //remainingJumps--;
+        if (context.canceled)
         {
-            if (remainingJumps > 0)
+            //remainingJumps++;
+            holdingJump = false;
+            holdJumpTimer = 0;
+        }
+        if (context.started && remainingJumps > 0)
+        {
+            remainingJumps--;
+            holdingJump = true;
+            if (!jumpedOnce)
             {
-                moveDirection.y = jumpForce;
-                remainingJumps--;
+                finalJumpForce = jumpForce;
+                jumpedOnce = true;
+            }
+            else if (jumpedOnce)
+            {
+                finalJumpForce = secondJumpForce;
             }
         }
     }
@@ -550,6 +584,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
         if (characterController.isGrounded && remainingJumps < jumpsAllowed)
         {
+            jumpedOnce = false;
             remainingJumps = jumpsAllowed;
         }
     }
@@ -593,6 +628,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         if ((wallLeft || wallRight) && verticalInput > 0 && !characterController.isGrounded)
         {
             //Reset the jumps as if the player has touched the ground
+            jumpedOnce = false;
             remainingJumps = jumpsAllowed;
 
             //If the player is not currently in the wallRunning state
@@ -646,6 +682,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         //if the player is on the ground, and they have less than max jumps, reset the remaining jumps to the maximum (for double jumping)
         if (characterController.isGrounded && remainingJumps < jumpsAllowed)
         {
+            jumpedOnce = false;
             remainingJumps = jumpsAllowed;
         }
     }
