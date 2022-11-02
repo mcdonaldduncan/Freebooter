@@ -79,8 +79,9 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
     //Parameters for jump height and gravity
     [Header("Jumping Parameters")]
+    [Tooltip("How many jumps are allowed after the inital one?")]
     [SerializeField]
-    private int jumpsAllowed = 2;
+    private int extraJumpsAllowed = 1;
     [SerializeField]
     private float maxJumpTime;
     [SerializeField]
@@ -90,7 +91,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     [SerializeField]
     private float gravity = 30f;
     private float finalJumpForce;
-    private int remainingJumps;
+    private int extraJumpsRemaining;
     private bool jumpedOnce;
     private bool jumpStarted;
     private bool holdingJump;
@@ -224,7 +225,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
         state = MovementState.basic;
 
-        remainingJumps = jumpsAllowed;
+        extraJumpsRemaining = extraJumpsAllowed;
         dashesRemaining = dashesAllowed;
     }
 
@@ -243,7 +244,6 @@ public class FirstPersonController : MonoBehaviour, IDamageable
                 //        Dash();
                 //    }
                 //}
-                Debug.Log($"Jump Started: {jumpStarted}");
                 if (DashShouldCooldown)
                 {
                     DashCooldown();
@@ -260,7 +260,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     {
         if (holdingJump && holdJumpTimer < maxJumpTime)
         {
-            //Debug.Log($"Jumps Remaining: {remainingJumps} | Jumped Once: {jumpedOnce} | Final Jump Force: {finalJumpForce}");
+            //Debug.Log($"Jumps Remaining: {extraJumpsRemaining} | Jumped Once: {jumpedOnce} | Final Jump Force: {finalJumpForce}");
             moveDirection.y = finalJumpForce;
             holdJumpTimer += Time.fixedDeltaTime;
         }
@@ -511,27 +511,31 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
     private void HandleJump(InputAction.CallbackContext context)
     {
-        //remainingJumps--;
+        //extraJumpsRemaining--;
         if (context.canceled)
         {
-            //remainingJumps++;
+            //extraJumpsRemaining++;
             holdingJump = false;
             holdJumpTimer = 0;
         }
-        if (context.started && remainingJumps > 0)
+        if (context.started && extraJumpsRemaining > 0)
         {
-            remainingJumps--;
+            extraJumpsRemaining--;
             holdingJump = true;
-            if (!jumpedOnce)
+            if (characterController.isGrounded)
             {
                 finalJumpForce = jumpForce;
                 jumpedOnce = true;
+                //extraJumpsRemaining--;
             }
-            else if (jumpedOnce)
+            else if (!characterController.isGrounded)
             {
                 finalJumpForce = secondJumpForce;
+                jumpedOnce = false;
             }
         }
+
+        //Debug.Log($"Character Grounded: {characterController.isGrounded}");
     }
 
     //KEEPING THIS INCASE WE WANT TO ADD CROUCHING
@@ -582,10 +586,10 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         //move the player based on the parameters gathered in the "Handle-" functions
         characterController.Move(moveDirection * Time.deltaTime);
 
-        if (characterController.isGrounded && remainingJumps < jumpsAllowed)
+        if (extraJumpsRemaining < extraJumpsAllowed && characterController.isGrounded)
         {
             jumpedOnce = false;
-            remainingJumps = jumpsAllowed;
+            extraJumpsRemaining = extraJumpsAllowed;
         }
     }
 
@@ -629,7 +633,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         {
             //Reset the jumps as if the player has touched the ground
             jumpedOnce = false;
-            remainingJumps = jumpsAllowed;
+            extraJumpsRemaining = extraJumpsAllowed;
 
             //If the player is not currently in the wallRunning state
             if (state != MovementState.wallrunning)
@@ -680,10 +684,10 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         characterController.Move(moveDirection * Time.deltaTime);
 
         //if the player is on the ground, and they have less than max jumps, reset the remaining jumps to the maximum (for double jumping)
-        if (characterController.isGrounded && remainingJumps < jumpsAllowed)
+        if (characterController.isGrounded && extraJumpsRemaining < extraJumpsAllowed)
         {
             jumpedOnce = false;
-            remainingJumps = jumpsAllowed;
+            extraJumpsRemaining = extraJumpsAllowed;
         }
     }
 
