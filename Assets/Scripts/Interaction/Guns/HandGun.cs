@@ -48,97 +48,142 @@ public class HandGun : MonoBehaviour, IGun
     //Doesn't need to be static anymore since this script is added as a component now
     public void Shoot()
     {
+        //if the player has ammo and they are not reloading
         if (CanShoot)
         {
             RaycastHit hitInfo;
 
-            Vector3 aimSpot = GunManager.FPSCam.transform.position;
-            aimSpot += GunManager.FPSCam.transform.forward * this.AimOffset;
-            this.ShootFrom.LookAt(aimSpot);
+            //Make sure the gun shoots towards the crosshair
+            //Vector3 aimSpot = GunManager.FPSCam.transform.position;
+            //aimSpot += GunManager.FPSCam.transform.forward * this.AimOffset;
+            //this.ShootFrom.LookAt(aimSpot);
 
-            Vector3 direction = ShootFrom.transform.forward; // your initial aim.
+            //Add the customized spread of the specific gun
+            Vector3 direction = GunManager.FPSCam.transform.forward; // your initial aim.
             Vector3 spread = Vector3.zero;
-            spread += ShootFrom.transform.up * Random.Range(-VerticalSpread, VerticalSpread);
-            spread += ShootFrom.transform.right * Random.Range(-HorizontalSpread, HorizontalSpread);
-            direction += spread.normalized; //* Random.Range(0f, 0.2f);
+            spread += GunManager.FPSCam.transform.up;// * Random.Range(-VerticalSpread, VerticalSpread);
+            spread += GunManager.FPSCam.transform.right;// * Random.Range(-HorizontalSpread, HorizontalSpread);
+            direction += spread.normalized;
 
+            //Play the shooting sound of this gun
             GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
 
-            if (Physics.Raycast(ShootFrom.transform.position, direction, out hitInfo, float.MaxValue, ~LayerToIgnore))
+            Ray ray = GunManager.FPSCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+
+            //Shoot out a raycast
+            if (Physics.Raycast(ray, out hitInfo, float.MaxValue, ~LayerToIgnore))
             {
 
-                TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, Quaternion.identity);
-                StartCoroutine(SpawnTrail(trail, hitInfo.point, aimSpot));
+                //Instantiate a bullet trail
+                TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, gameObject.transform.rotation);
+                trail.transform.parent = ShootFrom.transform;
+                Debug.Log($"Shoot From Local Position: {ShootFrom.transform.localPosition}");
+                Debug.Log($"Trail Local Position: {trail.transform.localPosition}");
+                StartCoroutine(SpawnTrail(trail, hitInfo.point));
 
-                Debug.DrawLine(ShootFrom.transform.position, hitInfo.point, Color.green, 1f);
+
                 if (hitInfo.transform.name != "Player")
                 {
+                    //IDamageable is the interface used for anything that can take damage (Enemies, Player, Buttons, etc)
+                    //Get the IDamageable component of the hit object
                     var damageableTarget = hitInfo.transform.GetComponent<IDamageable>();
                     if (damageableTarget != null)
                     {
+                        //using a try catch to prevent destroyed enemies from throwing null reference exceptions
                         try
                         {
+                            //Get the position of the hit enemy
                             Vector3 targetPosition = hitInfo.transform.position;
 
+                            //Play blood particle effects on the enemy, where they were hit
                             var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
                             Destroy(p, 1);
-                            float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);
-                            float totalDamage = Mathf.Abs(BulletDamage / ((distance / 2)));
-                            damageableTarget.TakeDamage(totalDamage);
 
-                            Debug.Log($"{hitInfo.transform.name}: {damageableTarget.Health}");
-                            Debug.Log($"TakeDamage Dealt: {totalDamage}");
+                            //Get the distance between the enemy and the gun
+                            float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);
+
+                            //calculate damage dropoff
+                            float totalDamage = Mathf.Abs(BulletDamage / ((distance / 2)));
+
+                            //Damage the target
+                            damageableTarget.TakeDamage(totalDamage);
                         }
                         catch
                         {
+                            //Play the blood effect
                             var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
                             Destroy(p, 1);
                         }
 
                     }
+                    //If the player did not hit an enemy
                     else
                     {
-                        Debug.Log("Not an IDamageable");
+                        //Play the bullet spark/impact particle effect
                         var p = Instantiate(HitNonEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
                         Destroy(p, 1);
                     }
                 }
             }
+            //if the player hit nothing
             else
             {
-                Debug.Log("Didn't hit anything");
-                TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, Quaternion.identity);
-                StartCoroutine(SpawnTrail(trail, ShootFrom.transform.position + direction * 10, aimSpot));
+                //Spawn the bullet trail
+                TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.localPosition, Quaternion.identity);
+                Debug.Log($"Shoot From Local Position: {ShootFrom.transform.localPosition}");
+                Debug.Log($"Trail Local Position: {trail.transform.localPosition}");
+                StartCoroutine(SpawnTrail(trail, ShootFrom.transform.position + direction * 10));
             }
 
+            //if the player does not have infinite ammo, decrement the gun's ammo by one
             if (!GunManager.InfiniteAmmo)
             {
                 CurrentAmmo--;
             }
 
+            //Get the time of the last shot, as this is needed for fire rate timer
             lastShotTime = Time.time;
         }
     }
 
-    private IEnumerator SpawnTrail(TrailRenderer trail, Vector3 endPoint, Vector3 aimSpot)
+    private IEnumerator SpawnTrail(TrailRenderer trail, Vector3 hitPoint)
     {
+        //Vector3 startPosition = trail.transform.position;
+        ////Vector3 direction = (hitPoint - trail.transform.position).normalized;
+        ////trail.transform.LookAt(hitPoint);
+
+        //float distance = Vector3.Distance(trail.transform.position, hitPoint);
+        //float startingDistance = distance;
+
+        //while (distance > 0)
+        //{
+        //    trail.transform.position = Vector3.Lerp(startPosition, hitPoint, 1 - (distance / startingDistance));
+        //    distance -= Time.deltaTime * 10;
+
+        //    yield return null;
+        //}
+
+        //trail.transform.position = hitPoint;
+
+        //------------------------------------------
+
         float time = 0;
 
-        trail.transform.LookAt(aimSpot);
+        //trail.transform.LookAt(hitPoint);
 
         Vector3 startPosition = trail.transform.position;
 
-        while (trail.transform.position != endPoint)
+        while (time < 1)
         {
-            trail.transform.position = Vector3.Lerp(startPosition, endPoint, time);
+            trail.transform.position = Vector3.Lerp(startPosition, hitPoint, time);
             time += Time.deltaTime / trail.time;
 
             yield return null;
         }
 
-        trail.transform.position = endPoint;
+        trail.transform.position = hitPoint;
 
-        Destroy(trail);
+        Destroy(trail.gameObject, trail.time);
     }
 
     //public void StartReload()

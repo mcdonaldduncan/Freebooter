@@ -258,8 +258,6 @@ public class GunHandler : NetworkBehaviour
 
         WaitForSeconds reloadToInvoke = gunReloadWaitDict[currentGunState];
         weaponSwitched?.Invoke(reloadToInvoke);
-
-        Debug.Log($"Equipped gun: {currentGunState.ToString()}");
     }
 
     public void Shoot(InputAction.CallbackContext context)
