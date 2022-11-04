@@ -20,13 +20,14 @@ public class NonPooledDynamicSpawner : NetworkBehaviour
         {
             return;
         }
+
         // Instantiate the GameObject Instance
         m_PrefabInstance = Instantiate(PrefabToSpawn, transform.position, Quaternion.identity);
 
         m_Swarmer = m_PrefabInstance.GetComponent<NetSwarmer>();
         m_Swarmer.spawner = this;
 
-        // Optional, this example applies the spawner's position and rotation to the new instance
+        // applies the spawner's position and rotation to the new instance
         m_PrefabInstance.transform.position = transform.position;
         m_PrefabInstance.transform.rotation = transform.rotation;
 

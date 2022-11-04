@@ -266,7 +266,8 @@ public class GunHandler : MonoBehaviour
         //{
         //    currentGun.Shoot()
         //}
-
+        //if (!IsOwner) return;
+        //RequestFireServerRpc();
         if (currentGunState == GunType.autoGun)
         {
             autoGun.ShootTriggered(context);
@@ -281,6 +282,23 @@ public class GunHandler : MonoBehaviour
             shotGun.Shoot();
         }
     }
+
+    //[ServerRpc]
+    //private void RequestFireServerRpc()
+    //{
+    //    FireClientRpc();
+    //}
+
+    //[ClientRpc]
+    //private void FireClientRpc()
+    //{
+    //    if (!IsOwner) ExecuteShoot();
+    //}
+
+    //private void ExecuteShoot()
+    //{
+    //    handGun.Shoot();
+    //}
 
     // network stuff do not delete
     //public void ShootOther(InputAction.CallbackContext context)

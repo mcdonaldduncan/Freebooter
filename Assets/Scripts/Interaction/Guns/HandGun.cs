@@ -66,7 +66,7 @@ public class HandGun : MonoBehaviour, IGun
 
             if (Physics.Raycast(ShootFrom.transform.position, direction, out hitInfo, float.MaxValue, ~LayerToIgnore))
             {
-
+                //ShotVFXSpawner.Instance.Shoot(ShootFrom.transform.position, hitInfo.point, aimSpot);
                 TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, Quaternion.identity);
                 StartCoroutine(SpawnTrail(trail, hitInfo.point, aimSpot));
 
