@@ -45,7 +45,6 @@ public class NetSwarmer : NetworkBehaviour, IDamageable
         if (!IsOwnedByServer) return;
 
         FindTarget();
-
         if (target == null) return;
 
         float distanceToPlayer = Vector3.Distance(gameObject.transform.position, target.transform.position);
@@ -56,10 +55,10 @@ public class NetSwarmer : NetworkBehaviour, IDamageable
         }
     }
 
-    float FindTarget()
+    void FindTarget()
     {
-        if (TargetManager.Instance == null) return 0;
-        if (TargetManager.Instance.targets.Length == 0) return 0;
+        if (TargetManager.Instance == null) return;
+        if (TargetManager.Instance.targets.Length == 0) return;
         if (TargetManager.Instance.targets.Length == 1)
         {
             target = TargetManager.Instance.targets[0];
@@ -69,28 +68,26 @@ public class NetSwarmer : NetworkBehaviour, IDamageable
         float distanceToPlayer2 = 0;
         for (int i = 0; i < TargetManager.Instance.targets.Length; i++)
         {
+            if (TargetManager.Instance.targets[i] == null) return;
             if (i == 0)
             {
-                if (TargetManager.Instance.targets[i] == null) continue;
                 distanceToPlayer1 = Vector3.Distance(gameObject.transform.position, TargetManager.Instance.targets[i].transform.position);
             }
             else
             {
-                if (TargetManager.Instance.targets[i] == null) continue;
                 distanceToPlayer2 = Vector3.Distance(gameObject.transform.position, TargetManager.Instance.targets[i].transform.position);
             }
         }
         if (distanceToPlayer1 < distanceToPlayer2)
         {
             target = TargetManager.Instance.targets[0];
-            return distanceToPlayer1;
         }
         if (distanceToPlayer2 < distanceToPlayer1)
         {
+            if (TargetManager.Instance.targets.Length <= 1) return;
             target = TargetManager.Instance.targets[1];
-            return distanceToPlayer2;
         }
-        return 0;
+
     }
 
     private void OnCollisionEnter(Collision collision)
