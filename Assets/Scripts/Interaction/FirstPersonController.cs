@@ -21,6 +21,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     private bool NonZeroVelocity => characterController.velocity.z != 0 || characterController.velocity.x != 0;
     private bool PlayerHasDashes => dashesRemaining > dashesAllowed - dashesAllowed;
     public bool PlayerCanDash => PlayerHasDashes && NonZeroVelocity;
+    public bool PlayerCanDashAgain => PlayerCanDash && playerDashing;
     //private bool PlayerIsSprinting => playerCanSprint && Input.GetKey(sprintKey) && !playerIsCrouching;
     //private bool PlayerShouldCrouch => Input.GetKeyDown(crouchKey) && !playerInCrouchAnimation && characterController.isGrounded;
 
@@ -188,6 +189,8 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     private bool dashOnCooldown;
     private bool playerShouldDash;
 
+    private Coroutine dashRoutine;
+
     private float groundRayDistance = 1;
     private RaycastHit slopeHit;
     private WaitForSeconds dashCooldownWait;
@@ -275,7 +278,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         //HumanoidLand
         _input.HumanoidLand.Walk.performed += HandleWalkInput;
         _input.HumanoidLand.Walk.canceled += HandleWalkInput;
-        _input.HumanoidLand.Dash.performed += HandleDashInput;
+        _input.HumanoidLand.Dash.started += HandleDashInput;
         _input.HumanoidLand.Dash.canceled += HandleDashInput;
         _input.HumanoidLand.Jump.performed += HandleJump;
         _input.HumanoidLand.Jump.canceled += HandleJump;
@@ -301,7 +304,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         //HumanoidLand
         _input.HumanoidLand.Walk.performed -= HandleWalkInput;
         _input.HumanoidLand.Walk.canceled -= HandleWalkInput;
-        _input.HumanoidLand.Dash.performed -= HandleDashInput;
+        _input.HumanoidLand.Dash.started -= HandleDashInput;
         _input.HumanoidLand.Dash.canceled -= HandleDashInput;
         _input.HumanoidLand.Jump.performed -= HandleJump;
         _input.HumanoidLand.Jump.canceled -= HandleJump;
@@ -381,20 +384,20 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         //        MoveInput = new Vector2(currentInput.x * walkSpeed, currentInput.y * walkSpeed);
         //    }
         //}
-        if (context.performed)
+        if (context.canceled)
+        {
+            playerShouldDash = false;
+            playerDashing = false;
+        }
+        if (context.started)
         {
             //InitiateDash();
             playerShouldDash = true;
 
             if (/*(characterController.velocity.z != 0 || characterController.velocity.x != 0) &&*/ PlayerCanDash)
             {
-                StartCoroutine(Dash());
+                dashRoutine = StartCoroutine(Dash());
             }
-        }
-        else if (context.canceled)
-        {
-            playerShouldDash = false;
-            playerDashing = false;
         }
     }
 
@@ -455,30 +458,30 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         dashCooldownStartTime = startTime;
 
         moveDirection = (transform.TransformDirection(Vector3.right) * MoveInput.x) + (transform.TransformDirection(Vector3.forward) * MoveInput.y);
-        moveDirection.y = 0;
 
         while (Time.time < startTime + dashTime) //&& playerShouldDash)
         {
             playerDashing = true;
             characterController.Move(moveDirection * dashSpeed * Time.deltaTime);
+            moveDirection.y = 0;
 
-            lastDashEnd = Time.time;
+            //lastDashEnd = Time.time;
 
             yield return null;
         }
 
-        if (PlayerCanDash)
+        //playerDashing = false;
+
+        if(PlayerCanDashAgain)
         {
             yield return dashBetweenWait;
             if (playerShouldDash)
             {
-                StartCoroutine(Dash());
+                StopCoroutine(dashRoutine);
+                dashRoutine = StartCoroutine(Dash());
             }
         }
-        else
-        {
-            playerDashing = false;
-        }
+        playerDashing = false;
     }
 
     private void DashCooldown()
