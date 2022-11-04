@@ -15,9 +15,9 @@ public class FlyEnemy : MonoBehaviour, IDamageable
     Vector3 targetDiretion, originalPos;
     Quaternion rotation, originalrot;
     
-    [SerializeField] List<Transform> wanderSpots = new List<Transform>();
+    [SerializeField] List<Vector3> wanderSpots = new List<Vector3>();
     [Tooltip("Distance to current wander spot before the player moves to next wander spot.")]
-    [SerializeField] private float wanderSpotOffset = 1f, delayBeforeMove = 2, originalPosOFFSET = 1f;
+    [SerializeField] private float wanderSpotOffset = 1f, delayBeforeMove = 2, originalPosOFFSET = 1f, wanderDistanceR, wanderDistanceL, wanderDistanceF, wanderDistanceB;
     private float lastShot, ShootRate = .5f;
     int i = 0;
     bool changeDir = false;
@@ -48,6 +48,11 @@ public class FlyEnemy : MonoBehaviour, IDamageable
         origianlst = st;
         originalPos = transform.position;
         originalrot = this.transform.rotation;
+        var pos = this.transform.position;
+        wanderSpots.Add(new Vector3(pos.x + wanderDistanceR, pos.y, pos.z));
+        wanderSpots.Add(new Vector3(pos.x - wanderDistanceL, pos.y, pos.z));
+        wanderSpots.Add(new Vector3(pos.x, pos.y, pos.z + wanderDistanceF));
+        wanderSpots.Add(new Vector3(pos.x, pos.y, pos.z - wanderDistanceB));
     }
     // Update is called once per frame
     void FixedUpdate()
@@ -143,7 +148,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable
     void Wander()
     {
         if (i >= wanderSpots.Count) { i = 0; }
-        if (Vector3.Distance(this.transform.position, wanderSpots[i].transform.position) < wanderSpotOffset)
+        if (Vector3.Distance(this.transform.position, wanderSpots[i]) < wanderSpotOffset)
         {
             if (changeDir == false)
             {
@@ -151,9 +156,9 @@ public class FlyEnemy : MonoBehaviour, IDamageable
                 changeDir = true;
             }
         }
-        else if (Vector3.Distance(this.transform.position, wanderSpots[i].transform.position) >= wanderSpotOffset)
+        else if (Vector3.Distance(this.transform.position, wanderSpots[i]) >= wanderSpotOffset)
         {
-            agent.SetDestination(wanderSpots[i].transform.position);
+            agent.SetDestination(wanderSpots[i]);
             //Debug.Log(wanderSpots[i].transform.position);
         }
 

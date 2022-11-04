@@ -250,7 +250,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 3.48
+  m_BaseOffset: 3.2
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!114 &1513274620143034692
@@ -271,20 +271,19 @@ MonoBehaviour:
   light: {fileID: 9014040488429798431}
   visionPoint: {fileID: 9014040488091691167}
   body: {fileID: 9014040488476938554}
-  SensorF: {fileID: 0}
   SensorR: {fileID: 8772785927216014671}
   SensorL: {fileID: 5847183793462315723}
-  SensorB: {fileID: 0}
   rotationspeed: 15
   range: 20
   agent: {fileID: 1731908634}
-  wanderSpots:
-  - {fileID: 9014040487129825756}
-  - {fileID: 9014040488200987484}
-  - {fileID: 9014040488885049116}
-  wanderSpotOffset: 6
+  wanderSpots: []
+  wanderSpotOffset: 7.15
   delayBeforeMove: 2
-  originalPosOFFSET: 6
+  originalPosOFFSET: 4
+  wanderDistanceR: 10
+  wanderDistanceL: 15
+  wanderDistanceF: 6
+  wanderDistanceB: 6
   BulletTrail: {fileID: 6952378413150019911, guid: 24acd6d67a692a64298fcd8e875417a9, type: 3}
   Damage: 1
   health: 150
