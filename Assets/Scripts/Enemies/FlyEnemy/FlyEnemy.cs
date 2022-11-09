@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class FlyEnemy : MonoBehaviour, IDamageable
 {
-    private enum SoldierState { guard, wanderer, chase, originalSpot, Relocating };
+    bool dead = false;
+    private enum SoldierState { guard, wanderer, chase, originalSpot, Relocating, Death };
     [Tooltip("/ Guard = Stand in one place until the player breaks line of sight / Wanderer = walks around / Chase = when the soldier goes after the enemy")]
     [SerializeField] private SoldierState st;
     private SoldierState origianlst;
@@ -39,9 +40,10 @@ public class FlyEnemy : MonoBehaviour, IDamageable
         if (Health <= 0)
         {
             //this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
-            Destroy(this.gameObject);
+            st = SoldierState.Death;
         }
     }
+
     private void Start()
     {
         target = GameObject.FindWithTag("Player");
@@ -57,6 +59,10 @@ public class FlyEnemy : MonoBehaviour, IDamageable
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (health <= 0)
+        {
+            st = SoldierState.Death;
+        }
         switch (st)
         {
             case SoldierState.guard:
@@ -71,22 +77,35 @@ public class FlyEnemy : MonoBehaviour, IDamageable
                 break;
 
             case (SoldierState.chase):
-                Aim();
-                Shoot();
-                ChasePlayer();
+                if (health > 0)
+                {
+                    Aim();
+                    Shoot();
+                    ChasePlayer();
+                }
+               
                 break;
             case (SoldierState.originalSpot):
                 ReturnToOriginalSpot();
                 break;
             case SoldierState.Relocating:
-                //Im collaing Relocate() somehwere else to not call it many times in update
+                //Im calling Relocate() somehwere else to not call it many times in update
                 Aim();
                 Shoot();
+                break;
+            case SoldierState.Death:
+                if (dead == false)
+                {
+                    dead = true;
+                    agent.ResetPath();
+                    body.GetComponent<OnDeathExplosion>().OnDeathVariables();
+                }
                 break;
             default:
                 break;
         }
     }
+
     void Aim() //This is pointing the torret towards the player as long as he is in range
     {
         float tempSpeed = rotationspeed;
@@ -118,6 +137,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable
         }
         else { }
     }
+
     void Shoot() //Shoots at the player
     {
         RaycastHit hit;
@@ -145,6 +165,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable
             StateReturnOriginalSpot();
         }
     }
+
     void Wander()
     {
         if (i >= wanderSpots.Count) { i = 0; }
@@ -163,6 +184,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable
         }
 
     }
+
     void WaitBeforeWanderToNextSpot()
     {
         if (i + 1 >= wanderSpots.Count)
@@ -175,6 +197,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable
         }
         changeDir = false;
     }
+
     void ChasePlayer()
     {
         var dist = Vector3.Distance(this.transform.position, target.transform.position);
@@ -183,15 +206,21 @@ public class FlyEnemy : MonoBehaviour, IDamageable
             agent.SetDestination(target.transform.position);
         }
     }
+
     void StateChase() //swaps state to Chase
     {
-        st = SoldierState.chase;
-        Invoke("RecolcateState", 5);
+        if (st != SoldierState.Death)
+        {
+            st = SoldierState.chase;
+            Invoke("RecolcateState", 5);
+        }
     }
+
     void StateReturnOriginalSpot()
     {
         st = SoldierState.originalSpot;
     }
+
     void ReturnToOriginalSpot()
     {
         agent.SetDestination(originalPos);
@@ -201,16 +230,21 @@ public class FlyEnemy : MonoBehaviour, IDamageable
             ReturnToOriginalState();
         }
     }
+
     void ReturnToOriginalState()
     {
         st = origianlst;
     }
+
     void RecolcateState()
     {
-        st = SoldierState.Relocating;
-        Relocate();
-
+        if (health > 0)
+        {
+            st = SoldierState.Relocating;
+            Relocate();
+        }
     }
+
     void Relocate()
     {
         var pos = this.transform.position;
@@ -226,6 +260,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable
         StateChase();
         
     }
+
     bool Right(Vector3 pos, float dist)
     {
         RaycastHit hit;
@@ -237,6 +272,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable
         }
         return false;
     }
+
     bool Left(Vector3 pos, float dist)
     {
         RaycastHit hit;
