@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -75,63 +76,19 @@ public class HandGun : MonoBehaviour, IGun
             {
 
                 //Instantiate a bullet trail
-                TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, gameObject.transform.rotation);
+                TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, ShootFrom.transform.localRotation);
                 trail.transform.parent = ShootFrom.transform;
-                Debug.Log($"Shoot From Local Position: {ShootFrom.transform.localPosition}");
-                Debug.Log($"Trail Local Position: {trail.transform.localPosition}");
-                StartCoroutine(SpawnTrail(trail, hitInfo.point));
-
 
                 if (hitInfo.transform.name != "Player")
                 {
-                    //IDamageable is the interface used for anything that can take damage (Enemies, Player, Buttons, etc)
-                    //Get the IDamageable component of the hit object
-                    var damageableTarget = hitInfo.transform.GetComponent<IDamageable>();
-                    if (damageableTarget != null)
-                    {
-                        //using a try catch to prevent destroyed enemies from throwing null reference exceptions
-                        try
-                        {
-                            //Get the position of the hit enemy
-                            Vector3 targetPosition = hitInfo.transform.position;
-
-                            //Play blood particle effects on the enemy, where they were hit
-                            var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-                            Destroy(p, 1);
-
-                            //Get the distance between the enemy and the gun
-                            float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);
-
-                            //calculate damage dropoff
-                            float totalDamage = Mathf.Abs(BulletDamage / ((distance / 2)));
-
-                            //Damage the target
-                            damageableTarget.TakeDamage(totalDamage);
-                        }
-                        catch
-                        {
-                            //Play the blood effect
-                            var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-                            Destroy(p, 1);
-                        }
-
-                    }
-                    //If the player did not hit an enemy
-                    else
-                    {
-                        //Play the bullet spark/impact particle effect
-                        var p = Instantiate(HitNonEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-                        Destroy(p, 1);
-                    }
+                    StartCoroutine(SpawnTrail(trail, hitInfo, HitEnemy));
                 }
             }
             //if the player hit nothing
             else
             {
                 //Spawn the bullet trail
-                TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.localPosition, Quaternion.identity);
-                Debug.Log($"Shoot From Local Position: {ShootFrom.transform.localPosition}");
-                Debug.Log($"Trail Local Position: {trail.transform.localPosition}");
+                TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, Quaternion.identity);
                 StartCoroutine(SpawnTrail(trail, ShootFrom.transform.position + direction * 10));
             }
 
@@ -146,32 +103,17 @@ public class HandGun : MonoBehaviour, IGun
         }
     }
 
+    /// <summary>
+    /// For when the player doesn't hit anything
+    /// </summary>
+    /// <param name="trail"></param>
+    /// <param name="hitPoint"></param>
+    /// <returns></returns>
     private IEnumerator SpawnTrail(TrailRenderer trail, Vector3 hitPoint)
     {
-        //Vector3 startPosition = trail.transform.position;
-        ////Vector3 direction = (hitPoint - trail.transform.position).normalized;
-        ////trail.transform.LookAt(hitPoint);
-
-        //float distance = Vector3.Distance(trail.transform.position, hitPoint);
-        //float startingDistance = distance;
-
-        //while (distance > 0)
-        //{
-        //    trail.transform.position = Vector3.Lerp(startPosition, hitPoint, 1 - (distance / startingDistance));
-        //    distance -= Time.deltaTime * 10;
-
-        //    yield return null;
-        //}
-
-        //trail.transform.position = hitPoint;
-
-        //------------------------------------------
-
         float time = 0;
 
-        //trail.transform.LookAt(hitPoint);
-
-        Vector3 startPosition = trail.transform.position;
+        Vector3 startPosition = ShootFrom.transform.position;
 
         while (time < 1)
         {
@@ -186,6 +128,74 @@ public class HandGun : MonoBehaviour, IGun
         Destroy(trail.gameObject, trail.time);
     }
 
+    /// <summary>
+    /// When the player hits something
+    /// </summary>
+    /// <param name="trail"></param>
+    /// <param name="hitInfo"></param>
+    /// <param name="hitEffect"></param>
+    /// <returns></returns>
+    private IEnumerator SpawnTrail(TrailRenderer trail, RaycastHit hitInfo, GameObject hitEffect = null)
+    {
+        float time = 0;
+
+        Vector3 startPosition = ShootFrom.transform.position;
+
+        while (time < 1)
+        {
+            trail.transform.position = Vector3.Lerp(startPosition, hitInfo.point, time);
+            time += Time.deltaTime / trail.time;
+
+            yield return null;
+        }
+
+        trail.transform.position = hitInfo.point;
+
+        Destroy(trail.gameObject, trail.time);
+
+        if (hitEffect != null)
+        {
+            var damageableTarget = hitInfo.transform.GetComponent<IDamageable>();
+            HitEnemyBehavior(hitInfo, damageableTarget);
+        }
+    }
+
+    private void HitEnemyBehavior(RaycastHit hitInfo, IDamageable damageableTarget)
+    {
+        if (damageableTarget != null)
+        {
+            //using a try catch to prevent destroyed enemies from throwing null reference exceptions
+            try
+            {
+                //Get the position of the hit enemy
+                Vector3 targetPosition = hitInfo.transform.position;
+
+                //Play blood particle effects on the enemy, where they were hit
+                var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                Destroy(p, 1);
+
+                //Get the distance between the enemy and the gun
+                float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);
+
+                //calculate damage dropoff
+                float totalDamage = Mathf.Abs(BulletDamage / ((distance / 2)));
+
+                //Damage the target
+                damageableTarget.TakeDamage(totalDamage);
+            }
+            catch
+            {
+                var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                Destroy(p, 1);
+            }
+        }
+        else
+        {
+            var p = Instantiate(HitNonEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+            Destroy(p, 1);
+        }
+
+    }
     //public void StartReload()
     //{
     //    GunManager.Reloading = true;

@@ -6,11 +6,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-//TODO I'll abstract all this at some point lol
+//TODO Abstract into classes that are managed by this class (i.e. defualt movement, wallrun movement, etc.)
 public class FirstPersonController : MonoBehaviour, IDamageable
 {
-    //properties used to help check whether player can use certain mechanics. These are mostly to keep the code clean and organized
-    //Kind of a rudimentary/crude state machine
     public float MaxHealth { get { return maxHealth; } set { maxHealth = value; } }
     public float Health { get { return health; } set { health = value; } }
     public float FinalJumpForce { get { return finalJumpForce; } set { finalJumpForce = value; } }
@@ -22,8 +20,6 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     private bool PlayerHasDashes => dashesRemaining > dashesAllowed - dashesAllowed;
     public bool PlayerCanDash => PlayerHasDashes && NonZeroVelocity;
     public bool PlayerCanDashAgain => PlayerCanDash && playerDashing;
-    //private bool PlayerIsSprinting => playerCanSprint && Input.GetKey(sprintKey) && !playerIsCrouching;
-    //private bool PlayerShouldCrouch => Input.GetKeyDown(crouchKey) && !playerInCrouchAnimation && characterController.isGrounded;
 
     //Checks used to see if player is able to use mechanics.
     [Header("Functional Options")]
@@ -32,14 +28,8 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     [Tooltip("Is the player in the middle of a special movement, i.e. ladder climbing?")]
     [SerializeField]
     public bool playerOnSpecialMovement = false;
-    //[SerializeField]
-    //private bool playerCanSprint = true;
-    //[SerializeField]
-    //private bool playerCanJump = true;
     [SerializeField]
     private bool playerCanDash = true;
-    //[SerializeField]
-    //private bool playerCanCrouch = true;
     [SerializeField]
     private bool playerCanHeadbob = true;
 
@@ -49,10 +39,6 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     public float wallRunSpeed = 12f; // Changed to public so powerups can affec this variable
     public float owalkspeed = 6; // Changed to public so powerups can affec this variable
     public float owallspeed = 12f; // Changed to public so powerups can affec this variable
-    //[SerializeField]
-    //private float sprintSpeed = 6f;
-    //[SerializeField]
-    //private float crouchSpeed = 1.5f;
     [SerializeField]
     private float slopeSlideSpeed = 6f;
     [SerializeField]
@@ -114,35 +100,11 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     private float wallRunTimer;
     private float verticalInput;
 
-    //KEEPING THIS INCASE WE WANT TO ADD CROUCHING
-    //Parameters for crouching. The height and center will directly affect the CharacterController height and center.
-    //[Header("Crouch Parameters")]
-    //[SerializeField]
-    //private float crouchingHeight = 0.5f;
-    //[SerializeField]
-    //private float standingHeight = 2f;
-    //[SerializeField]
-    //private float timeToCrouch = 0.25f; //How long should the crouching animation take?
-    //[SerializeField]
-    //private Vector3 crouchingCenter = new Vector3(0, 0.5f, 0);
-    //[SerializeField]
-    //private Vector3 standingCenter = new Vector3(0, 0, 0); //Didn't use Vector3.Zero so that it would be customizable in inspector
-    //private bool playerIsCrouching; //Is the player currently crouched?
-    //private bool playerInCrouchAnimation; //Is the player currently in the middle of the crouching animation?
-
     [Header("Headbob Parameters")]
     [SerializeField]
     private float walkBobSpeed = 14f;
     [SerializeField]
     private float walkBobAmount = 0.05f;
-    //[SerializeField]
-    //private float sprintBobSpeed = 18f;
-    //[SerializeField]
-    //private float sprintBobAmount = 0.1f;
-    //[SerializeField]
-    //private float crouchBobSpeed = 8f;
-    //[SerializeField]
-    //private float crouchBobAmount = 0.025f;
     private float defaultYPosCamera = 0;
     private float timer;
 
@@ -184,7 +146,6 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     private float rotationX = 0f; //Camera rotation for clamping
     private float rotationY = 0f;
 
-    //private bool playerIsSprinting;
     private bool playerDashing;
     private bool dashOnCooldown;
     private bool playerShouldDash;
@@ -264,7 +225,6 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     {
         if (holdingJump && holdJumpTimer < maxJumpTime)
         {
-            //Debug.Log($"Jumps Remaining: {jumpsRemaining} | Jumped Once: {jumpedOnce} | Final Jump Force: {finalJumpForce}");
             moveDirection.y = finalJumpForce;
             holdJumpTimer += Time.fixedDeltaTime;
         }
@@ -370,20 +330,6 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
     private void HandleDashInput(InputAction.CallbackContext context)
     {
-        //KEEPING THIS IN CASE WE WANT TO ADD SPRINTING
-        //playerIsSprinting = !playerIsSprinting;
-
-        //if (currentInput != null)
-        //{
-        //    if (playerIsSprinting)
-        //    {
-        //        MoveInput = new Vector2(currentInput.x * sprintSpeed, currentInput.y * sprintSpeed);
-        //    }
-        //    else if (!playerIsSprinting)
-        //    {
-        //        MoveInput = new Vector2(currentInput.x * walkSpeed, currentInput.y * walkSpeed);
-        //    }
-        //}
         if (context.canceled)
         {
             playerShouldDash = false;
@@ -394,61 +340,12 @@ public class FirstPersonController : MonoBehaviour, IDamageable
             //InitiateDash();
             playerShouldDash = true;
 
-            if (/*(characterController.velocity.z != 0 || characterController.velocity.x != 0) &&*/ PlayerCanDash)
+            if (PlayerCanDash)
             {
                 dashRoutine = StartCoroutine(Dash());
             }
         }
     }
-
-    //private void BeginDash()
-    //{
-    //    if (CanDoNextDash)
-    //    {
-    //        if (!playerDashing)
-    //        {
-    //            playerDashing = true;
-    //            dashesRemaining--;
-    //            dashStartTime = Time.time;
-    //            dashCooldownStartTime = dashStartTime;
-
-    //            moveDirection = (transform.TransformDirection(Vector3.right) * MoveInput.x) + (transform.TransformDirection(Vector3.forward) * MoveInput.y);
-    //            moveDirection.y = 0;
-    //        }
-    //    }
-    //    else
-    //    {
-    //        playerDashing = false;
-    //    }
-    //}
-
-    //private void Dash()
-    //{
-    //    if (dashStartTime + dashTime > Time.time && PlayerCanDash && playerDashing)
-    //    {
-    //        characterController.Move(moveDirection * dashSpeed * Time.deltaTime);
-    //    }
-    //    else
-    //    {
-    //        lastDashEnd = Time.time;
-    //        playerDashing = false;
-    //    }
-    //}
-
-    //private void InitiateDash()
-    //{
-    //    dashesRemaining--;
-    //    dashStartTime = Time.time;
-    //    dashCooldownStartTime = dashStartTime;
-
-    //    moveDirection = (transform.TransformDirection(Vector3.right) * MoveInput.x) + (transform.TransformDirection(Vector3.forward) * MoveInput.y);
-    //    moveDirection.y = 0;
-    //}
-
-    //private void DoTheDash()
-    //{
-
-    //}
 
     //TODO: Doesn't need to be a coroutine
     private IEnumerator Dash()
@@ -459,7 +356,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
         moveDirection = (transform.TransformDirection(Vector3.right) * MoveInput.x) + (transform.TransformDirection(Vector3.forward) * MoveInput.y);
 
-        while (Time.time < startTime + dashTime) //&& playerShouldDash)
+        while (Time.time < startTime + dashTime)
         {
             playerDashing = true;
             characterController.Move(moveDirection * dashSpeed * Time.deltaTime);
@@ -469,8 +366,6 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
             yield return null;
         }
-
-        //playerDashing = false;
 
         if(PlayerCanDashAgain)
         {
@@ -515,10 +410,8 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
     private void HandleJump(InputAction.CallbackContext context)
     {
-        //jumpsRemaining--;
         if (context.canceled)
         {
-            //jumpsRemaining++;
             holdingJump = false;
             holdJumpTimer = 0;
         }
@@ -537,19 +430,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
                 jumpedOnce = false;
             }
         }
-
-        //Debug.Log($"Character Grounded: {characterController.isGrounded}");
     }
-
-    //KEEPING THIS INCASE WE WANT TO ADD CROUCHING
-    //private void HandleCrouch()
-    //{
-    //    //only crouch if property conditions are met
-    //    if (PlayerShouldCrouch)
-    //    {
-    //        StartCoroutine(CrouchStand());
-    //    }
-    //}
 
     private void HandleHeadbob()
     {
@@ -721,43 +602,4 @@ public class FirstPersonController : MonoBehaviour, IDamageable
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
-
-    //KEEPING THIS INCASE WE WANT TO ADD CROUCHING
-    //Coroutine that handles crouching/standing
-    //private IEnumerator CrouchStand()
-    //{
-    //    //make sure there is nothing above player's head that should prevent them from standing, if there is, do not allow them to stand
-    //    if (playerIsCrouching && Physics.Raycast(playerCamera.transform.position, Vector3.up, 1f))
-    //    {
-    //        yield break;
-    //    }
-
-    //    //player is now in crouching animation
-    //    playerInCrouchAnimation = true;
-
-    //    float timeElapsed = 0; //amount of time elapsed during animation
-    //    float targetHeight = playerIsCrouching ? standingHeight : crouchingHeight; //target height based on the state the player is in when they press crouch button
-    //    float currentHeight = characterController.height; //the player's height when they press the crouch button
-    //    Vector3 targetCenter = playerIsCrouching ? standingCenter : crouchingCenter; //target center based on the state the player is in when they press crouch button
-    //    Vector3 currentCenter = characterController.center; //the player's center when they press the crouch button
-
-    //    //while the animation is still going
-    //    while(timeElapsed < timeToCrouch)
-    //    {
-    //        characterController.height = Mathf.Lerp(currentHeight, targetHeight, timeElapsed/timeToCrouch); //change the current height to the target height
-    //        characterController.center = Vector3.Lerp(currentCenter, targetCenter, timeElapsed/timeToCrouch); //change the current center to the target center
-
-    //        timeElapsed += Time.deltaTime; //increment the time elapsed based on the time it took between frames
-
-    //        yield return null;
-    //    }
-
-    //    //Sanity check :P
-    //    characterController.height = targetHeight;
-    //    characterController.center = targetCenter;
-
-    //    playerIsCrouching = !playerIsCrouching; //update whether or not the player is crouching
-
-    //    playerInCrouchAnimation = false; //the crouching animation has ended
-    //}
 }
