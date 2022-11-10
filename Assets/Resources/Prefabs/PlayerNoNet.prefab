@@ -538,10 +538,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f132a42815b4b44598aa50e8cc680f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Maxhealth: 150
+  maxHealth: 100
   health: 100
   playerOnSpecialMovement: 0
-  playerCanJump: 1
   playerCanDash: 1
   playerCanHeadbob: 1
   walkSpeed: 6
@@ -560,8 +559,9 @@ MonoBehaviour:
   leftLookLimit: 80
   rightLookLimit: 80
   jumpsAllowed: 2
-  remainingJumps: 0
+  maxJumpTime: 0.2
   jumpForce: 10
+  secondJumpForce: 16
   gravity: 25
   whatIsWall:
     serializedVersion: 2
@@ -569,7 +569,7 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 128
-  wallRunForce: 0
+  wallRunGravity: 0
   maxWallRunTime: 0
   wallCheckDistance: 0.7
   minJumpHeight: 2
