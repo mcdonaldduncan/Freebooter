@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Random = UnityEngine.Random;
 
-public class GunHandler : NetworkBehaviour
+public class GunHandler : MonoBehaviour
 {
     //TODO: Consider making ammo properties in interface and implementing into different guntypes, as this would prevent the need for passing so many parameters
     public IGun CurrentGun { get { return currentGun; } }
@@ -224,7 +224,9 @@ public class GunHandler : NetworkBehaviour
 
     private void Update()
     {
-        if (!IsOwner) return;
+        Debug.Log($"ShootFrom Pos: {shootFrom.transform.position}");
+        Debug.Log($"ShootFrom Rot: {shootFrom.transform.position}");
+        //if (!IsOwner) return;
         if (reloading)
         {
             gunRenderer.material.color = Color.red;
@@ -241,7 +243,7 @@ public class GunHandler : NetworkBehaviour
 
     public void SwitchWeapon(InputAction.CallbackContext context)
     {
-        if (!IsOwner) return;
+        //if (!IsOwner) return;
         currentGun.GunReticle.alpha = 0;
 
         if (currentGunState != guns.Last())
@@ -252,7 +254,7 @@ public class GunHandler : NetworkBehaviour
         {
             currentGunState = guns[0];
         }
-
+        
         currentGun = gunDict[Array.IndexOf(guns, currentGunState)];
         currentGun.GunReticle.alpha = 1;
 
@@ -266,7 +268,7 @@ public class GunHandler : NetworkBehaviour
         //{
         //    currentGun.Shoot()
         //}
-        if (!IsOwner) return;
+        //if (!IsOwner) return;
         
         if (currentGunState == GunType.autoGun)
         {
@@ -295,7 +297,7 @@ public class GunHandler : NetworkBehaviour
     [ClientRpc]
     private void FireClientRpc()
     {
-        if (!IsOwner) ExecuteShoot();
+        //if (!IsOwner) ExecuteShoot();
     }
 
     private void ExecuteShoot()
@@ -346,7 +348,7 @@ public class GunHandler : NetworkBehaviour
 
     public void Reload(InputAction.CallbackContext context)
     {
-        if (!IsOwner) return;
+        //if (!IsOwner) return;
         if (currentGunState == GunType.autoGun && autoGunCurrentAmmo < autoGunMaxAmmo && !reloading)
         {
             autoGun.StartReload(autoGunReloadWait);
