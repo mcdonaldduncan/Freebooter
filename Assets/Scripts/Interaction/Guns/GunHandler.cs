@@ -52,6 +52,7 @@ public class GunHandler : MonoBehaviour
 
     [Header("Handgun Parameters")]
     [SerializeField] private float handGunBulletDamage = 10f;
+    [SerializeField] private float handGunDamageDrop = 1f;
     [SerializeField] private float handGunVerticalSpread;
     [SerializeField] private float handGunHorizontalSpread;
     [SerializeField] private int handGunCurrentAmmo;
@@ -66,6 +67,7 @@ public class GunHandler : MonoBehaviour
     [Header("Shotgun Parameters")]
     [Tooltip("This will apply to EACH 'bullet' the shotgun fires")]
     [SerializeField] private float shotGunBulletDamage = 10f;
+    [SerializeField] private float shotGunDamageDrop = 1f;
     [SerializeField] private int shotGunBulletAmount;
     [Tooltip("Increase for wider vertical spread. This will be used to a find a random number between the negative of this and the positive.")]
     [SerializeField] private float shotGunVerticalSpread;
@@ -82,6 +84,7 @@ public class GunHandler : MonoBehaviour
 
     [Header("Autogun Parameters")]
     [SerializeField] private float autoGunBulletDamage = 10f;
+    [SerializeField] private float autoGunDamageDrop = 1f;
     [SerializeField] private float autoGunHorizontalSpread;
     [SerializeField] private float autoGunVerticalSpread;
     [SerializeField] private int autoGunCurrentAmmo;
@@ -171,6 +174,7 @@ public class GunHandler : MonoBehaviour
             gun.ReloadTime = this.autoGunReloadTime;
             gun.GunReticle = this.autoGunReticle;
             gun.GunShotAudio = this.autoGunShotAudio;
+            gun.DamageDrop = this.autoGunDamageDrop != 0 ? this.autoGunDamageDrop : 1;
         }
         if (gun is HandGun)
         {
@@ -182,6 +186,7 @@ public class GunHandler : MonoBehaviour
             gun.ReloadTime = this.handGunReloadTime;
             gun.GunReticle = this.handGunReticle;
             gun.GunShotAudio = this.handGunShotAudio;
+            gun.DamageDrop = this.handGunDamageDrop != 0 ? this.handGunDamageDrop : 1;
         }
         if (gun is ShotGun)
         {
@@ -193,6 +198,7 @@ public class GunHandler : MonoBehaviour
             gun.ReloadTime = this.shotGunReloadTime;
             gun.GunReticle = this.shotGunReticle;
             gun.GunShotAudio = this.shotGunShotAudio;
+            gun.DamageDrop = this.shotGunDamageDrop != 0 ? this.shotGunDamageDrop : 1;
         }
     }
 
@@ -268,6 +274,7 @@ public class GunHandler : MonoBehaviour
         //{
         //    currentGun.Shoot()
         //}
+
         //if (!IsOwner) return;
         
         if (currentGunState == GunType.autoGun)

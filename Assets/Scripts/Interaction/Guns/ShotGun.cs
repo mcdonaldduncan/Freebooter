@@ -10,6 +10,7 @@ public class ShotGun : MonoBehaviour, IGun
     public LayerMask LayerToIgnore { get; set; }
     public float FireRate { get; set; } 
     public float BulletDamage { get; set; }
+    public float DamageDrop { get; set; }
     public float VerticalSpread { get; set; }
     public float HorizontalSpread { get; set; }
     public float AimOffset { get; set; }
@@ -82,7 +83,7 @@ public class ShotGun : MonoBehaviour, IGun
                 else
                 {
                     //Spawn the bullet trail
-                    TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, Quaternion.identity);
+                    TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, ShootFrom.transform.localRotation);
                     StartCoroutine(SpawnTrail(trail, ShootFrom.transform.position + direction * 10));
                 }
             }
@@ -172,7 +173,7 @@ public class ShotGun : MonoBehaviour, IGun
                 float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);
 
                 //calculate damage dropoff
-                float totalDamage = Mathf.Abs(BulletDamage / ((distance / 2)));
+                float totalDamage = Mathf.Abs(BulletDamage / ((distance / DamageDrop)));
 
                 //Damage the target
                 damageableTarget.TakeDamage(totalDamage);

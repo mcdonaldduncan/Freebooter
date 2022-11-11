@@ -9,6 +9,7 @@ public interface IGun
     LayerMask LayerToIgnore { get; set; }
     float FireRate { get; set; }
     float BulletDamage { get; set; }
+    float DamageDrop { get; set; }
     float VerticalSpread { get; set; }
     float HorizontalSpread { get; set; }
     float AimOffset { get; set; }
