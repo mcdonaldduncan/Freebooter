@@ -340,6 +340,7 @@ MonoBehaviour:
   reloading: 0
   infiniteAmmo: 0
   handGunBulletDamage: 40
+  handGunDamageDrop: 1
   handGunVerticalSpread: 0
   handGunHorizontalSpread: 0
   handGunCurrentAmmo: 0
@@ -350,6 +351,7 @@ MonoBehaviour:
   handGunReticle: {fileID: 6976750457327859168}
   handGunShotAudio: {fileID: 8300000, guid: aa41d7a175e94544ba3a9e4684092689, type: 3}
   shotGunBulletDamage: 30
+  shotGunDamageDrop: 1
   shotGunBulletAmount: 12
   shotGunVerticalSpread: 10
   shotGunHorizontalSpread: 10
@@ -361,6 +363,7 @@ MonoBehaviour:
   shotGunReticle: {fileID: 2291208426676616775}
   shotGunShotAudio: {fileID: 8300000, guid: c15d23ec2ec14b949aa86c30705b3da5, type: 3}
   autoGunBulletDamage: 25
+  autoGunDamageDrop: 1
   autoGunHorizontalSpread: 0
   autoGunVerticalSpread: 0
   autoGunCurrentAmmo: 0
@@ -543,7 +546,7 @@ MonoBehaviour:
   playerOnSpecialMovement: 0
   playerCanDash: 1
   playerCanHeadbob: 1
-  walkSpeed: 6
+  walkSpeed: 7
   wallRunSpeed: 12
   owalkspeed: 6
   owallspeed: 12
@@ -559,10 +562,10 @@ MonoBehaviour:
   leftLookLimit: 80
   rightLookLimit: 80
   jumpsAllowed: 2
-  maxJumpTime: 0.2
+  maxJumpTime: 0.1
   jumpForce: 10
-  secondJumpForce: 16
-  gravity: 25
+  secondJumpForce: 12
+  gravity: 35
   whatIsWall:
     serializedVersion: 2
     m_Bits: 64
@@ -578,7 +581,7 @@ MonoBehaviour:
   walkBobAmount: 0.05
   dashesAllowed: 2
   dashesRemaining: 0
-  dashSpeed: 7
+  dashSpeed: 8
   dashTime: 0.125
   dashCooldownTime: 3
   dashBetweenTime: 0.25
