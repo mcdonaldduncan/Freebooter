@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class SoldierEnemyScript : MonoBehaviour, IDamageable
 {
     
-    private enum SoldierState {guard, wanderer, chase, originalSpot};
+    private enum SoldierState {guard, wanderer, chase, originalSpot, retaliate};
     [Tooltip("/ Guard = Stand in one place until the player breaks line of sight / Wanderer = walks around / Chase = when the soldier goes after the enemy")]
     [SerializeField] private SoldierState st;
     private SoldierState origianlst;
@@ -31,6 +31,10 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
     [SerializeField] private float health;
     public void TakeDamage(float damageTaken)
     {
+        if (st == SoldierState.guard || st == SoldierState.wanderer)
+        {
+            st = SoldierState.retaliate;
+        }
         Health -= damageTaken;
         CheckForDeath();
     }
@@ -80,6 +84,11 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
             case (SoldierState.originalSpot):
                 ReturnToOriginalSpot();
                 break;
+            case (SoldierState.retaliate):
+                RetaliationAim();
+                RetaliationShoot();
+                RetaliationChasePlayer();
+                break;
             default:
                 break;
         }
@@ -114,6 +123,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
         }
         else { }
     }
+
     void Shoot() //Shoots at the player
     {
         RaycastHit hit;
@@ -141,6 +151,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
             StateReturnOriginalSpot();
         }
     }
+
     void Wander()
     {
         if(i >= wanderSpots.Count){i=0;}
@@ -204,5 +215,53 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
     void ReturnToOriginalState()
     {
         st = origianlst;
+    }
+
+    void RetaliationAim() //This is pointing the soldier towards the player as long as he is in range
+    {
+        float tempSpeed = rotationspeed;
+
+        targetDiretion = target.transform.position - transform.position;
+        rotation = Quaternion.LookRotation(targetDiretion);
+        body.transform.rotation = Quaternion.RotateTowards(body.transform.rotation, rotation, tempSpeed * Time.deltaTime * 180);
+
+    }
+
+    void RetaliationShoot()
+    {
+        RaycastHit hit;
+        Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
+
+        Physics.Raycast(tip.transform.position, targetDiretion, out hit, range);
+        if (hit.collider != null)
+        {
+            if (hit.collider.tag == target.tag)
+            {
+                if (Time.time > ShootRate + lastShot)
+                {
+                    var bt = Instantiate(BulletTrail, tip.transform.position, rotation);
+                    bt.GetComponent<MoveForward>().origin = this.gameObject.transform.rotation;
+                    bt.GetComponent<MoveForward>().target = target;
+                    //bt.GetComponent<MoveForward>().damage = Damage;
+                    Debug.Log("Player was shot, dealing damage.");
+                    target.GetComponent<FirstPersonController>().TakeDamage(Damage);
+                    lastShot = Time.time;
+                }
+            }
+        }
+    }
+
+    void RetaliationChasePlayer()
+    {
+        var dist = Vector3.Distance(this.transform.position, target.transform.position);
+        if (dist <= range / 2)
+        {
+            agent.ResetPath();
+        }
+        else if (dist > range)
+        {
+            agent.SetDestination(target.transform.position);
+        }
+
     }
 }
