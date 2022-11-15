@@ -18,7 +18,7 @@ public class NodeInspector : Editor
             if (platform.m_Nodes.Contains(node.transform))
             {
                 platform.m_Nodes.Remove(node.transform);
-                DestroyImmediate(node);
+                DestroyImmediate(node.gameObject);
 
                 foreach (var item in platform.m_Nodes)
                 {
