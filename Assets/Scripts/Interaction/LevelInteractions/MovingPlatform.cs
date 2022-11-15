@@ -45,6 +45,9 @@ public class MovingPlatform : MonoBehaviour
 
     void Start()
     {
+        PlatformNode node = gameObject.FindComponentInChildWithTag<PlatformNode>("Node");
+
+
         Platform = gameObject.FindChildWithTag("Platform");
         Base = Platform.GetComponent<PlatformBase>();
         isActivated = m_MovementType == MovementType.CONSTANT;
