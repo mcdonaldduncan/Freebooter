@@ -61,12 +61,15 @@ public class PowerUpManager : Singleton<PowerUpManager>
     void UpdateTXT()
     {
         // in line statements dont need brackets
-        if (AmmoApp == false) AmmoTXT.text = $"";
-        else 
-        { 
-            AmmoTXT.text = $"{AmmoTimer.ToString("0.00")}"; 
-            AmmoTimer -= Time.deltaTime; 
-            Ammoimg.enabled = true; 
+        if (AmmoApp == false)
+        {
+            AmmoTXT.text = $"";
+        }
+        else
+        {
+            AmmoTXT.text = $"{AmmoTimer.ToString("0.00")}";
+            AmmoTimer -= Time.deltaTime;
+            Ammoimg.enabled = true;
         }
 
         // This is not very readable
