@@ -28,12 +28,4 @@ public class NodeInspector : Editor
         }
 
     }
-
-    //public void OnDestroy()
-    //{
-    //    if (Application.isEditor)
-    //    {
-    //        //if (((PlatformNode)target) == null)
-    //    }
-    //}
 }

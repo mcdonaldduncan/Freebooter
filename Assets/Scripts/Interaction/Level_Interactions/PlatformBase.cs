@@ -18,6 +18,22 @@ public class PlatformBase : MonoBehaviour
         m_Platform = GetComponentInParent<MovingPlatform>();
     }
 
+    void Update()
+    {
+        HandleMovement();
+    }
+
+    #region Movement Logic
+    void HandleMovement()
+    {
+        if (!m_ShouldMove) return;
+
+        m_Transform.position = Vector3.MoveTowards(m_Transform.position, m_Target.position, m_Speed * Time.deltaTime);
+    }
+
+    #endregion
+
+    #region Public Set Methods
     public void Init(float speed, bool shouldMove, Transform target)
     {
         m_Speed = speed;
@@ -25,19 +41,7 @@ public class PlatformBase : MonoBehaviour
         m_Target = target;
     }
 
-    void Update()
-    {
-        HandleMovement();
-    }
-
-    private void HandleMovement()
-    {
-        if (!m_ShouldMove) return;
-
-        m_Transform.position = Vector3.MoveTowards(m_Transform.position, m_Target.position, m_Speed * Time.deltaTime);
-    }
-
-    public void SetNewTarget(Transform target)
+    public void SetTarget(Transform target)
     {
         m_Target = target;
     }
@@ -46,6 +50,10 @@ public class PlatformBase : MonoBehaviour
     {
         m_ShouldMove = state;
     }
+
+    #endregion
+
+    #region Collision Logic
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -62,4 +70,6 @@ public class PlatformBase : MonoBehaviour
             m_Platform.OnPlayerExit();
         }
     }
+
+    #endregion
 }

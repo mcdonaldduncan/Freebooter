@@ -31,6 +31,7 @@ public class MovingPlatform : MonoBehaviour
     
     int currentIndex = 0;
 
+    #region Gizmo Drawing
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
@@ -46,6 +47,7 @@ public class MovingPlatform : MonoBehaviour
         Gizmos.DrawWireCube(transform.position, Vector3.one);
     }
 #endif
+    #endregion
 
     void Start()
     {
@@ -64,34 +66,7 @@ public class MovingPlatform : MonoBehaviour
         ApplyMotionToPlayer();
     }
 
-    public void OnPlayerContact()
-    {
-        //if (!m_ShouldLoop && currentIndex == m_Nodes.Count - 1) return;
-        if (m_MovementType == MovementType.CONTACT)
-        {
-            isAttached = true;
-            isActivated = true;
-            Base.SetState(true);
-        }
-    }
-
-    public void OnPlayerExit()
-    {
-        if (m_MovementType == MovementType.CONTACT)
-        {
-            isAttached = false;
-            isActivated = false;
-            Base.SetState(false);
-        }
-    }
-
-    public GameObject AddNode()
-    {
-        GameObject node = Instantiate(Node, transform, false);
-        m_Nodes.Add(node.transform);
-        node.name = $"Node_{m_Nodes.Count}";
-        return node;
-    }
+    #region Core Logic
 
     void ApplyMotionToPlayer()
     {
@@ -112,11 +87,11 @@ public class MovingPlatform : MonoBehaviour
             if (currentIndex == 0)
             {
                 isLooping = false;
-                Base.SetNewTarget(m_Nodes[++currentIndex]);
+                Base.SetTarget(m_Nodes[++currentIndex]);
             }
             else
             {
-                Base.SetNewTarget(m_Nodes[--currentIndex]);
+                Base.SetTarget(m_Nodes[--currentIndex]);
             }
         }
         else
@@ -133,16 +108,52 @@ public class MovingPlatform : MonoBehaviour
                 else
                 {
                     isLooping = true;
-                    Base.SetNewTarget(m_Nodes[--currentIndex]);
+                    Base.SetTarget(m_Nodes[--currentIndex]);
                 }
                 
             }
             else
             {
-                Base.SetNewTarget(m_Nodes[++currentIndex]);
+                Base.SetTarget(m_Nodes[++currentIndex]);
             }
         }
     }
+
+    #endregion
+
+    #region Player Contact
+
+    public void OnPlayerContact()
+    {
+        if (m_MovementType == MovementType.CONTACT)
+        {
+            isAttached = true;
+            isActivated = true;
+            Base.SetState(true);
+        }
+    }
+
+    public void OnPlayerExit()
+    {
+        if (m_MovementType == MovementType.CONTACT)
+        {
+            isAttached = false;
+            isActivated = false;
+            Base.SetState(false);
+        }
+    }
+
+    #endregion
+
+    #region Editor Functions
+    public GameObject AddNode()
+    {
+        GameObject node = Instantiate(Node, transform, false);
+        m_Nodes.Add(node.transform);
+        node.name = $"Node_{m_Nodes.Count}";
+        return node;
+    }
+    #endregion
 }
 
 public enum MovementType
