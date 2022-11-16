@@ -52,6 +52,7 @@ public class GunHandler : MonoBehaviour
 
     [Header("Handgun Parameters")]
     [SerializeField] private float handGunBulletDamage = 10f;
+    [SerializeField] private float handGunDamageDrop = 1f;
     [SerializeField] private float handGunVerticalSpread;
     [SerializeField] private float handGunHorizontalSpread;
     [SerializeField] private int handGunCurrentAmmo;
@@ -66,6 +67,7 @@ public class GunHandler : MonoBehaviour
     [Header("Shotgun Parameters")]
     [Tooltip("This will apply to EACH 'bullet' the shotgun fires")]
     [SerializeField] private float shotGunBulletDamage = 10f;
+    [SerializeField] private float shotGunDamageDrop = 1f;
     [SerializeField] private int shotGunBulletAmount;
     [Tooltip("Increase for wider vertical spread. This will be used to a find a random number between the negative of this and the positive.")]
     [SerializeField] private float shotGunVerticalSpread;
@@ -82,6 +84,7 @@ public class GunHandler : MonoBehaviour
 
     [Header("Autogun Parameters")]
     [SerializeField] private float autoGunBulletDamage = 10f;
+    [SerializeField] private float autoGunDamageDrop = 1f;
     [SerializeField] private float autoGunHorizontalSpread;
     [SerializeField] private float autoGunVerticalSpread;
     [SerializeField] private int autoGunCurrentAmmo;
@@ -171,6 +174,7 @@ public class GunHandler : MonoBehaviour
             gun.ReloadTime = this.autoGunReloadTime;
             gun.GunReticle = this.autoGunReticle;
             gun.GunShotAudio = this.autoGunShotAudio;
+            gun.DamageDrop = this.autoGunDamageDrop != 0 ? this.autoGunDamageDrop : 1;
         }
         if (gun is HandGun)
         {
@@ -182,6 +186,7 @@ public class GunHandler : MonoBehaviour
             gun.ReloadTime = this.handGunReloadTime;
             gun.GunReticle = this.handGunReticle;
             gun.GunShotAudio = this.handGunShotAudio;
+            gun.DamageDrop = this.handGunDamageDrop != 0 ? this.handGunDamageDrop : 1;
         }
         if (gun is ShotGun)
         {
@@ -193,6 +198,7 @@ public class GunHandler : MonoBehaviour
             gun.ReloadTime = this.shotGunReloadTime;
             gun.GunReticle = this.shotGunReticle;
             gun.GunShotAudio = this.shotGunShotAudio;
+            gun.DamageDrop = this.shotGunDamageDrop != 0 ? this.shotGunDamageDrop : 1;
         }
     }
 
@@ -224,6 +230,9 @@ public class GunHandler : MonoBehaviour
 
     private void Update()
     {
+        //Debug.Log($"ShootFrom Pos: {shootFrom.transform.position}");
+        //Debug.Log($"ShootFrom Rot: {shootFrom.transform.position}");
+        //if (!IsOwner) return;
         if (reloading)
         {
             gunRenderer.material.color = Color.red;
@@ -240,6 +249,7 @@ public class GunHandler : MonoBehaviour
 
     public void SwitchWeapon(InputAction.CallbackContext context)
     {
+        //if (!IsOwner) return;
         currentGun.GunReticle.alpha = 0;
 
         if (currentGunState != guns.Last())
@@ -250,14 +260,12 @@ public class GunHandler : MonoBehaviour
         {
             currentGunState = guns[0];
         }
-
+        
         currentGun = gunDict[Array.IndexOf(guns, currentGunState)];
         currentGun.GunReticle.alpha = 1;
 
         WaitForSeconds reloadToInvoke = gunReloadWaitDict[currentGunState];
         weaponSwitched?.Invoke(reloadToInvoke);
-
-        Debug.Log($"Equipped gun: {currentGunState.ToString()}");
     }
 
     public void Shoot(InputAction.CallbackContext context)
@@ -267,19 +275,41 @@ public class GunHandler : MonoBehaviour
         //    currentGun.Shoot()
         //}
 
+        //if (!IsOwner) return;
+        
         if (currentGunState == GunType.autoGun)
         {
             autoGun.ShootTriggered(context);
+            RequestFireServerRpc();
         }
         if ((currentGunState == GunType.handGun || currentGunState == GunType.longGun) && context.performed && handGunCurrentAmmo > 0 && !reloading)
         {
             handGun.Shoot();
+            RequestFireServerRpc();
         }
 
         if (currentGunState == GunType.shotGun && context.performed && shotGunCurrentAmmo > 0 && !reloading)
         {
             shotGun.Shoot();
+            RequestFireServerRpc();
         }
+    }
+
+    [ServerRpc]
+    private void RequestFireServerRpc()
+    {
+        FireClientRpc();
+    }
+
+    [ClientRpc]
+    private void FireClientRpc()
+    {
+        //if (!IsOwner) ExecuteShoot();
+    }
+
+    private void ExecuteShoot()
+    {
+        handGun.Shoot();
     }
 
     // network stuff do not delete
@@ -325,7 +355,7 @@ public class GunHandler : MonoBehaviour
 
     public void Reload(InputAction.CallbackContext context)
     {
-
+        //if (!IsOwner) return;
         if (currentGunState == GunType.autoGun && autoGunCurrentAmmo < autoGunMaxAmmo && !reloading)
         {
             autoGun.StartReload(autoGunReloadWait);

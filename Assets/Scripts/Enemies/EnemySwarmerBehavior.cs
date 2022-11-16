@@ -38,7 +38,7 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable
 
         if (!ignorePlayer && distanceToPlayer <= distanceToStartFollow)
         {
-            navMeshAgent.destination = player.transform.position;
+            navMeshAgent.SetDestination(player.transform.position);
         }
     }
 

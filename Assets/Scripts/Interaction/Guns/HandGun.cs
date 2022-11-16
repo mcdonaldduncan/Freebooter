@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,7 @@ public class HandGun : MonoBehaviour, IGun
     public LayerMask LayerToIgnore { get; set; }
     public float FireRate { get; set; }
     public float BulletDamage { get; set; }
+    public float DamageDrop { get; set; }
     public float VerticalSpread { get; set; }
     public float HorizontalSpread { get; set; }
     public float AimOffset { get; set; }
@@ -48,99 +50,153 @@ public class HandGun : MonoBehaviour, IGun
     //Doesn't need to be static anymore since this script is added as a component now
     public void Shoot()
     {
+        //if the player has ammo and they are not reloading
         if (CanShoot)
         {
             RaycastHit hitInfo;
 
-            Vector3 aimSpot = GunManager.FPSCam.transform.position;
-            aimSpot += GunManager.FPSCam.transform.forward * this.AimOffset;
-            this.ShootFrom.LookAt(aimSpot);
+            //Make sure the gun shoots towards the crosshair
+            //Vector3 aimSpot = GunManager.FPSCam.transform.position;
+            //aimSpot += GunManager.FPSCam.transform.forward * this.AimOffset;
+            //this.ShootFrom.LookAt(aimSpot);
 
-            Vector3 direction = ShootFrom.transform.forward; // your initial aim.
+            //Add the customized spread of the specific gun
+            Vector3 direction = GunManager.FPSCam.transform.forward; // your initial aim.
             Vector3 spread = Vector3.zero;
-            spread += ShootFrom.transform.up * Random.Range(-VerticalSpread, VerticalSpread);
-            spread += ShootFrom.transform.right * Random.Range(-HorizontalSpread, HorizontalSpread);
-            direction += spread.normalized; //* Random.Range(0f, 0.2f);
+            spread += GunManager.FPSCam.transform.up;// * Random.Range(-VerticalSpread, VerticalSpread);
+            spread += GunManager.FPSCam.transform.right;// * Random.Range(-HorizontalSpread, HorizontalSpread);
+            direction += spread.normalized;
 
+            //Play the shooting sound of this gun
             GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
 
-            if (Physics.Raycast(ShootFrom.transform.position, direction, out hitInfo, float.MaxValue, ~LayerToIgnore))
+            Ray ray = GunManager.FPSCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+
+            //Shoot out a raycast
+            if (Physics.Raycast(ray, out hitInfo, float.MaxValue, ~LayerToIgnore))
             {
 
-                TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, Quaternion.identity);
-                StartCoroutine(SpawnTrail(trail, hitInfo.point, aimSpot));
+                //Instantiate a bullet trail
+                TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, ShootFrom.transform.localRotation);
+                trail.transform.parent = ShootFrom.transform;
 
-                Debug.DrawLine(ShootFrom.transform.position, hitInfo.point, Color.green, 1f);
                 if (hitInfo.transform.name != "Player")
                 {
-                    var damageableTarget = hitInfo.transform.GetComponent<IDamageable>();
-                    if (damageableTarget != null)
-                    {
-                        try
-                        {
-                            Vector3 targetPosition = hitInfo.transform.position;
-
-                            var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-                            Destroy(p, 1);
-                            float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);
-                            float totalDamage = Mathf.Abs(BulletDamage / ((distance / 2)));
-                            damageableTarget.TakeDamage(totalDamage);
-
-                            Debug.Log($"{hitInfo.transform.name}: {damageableTarget.Health}");
-                            Debug.Log($"TakeDamage Dealt: {totalDamage}");
-                        }
-                        catch
-                        {
-                            var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-                            Destroy(p, 1);
-                        }
-
-                    }
-                    else
-                    {
-                        Debug.Log("Not an IDamageable");
-                        var p = Instantiate(HitNonEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-                        Destroy(p, 1);
-                    }
+                    StartCoroutine(SpawnTrail(trail, hitInfo, HitEnemy));
                 }
             }
+            //if the player hit nothing
             else
             {
-                Debug.Log("Didn't hit anything");
-                TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, Quaternion.identity);
-                StartCoroutine(SpawnTrail(trail, ShootFrom.transform.position + direction * 10, aimSpot));
+                //Spawn the bullet trail
+                TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, ShootFrom.transform.localRotation);
+                StartCoroutine(SpawnTrail(trail, ShootFrom.transform.position + ray.direction * 10));
             }
 
+            //if the player does not have infinite ammo, decrement the gun's ammo by one
             if (!GunManager.InfiniteAmmo)
             {
                 CurrentAmmo--;
             }
 
+            //Get the time of the last shot, as this is needed for fire rate timer
             lastShotTime = Time.time;
         }
     }
 
-    private IEnumerator SpawnTrail(TrailRenderer trail, Vector3 endPoint, Vector3 aimSpot)
+    /// <summary>
+    /// For when the player doesn't hit anything
+    /// </summary>
+    /// <param name="trail"></param>
+    /// <param name="hitPoint"></param>
+    /// <returns></returns>
+    private IEnumerator SpawnTrail(TrailRenderer trail, Vector3 hitPoint)
     {
         float time = 0;
 
-        trail.transform.LookAt(aimSpot);
+        Vector3 startPosition = ShootFrom.transform.position;
 
-        Vector3 startPosition = trail.transform.position;
-
-        while (trail.transform.position != endPoint)
+        while (time < 1)
         {
-            trail.transform.position = Vector3.Lerp(startPosition, endPoint, time);
+            trail.transform.position = Vector3.Lerp(startPosition, hitPoint, time);
             time += Time.deltaTime / trail.time;
 
             yield return null;
         }
 
-        trail.transform.position = endPoint;
+        trail.transform.position = hitPoint;
 
-        Destroy(trail);
+        Destroy(trail.gameObject, trail.time);
     }
 
+    /// <summary>
+    /// When the player hits something
+    /// </summary>
+    /// <param name="trail"></param>
+    /// <param name="hitInfo"></param>
+    /// <param name="hitEffect"></param>
+    /// <returns></returns>
+    private IEnumerator SpawnTrail(TrailRenderer trail, RaycastHit hitInfo, GameObject hitEffect = null)
+    {
+        float time = 0;
+
+        Vector3 startPosition = ShootFrom.transform.position;
+
+        while (time < 1)
+        {
+            trail.transform.position = Vector3.Lerp(startPosition, hitInfo.point, time);
+            time += Time.deltaTime / trail.time;
+
+            yield return null;
+        }
+
+        trail.transform.position = hitInfo.point;
+
+        Destroy(trail.gameObject, trail.time);
+
+        if (hitEffect != null)
+        {
+            var damageableTarget = hitInfo.transform.GetComponent<IDamageable>();
+            HitEnemyBehavior(hitInfo, damageableTarget);
+        }
+    }
+
+    private void HitEnemyBehavior(RaycastHit hitInfo, IDamageable damageableTarget)
+    {
+        if (damageableTarget != null)
+        {
+            //using a try catch to prevent destroyed enemies from throwing null reference exceptions
+            try
+            {
+                //Get the position of the hit enemy
+                Vector3 targetPosition = hitInfo.transform.position;
+
+                //Play blood particle effects on the enemy, where they were hit
+                var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                Destroy(p, 1);
+
+                //Get the distance between the enemy and the gun
+                float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);
+
+                //calculate damage dropoff
+                float totalDamage = Mathf.Abs(BulletDamage / ((distance / DamageDrop)));
+
+                //Damage the target
+                damageableTarget.TakeDamage(totalDamage);
+            }
+            catch
+            {
+                var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                Destroy(p, 1);
+            }
+        }
+        else
+        {
+            var p = Instantiate(HitNonEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+            Destroy(p, 1);
+        }
+
+    }
     //public void StartReload()
     //{
     //    GunManager.Reloading = true;

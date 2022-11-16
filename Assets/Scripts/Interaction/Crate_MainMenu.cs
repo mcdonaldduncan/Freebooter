@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class Crate_MainMenu : MonoBehaviour, IDamageable
 {
@@ -60,5 +61,10 @@ public class Crate_MainMenu : MonoBehaviour, IDamageable
         this.gameObject.transform.position = defaultPosition;
         this.gameObject.GetComponent<MeshRenderer>().enabled = true;
         this.gameObject.GetComponent<MeshCollider>().enabled = true;
+    }
+
+    public void LoadScene(string sceneToLoad)
+    {
+        SceneManager.LoadScene(sceneToLoad);
     }
 }

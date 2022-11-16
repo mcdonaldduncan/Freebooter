@@ -5,19 +5,21 @@ using UnityEngine;
 
 public class FlyEnemy : MonoBehaviour, IDamageable
 {
-    private enum SoldierState { guard, wanderer, chase, originalSpot };
+    int shotCount;
+    bool dead = false;
+    private enum SoldierState { guard, wanderer, chase, originalSpot, Relocating, Death, retaliate};
     [Tooltip("/ Guard = Stand in one place until the player breaks line of sight / Wanderer = walks around / Chase = when the soldier goes after the enemy")]
     [SerializeField] private SoldierState st;
     private SoldierState origianlst;
-    [SerializeField] private GameObject target, tip, light, visionPoint, body;
+    [SerializeField] private GameObject target, tip, light, visionPoint, body,SensorR,SensorL;
     [SerializeField] private float rotationspeed, range;
     [SerializeField] private UnityEngine.AI.NavMeshAgent agent;
     Vector3 targetDiretion, originalPos;
     Quaternion rotation, originalrot;
-
-    [SerializeField] List<Transform> wanderSpots = new List<Transform>();
+    
+    [SerializeField] List<Vector3> wanderSpots = new List<Vector3>();
     [Tooltip("Distance to current wander spot before the player moves to next wander spot.")]
-    [SerializeField] private float wanderSpotOffset = 1f, delayBeforeMove = 2, originalPosOFFSET = 1f;
+    [SerializeField] private float wanderSpotOffset = 1f, delayBeforeMove = 2, originalPosOFFSET = 1f, wanderDistanceR, wanderDistanceL, wanderDistanceF, wanderDistanceB;
     private float lastShot, ShootRate = .5f;
     int i = 0;
     bool changeDir = false;
@@ -30,6 +32,10 @@ public class FlyEnemy : MonoBehaviour, IDamageable
     [SerializeField] private float health;
     public void TakeDamage(float damageTaken)
     {
+        if (st == SoldierState.guard || st == SoldierState.wanderer)
+        {
+            st = SoldierState.retaliate;
+        }
         Health -= damageTaken;
         CheckForDeath();
     }
@@ -39,19 +45,29 @@ public class FlyEnemy : MonoBehaviour, IDamageable
         if (Health <= 0)
         {
             //this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
-            Destroy(this.gameObject);
+            st = SoldierState.Death;
         }
     }
+
     private void Start()
     {
         target = GameObject.FindWithTag("Player");
         origianlst = st;
         originalPos = transform.position;
         originalrot = this.transform.rotation;
+        var pos = this.transform.position;
+        wanderSpots.Add(new Vector3(pos.x + wanderDistanceR, pos.y, pos.z));
+        wanderSpots.Add(new Vector3(pos.x - wanderDistanceL, pos.y, pos.z));
+        wanderSpots.Add(new Vector3(pos.x, pos.y, pos.z + wanderDistanceF));
+        wanderSpots.Add(new Vector3(pos.x, pos.y, pos.z - wanderDistanceB));
     }
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (health <= 0)
+        {
+            st = SoldierState.Death;
+        }
         switch (st)
         {
             case SoldierState.guard:
@@ -66,17 +82,40 @@ public class FlyEnemy : MonoBehaviour, IDamageable
                 break;
 
             case (SoldierState.chase):
-                Aim();
-                Shoot();
-                ChasePlayer();
+                if (health > 0)
+                {
+                    Aim();
+                    Shoot();
+                    ChasePlayer();
+                }
+               
                 break;
             case (SoldierState.originalSpot):
                 ReturnToOriginalSpot();
+                break;
+            case SoldierState.Relocating:
+                //Im calling Relocate() somehwere else to not call it many times in update
+                Aim();
+                Shoot();
+                break;
+            case SoldierState.Death:
+                if (dead == false)
+                {
+                    dead = true;
+                    agent.ResetPath();
+                    body.GetComponent<OnDeathExplosion>().OnDeathVariables();
+                }
+                break;
+            case (SoldierState.retaliate):
+                RetaliationAim();
+                RetaliationShoot();
+                RetaliationChasePlayer();
                 break;
             default:
                 break;
         }
     }
+
     void Aim() //This is pointing the torret towards the player as long as he is in range
     {
         float tempSpeed = rotationspeed;
@@ -108,6 +147,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable
         }
         else { }
     }
+
     void Shoot() //Shoots at the player
     {
         RaycastHit hit;
@@ -135,10 +175,11 @@ public class FlyEnemy : MonoBehaviour, IDamageable
             StateReturnOriginalSpot();
         }
     }
+
     void Wander()
     {
         if (i >= wanderSpots.Count) { i = 0; }
-        if (Vector3.Distance(this.transform.position, wanderSpots[i].transform.position) < wanderSpotOffset)
+        if (Vector3.Distance(this.transform.position, wanderSpots[i]) < wanderSpotOffset)
         {
             if (changeDir == false)
             {
@@ -146,13 +187,14 @@ public class FlyEnemy : MonoBehaviour, IDamageable
                 changeDir = true;
             }
         }
-        else if (Vector3.Distance(this.transform.position, wanderSpots[i].transform.position) >= wanderSpotOffset)
+        else if (Vector3.Distance(this.transform.position, wanderSpots[i]) >= wanderSpotOffset)
         {
-            agent.SetDestination(wanderSpots[i].transform.position);
+            agent.SetDestination(wanderSpots[i]);
             //Debug.Log(wanderSpots[i].transform.position);
         }
 
     }
+
     void WaitBeforeWanderToNextSpot()
     {
         if (i + 1 >= wanderSpots.Count)
@@ -165,6 +207,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable
         }
         changeDir = false;
     }
+
     void ChasePlayer()
     {
         var dist = Vector3.Distance(this.transform.position, target.transform.position);
@@ -173,14 +216,21 @@ public class FlyEnemy : MonoBehaviour, IDamageable
             agent.SetDestination(target.transform.position);
         }
     }
+
     void StateChase() //swaps state to Chase
     {
-        st = SoldierState.chase;
+        if (st != SoldierState.Death)
+        {
+            st = SoldierState.chase;
+            Invoke("RecolcateState", 5);
+        }
     }
+
     void StateReturnOriginalSpot()
     {
         st = SoldierState.originalSpot;
     }
+
     void ReturnToOriginalSpot()
     {
         agent.SetDestination(originalPos);
@@ -190,8 +240,111 @@ public class FlyEnemy : MonoBehaviour, IDamageable
             ReturnToOriginalState();
         }
     }
+
     void ReturnToOriginalState()
     {
         st = origianlst;
+    }
+
+    void RecolcateState()
+    {
+        if (health > 0)
+        {
+            var lastState = st;
+            st = SoldierState.Relocating;
+            Relocate(lastState);
+        }
+    }
+
+    void Relocate(SoldierState lastState)
+    {
+        var pos = this.transform.position;
+        float dist = range / 2;
+        if (Right(pos, dist) == true)
+        {
+            agent.SetDestination(new Vector3(pos.x + dist, pos.y, pos.z));
+        }
+        else if (Left(pos, dist) == true)
+        {
+            agent.SetDestination(new Vector3(pos.x - dist, pos.y, pos.z + dist));
+        }
+        st = lastState;
+    }
+
+    bool Right(Vector3 pos, float dist)
+    {
+        RaycastHit hit;
+        Debug.DrawRay(SensorR.transform.position, Vector3.right, Color.blue);
+        Physics.Raycast(SensorR.transform.position, Vector3.right, out hit, range / 2);
+        if (hit.collider == null)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    bool Left(Vector3 pos, float dist)
+    {
+        RaycastHit hit;
+        Debug.DrawRay(SensorL.transform.position, -Vector3.right, Color.blue);
+        Physics.Raycast(SensorR.transform.position, -Vector3.right, out hit, range / 2);
+        if (hit.collider == null)
+        {
+            return true;
+        }
+        return false;
+    }
+
+
+    void RetaliationAim() //This is pointing the soldier towards the player as long as he is in range
+    {
+        float tempSpeed = rotationspeed;
+
+        targetDiretion = target.transform.position - transform.position;
+        rotation = Quaternion.LookRotation(targetDiretion);
+        body.transform.rotation = Quaternion.RotateTowards(body.transform.rotation, rotation, tempSpeed * Time.deltaTime * 180);
+
+    }
+
+    void RetaliationShoot()
+    {
+        RaycastHit hit;
+        Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
+
+        Physics.Raycast(tip.transform.position, targetDiretion, out hit, range);
+        if (hit.collider != null)
+        {
+            if (hit.collider.tag == target.tag)
+            {
+                if (Time.time > ShootRate + lastShot)
+                {
+                    var bt = Instantiate(BulletTrail, tip.transform.position, rotation);
+                    bt.GetComponent<MoveForward>().origin = this.gameObject.transform.rotation;
+                    bt.GetComponent<MoveForward>().target = target;
+                    //bt.GetComponent<MoveForward>().damage = Damage;
+                    Debug.Log("Player was shot, dealing damage.");
+                    target.GetComponent<FirstPersonController>().TakeDamage(Damage);
+                    lastShot = Time.time;
+                }
+            }
+        }
+        if (shotCount%5 == 0)
+        {
+            Relocate(st);
+        }
+    }
+
+    void RetaliationChasePlayer()
+    {
+        var dist = Vector3.Distance(this.transform.position, target.transform.position);
+        if (dist <= range / 3)
+        {
+            agent.ResetPath();
+        }
+        else if (dist > range)
+        {
+            agent.SetDestination(target.transform.position);
+        }
+
     }
 }
