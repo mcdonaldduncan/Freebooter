@@ -150,12 +150,19 @@ public class ShotGun : MonoBehaviour, IGun
 
         if (hitEffect != null)
         {
-            var damageableTarget = hitInfo.transform.GetComponent<IDamageable>();
-            HitEnemyBehavior(hitInfo, damageableTarget);
+            try
+            {
+                var damageableTarget = hitInfo.transform.GetComponent<IDamageable>();
+                HitEnemyBehavior(hitInfo, damageableTarget);
+            }
+            catch
+            {
+                HitEnemyBehavior(hitInfo);
+            }
         }
     }
 
-    private void HitEnemyBehavior(RaycastHit hitInfo, IDamageable damageableTarget)
+    private void HitEnemyBehavior(RaycastHit hitInfo, IDamageable damageableTarget = null)
     {
         if (damageableTarget != null)
         {
