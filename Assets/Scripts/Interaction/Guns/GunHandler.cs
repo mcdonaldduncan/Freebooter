@@ -94,7 +94,8 @@ public class GunHandler : MonoBehaviour
     [Tooltip("This will offset how the shot is centered from the tip of the gun")]
     [SerializeField] private float autoGunAimOffset = 15f;
     [SerializeField] private CanvasGroup autoGunReticle;
-    [SerializeField] private AudioClip autoGunShotAudio;
+    [SerializeField] private AudioClip[] autoGunShotAudioList;
+    [SerializeField] private AudioClip triggerReleasedAudio;
 
     [Header("Longgun Parameters")]
     [SerializeField] private float longGunBulletDamage = 10f;
@@ -173,8 +174,9 @@ public class GunHandler : MonoBehaviour
             gun.AimOffset = this.autoGunAimOffset;
             gun.ReloadTime = this.autoGunReloadTime;
             gun.GunReticle = this.autoGunReticle;
-            gun.GunShotAudio = this.autoGunShotAudio;
             gun.DamageDrop = this.autoGunDamageDrop != 0 ? this.autoGunDamageDrop : 1;
+            autoGun.GunShotAudioList = this.autoGunShotAudioList;
+            autoGun.TriggerReleasedAudio = this.triggerReleasedAudio;
         }
         if (gun is HandGun)
         {

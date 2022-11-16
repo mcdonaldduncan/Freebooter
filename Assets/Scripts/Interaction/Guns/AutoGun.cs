@@ -22,6 +22,8 @@ public class AutoGun : MonoBehaviour, IGun
     public CanvasGroup GunReticle { get; set; }
     public TrailRenderer BulletTrail { get; set; }
     public AudioClip GunShotAudio { get; set; }
+    public AudioClip TriggerReleasedAudio { get; set; }
+    public AudioClip[] GunShotAudioList { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
 
     private bool CanShoot => lastShotTime + FireRate < Time.time && CurrentAmmo > 0 && GunManager.CurrentGun is AutoGun;
@@ -59,14 +61,15 @@ public class AutoGun : MonoBehaviour, IGun
     {
         if (context.canceled)
         {
+            if (this.holdingTrigger && GunManager.AutoGunCurrentAmmo > 0)
+            {
+                GunManager.GunShotAudioSource.PlayOneShot(TriggerReleasedAudio);
+            }
             this.holdingTrigger = false;
-            //GunManager.StopCoroutine(this.ShootAutoGun());
         }
         else if (context.performed)
         {
             this.holdingTrigger = true;
-
-            //GunManager.StartCoroutine(this.ShootAutoGun());
         }
     }
 
@@ -91,7 +94,8 @@ public class AutoGun : MonoBehaviour, IGun
 
             RaycastHit hitInfo;
 
-
+            int gunShotIndex = Random.RandomRange(0, GunShotAudioList.Length - 1);
+            GunShotAudio = GunShotAudioList[gunShotIndex];
             GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
 
             if (Physics.Raycast(GunManager.FPSCam.transform.position, direction, out hitInfo, float.MaxValue, ~LayerToIgnore))
@@ -114,6 +118,12 @@ public class AutoGun : MonoBehaviour, IGun
             }
 
             lastShotTime = Time.time;
+        }
+
+        if (GunManager.AutoGunCurrentAmmo <= 0)
+        {
+            this.holdingTrigger = false;
+            GunManager.GunShotAudioSource.PlayOneShot(TriggerReleasedAudio);
         }
     }
 
@@ -256,87 +266,6 @@ public class AutoGun : MonoBehaviour, IGun
         {
             GunManager.Reloading = false;
             GunManager.AutoGunCurrentAmmo = GunManager.AutoGunMaxAmmo;
-            Debug.Log("Reloaded!");
-        }
-        else
-        {
-            Debug.Log($"Reloading was canceled");
         }
     }
-
-    //private IEnumerator ShootAutoGun()
-    //{
-    //    if (!GunManager.Reloading && GunManager.AutoGunCurrentAmmo > 0)
-    //    {
-    //        if (!GunManager.InfiniteAmmo)
-    //        {
-    //            GunManager.AutoGunCurrentAmmo--;
-    //        }
-    //        GameObject lineDrawer = new GameObject();
-    //        LineRenderer lineRenderer = lineDrawer.AddComponent<LineRenderer>();
-    //        lineRenderer.startWidth = 0.025f;
-    //        lineRenderer.endWidth = 0.025f;
-
-    //        Vector3 aimSpot = GunManager.FPSCam.transform.position;
-    //        aimSpot += GunManager.FPSCam.transform.forward * AimOffset;
-    //        ShootFrom.LookAt(aimSpot);
-
-    //        Vector3 direction = ShootFrom.transform.forward; // your initial aim.
-    //        Vector3 spread = Vector3.zero;
-    //        spread += ShootFrom.transform.up * Random.Range(-VerticalSpread, VerticalSpread);
-    //        spread += ShootFrom.transform.right * Random.Range(-HorizontalSpread, HorizontalSpread);
-    //        direction += spread.normalized; //* Random.Range(0f, 0.2f);
-
-    //        RaycastHit hitInfo;
-
-    //        if (Physics.Raycast(ShootFrom.transform.position, direction, out hitInfo, float.MaxValue, ~LayerToIgnore))
-    //        {
-
-    //            Debug.DrawLine(ShootFrom.transform.position, hitInfo.point, Color.green, 1f);
-    //            lineRenderer.material.color = Color.green;
-    //            lineRenderer.SetPosition(0, ShootFrom.transform.position);
-    //            lineRenderer.SetPosition(1, hitInfo.point);
-
-    //            if (hitInfo.transform.name != "Player")
-    //            {
-    //                try
-    //                {
-    //                    IDamageable damageableTarget = hitInfo.transform.GetComponent<IDamageable>();
-    //                    Vector3 targetPosition = hitInfo.transform.position;
-
-    //                    float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);
-    //                    float totalDamage = Mathf.Abs(BulletDamage / ((distance / 2)));
-    //                    damageableTarget.TakeDamage(totalDamage);
-
-    //                    Debug.Log($"{hitInfo.transform.name}: {damageableTarget.Health}");
-    //                    Debug.Log($"TakeDamage Dealt: {totalDamage}");
-    //                    var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-    //                    Destroy(p, 1);
-    //                }
-    //                catch
-    //                {
-    //                    Debug.Log("Not an IDamageable");
-    //                    var p = Instantiate(HitNonEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-    //                    Destroy(p, 1);
-    //                }
-    //            }
-    //        }
-    //        else
-    //        {
-    //            lineRenderer.material.color = Color.red;
-    //            lineRenderer.SetPosition(0, ShootFrom.transform.position);
-    //            lineRenderer.SetPosition(1, ShootFrom.transform.position + direction * 10);
-    //            Debug.DrawLine(ShootFrom.transform.position, ShootFrom.transform.position + direction * 10, Color.red, 1f);
-    //        }
-
-    //        yield return FireRate;
-
-    //        if (holdingTrigger && !GunManager.Reloading)
-    //        {
-    //            GunManager.StartCoroutine(this.ShootAutoGun());
-    //        }
-    //    }
-    //}
-
-
 }

@@ -227,8 +227,6 @@ public class HandGun : MonoBehaviour, IGun
 
     private void OnWeaponSwitch(WaitForSeconds reloadWait)
     {
-        Debug.Log("Stopping Reload");
-
         //if (GunManager.Reloading)
         //{
         //    GunManager.Reloading = false;

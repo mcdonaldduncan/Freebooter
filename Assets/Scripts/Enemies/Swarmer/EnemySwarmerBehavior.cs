@@ -116,15 +116,10 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable
         inAttackAnim = true;
         if (Physics.Raycast(raycastSource.position, gameObject.transform.forward, out hitInfo, attackReach))
         {
-            Debug.Log($"Swarmer Hit Player!");
             if (hitInfo.transform.CompareTag("Player"))
             {
                 GiveDamage(damageToDeal);
             }
-        }
-        else
-        {
-            Debug.Log($"Swarmer hit nothing");
         }
     }
 
