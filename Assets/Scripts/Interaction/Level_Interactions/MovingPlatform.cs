@@ -21,11 +21,15 @@ public class MovingPlatform : MonoBehaviour
 
     Transform m_Transform;
 
+    FirstPersonController Player;
+
+    Vector3 lastPosition;
+
     bool isActivated;
     bool isLooping;
-
+    bool isAttached;
+    
     int currentIndex = 0;
-
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()
@@ -45,22 +49,27 @@ public class MovingPlatform : MonoBehaviour
 
     void Start()
     {
+        Player = GameObject.FindGameObjectWithTag("Player").GetComponent<FirstPersonController>();
         Platform = gameObject.FindChildWithTag("Platform");
         Base = Platform.GetComponent<PlatformBase>();
         isActivated = m_MovementType == MovementType.CONSTANT;
         Base.Init(m_MoveSpeed, isActivated, m_Nodes[0] ?? transform);
         m_Transform = Platform.transform;
+        lastPosition = m_Transform.position;
     }
 
     void Update()
     {
         MonitorBase();
+        ApplyMotionToPlayer();
     }
 
     public void OnPlayerContact()
     {
+        //if (!m_ShouldLoop && currentIndex == m_Nodes.Count - 1) return;
         if (m_MovementType == MovementType.CONTACT)
         {
+            isAttached = true;
             isActivated = true;
             Base.SetState(true);
         }
@@ -70,6 +79,7 @@ public class MovingPlatform : MonoBehaviour
     {
         if (m_MovementType == MovementType.CONTACT)
         {
+            isAttached = false;
             isActivated = false;
             Base.SetState(false);
         }
@@ -81,6 +91,15 @@ public class MovingPlatform : MonoBehaviour
         m_Nodes.Add(node.transform);
         node.name = $"Node_{m_Nodes.Count}";
         return node;
+    }
+
+    void ApplyMotionToPlayer()
+    {
+        if (!isAttached) return;
+        if (lastPosition == m_Transform.position) return;
+        Vector3 platformTranslation = m_Transform.position - lastPosition;
+        Player.surfaceMotion += platformTranslation;
+        lastPosition = m_Transform.position;
     }
 
     void MonitorBase()
@@ -106,11 +125,17 @@ public class MovingPlatform : MonoBehaviour
             
             if (currentIndex == m_Nodes.Count - 1)
             {
-                if (!m_ShouldLoop) isActivated = false;
-                else isLooping = true;
-
-                Base.SetState(isActivated);
-                Base.SetNewTarget(m_Nodes[--currentIndex]);
+                if (!m_ShouldLoop)
+                {
+                    isActivated = false;
+                    Base.SetState(false);
+                }
+                else
+                {
+                    isLooping = true;
+                    Base.SetNewTarget(m_Nodes[--currentIndex]);
+                }
+                
             }
             else
             {

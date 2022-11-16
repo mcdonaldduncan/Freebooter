@@ -161,6 +161,8 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
     private MovementState state;
 
+    [System.NonSerialized] public Vector3 surfaceMotion;
+
     public enum MovementState
     {
         basic,
@@ -468,7 +470,8 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         if (OnSteepSlope()) SteepSlopeMovement();
 
         //move the player based on the parameters gathered in the "Handle-" functions
-        characterController.Move(moveDirection * Time.deltaTime);
+        characterController.Move(surfaceMotion + moveDirection * Time.deltaTime);
+        surfaceMotion = Vector3.zero;
 
         if (jumpsRemaining < jumpsAllowed && characterController.isGrounded && !holdingJump)
         {

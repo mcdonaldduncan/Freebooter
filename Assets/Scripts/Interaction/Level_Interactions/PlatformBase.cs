@@ -25,7 +25,7 @@ public class PlatformBase : MonoBehaviour
         m_Target = target;
     }
 
-    void FixedUpdate()
+    void Update()
     {
         HandleMovement();
     }
@@ -51,7 +51,6 @@ public class PlatformBase : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            collision.gameObject.transform.SetParent(m_Transform);
             m_Platform.OnPlayerContact();
         }
     }
@@ -60,7 +59,6 @@ public class PlatformBase : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            collision.gameObject.transform.SetParent(null);
             m_Platform.OnPlayerExit();
         }
     }

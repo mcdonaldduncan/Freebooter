@@ -24,11 +24,6 @@ public class PlatformInspector : Editor
             Transform temp = platform.m_Nodes[platform.m_Nodes.Count - 1];
             platform.m_Nodes.RemoveAt(platform.m_Nodes.Count - 1);
             DestroyImmediate(temp.gameObject);
-
-            foreach (var item in platform.m_Nodes)
-            {
-                item.gameObject.name = $"Node_{platform.m_Nodes.IndexOf(item) + 1}";
-            }
         }
 
     }

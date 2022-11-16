@@ -230,8 +230,8 @@ public class GunHandler : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log($"ShootFrom Pos: {shootFrom.transform.position}");
-        Debug.Log($"ShootFrom Rot: {shootFrom.transform.position}");
+        //Debug.Log($"ShootFrom Pos: {shootFrom.transform.position}");
+        //Debug.Log($"ShootFrom Rot: {shootFrom.transform.position}");
         //if (!IsOwner) return;
         if (reloading)
         {
