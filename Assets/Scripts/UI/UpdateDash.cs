@@ -5,12 +5,15 @@ using UnityEngine.UI;
 
 public class UpdateDash : MonoBehaviour
 {
-    public Image image;
-    void Start()
+    private Image Dashbar;
+    public float DashAmount = 100;
+    private float MaxDashAmount;
+    FirstPersonController Player;
+
+    private void Start()
     {
-        image = GetComponent<Image>();
-        var tempColor = image.color;
-        tempColor.a = 1f;
-        image.color = tempColor;
+        Dashbar = GetComponent<Image>();
+        Player = FindObjectOfType<FirstPersonController>();
+        //this.MaxDashAmount = ;
     }
 }
