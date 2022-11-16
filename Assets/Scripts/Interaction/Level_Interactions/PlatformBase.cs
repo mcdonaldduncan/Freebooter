@@ -51,7 +51,7 @@ public class PlatformBase : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            //collision.gameObject.transform.SetParent(m_Transform);
+            collision.gameObject.transform.SetParent(m_Transform);
             m_Platform.OnPlayerContact();
         }
     }
@@ -60,7 +60,7 @@ public class PlatformBase : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            //collision.gameObject.transform.SetParent(null);
+            collision.gameObject.transform.SetParent(null);
             m_Platform.OnPlayerExit();
         }
     }
