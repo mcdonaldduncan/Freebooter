@@ -27,6 +27,7 @@ public class PlatformBase : MonoBehaviour
     void HandleMovement()
     {
         if (!m_ShouldMove) return;
+        if (Time.time < m_Platform.NextMoveTime) return;
 
         m_Transform.position = Vector3.MoveTowards(m_Transform.position, m_Target.position, m_Speed * Time.deltaTime);
     }

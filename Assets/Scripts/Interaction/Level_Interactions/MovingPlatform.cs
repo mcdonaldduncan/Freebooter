@@ -9,7 +9,9 @@ public class MovingPlatform : MonoBehaviour
     [Header("Movement Properties")]
     [SerializeField] MovementType m_MovementType;
     [SerializeField] float m_MoveSpeed;
+    [SerializeField] float m_nodeDelay;
     [SerializeField] bool m_ShouldLoop;
+    
 
     [Header("Node Prefab")]
     [SerializeField] GameObject Node;
@@ -28,8 +30,12 @@ public class MovingPlatform : MonoBehaviour
     bool isActivated;
     bool isLooping;
     bool isAttached;
-    
+
     int currentIndex = 0;
+
+    float lastNodeTime;
+
+    public float NextMoveTime => lastNodeTime + m_nodeDelay;
 
     #region Gizmo Drawing
 #if UNITY_EDITOR
@@ -93,6 +99,7 @@ public class MovingPlatform : MonoBehaviour
             {
                 Base.SetTarget(m_Nodes[--currentIndex]);
             }
+            lastNodeTime = Time.time;
         }
         else
         {
@@ -116,6 +123,7 @@ public class MovingPlatform : MonoBehaviour
             {
                 Base.SetTarget(m_Nodes[++currentIndex]);
             }
+            lastNodeTime = Time.time;
         }
     }
 
