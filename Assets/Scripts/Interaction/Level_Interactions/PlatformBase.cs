@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class PlatformBase : MonoBehaviour
 {
+    [SerializeField] public TranslationType m_TranslationType;
+
+    [SerializeField] float m_MaxForce;
+    [SerializeField] float m_MaxSpeed;
+
+    [SerializeField] bool m_IsDamp;
+
     [System.NonSerialized] public Transform m_Target;
     Transform m_Transform;
 
@@ -73,4 +80,11 @@ public class PlatformBase : MonoBehaviour
     }
 
     #endregion
+}
+
+public enum TranslationType
+{
+    LINEAR,
+    DAMP,
+    STEERING
 }
