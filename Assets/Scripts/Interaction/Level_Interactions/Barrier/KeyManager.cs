@@ -2,14 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BarrierManager : Singleton<BarrierManager>
+public class KeyManager : Singleton<KeyManager>
 {
-
-
-    [SerializeField] Dictionary<Barrier, List<Key>> m_KeyMap;
-    
-    List<Key> m_KeyInventory;
-
+    public List<Key> KeyInventory;
 
     void Start()
     {
