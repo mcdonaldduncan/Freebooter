@@ -22,6 +22,7 @@ public class HandGun : MonoBehaviour, IGun
     public CanvasGroup GunReticle { get; set; }
     public TrailRenderer BulletTrail { get; set; }
     public AudioClip GunShotAudio { get; set; }
+    public GameObject GunModel { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
 
     private bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading;

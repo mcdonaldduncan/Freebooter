@@ -24,6 +24,7 @@ public class ShotGun : MonoBehaviour, IGun
     public CanvasGroup GunReticle { get; set; }
     public TrailRenderer BulletTrail { get; set; }
     public AudioClip GunShotAudio { get; set; }
+    public GameObject GunModel { get; set; }
 
     private bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading;
 

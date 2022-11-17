@@ -16,4 +16,9 @@ public class UpdateDash : MonoBehaviour
         Player = FindObjectOfType<FirstPersonController>();
         //this.MaxDashAmount = ;
     }
+
+    private void Update()
+    {
+        Dashbar.fillAmount = Player.DashesRemaining / Player.DashesAllowed;
+    }
 }

@@ -24,6 +24,7 @@ public class AutoGun : MonoBehaviour, IGun
     public AudioClip GunShotAudio { get; set; }
     public AudioClip TriggerReleasedAudio { get; set; }
     public AudioClip[] GunShotAudioList { get; set; }
+    public GameObject GunModel { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
 
     private bool CanShoot => lastShotTime + FireRate < Time.time && CurrentAmmo > 0 && GunManager.CurrentGun is AutoGun;

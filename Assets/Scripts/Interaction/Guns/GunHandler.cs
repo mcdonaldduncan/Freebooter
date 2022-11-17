@@ -39,7 +39,6 @@ public class GunHandler : MonoBehaviour
 
     [Header("Gun Handler Parameters")]
     [SerializeField] private GunType currentGunState;
-    [SerializeField] private Transform shootFrom;
     [SerializeField] private Camera fpsCam;
     [SerializeField] private LayerMask playerLayer;
     [SerializeField] private TextMeshProUGUI ammoText;
@@ -51,6 +50,8 @@ public class GunHandler : MonoBehaviour
 
 
     [Header("Handgun Parameters")]
+    [SerializeField] private GameObject handGunModel;
+    [SerializeField] private Transform handGunShootFrom;
     [SerializeField] private float handGunBulletDamage = 10f;
     [SerializeField] private float handGunDamageDrop = 1f;
     [SerializeField] private float handGunVerticalSpread;
@@ -65,6 +66,8 @@ public class GunHandler : MonoBehaviour
     [SerializeField] private AudioClip handGunShotAudio;
 
     [Header("Shotgun Parameters")]
+    [SerializeField] private GameObject shotGunModel;
+    [SerializeField] private Transform shotGunShootFrom;
     [Tooltip("This will apply to EACH 'bullet' the shotgun fires")]
     [SerializeField] private float shotGunBulletDamage = 10f;
     [SerializeField] private float shotGunDamageDrop = 1f;
@@ -83,6 +86,8 @@ public class GunHandler : MonoBehaviour
     [SerializeField] private AudioClip shotGunShotAudio;
 
     [Header("Autogun Parameters")]
+    [SerializeField] private GameObject autoGunModel;
+    [SerializeField] private Transform autoGunShootFrom;
     [SerializeField] private float autoGunBulletDamage = 10f;
     [SerializeField] private float autoGunDamageDrop = 1f;
     [SerializeField] private float autoGunHorizontalSpread;
@@ -159,7 +164,6 @@ public class GunHandler : MonoBehaviour
     private void PopulateGunProperties(IGun gun)
     {
         gun.GunManager = this;
-        gun.ShootFrom = this.shootFrom;
         gun.LayerToIgnore = this.playerLayer;
         gun.HitEnemy = this.hitEnemy;
         gun.HitNonEnemy = this.hitNONEnemy;
@@ -168,6 +172,8 @@ public class GunHandler : MonoBehaviour
         if (gun is AutoGun)
         {
             gun.FireRate = this.autoFireRate;
+            gun.GunModel = this.autoGunModel;
+            gun.ShootFrom = this.autoGunShootFrom;
             gun.BulletDamage = this.autoGunBulletDamage;
             gun.VerticalSpread = this.autoGunVerticalSpread;
             gun.HorizontalSpread = this.autoGunHorizontalSpread;
@@ -181,6 +187,8 @@ public class GunHandler : MonoBehaviour
         if (gun is HandGun)
         {
             gun.FireRate = this.handGunFireRate;
+            gun.GunModel = this.handGunModel;
+            gun.ShootFrom = this.handGunShootFrom;
             gun.BulletDamage = this.handGunBulletDamage;
             gun.VerticalSpread = this.handGunVerticalSpread;
             gun.HorizontalSpread = this.handGunHorizontalSpread;
@@ -193,6 +201,8 @@ public class GunHandler : MonoBehaviour
         if (gun is ShotGun)
         {
             gun.FireRate = this.shotGunFireRate; //TODO get rid of coroutine reloads
+            gun.GunModel = this.shotGunModel;
+            gun.ShootFrom = this.shotGunShootFrom;
             gun.BulletDamage = this.shotGunBulletDamage;
             gun.VerticalSpread = this.shotGunVerticalSpread;
             gun.HorizontalSpread = this.shotGunHorizontalSpread;
@@ -209,6 +219,10 @@ public class GunHandler : MonoBehaviour
         handGunReticle.alpha = 0;
         shotGunReticle.alpha = 0;
         autoGunReticle.alpha = 0;
+
+        handGunModel.SetActive(false);
+        shotGunModel.SetActive(false);
+        autoGunModel.SetActive(false);
 
         handGunCurrentAmmo = handGunMaxAmmo;
         shotGunCurrentAmmo = shotGunMaxAmmo;
@@ -228,6 +242,7 @@ public class GunHandler : MonoBehaviour
 
         currentGun = gunDict[Array.IndexOf(guns, currentGunState)];
         currentGun.GunReticle.alpha = 1;
+        currentGun.GunModel.SetActive(true);
     }
 
     private void Update()
@@ -235,14 +250,14 @@ public class GunHandler : MonoBehaviour
         //Debug.Log($"ShootFrom Pos: {shootFrom.transform.position}");
         //Debug.Log($"ShootFrom Rot: {shootFrom.transform.position}");
         //if (!IsOwner) return;
-        if (reloading)
-        {
-            gunRenderer.material.color = Color.red;
-        }
-        else
-        {
-            gunRenderer.material.color = default;
-        }
+        //if (reloading)
+        //{
+        //    gunRenderer.material.color = Color.red;
+        //}
+        //else
+        //{
+        //    gunRenderer.material.color = default;
+        //}
 
         currentGunAmmo = currentGun.CurrentAmmo;
 
@@ -253,6 +268,7 @@ public class GunHandler : MonoBehaviour
     {
         //if (!IsOwner) return;
         currentGun.GunReticle.alpha = 0;
+        currentGun.GunModel.SetActive(false);
 
         if (currentGunState != guns.Last())
         {
@@ -265,6 +281,7 @@ public class GunHandler : MonoBehaviour
         
         currentGun = gunDict[Array.IndexOf(guns, currentGunState)];
         currentGun.GunReticle.alpha = 1;
+        currentGun.GunModel.SetActive(true);
 
         WaitForSeconds reloadToInvoke = gunReloadWaitDict[currentGunState];
         weaponSwitched?.Invoke(reloadToInvoke);

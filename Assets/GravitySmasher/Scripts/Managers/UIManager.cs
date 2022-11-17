@@ -9,14 +9,14 @@ public class UIManager : MonoBehaviour
 
     //DataManager dataManager;
 
-    // Assign data manager and update score text on start
+    // Assign data manager and update score reloadText on start
     void Start()
     {
         //dataManager = Utility.AssignDataManager();
         UpdateScore();
     }
 
-    // Update the score text
+    // Update the score reloadText
     public void UpdateScore()
     {
         if (scoreText != null)
