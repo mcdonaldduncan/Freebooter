@@ -16,7 +16,11 @@ public class PlatformBase : MonoBehaviour
 
     MovingPlatform m_Platform;
 
+    Vector3 m_Velocity;
+    Vector3 m_Acceleration;
+
     float m_Speed;
+
     bool m_ShouldMove;
 
     void Start()

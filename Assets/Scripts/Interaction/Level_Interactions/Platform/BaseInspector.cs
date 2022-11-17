@@ -11,6 +11,7 @@ public class BaseInspector : Editor
         maxForce_Prop,
         isDamp_Prop,
         Type_Prop;
+        
 
     private void OnEnable()
     {
@@ -18,11 +19,11 @@ public class BaseInspector : Editor
         maxSpeed_Prop = serializedObject.FindProperty("m_MaxSpeed");
         Type_Prop = serializedObject.FindProperty("m_TranslationType");
         isDamp_Prop = serializedObject.FindProperty("m_IsDamp");
+        
     }
 
     public override void OnInspectorGUI()
     {
-        //DrawDefaultInspector();
         serializedObject.Update();
 
         PlatformBase _base = (PlatformBase)target;
