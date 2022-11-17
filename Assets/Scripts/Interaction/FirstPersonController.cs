@@ -11,8 +11,10 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 {
     public float MaxHealth { get { return maxHealth; } set { maxHealth = value; } }
     public float Health { get { return health; } set { health = value; } }
+    public float DashTime { get { return dashTime; } }
     public float DashesAllowed { get { return dashesAllowed; } }
     public float DashesRemaining { get { return dashesRemaining; } }
+    public float DashCooldownTime { get { return dashCooldownTime; } }
     public float FinalJumpForce { get { return finalJumpForce; } set { finalJumpForce = value; } }
     public bool PlayerCanMove { get; private set; } = true;
     public bool PlayerIsDashing { get; private set; }
@@ -22,6 +24,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     private bool PlayerHasDashes => dashesRemaining > dashesAllowed - dashesAllowed;
     public bool PlayerCanDash => PlayerHasDashes && NonZeroVelocity;
     public bool PlayerCanDashAgain => PlayerCanDash && playerDashing;
+    public bool UpdateDashBar { get; set; }
 
     //Checks used to see if player is able to use mechanics.
     [Header("Functional Options")]
@@ -162,6 +165,9 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     public static InputActions _input;
 
     private MovementState state;
+    
+    public delegate void PlayerDashDelegate();
+    public static PlayerDashDelegate playerDashed;
 
     [System.NonSerialized] public Vector3 surfaceMotion;
 
@@ -355,6 +361,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     private IEnumerator Dash()
     {
         dashesRemaining--;
+        playerDashed?.Invoke();
         float startTime = Time.time;
         dashCooldownStartTime = startTime;
 
@@ -362,6 +369,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
         while (Time.time < startTime + dashTime)
         {
+            UpdateDashBar = true;
             playerDashing = true;
             characterController.Move(moveDirection * dashSpeed * Time.deltaTime);
             moveDirection.y = 0;
@@ -370,6 +378,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
             yield return null;
         }
+        UpdateDashBar = false;
 
         if(PlayerCanDashAgain)
         {
