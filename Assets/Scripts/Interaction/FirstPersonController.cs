@@ -11,6 +11,8 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 {
     public float MaxHealth { get { return maxHealth; } set { maxHealth = value; } }
     public float Health { get { return health; } set { health = value; } }
+    public float DashesAllowed { get { return dashesAllowed; } }
+    public float DashesRemaining { get { return dashesRemaining; } }
     public float FinalJumpForce { get { return finalJumpForce; } set { finalJumpForce = value; } }
     public bool PlayerCanMove { get; private set; } = true;
     public bool PlayerIsDashing { get; private set; }

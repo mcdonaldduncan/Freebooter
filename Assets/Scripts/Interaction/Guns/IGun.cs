@@ -21,6 +21,7 @@ public interface IGun
     CanvasGroup GunReticle { get; set; }
     TrailRenderer BulletTrail { get; set; }
     AudioClip GunShotAudio { get; set; }
+    GameObject GunModel { get; set; }
 
     //void Shoot();
     IEnumerator Reload(WaitForSeconds reloadWait);

@@ -10,7 +10,7 @@ public class SciFiButtonScript : MonoBehaviour
 {
 	public GameObject Button;
 	Text MyButtonText;
-	string projectileParticleName;		// The variable to update the text component of the button
+	string projectileParticleName;		// The variable to update the reloadText component of the button
 
 	SciFiFireProjectile effectScript;		// A variable used to access the list of projectiles
 	SciFiProjectileScript projectileScript;

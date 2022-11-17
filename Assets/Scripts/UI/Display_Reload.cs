@@ -6,25 +6,30 @@ using UnityEngine.UI;
 
 public class Display_Reload : MonoBehaviour
 {
-    public GunHandler Cgun;
-    public TextMeshProUGUI text;
+    [SerializeField] private GunHandler Cgun;
+    private TextMeshProUGUI reloadText;
 
     private void Start()
     {
-        text.enabled = false;
+        reloadText = GetComponent<TextMeshProUGUI>();
+        reloadText.enabled = false;
     }
 
     void Update()
     {
-
-
-        if(Cgun.CurrentGun.CurrentAmmo <= Cgun.CurrentGun.CurrentMaxAmmo * .25)
+        if(Cgun.CurrentGun.CurrentAmmo <= Cgun.CurrentGun.CurrentMaxAmmo * .25 && !Cgun.Reloading)
         {
-        text.enabled = true;
+            reloadText.text = "Press R to reload";
+            reloadText.enabled = true;
         }
-        else if(Cgun.CurrentGun.CurrentAmmo > Cgun.CurrentGun.CurrentMaxAmmo * .25)
+        if (Cgun.Reloading)
         {
-            text.enabled = false;
+            reloadText.text = "Reloading...";
+            reloadText.enabled = true;
+        }
+        else if(Cgun.CurrentGun.CurrentAmmo > Cgun.CurrentGun.CurrentMaxAmmo * .25 && !Cgun.Reloading)
+        {
+            reloadText.enabled = false;
         }
     }
 
