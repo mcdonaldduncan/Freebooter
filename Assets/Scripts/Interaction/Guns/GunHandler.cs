@@ -266,17 +266,32 @@ public class GunHandler : MonoBehaviour
 
     public void SwitchWeapon(InputAction.CallbackContext context)
     {
+        float mouseScrollDirection = context.ReadValue<float>();
         //if (!IsOwner) return;
         currentGun.GunReticle.alpha = 0;
         currentGun.GunModel.SetActive(false);
 
-        if (currentGunState != guns.Last())
+        if (mouseScrollDirection < 0)
         {
-            currentGunState = guns[Array.IndexOf(guns, currentGunState) + 1];
+            if (currentGunState != guns.Last())
+            {
+                currentGunState = guns[Array.IndexOf(guns, currentGunState) + 1];
+            }
+            else
+            {
+                currentGunState = guns[0];
+            }
         }
-        else
+        if (mouseScrollDirection > 0)
         {
-            currentGunState = guns[0];
+            if (currentGunState != guns[0])
+            {
+                currentGunState = guns[Array.IndexOf(guns, currentGunState) - 1];
+            }
+            else
+            {
+                currentGunState = guns.Last();
+            }
         }
         
         currentGun = gunDict[Array.IndexOf(guns, currentGunState)];

@@ -357,9 +357,9 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""SwitchWeapon"",
-                    ""type"": ""Button"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""56cfc37d-d20a-4480-8ea2-1c690590de5a"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -390,8 +390,8 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""24a4c819-a370-46a0-bfe9-bce5e5c272eb"",
-                    ""path"": ""<Keyboard>/q"",
+                    ""id"": ""89f32d39-4be1-47d7-8b07-4cabffcb1627"",
+                    ""path"": ""<Mouse>/scroll/y"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
