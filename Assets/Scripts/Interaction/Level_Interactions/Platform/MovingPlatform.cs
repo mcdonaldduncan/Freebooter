@@ -11,7 +11,6 @@ public class MovingPlatform : MonoBehaviour
     [SerializeField] float m_MoveSpeed;
     [SerializeField] float m_nodeDelay;
     [SerializeField] bool m_ShouldLoop;
-    
 
     [Header("Node Prefab")]
     [SerializeField] GameObject Node;
@@ -55,6 +54,7 @@ public class MovingPlatform : MonoBehaviour
 #endif
     #endregion
 
+
     void Start()
     {
         Player = GameObject.FindGameObjectWithTag("Player").GetComponent<FirstPersonController>();
@@ -62,7 +62,6 @@ public class MovingPlatform : MonoBehaviour
         Base = Platform.GetComponent<PlatformBase>();
         isActivated = m_MovementType == MovementType.CONSTANT;
         Base.Init(m_MoveSpeed, isActivated, m_Nodes[0] ?? transform);
-        m_Transform = Platform.transform;
         lastPosition = m_Transform.position;
     }
 
@@ -77,34 +76,42 @@ public class MovingPlatform : MonoBehaviour
     void ApplyMotionToPlayer()
     {
         if (!isAttached) return;
-        if (lastPosition == m_Transform.position) return;
-        Vector3 platformTranslation = m_Transform.position - lastPosition;
+        if (lastPosition == Base.transform.position) return;
+        Vector3 platformTranslation = Base.transform.position - lastPosition;
         Player.surfaceMotion += platformTranslation;
-        lastPosition = m_Transform.position;
+        lastPosition = Base.transform.position;
+    }
+
+    public void UpdateFromBase()
+    {
+        TransitionTargets();
     }
 
     void MonitorBase()
     {
         if (!isActivated) return;
+        if (!(m_Transform.position == m_Nodes[currentIndex].position)) return;
+
+        TransitionTargets();
+    }
+
+    void TransitionTargets()
+    {
         if (isLooping)
         {
-            if (!(m_Transform.position == m_Nodes[currentIndex].position)) return;
-
             if (currentIndex == 0)
             {
                 isLooping = false;
-                Base.SetTarget(m_Nodes[++currentIndex]);
+                Base.SetTargets(m_Nodes[currentIndex], m_Nodes[++currentIndex]);
             }
             else
             {
-                Base.SetTarget(m_Nodes[--currentIndex]);
+                Base.SetTargets(m_Nodes[currentIndex], m_Nodes[--currentIndex]);
             }
             lastNodeTime = Time.time;
         }
         else
         {
-            if (!(m_Transform.position == m_Nodes[currentIndex].position)) return;
-            
             if (currentIndex == m_Nodes.Count - 1)
             {
                 if (!m_ShouldLoop)
@@ -115,13 +122,12 @@ public class MovingPlatform : MonoBehaviour
                 else
                 {
                     isLooping = true;
-                    Base.SetTarget(m_Nodes[--currentIndex]);
+                    Base.SetTargets(m_Nodes[currentIndex], m_Nodes[--currentIndex]);
                 }
-                
             }
             else
             {
-                Base.SetTarget(m_Nodes[++currentIndex]);
+                Base.SetTargets(m_Nodes[currentIndex], m_Nodes[++currentIndex]);
             }
             lastNodeTime = Time.time;
         }
@@ -133,9 +139,9 @@ public class MovingPlatform : MonoBehaviour
 
     public void OnPlayerContact()
     {
+        isAttached = true;
         if (m_MovementType == MovementType.CONTACT)
         {
-            isAttached = true;
             isActivated = true;
             Base.SetState(true);
         }
@@ -143,15 +149,21 @@ public class MovingPlatform : MonoBehaviour
 
     public void OnPlayerExit()
     {
+        isAttached = false;
         if (m_MovementType == MovementType.CONTACT)
         {
-            isAttached = false;
             isActivated = false;
             Base.SetState(false);
         }
     }
 
     #endregion
+
+
+    public void SetTransform(Transform t)
+    {
+        m_Transform = t;
+    }
 
     #region Editor Functions
     public GameObject AddNode()
