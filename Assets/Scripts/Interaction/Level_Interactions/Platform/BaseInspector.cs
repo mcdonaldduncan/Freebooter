@@ -47,6 +47,7 @@ public class BaseInspector : Editor
                 break;
             case TranslationType.STEERING:
                 EditorGUILayout.LabelField("Caution, steering can be unpredictable");
+                EditorGUILayout.LabelField("Node delay will not be applied for steering");
                 EditorGUILayout.PropertyField(maxSpeed_Prop);
                 EditorGUILayout.PropertyField(maxForce_Prop);
                 break;

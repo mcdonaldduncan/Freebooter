@@ -55,8 +55,8 @@ public class PlatformBase : MonoBehaviour
     #region Movement Logic
     void HandleMovementState()
     {
-        if (!m_ShouldMove) return;
-        if (Time.time < m_Platform.NextMoveTime) return;
+        
+        
 
         switch (m_TranslationType)
         {
@@ -87,18 +87,25 @@ public class PlatformBase : MonoBehaviour
 
     private void LinearMotion()
     {
+        if (!m_ShouldMove) return;
+        if (Time.time < m_Platform.NextMoveTime) return;
         m_Transform.position = Vector3.MoveTowards(m_Transform.position, m_Target.position, m_Speed * Time.deltaTime);
     }
 
     private void CurveMotion()
     {
+        if (!m_ShouldMove) return;
+        if (Time.time < m_Platform.NextMoveTime) return;
         m_LerpTime += Time.deltaTime / m_LerpScale;
         m_Transform.position = Vector3.Lerp(m_PreviousTarget.position, m_Target.position, m_AnimationCurve.Evaluate(m_LerpTime));
     }
 
     private void DampMotion()
     {
-        m_Navigator.position = Vector3.MoveTowards(m_Navigator.position, m_Target.position, m_Speed * Time.deltaTime);
+        m_ShouldMove = Vector3.Distance(m_Transform.position, m_Target.position) > .1f;
+        
+        if (!m_ShouldMove) return;
+
         m_Velocity = Vector3.ClampMagnitude(m_Velocity, m_MaxSpeed);
 
         var n1 = m_Velocity - (m_Transform.position - m_Navigator.position) * Mathf.Pow(m_Damping, 2) * Time.deltaTime;
@@ -106,10 +113,17 @@ public class PlatformBase : MonoBehaviour
         m_Velocity = n1 / n2;
 
         m_Transform.position += m_Velocity * Time.deltaTime;
+
+        
+        if (Time.time < m_Platform.NextMoveTime) return;
+
+        m_Navigator.position = Vector3.MoveTowards(m_Navigator.position, m_Target.position, m_Speed * Time.deltaTime);
     }
 
     private void SteeringMotion()
     {
+        if (!m_ShouldMove) return;
+
         m_Acceleration += CalculateSteering(m_Target.position);
         m_Velocity += m_Acceleration;
         m_Transform.position += m_Velocity * Time.deltaTime;
