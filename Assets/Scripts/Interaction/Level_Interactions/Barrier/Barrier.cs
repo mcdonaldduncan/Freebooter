@@ -13,8 +13,12 @@ public class Barrier : MonoBehaviour
     [Header("Segment Parameters")]
     [SerializeField] public float MoveSpeed;
 
+    [Header("Prefabs")]
+    [SerializeField] GameObject m_KeyPrefab;
+    [SerializeField] GameObject m_SegmentPrefab;
+
     [Header("")]
-    [SerializeField] List<Key> m_RequiredKeys;
+    [SerializeField] public List<Key> m_RequiredKeys;
 
     public delegate void ActionDelegate();
     public event ActionDelegate Activation;
@@ -23,6 +27,18 @@ public class Barrier : MonoBehaviour
     bool HasKeys => KeyManager.Instance.KeyInventory.Intersect(m_RequiredKeys).Count() == m_RequiredKeys.Count;
 
     bool m_InTrigger;
+
+#if UNITY_EDITOR
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        
+
+        Gizmos.DrawWireCube(transform.position, Vector3.one);
+    }
+
+#endif
 
     void Start()
     {
@@ -45,10 +61,17 @@ public class Barrier : MonoBehaviour
         m_State = m_State == BarrierState.OPEN ? BarrierState.CLOSED : BarrierState.OPEN;
     }
 
-
-    private void OnControllerColliderHit(ControllerColliderHit hit)
+    public GameObject AddSegment()
     {
-        
+        GameObject segment = Instantiate(m_SegmentPrefab, transform, false);
+        return segment;
+    }
+
+    public GameObject AddKey()
+    {
+        GameObject key = Instantiate(m_KeyPrefab, transform, false);
+        m_RequiredKeys.Add(key.GetComponent<Key>());
+        return key;
     }
 
     private void OnTriggerEnter(Collider other)

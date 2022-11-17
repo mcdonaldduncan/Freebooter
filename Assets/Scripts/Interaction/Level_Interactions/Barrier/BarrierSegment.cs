@@ -7,6 +7,9 @@ using UnityEngine.UIElements;
 
 public class BarrierSegment : MonoBehaviour
 {
+    [Header("Node Prefab")]
+    [SerializeField] GameObject NodePrefab;
+
     [Header("Nodes")]
     [SerializeField] public List<Transform> m_Nodes;
 
@@ -20,6 +23,23 @@ public class BarrierSegment : MonoBehaviour
     int m_LastIndex;
 
     bool m_ShouldMove;
+
+
+#if UNITY_EDITOR
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Vector3 lastPosition = transform.position;
+        foreach (var _transform in m_Nodes)
+        {
+            Gizmos.DrawSphere(_transform.position, .5f);
+            Gizmos.DrawLine(lastPosition, _transform.position);
+            lastPosition = _transform.position;
+        }
+    }
+
+#endif
 
     private void OnEnable()
     {
@@ -120,4 +140,12 @@ public class BarrierSegment : MonoBehaviour
     }
 
     #endregion
+
+    public GameObject AddNode()
+    {
+        GameObject node = Instantiate(NodePrefab, transform.parent, false);
+        m_Nodes.Add(node.transform);
+        node.name = $"Node_{m_Nodes.Count}";
+        return node;
+    }
 }
