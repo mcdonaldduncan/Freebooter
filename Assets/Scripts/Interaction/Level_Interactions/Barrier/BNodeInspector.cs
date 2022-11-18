@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(BarrierNode))]
 public class BNodeInspector : Editor
 {
@@ -30,3 +31,4 @@ public class BNodeInspector : Editor
 
     }
 }
+#endif

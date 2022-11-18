@@ -4,6 +4,8 @@ using UnityEditor;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
+#if UNITY_EDITOR
+
 [CustomEditor(typeof(BarrierSegment))]
 public class SegmentInspector : Editor
 {
@@ -28,3 +30,4 @@ public class SegmentInspector : Editor
 
     }
 }
+#endif

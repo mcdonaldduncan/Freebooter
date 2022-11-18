@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
+
 [CustomEditor(typeof(PlatformBase))]
 public class BaseInspector : Editor
 {
@@ -61,3 +63,4 @@ public class BaseInspector : Editor
         serializedObject.ApplyModifiedProperties();
     }
 }
+#endif

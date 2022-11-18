@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(Key))]
 public class KeyInspector : Editor
 {
@@ -29,3 +30,4 @@ public class KeyInspector : Editor
 
     }
 }
+#endif

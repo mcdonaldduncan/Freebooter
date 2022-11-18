@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(MovingPlatform))]
 public class PlatformInspector : Editor
 {
@@ -28,3 +28,4 @@ public class PlatformInspector : Editor
 
     }
 }
+#endif
