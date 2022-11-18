@@ -66,6 +66,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
     // Update is called once per frame
     void FixedUpdate()
     {
+        Debug.Log(st);
         switch (st)
         {
             case SoldierState.guard:
