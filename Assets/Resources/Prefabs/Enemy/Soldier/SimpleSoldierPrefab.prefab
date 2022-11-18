@@ -91,6 +91,7 @@ GameObject:
   - component: {fileID: 8253998864217772736}
   - component: {fileID: 2070929647298480692}
   - component: {fileID: 4041115256718326706}
+  - component: {fileID: -8841724177387881942}
   m_Layer: 0
   m_Name: SimpleSoldierPrefab
   m_TagString: Untagged
@@ -161,7 +162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4ca285f011d447448bed18f84fbd965, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 1625230949602922297}
+  animator: {fileID: -8841724177387881942}
   st: 1
   target: {fileID: 297426594678655177, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
   tip: {fileID: 965038701042483596}
@@ -196,6 +197,26 @@ CapsuleCollider:
   m_Height: 2.2400653
   m_Direction: 1
   m_Center: {x: 0.018041492, y: -0.011769414, z: -0.021464586}
+--- !u!95 &-8841724177387881942
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3157978276382255860}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: f4f1541916ce2d245b080631d9c52f9b, type: 3}
+  m_Controller: {fileID: 9100000, guid: 3bcb7ae2e45559f40b2e1e0f62a1665f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &7523779096007271324
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -256,11 +277,6 @@ PrefabInstance:
 --- !u!1 &965038701042483596 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7281569271449231888, guid: 08d94c7d0b1ecfa4fbde6d8d4e500abf, type: 3}
-  m_PrefabInstance: {fileID: 7523779096007271324}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &1625230949602922297 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 9143485686874664101, guid: 08d94c7d0b1ecfa4fbde6d8d4e500abf, type: 3}
   m_PrefabInstance: {fileID: 7523779096007271324}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &4642602243419297091 stripped
