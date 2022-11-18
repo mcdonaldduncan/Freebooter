@@ -595,7 +595,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     public void TakeDamage(float damageTaken)
     {
         Health -= damageTaken;
-        Debug.Log($"Player Health: { health }");
+        //Debug.Log($"Player Health: { health }");
         CheckForDeath();
     }
     public void HealthRegen(float heal)
