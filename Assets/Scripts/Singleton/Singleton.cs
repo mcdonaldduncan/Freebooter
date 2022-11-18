@@ -8,9 +8,6 @@ public class Singleton<T> :
 
     private static T _instance;
 
-
-
-
     public static T Instance
     {
         get
@@ -30,8 +27,6 @@ public class Singleton<T> :
                     _instance = obj.AddComponent<T>();
                 }
             }
-
-
 
             return _instance;
         }
