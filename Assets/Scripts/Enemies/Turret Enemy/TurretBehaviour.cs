@@ -123,12 +123,12 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
         {
             if (hit.collider.tag == target.tag)
             { 
-            Debug.Log("Player Detected");
+            //Debug.Log("Player Detected");
             Invoke("StateShootTarget",2);
             }
             else if (hit.collider.tag != target.tag)
             {
-            Debug.Log("Player NOT Detected");
+            //Debug.Log("Player NOT Detected");
             }
         }
         else { }
