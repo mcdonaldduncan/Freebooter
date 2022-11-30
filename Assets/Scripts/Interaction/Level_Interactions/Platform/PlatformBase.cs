@@ -55,9 +55,6 @@ public class PlatformBase : MonoBehaviour
     #region Movement Logic
     void HandleMovementState()
     {
-        
-        
-
         switch (m_TranslationType)
         {
             case TranslationType.LINEAR:

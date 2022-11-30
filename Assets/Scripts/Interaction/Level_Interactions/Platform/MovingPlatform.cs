@@ -62,7 +62,7 @@ public class MovingPlatform : MonoBehaviour
         Base = Platform.GetComponent<PlatformBase>();
         isActivated = m_MovementType == MovementType.CONSTANT;
         Base.Init(m_MoveSpeed, isActivated, m_Nodes[0] ?? transform);
-        lastPosition = m_Transform.position;
+        lastPosition = Base.transform.position;
     }
 
     void Update()
