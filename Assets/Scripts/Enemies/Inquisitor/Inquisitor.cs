@@ -5,10 +5,12 @@ using UnityEngine;
 
 public class Inquisitor : MonoBehaviour, IDamageable
 {
-    [SerializeField] GameObject follower;
+    [SerializeField] GameObject follower_GO;
     [SerializeField] public List<FakeOrbit> orbits;
     [SerializeField] float StartingHealth;
     [SerializeField] float cooldown;
+
+    Follower follower;
 
     public float Health { get; set; }
 
@@ -36,9 +38,9 @@ public class Inquisitor : MonoBehaviour, IDamageable
     {
         if (Health <= 0)
         {
-            this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
             Debug.Log("Inquisitor Destroyed");
-            Destroy(gameObject);
+            follower.Despawn();
+            gameObject.SetActive(false);
         }
     }
 
@@ -52,7 +54,6 @@ public class Inquisitor : MonoBehaviour, IDamageable
         SpawnFollower();
     }
 
-
     void SpawnFollower()
     {
         if (isTracking)
@@ -63,8 +64,16 @@ public class Inquisitor : MonoBehaviour, IDamageable
         if (cooldownProgress < cooldown)
             return;
 
-        Follower temp = Instantiate(follower).GetComponent<Follower>();
-        temp.Init(potentialTargets[0], this);
+        if (follower == null)
+        {
+            follower = Instantiate(follower_GO).GetComponent<Follower>();
+            follower.Init(potentialTargets[0], this);
+        }
+        else
+        {
+            follower.Init(potentialTargets[0], this);
+        }
+        
         isTracking = true;
         cooldownProgress = 0;
     }
