@@ -2,9 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class FlyEnemy : MonoBehaviour, IDamageable
 {
+    [SerializeField] private LayerMask layerMask = 0; // for wondering
+    [SerializeField] private float minWaitTimeWander, maxWaitTimeWander, wonderDistanceRange; // wait timer for wandering
+
+    float waitTimer;
+    bool wanderMiniState; //state for wandering and wanderingIdle
+
+
     int shotCount;
     bool dead = false;
     private enum SoldierState { guard, wanderer, chase, originalSpot, Relocating, Death, retaliate};
@@ -16,10 +24,9 @@ public class FlyEnemy : MonoBehaviour, IDamageable
     [SerializeField] private UnityEngine.AI.NavMeshAgent agent;
     Vector3 targetDiretion, originalPos;
     Quaternion rotation, originalrot;
-    
-    [SerializeField] List<Vector3> wanderSpots = new List<Vector3>();
+
     [Tooltip("Distance to current wander spot before the player moves to next wander spot.")]
-    [SerializeField] private float wanderSpotOffset = 1f, delayBeforeMove = 2, originalPosOFFSET = 1f, wanderDistanceR, wanderDistanceL, wanderDistanceF, wanderDistanceB;
+    [SerializeField] private float wanderSpotOffset = 1f, delayBeforeMove = 2, originalPosOFFSET = 1f;
     private float lastShot, ShootRate = .5f;
     int i = 0;
     bool changeDir = false;
@@ -56,10 +63,6 @@ public class FlyEnemy : MonoBehaviour, IDamageable
         originalPos = transform.position;
         originalrot = this.transform.rotation;
         var pos = this.transform.position;
-        wanderSpots.Add(new Vector3(pos.x + wanderDistanceR, pos.y, pos.z));
-        wanderSpots.Add(new Vector3(pos.x - wanderDistanceL, pos.y, pos.z));
-        wanderSpots.Add(new Vector3(pos.x, pos.y, pos.z + wanderDistanceF));
-        wanderSpots.Add(new Vector3(pos.x, pos.y, pos.z - wanderDistanceB));
     }
     // Update is called once per frame
     void FixedUpdate()
@@ -77,8 +80,15 @@ public class FlyEnemy : MonoBehaviour, IDamageable
                 break;
             case SoldierState.wanderer:
                 Aim();
-                LineOfSightWithPlayer();
-                Wander();
+                LineOfSightWithPlayer(); 
+                if (wanderMiniState)
+                {
+                    ShouldIWander();
+                }
+                else if (!wanderMiniState)
+                {
+                    WanderIde();
+                }
                 break;
 
             case (SoldierState.chase):
@@ -176,36 +186,38 @@ public class FlyEnemy : MonoBehaviour, IDamageable
         }
     }
 
-    void Wander()
+    private void ShouldIWander()
     {
-        if (i >= wanderSpots.Count) { i = 0; }
-        if (Vector3.Distance(this.transform.position, wanderSpots[i]) < wanderSpotOffset)
+        if (waitTimer > 0) // if wait timer is > 0 do nothing except waiting
         {
-            if (changeDir == false)
-            {
-                Invoke("WaitBeforeWanderToNextSpot", delayBeforeMove);
-                changeDir = true;
-            }
+            waitTimer -= Time.deltaTime;
+            return;
         }
-        else if (Vector3.Distance(this.transform.position, wanderSpots[i]) >= wanderSpotOffset)
-        {
-            agent.SetDestination(wanderSpots[i]);
-            //Debug.Log(wanderSpots[i].transform.position);
-        }
+        agent.SetDestination(RandomPosInSphere(originalPos, wonderDistanceRange, layerMask)); //Set destination inside a random sphere
 
+        wanderMiniState = !wanderMiniState;
+        // I just made a bool to make sure it doesnt call again after it sets path to make animating it easier and prevent setting more paths while its not completed
     }
 
-    void WaitBeforeWanderToNextSpot()
+    private void WanderIde()
     {
-        if (i + 1 >= wanderSpots.Count)
-        {
-            i = 0;
-        }
-        else
-        {
-            i++;
-        }
-        changeDir = false;
+        if (agent.pathStatus != NavMeshPathStatus.PathComplete)
+            return;
+
+        waitTimer = Random.Range(minWaitTimeWander, maxWaitTimeWander);
+        wanderMiniState = !wanderMiniState; // I just made a bool to make sure it doesnt call again after it completes path to make animating it easier.
+    }
+
+    Vector3 RandomPosInSphere(Vector3 origin, float distance, LayerMask layerMask)
+    {
+        Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * distance; //Create a sphere
+        randomDirection += origin; //add origin to place it at the origin
+
+        NavMeshHit navHit;
+
+        NavMesh.SamplePosition(randomDirection, out navHit, distance, layerMask); //get an appropriate navHit where we can set destination later
+
+        return navHit.position; //return hit position to set destination on it.
     }
 
     void ChasePlayer()
