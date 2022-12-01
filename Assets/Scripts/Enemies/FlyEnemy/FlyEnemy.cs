@@ -36,7 +36,11 @@ public class FlyEnemy : MonoBehaviour, IDamageable
     [SerializeField] private float Damage;
 
     public float Health { get { return health; } set { health = value; } }
-    [SerializeField] private float health;
+    [SerializeField] private float health, maxHealth;
+
+    float distanceToPlayer;
+    FirstPersonController playerController;
+
     public void TakeDamage(float damageTaken)
     {
         if (st == SoldierState.guard || st == SoldierState.wanderer)
@@ -51,7 +55,12 @@ public class FlyEnemy : MonoBehaviour, IDamageable
     {
         if (Health <= 0)
         {
+            if (distanceToPlayer <= playerController.DistanceToHeal)
+            {
+                playerController.Health += (playerController.PercentToHeal * maxHealth);
+            }
             //this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
+            Destroy(this.gameObject);
             st = SoldierState.Death;
         }
     }
