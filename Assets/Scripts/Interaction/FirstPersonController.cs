@@ -11,6 +11,8 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 {
     public float MaxHealth { get { return maxHealth; } set { maxHealth = value; } }
     public float Health { get { return health; } set { health = value; } }
+    public float DistanceToHeal { get { return distanceToHeal; } }
+    public float PercentToHeal { get { return percentToHeal / 100; } }
     public float DashTime { get { return dashTime; } }
     public float DashesAllowed { get { return dashesAllowed; } }
     public float DashesRemaining { get { return dashesRemaining; } }
@@ -25,11 +27,19 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     public bool PlayerCanDash => PlayerHasDashes && NonZeroVelocity;
     public bool PlayerCanDashAgain => PlayerCanDash && playerDashing;
     public bool UpdateDashBar { get; set; }
+    public bool CanBeDamaged => !hasIFrames && !invincible;
 
     //Checks used to see if player is able to use mechanics.
     [Header("Functional Options")]
     [SerializeField]
+    private bool invincible = false;
+    [SerializeField]
     private float maxHealth, health;
+    [SerializeField]
+    private float distanceToHeal = 10f;
+    [Tooltip("What percent of the enemy's max health should the player heal if they kill them within the distance to heal?")]
+    [SerializeField]
+    private float percentToHeal = 25f;
     [Tooltip("Is the player in the middle of a special movement, i.e. ladder climbing?")]
     [SerializeField]
     public bool playerOnSpecialMovement = false;
@@ -37,6 +47,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     private bool playerCanDash = true;
     [SerializeField]
     private bool playerCanHeadbob = true;
+    private bool hasIFrames = false;
 
     //parameters for different movement speeds
     [Header("Movement Parameters")]
@@ -367,6 +378,8 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
         moveDirection = (transform.TransformDirection(Vector3.right) * MoveInput.x) + (transform.TransformDirection(Vector3.forward) * MoveInput.y);
 
+        //While loop where the dash happens
+        hasIFrames = true; //turn on iframes
         while (Time.time < startTime + dashTime)
         {
             UpdateDashBar = true;
@@ -379,8 +392,9 @@ public class FirstPersonController : MonoBehaviour, IDamageable
             yield return null;
         }
         UpdateDashBar = false;
+        hasIFrames = false; //turn of iframes now that dash is finished
 
-        if(PlayerCanDashAgain)
+        if (PlayerCanDashAgain)
         {
             yield return dashBetweenWait;
             if (playerShouldDash)
@@ -398,7 +412,6 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         {
             dashesRemaining++;
             dashCooldownStartTime = Time.time;
-            Debug.Log("Cooldown Complete!");
         }
     }
 
@@ -594,9 +607,12 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
     public void TakeDamage(float damageTaken)
     {
-        Health -= damageTaken;
-        //Debug.Log($"Player Health: { health }");
-        CheckForDeath();
+        if (CanBeDamaged)
+        {
+            Health -= damageTaken;
+            //Debug.Log($"Player Health: { health }");
+            CheckForDeath();
+        }
     }
     public void HealthRegen(float heal)
     {
