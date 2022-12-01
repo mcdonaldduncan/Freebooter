@@ -43,16 +43,19 @@ public class EnemyMovement : MonoBehaviour
 
     void HandleSightGain(Transform target)
     {
+        Debug.Log("Gained sight");
         if (m_MovementCoroutine != null)
         {
             StopCoroutine(m_MovementCoroutine);
         }
 
         m_MovementCoroutine = StartCoroutine(Hide(target));
+        Debug.Log("Hide routine started");
     }
 
     void HandleSightLost(Transform target)
     {
+        Debug.Log("Lost sight");
         if (m_MovementCoroutine != null)
         {
             StopCoroutine(m_MovementCoroutine);
@@ -68,10 +71,7 @@ public class EnemyMovement : MonoBehaviour
                 m_Colliders[i] = null;
             }
 
-            int hits = Physics.OverlapSphereNonAlloc(m_Agent.transform.position, 
-                m_LineOfSightChecker.sphereCollider.radius, 
-                m_Colliders, 
-                m_HidableLayers);
+            int hits = Physics.OverlapSphereNonAlloc(m_Agent.transform.position, m_LineOfSightChecker.sphereCollider.radius, m_Colliders, m_HidableLayers);
 
             int hitModifier = 0;
 
@@ -90,38 +90,52 @@ public class EnemyMovement : MonoBehaviour
 
             for (int i = 0; i < hits; i++)
             {
-                if (!NavMesh.SamplePosition(m_Colliders[i].transform.position, 
-                    out NavMeshHit hit, 
-                    2f, 
-                    m_Agent.areaMask)) 
-                    break;
-                
-                if (!NavMesh.FindClosestEdge(hit.position, out hit, m_Agent.areaMask))
+                if (HideAttempt(target, Vector3.zero, i, 1, 0))
                 {
-                    Debug.LogError($"Unable to find edge close to {hit.position}");
+                    break;
                 }
-
-                ProcessHideAttempt(hit, (target.position - hit.position).normalized, 0);
+                else
+                {
+                    Debug.LogError($"Unable to find NavMesh near object {m_Colliders[i].name} at {m_Colliders[i].transform.position}");
+                }
             }
             yield return m_Wait;
-
         }
     }
 
-    private void ProcessHideAttempt(NavMeshHit hit, Vector3 target, int iterations)
+    private bool HideAttempt(Transform target, Vector3 attempt, int i, int mod, int iterations)
     {
-        if (iterations >= 5) return;
+        if (NavMesh.SamplePosition(m_Colliders[i].transform.position - attempt * mod, out NavMeshHit hit, 4f, m_Agent.areaMask))
+        {
+            if (!NavMesh.FindClosestEdge(hit.position, out hit, m_Agent.areaMask))
+            {
+                Debug.LogError($"Unable to find edge close to {hit.position}");
+            }
+
+            if (!ProcessHideAttempt(hit, (target.position - hit.position).normalized, iterations))
+            {
+                return HideAttempt(target, (target.position - hit.position).normalized, i, mod * 2, ++iterations);
+            }
+            else
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private bool ProcessHideAttempt(NavMeshHit hit, Vector3 target, int iterations)
+    {
+        if (iterations >= 3) return false;
 
         if (Vector3.Dot(hit.normal, target) < m_Sensitivity)
         {
             m_Agent.SetDestination(hit.position);
             //m_Agent.transform.position = hit.position;
-            return;
+            return true;
         }
-        else
-        {
-            ProcessHideAttempt(hit, target * 2, ++iterations);
-        }
+
+        return false;
     }
 
     private int ColliderSortCompare(Collider A, Collider B)
@@ -150,5 +164,4 @@ public class EnemyMovement : MonoBehaviour
     {
         return Vector3.Distance(pos, posA).CompareTo(Vector3.Distance(pos, posB));
     }
-
 }

@@ -197,7 +197,6 @@ GameObject:
   - component: {fileID: 297426594336726725}
   - component: {fileID: 297426594336726720}
   - component: {fileID: 909842072}
-  - component: {fileID: 278383513}
   m_Layer: 8
   m_Name: gun
   m_TagString: Untagged
@@ -316,7 +315,7 @@ MonoBehaviour:
   handGunHorizontalSpread: 0
   handGunCurrentAmmo: 0
   handGunMaxAmmo: 10
-  handGunReloadTime: 3
+  handGunReloadTime: 1
   handGunFireRate: 0
   handGunAimOffset: 15
   handGunReticle: {fileID: 6976750457327859168}
@@ -330,7 +329,7 @@ MonoBehaviour:
   shotGunHorizontalSpread: 10
   shotGunCurrentAmmo: 0
   shotGunMaxAmmo: 12
-  shotGunReloadTime: 5
+  shotGunReloadTime: 3
   shotGunFireRate: 1
   shotGunAimOffset: 15
   shotGunReticle: {fileID: 2291208426676616775}
@@ -343,7 +342,7 @@ MonoBehaviour:
   autoGunVerticalSpread: 0
   autoGunCurrentAmmo: 0
   autoGunMaxAmmo: 30
-  autoGunReloadTime: 5
+  autoGunReloadTime: 2
   autoFireRate: 0.2
   autoGunAimOffset: 15
   autoGunReticle: {fileID: 2291571642965968571}
@@ -458,22 +457,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &278383513
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 297426594336726731}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
 --- !u!1 &297426594678655177
 GameObject:
   m_ObjectHideFlags: 0

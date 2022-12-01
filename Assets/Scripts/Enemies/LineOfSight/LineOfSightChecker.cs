@@ -8,7 +8,7 @@ public class LineOfSightChecker : MonoBehaviour
     [System.NonSerialized] public SphereCollider sphereCollider;
     Coroutine LineOfSightCoroutine;
     [SerializeField] LayerMask layerMask;
-    float FOV = 360;
+    [SerializeField] float FOV = 360f;
 
     public delegate void GainSightDelegate(Transform target);
     public delegate void LoseSightDelegate(Transform target);
@@ -24,6 +24,11 @@ public class LineOfSightChecker : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("Player Trigger Enter");
+        }
+
         if (!CheckLineOfSight(other.transform))
         {
             LineOfSightCoroutine = StartCoroutine(AssessLineOfSight(other.transform));
@@ -32,7 +37,13 @@ public class LineOfSightChecker : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("Player Trigger Exit");
+        }
+
         OnLoseSight?.Invoke(other.transform);
+        
         if (LineOfSightCoroutine != null)
         {
             StopCoroutine(LineOfSightCoroutine);
@@ -50,25 +61,19 @@ public class LineOfSightChecker : MonoBehaviour
 
         if (dot >= Mathf.Cos(FOV))
         {
-            if (!Physics.Raycast(transform.position, 
-                direction, 
-                out RaycastHit hit, 
-                sphereCollider.radius, 
-                layerMask))
-                return false;
+            if (!Physics.Raycast(transform.position, direction, out RaycastHit hit, sphereCollider.radius, layerMask)) return false;
 
+            
             OnGainSight?.Invoke(target);
             return true;
-            
         }
 
-        //OnLoseSight?.Invoke(target);
         return false;
     }
 
     private IEnumerator AssessLineOfSight(Transform target)
     {
-        if (!target.CompareTag("Player")) yield break;
+        //if (!target.CompareTag("Player")) yield break;
 
         while (!CheckLineOfSight(target))
         {
