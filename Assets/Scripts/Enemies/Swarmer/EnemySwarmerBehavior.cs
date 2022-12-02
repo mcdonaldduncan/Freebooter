@@ -11,6 +11,7 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable
 
     [SerializeField] private bool ignorePlayer;
     
+    [SerializeField] private float maxHealth = 75;
     [SerializeField] private float health = 75;
     [SerializeField] private float damageToDeal = 20;
     [SerializeField] private GameObject player;
@@ -38,6 +39,7 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable
 
     private void Start()
     {
+        health = maxHealth;
         chasePlayer = false;
         animator.SetBool("PlayerTooFar", true);
         animator.SetBool("ChasePlayer", false);
@@ -146,6 +148,10 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable
         if (Health <= 0)
         {
             //this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
+            if (distanceToPlayer <= playerController.DistanceToHeal)
+            {
+                playerController.Health += (playerController.PercentToHeal * maxHealth);
+            }
             DestroyImmediate(gameObject);
         }
     }

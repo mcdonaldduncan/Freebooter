@@ -150,22 +150,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: -8841724177387881942}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  minWaitTimeWander: 3
+  maxWaitTimeWander: 6
+  wonderDistanceRange: 5
   st: 1
   target: {fileID: 297426594678655177, guid: c90d46f9dd3b05e40bc328c8de0abd16, type: 3}
   tip: {fileID: 965038701042483596}
   visionPoint: {fileID: 965038701042483596}
   body: {fileID: 105307549136551168}
   rotationspeed: 20
-  range: 25
+  range: 15
   agent: {fileID: 1262776737}
   wanderSpots: []
   wanderSpotOffset: 5
   delayBeforeMove: 3
   originalPosOFFSET: 1
-  wanderDistanceR: 5
-  wanderDistanceL: 5
-  wanderDistanceF: 10
-  wanderDistanceB: 2
   BulletTrail: {fileID: 6952378413150019911, guid: 24acd6d67a692a64298fcd8e875417a9, type: 3}
   Damage: 1
   health: 100

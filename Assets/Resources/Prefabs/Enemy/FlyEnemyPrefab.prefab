@@ -323,6 +323,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b603de6fab946646bee25741608148a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  minWaitTimeWander: 3
+  maxWaitTimeWander: 6
+  wonderDistanceRange: 15
   st: 1
   target: {fileID: 0}
   tip: {fileID: 9014040488091691167}
@@ -334,14 +340,9 @@ MonoBehaviour:
   rotationspeed: 15
   range: 20
   agent: {fileID: 1731908634}
-  wanderSpots: []
   wanderSpotOffset: 7.15
   delayBeforeMove: 2
   originalPosOFFSET: 4
-  wanderDistanceR: 10
-  wanderDistanceL: 15
-  wanderDistanceF: 6
-  wanderDistanceB: 6
   BulletTrail: {fileID: 6952378413150019911, guid: 24acd6d67a692a64298fcd8e875417a9, type: 3}
   Damage: 1
   health: 150

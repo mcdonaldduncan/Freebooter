@@ -6,7 +6,13 @@ using UnityEngine.AI;
 public class SoldierEnemyScript : MonoBehaviour, IDamageable
 {
     [SerializeField]
-    Animator animator;
+    private Animator animator;
+
+    [SerializeField] private LayerMask layerMask = 0; // for wondering
+    [SerializeField] private float minWaitTimeWander, maxWaitTimeWander, wonderDistanceRange; // wait timer for wandering
+    
+    float waitTimer;
+    bool wanderMiniState; //state for wandering and wanderingIdle
 
     private enum SoldierState {guard, wanderer, chase, originalSpot, retaliate, emergencyHeal};
     [Tooltip("/ Guard = Stand in one place until the player breaks line of sight / Wanderer = walks around / Chase = when the soldier goes after the enemy")]
@@ -20,7 +26,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
 
     [SerializeField] List<Vector3> wanderSpots = new List<Vector3>();
     [Tooltip("Distance to current wander spot before the player moves to next wander spot.")]
-    [SerializeField] private float wanderSpotOffset = 1f, delayBeforeMove = 2, originalPosOFFSET = 1f, wanderDistanceR, wanderDistanceL, wanderDistanceF, wanderDistanceB;
+    [SerializeField] private float wanderSpotOffset = 1f, delayBeforeMove = 2, originalPosOFFSET = 1f;
     private float lastShot, ShootRate = .5f;
     int i = 0;
     bool changeDir = false;
@@ -31,6 +37,9 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
 
     public float Health { get { return health; } set { health = value; } }
     [SerializeField] private float health, maxHealth;
+    float distanceToPlayer;
+    FirstPersonController playerController;
+
     public void TakeDamage(float damageTaken)
     {
         if (st == SoldierState.guard || st == SoldierState.wanderer)
@@ -45,6 +54,10 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
     {
         if (Health <= 0)
         {
+            if (distanceToPlayer <= playerController.DistanceToHeal)
+            {
+                playerController.Health += (playerController.PercentToHeal * maxHealth);
+            }
             //this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
             Destroy(this.gameObject);
         }
@@ -58,10 +71,6 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
         originalPos = transform.position;
         originalrot = this.transform.rotation;
         var pos = this.transform.position;
-        wanderSpots.Add(new Vector3(pos.x + wanderDistanceR, pos.y,pos.z));
-        wanderSpots.Add(new Vector3(pos.x - wanderDistanceL, pos.y, pos.z));
-        wanderSpots.Add(new Vector3(pos.x, pos.y, pos.z + wanderDistanceF));
-        wanderSpots.Add(new Vector3(pos.x, pos.y, pos.z - wanderDistanceB));
     }
     // Update is called once per frame
     void FixedUpdate()
@@ -77,7 +86,14 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
             case SoldierState.wanderer:
                 Aim();
                 LineOfSightWithPlayer();
-                Wander();
+                if (wanderMiniState)
+                {
+                    ShouldIWander();
+                }
+                else if (!wanderMiniState)
+                {
+                    WanderIde();
+                }
                 break;
                 
                 case (SoldierState.chase):
@@ -113,6 +129,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
             default:
                 break;
         }
+        distanceToPlayer = Vector3.Distance(agent.gameObject.transform.position, target.transform.position);
     }
     void Aim() //This is pointing the soldier towards the player as long as he is in range
     {
@@ -175,38 +192,42 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
         }
     }
 
-    void Wander()
+    private void ShouldIWander() 
     {
-        if(i >= wanderSpots.Count){i=0;}
-        if (Vector3.Distance(this.transform.position, wanderSpots[i]) < wanderSpotOffset)
+        if (waitTimer > 0) // if wait timer is > 0 do nothing except waiting
         {
-            if (changeDir == false)
-            {
-                Invoke("WaitBeforeWanderToNextSpot", delayBeforeMove);
-                animator.SetTrigger("Idle");
-                changeDir = true;
-            }
+            waitTimer -= Time.deltaTime;
+            return;
         }
-        else if (Vector3.Distance(this.transform.position, wanderSpots[i]) >= wanderSpotOffset)
-        {
-          agent.SetDestination(wanderSpots[i]);
-          animator.SetTrigger("RunAndShoot");
-          //Debug.Log(wanderSpots[i].transform.position);
-        }
-        
+        agent.SetDestination(RandomPosInSphere(originalPos, wonderDistanceRange, layerMask)); //Set destination inside a random sphere
+        animator.SetTrigger("RunAndShoot");
+
+        wanderMiniState = !wanderMiniState;
+        // I just made a bool to make sure it doesnt call again after it sets path to make animating it easier and prevent setting more paths while its not completed
     }
-    void WaitBeforeWanderToNextSpot()
+
+    private void WanderIde()
     {
-        if (i+1 >= wanderSpots.Count)
-        {
-            i = 0;
-        }
-        else
-        {
-            i++;
-        }
-        changeDir = false;
+        if (agent.pathStatus != NavMeshPathStatus.PathComplete)
+        return;
+
+        waitTimer = Random.Range(minWaitTimeWander, maxWaitTimeWander);
+        animator.SetTrigger("Idle");
+        wanderMiniState = !wanderMiniState; // I just made a bool to make sure it doesnt call again after it completes path to make animating it easier.
     }
+
+    Vector3 RandomPosInSphere(Vector3 origin, float distance, LayerMask layerMask)
+    {
+        Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * distance; //Create a sphere
+        randomDirection += origin; //add origin to place it at the origin
+
+        NavMeshHit navHit;
+
+        NavMesh.SamplePosition(randomDirection, out navHit, distance, layerMask); //get an appropriate navHit where we can set destination later
+
+        return navHit.position; //return hit position to set destination on it.
+    }
+
     void ChasePlayer()
     {
        var dist = Vector3.Distance(this.transform.position, target.transform.position);
