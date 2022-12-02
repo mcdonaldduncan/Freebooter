@@ -28,7 +28,6 @@ public class BNodeInspector : Editor
                 }
             }
         }
-
     }
 }
 #endif

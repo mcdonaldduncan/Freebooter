@@ -16,8 +16,6 @@ public class BaseInspector : Editor
         damping_Prop,
         curve_Prop;
         
-    
-
     private void OnEnable()
     {
         maxForce_Prop = serializedObject.FindProperty("m_MaxForce");
