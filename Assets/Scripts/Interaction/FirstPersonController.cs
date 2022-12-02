@@ -180,7 +180,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     public delegate void PlayerDashDelegate();
     public static PlayerDashDelegate playerDashed;
 
-    [System.NonSerialized] public Vector3 surfaceMotion;
+    [NonSerialized] public Vector3 surfaceMotion;
 
     public enum MovementState
     {
