@@ -56,11 +56,6 @@ public class HandGun : MonoBehaviour, IGun
         {
             RaycastHit hitInfo;
 
-            //Make sure the gun shoots towards the crosshair
-            //Vector3 aimSpot = GunManager.FPSCam.transform.position;
-            //aimSpot += GunManager.FPSCam.transform.forward * this.AimOffset;
-            //this.ShootFrom.LookAt(aimSpot);
-
             //Add the customized spread of the specific gun
             Vector3 direction = GunManager.FPSCam.transform.forward; // your initial aim.
             Vector3 spread = Vector3.zero;

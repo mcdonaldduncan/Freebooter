@@ -83,15 +83,12 @@ public class AutoGun : MonoBehaviour, IGun
                 CurrentAmmo--;
             }
 
-            Vector3 aimSpot = GunManager.FPSCam.transform.position;
-            aimSpot += GunManager.FPSCam.transform.forward * AimOffset;
-            ShootFrom.LookAt(aimSpot);
-
-            Vector3 direction = ShootFrom.transform.forward; // your initial aim.
+            //Add the customized spread of the specific gun
             Vector3 spread = Vector3.zero;
-            spread += ShootFrom.transform.up * Random.Range(-VerticalSpread, VerticalSpread);
-            spread += ShootFrom.transform.right * Random.Range(-HorizontalSpread, HorizontalSpread);
-            direction += spread.normalized; //* Random.Range(0f, 0.2f);
+            spread += GunManager.FPSCam.transform.up * Random.Range(-VerticalSpread, VerticalSpread);
+            spread += GunManager.FPSCam.transform.right * Random.Range(-HorizontalSpread, HorizontalSpread);
+
+            Ray ray = GunManager.FPSCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0) + spread.normalized);
 
             RaycastHit hitInfo;
 
@@ -99,7 +96,7 @@ public class AutoGun : MonoBehaviour, IGun
             GunShotAudio = GunShotAudioList[gunShotIndex];
             GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
 
-            if (Physics.Raycast(GunManager.FPSCam.transform.position, direction, out hitInfo, float.MaxValue, ~LayerToIgnore))
+            if (Physics.Raycast(ray, out hitInfo, float.MaxValue, ~LayerToIgnore))
             {
                 //Instantiate a bullet trail
                 TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, ShootFrom.transform.localRotation);
@@ -115,7 +112,7 @@ public class AutoGun : MonoBehaviour, IGun
             {
                 //Spawn the bullet trail
                 TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, ShootFrom.transform.localRotation);
-                StartCoroutine(SpawnTrail(trail, ShootFrom.transform.position + direction * 10));
+                StartCoroutine(SpawnTrail(trail, ShootFrom.transform.position + ray.direction * 10));
             }
 
             lastShotTime = Time.time;

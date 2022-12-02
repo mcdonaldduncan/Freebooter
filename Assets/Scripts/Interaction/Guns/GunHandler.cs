@@ -214,6 +214,8 @@ public class GunHandler : MonoBehaviour
         }
     }
 
+    //TODO: System to start the player with a pistol at beginning of each level
+    //with a dynamic list so the player can pick up weapons as they go through the level
     private void Start()
     {
         handGunReticle.alpha = 0;
