@@ -25,7 +25,6 @@ public class PlatformInspector : Editor
             platform.m_Nodes.RemoveAt(platform.m_Nodes.Count - 1);
             DestroyImmediate(temp.gameObject);
         }
-
     }
 }
 #endif
