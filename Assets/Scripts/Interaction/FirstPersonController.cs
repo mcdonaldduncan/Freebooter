@@ -616,6 +616,11 @@ public class FirstPersonController : MonoBehaviour, IDamageable
             CheckForDeath();
         }
     }
+
+    /// <summary>
+    /// For pick up system which is currently not in use
+    /// </summary>
+    /// <param name="heal"></param>
     public void HealthRegen(float heal)
     {
         health += heal;

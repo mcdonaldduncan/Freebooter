@@ -115,7 +115,10 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable
 
     private void AttackPlayer()
     {
+        //a bool to make sure the swarmer doesn't move while trying to hit the player
         inAttackAnim = true;
+
+        //send out raycast to see if enemy hit player
         if (Physics.Raycast(raycastSource.position, gameObject.transform.forward, out hitInfo, attackReach))
         {
             if (hitInfo.transform.CompareTag("Player"))
