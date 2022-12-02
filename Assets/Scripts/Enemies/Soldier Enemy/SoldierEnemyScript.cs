@@ -52,14 +52,18 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
 
     public void CheckForDeath()
     {
+        Debug.Log("Checking for death...");
         if (Health <= 0)
         {
+            Debug.Log("should die...");
             if (distanceToPlayer <= playerController.DistanceToHeal)
             {
                 playerController.Health += (playerController.PercentToHeal * maxHealth);
+                Debug.Log("Healed player");
             }
             //this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
             Destroy(this.gameObject);
+            Debug.Log("done...");
         }
     }
 
@@ -67,6 +71,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
     {
         maxHealth = health;
         target = GameObject.FindWithTag("Player");
+        playerController = target.GetComponent<FirstPersonController>();
         origianlst = st;
         originalPos = transform.position;
         originalrot = this.transform.rotation;
@@ -129,7 +134,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
             default:
                 break;
         }
-        distanceToPlayer = Vector3.Distance(agent.gameObject.transform.position, target.transform.position);
+        distanceToPlayer = Vector3.Distance(gameObject.transform.position, target.transform.position);
     }
     void Aim() //This is pointing the soldier towards the player as long as he is in range
     {
