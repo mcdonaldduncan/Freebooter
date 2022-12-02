@@ -493,7 +493,8 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
         if (OnSteepSlope()) SteepSlopeMovement();
 
-        //move the player based on the parameters gathered in the "Handle-" functions
+        // move the player based on the parameters gathered in the "Handle-" functions
+        // Apply accumulated motion from attached platforms before clearing the vector
         characterController.Move(surfaceMotion + moveDirection * Time.deltaTime);
         surfaceMotion = Vector3.zero;
 

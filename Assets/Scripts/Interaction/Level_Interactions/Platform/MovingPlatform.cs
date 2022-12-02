@@ -159,7 +159,6 @@ public class MovingPlatform : MonoBehaviour
 
     #endregion
 
-
     public void SetTransform(Transform t)
     {
         m_Transform = t;
