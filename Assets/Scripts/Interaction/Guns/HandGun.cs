@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class HandGun : MonoBehaviour, IGun
 {
@@ -25,7 +26,7 @@ public class HandGun : MonoBehaviour, IGun
     public GameObject GunModel { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
 
-    private bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading;
+    private bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading && CurrentAmmo > 0;
     private bool ReloadNow => reloadStartTime + ReloadTime < Time.time && GunManager.Reloading;
     private float lastShotTime;
     private float reloadStartTime;
@@ -48,56 +49,56 @@ public class HandGun : MonoBehaviour, IGun
         GunHandler.weaponSwitched -= OnWeaponSwitch;
     }
 
-    //Doesn't need to be static anymore since this script is added as a component now
+    public void ShootTriggered(InputAction.CallbackContext context)
+    {
+        if (CanShoot && context.performed) Shoot();
+    }
+
     public void Shoot()
     {
-        //if the player has ammo and they are not reloading
-        if (CanShoot)
+        RaycastHit hitInfo;
+
+        //Add the customized spread of the specific gun
+        Vector3 direction = GunManager.FPSCam.transform.forward; // your initial aim.
+        Vector3 spread = Vector3.zero;
+        spread += GunManager.FPSCam.transform.up;// * Random.Range(-VerticalSpread, VerticalSpread);
+        spread += GunManager.FPSCam.transform.right;// * Random.Range(-HorizontalSpread, HorizontalSpread);
+        direction += spread.normalized;
+
+        //Play the shooting sound of this gun
+        GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
+
+        Ray ray = GunManager.FPSCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+
+        //Shoot out a raycast
+        if (Physics.Raycast(ray, out hitInfo, float.MaxValue, ~LayerToIgnore))
         {
-            RaycastHit hitInfo;
 
-            //Add the customized spread of the specific gun
-            Vector3 direction = GunManager.FPSCam.transform.forward; // your initial aim.
-            Vector3 spread = Vector3.zero;
-            spread += GunManager.FPSCam.transform.up;// * Random.Range(-VerticalSpread, VerticalSpread);
-            spread += GunManager.FPSCam.transform.right;// * Random.Range(-HorizontalSpread, HorizontalSpread);
-            direction += spread.normalized;
+            //Instantiate a bullet trail
+            TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, ShootFrom.transform.localRotation);
+            trail.transform.parent = ShootFrom.transform;
 
-            //Play the shooting sound of this gun
-            GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
-
-            Ray ray = GunManager.FPSCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-
-            //Shoot out a raycast
-            if (Physics.Raycast(ray, out hitInfo, float.MaxValue, ~LayerToIgnore))
+            if (hitInfo.transform.name != "Player")
             {
-
-                //Instantiate a bullet trail
-                TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, ShootFrom.transform.localRotation);
-                trail.transform.parent = ShootFrom.transform;
-
-                if (hitInfo.transform.name != "Player")
-                {
-                    StartCoroutine(SpawnTrail(trail, hitInfo, HitEnemy));
-                }
+                StartCoroutine(SpawnTrail(trail, hitInfo, HitEnemy));
             }
-            //if the player hit nothing
-            else
-            {
-                //Spawn the bullet trail
-                TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, ShootFrom.transform.localRotation);
-                StartCoroutine(SpawnTrail(trail, ShootFrom.transform.position + ray.direction * 10));
-            }
-
-            //if the player does not have infinite ammo, decrement the gun's ammo by one
-            if (!GunManager.InfiniteAmmo)
-            {
-                CurrentAmmo--;
-            }
-
-            //Get the time of the last shot, as this is needed for fire rate timer
-            lastShotTime = Time.time;
         }
+        //if the player hit nothing
+        else
+        {
+            //Spawn the bullet trail
+            TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, ShootFrom.transform.localRotation);
+            StartCoroutine(SpawnTrail(trail, ShootFrom.transform.position + ray.direction * 10));
+        }
+
+        //if the player does not have infinite ammo, decrement the gun's ammo by one
+        if (!GunManager.InfiniteAmmo)
+        {
+            CurrentAmmo--;
+        }
+
+        //Get the time of the last shot, as this is needed for fire rate timer
+        lastShotTime = Time.time;
     }
 
     /// <summary>

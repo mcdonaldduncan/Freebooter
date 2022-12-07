@@ -117,7 +117,7 @@ public class GunHandler : MonoBehaviour
     private GameObject lineDrawer;
     private LineRenderer lineRenderer;
 
-    private GunType[] guns = {GunType.handGun, GunType.shotGun, GunType.autoGun};
+    private List<GunType> guns;
 
     private WaitForSeconds fireRateWait;
     private WaitForSeconds handGunReloadWait;
@@ -126,7 +126,8 @@ public class GunHandler : MonoBehaviour
 
     private Renderer gunRenderer;
 
-    private Dictionary<int, IGun> gunDict;
+    private Dictionary<GunType, IGun> gunDict;
+    private Dictionary<GunType, int> gunTypeDict;
     private Dictionary<GunType, WaitForSeconds> gunReloadWaitDict;
 
     //Particle Effects for the bullet collision.
@@ -149,7 +150,8 @@ public class GunHandler : MonoBehaviour
         PopulateGunProperties(handGun);
         PopulateGunProperties(shotGun);
 
-        gunDict = new Dictionary<int, IGun>();
+        gunDict = new Dictionary<GunType, IGun>();
+        gunTypeDict = new Dictionary<GunType, int>();
         gunReloadWaitDict = new Dictionary<GunType, WaitForSeconds>();
 
         gunRenderer = gameObject.GetComponent<Renderer>();
@@ -213,11 +215,10 @@ public class GunHandler : MonoBehaviour
             gun.DamageDrop = this.shotGunDamageDrop != 0 ? this.shotGunDamageDrop : 1;
         }
     }
-
-    //TODO: System to start the player with a pistol at beginning of each level
-    //with a dynamic list so the player can pick up weapons as they go through the level
     private void Start()
     {
+        guns = new List<GunType>() { GunType.handGun };
+
         handGunReticle.alpha = 0;
         shotGunReticle.alpha = 0;
         autoGunReticle.alpha = 0;
@@ -230,9 +231,13 @@ public class GunHandler : MonoBehaviour
         shotGunCurrentAmmo = shotGunMaxAmmo;
         autoGunCurrentAmmo = autoGunMaxAmmo;
 
-        gunDict.Add(Array.IndexOf(guns, GunType.handGun), handGun);
-        gunDict.Add(Array.IndexOf(guns, GunType.shotGun), shotGun);
-        gunDict.Add(Array.IndexOf(guns, GunType.autoGun), autoGun);
+        gunDict.Add(GunType.handGun, handGun);
+        gunDict.Add(GunType.shotGun, shotGun);
+        gunDict.Add(GunType.autoGun, autoGun);
+
+        gunTypeDict.Add(GunType.handGun, 0);
+        gunTypeDict.Add(GunType.shotGun, 1);
+        gunTypeDict.Add(GunType.autoGun, 2);
 
         gunReloadWaitDict.Add(GunType.handGun, handGunReloadWait);
         gunReloadWaitDict.Add(GunType.shotGun, shotGunReloadWait);
@@ -242,25 +247,13 @@ public class GunHandler : MonoBehaviour
         lineRenderer.startWidth = 0.1f;
         lineRenderer.endWidth = 0.1f;
 
-        currentGun = gunDict[Array.IndexOf(guns, currentGunState)];
+        currentGun = gunDict[GunType.handGun];
         currentGun.GunReticle.alpha = 1;
         currentGun.GunModel.SetActive(true);
     }
 
     private void Update()
     {
-        //Debug.Log($"ShootFrom Pos: {shootFrom.transform.position}");
-        //Debug.Log($"ShootFrom Rot: {shootFrom.transform.position}");
-        //if (!IsOwner) return;
-        //if (reloading)
-        //{
-        //    gunRenderer.material.color = Color.red;
-        //}
-        //else
-        //{
-        //    gunRenderer.material.color = default;
-        //}
-
         currentGunAmmo = currentGun.CurrentAmmo;
 
         ammoText.text = $"Ammo: {currentGunAmmo}/{currentGun.CurrentMaxAmmo}";
@@ -277,7 +270,7 @@ public class GunHandler : MonoBehaviour
         {
             if (currentGunState != guns.Last())
             {
-                currentGunState = guns[Array.IndexOf(guns, currentGunState) + 1];
+                currentGunState = guns[guns.IndexOf(currentGunState) + 1];
             }
             else
             {
@@ -288,7 +281,7 @@ public class GunHandler : MonoBehaviour
         {
             if (currentGunState != guns[0])
             {
-                currentGunState = guns[Array.IndexOf(guns, currentGunState) - 1];
+                currentGunState = guns[guns.IndexOf(currentGunState) - 1];
             }
             else
             {
@@ -296,12 +289,32 @@ public class GunHandler : MonoBehaviour
             }
         }
         
-        currentGun = gunDict[Array.IndexOf(guns, currentGunState)];
+        currentGun = gunDict[currentGunState];
         currentGun.GunReticle.alpha = 1;
         currentGun.GunModel.SetActive(true);
 
         WaitForSeconds reloadToInvoke = gunReloadWaitDict[currentGunState];
         weaponSwitched?.Invoke(reloadToInvoke);
+    }
+
+    public void OnWeaponPickup(GunType gunType)
+    {
+        if (gunTypeDict[gunType] > guns.Count - 1)
+        {
+            guns.Add(gunType);
+        }
+        else
+        {
+            guns.Insert(gunTypeDict[gunType], gunType);
+        }
+
+        currentGun.GunReticle.alpha = 0;
+        currentGun.GunModel.SetActive(false);
+
+        currentGunState = guns[guns.IndexOf(gunType)];
+        currentGun = gunDict[currentGunState];
+        currentGun.GunReticle.alpha = 1;
+        currentGun.GunModel.SetActive(true);
     }
 
     public void Shoot(InputAction.CallbackContext context)
@@ -312,8 +325,10 @@ public class GunHandler : MonoBehaviour
         //}
 
         //if (!IsOwner) return;
+
+        currentGun.ShootTriggered(context);
         
-        if (currentGunState == GunType.autoGun)
+        /*if (currentGunState == GunType.autoGun)
         {
             autoGun.ShootTriggered(context);
             RequestFireServerRpc();
@@ -328,7 +343,7 @@ public class GunHandler : MonoBehaviour
         {
             shotGun.Shoot();
             RequestFireServerRpc();
-        }
+        }*/
     }
 
     [ServerRpc]

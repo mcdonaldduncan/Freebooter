@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public interface IGun
 {
@@ -23,7 +24,7 @@ public interface IGun
     AudioClip GunShotAudio { get; set; }
     GameObject GunModel { get; set; }
 
-    //void Shoot();
+    void ShootTriggered(InputAction.CallbackContext context);
     IEnumerator Reload(WaitForSeconds reloadWait);
     //IEnumerator SpawnTrail(TrailRenderer trail, RaycastHit hit);
 }
