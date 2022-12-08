@@ -307,6 +307,9 @@ MonoBehaviour:
   bulletTrail: {fileID: 3822495795310971056, guid: b2f558980faf30246a11b5d0a206d0e8, type: 3}
   reloading: 0
   infiniteAmmo: 0
+  ignoreLayers:
+    serializedVersion: 2
+    m_Bits: 2304
   handGunModel: {fileID: 8433409136838652493}
   handGunShootFrom: {fileID: 8119341505407714208}
   handGunBulletDamage: 40
@@ -525,8 +528,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f132a42815b4b44598aa50e8cc680f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  invincible: 0
   maxHealth: 100
   health: 100
+  distanceToHeal: 10
+  percentToHeal: 25
   playerOnSpecialMovement: 0
   playerCanDash: 1
   playerCanHeadbob: 1

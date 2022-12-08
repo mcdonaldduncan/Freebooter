@@ -14,7 +14,7 @@ public class GunHandler : MonoBehaviour
     public IGun CurrentGun { get { return currentGun; } }
     public Camera FPSCam { get { return fpsCam; } }
     public AudioSource GunShotAudioSource { get { return gunShotAudioSource; } }
-
+    
     public int HandGunCurrentAmmo { get { return handGunCurrentAmmo; } set { handGunCurrentAmmo = value; } }
     public int HandGunMaxAmmo { get { return handGunMaxAmmo; } }
     public int ShotGunCurrentAmmo { get { return shotGunCurrentAmmo; } set { shotGunCurrentAmmo = value; } }
@@ -45,6 +45,7 @@ public class GunHandler : MonoBehaviour
     [SerializeField] private TrailRenderer bulletTrail;
     [SerializeField] private bool reloading;
     [SerializeField] private bool infiniteAmmo;
+    [SerializeField] private LayerMask ignoreLayers;
     private int currentGunAmmo;
     private AudioSource gunShotAudioSource;
 
@@ -166,7 +167,7 @@ public class GunHandler : MonoBehaviour
     private void PopulateGunProperties(IGun gun)
     {
         gun.GunManager = this;
-        gun.LayerToIgnore = this.playerLayer;
+        gun.LayerToIgnore = ignoreLayers;
         gun.HitEnemy = this.hitEnemy;
         gun.HitNonEnemy = this.hitNONEnemy;
         gun.BulletTrail = this.bulletTrail;
