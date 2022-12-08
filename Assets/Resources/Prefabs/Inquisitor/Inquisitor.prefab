@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2900273674527870798}
   - component: {fileID: 2900273674527870794}
   - component: {fileID: 2900273674527870792}
-  - component: {fileID: 2900273674527870793}
+  - component: {fileID: 2101105219881330999}
   m_Layer: 9
   m_Name: Inquisitor
   m_TagString: Untagged
@@ -162,7 +162,7 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 1
   m_ObstacleAvoidanceType: 4
---- !u!114 &2900273674527870793
+--- !u!114 &2101105219881330999
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -171,13 +171,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 2900273674527870799}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f9e618a6b9fcf0418f887ba256c8acd, type: 3}
+  m_Script: {fileID: 11500000, guid: b5d79113e799e6a42adb4ddc5e510290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_HidableLayers:
     serializedVersion: 2
     m_Bits: 64
-  m_Sensitivity: 0
+  m_Sensitivity: -0.5
   m_MinDistance: 10
 --- !u!1001 &1328473307295297072
 PrefabInstance:

@@ -10,31 +10,50 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable
     public float Health { get { return health; } set { health = value; } }
 
     [SerializeField] private bool ignorePlayer;
-    
+
+    [Header("Hide Properties")]
+    [Tooltip("The swarmer will hide if not accompanied by this many other enemies (0 = never hide)")]
+    [SerializeField] private float hideThreshold;
+
+    [Header("Health and Damage")]
     [SerializeField] private float maxHealth = 75;
     [SerializeField] private float health = 75;
     [SerializeField] private float damageToDeal = 20;
-    [SerializeField] private GameObject player;
+
+    [Header("Attacks and Movement")]
     [SerializeField] private float distanceToFollow = 20;
     [SerializeField] private float distanceToAttack = 2;
     [SerializeField] private float attackReach = 3;
     [SerializeField] private float attackRotateSpeed = 10;
+
+    [Header("Misc")]
     [SerializeField] private Transform raycastSource;
+    [Tooltip("The layer of colliders that will be considered when counting nearby enemies")]
+    [SerializeField] private LayerMask enemies;
 
     private FirstPersonController playerController;
+    private GameObject player;
+    private HideBehavior hideBehavior;
     private NavMeshAgent navMeshAgent;
     private RaycastHit hitInfo;
     private Animator animator;
     private float mostRecentHit;
     private float distanceToPlayer;
     private bool chasePlayer;
+    private bool hideFromPLayer;
     private bool attackingPlayer;
     private bool inAttackAnim;
 
+
+    private bool isSwarm => Physics.OverlapSphereNonAlloc(transform.position, 10f, hits, enemies) > hideThreshold;
+    private Collider[] hits = new Collider[5];
+
     private void Awake()
     {
+        hideBehavior = GetComponent<HideBehavior>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
+        player = GameObject.FindWithTag("Player");
     }
 
     private void Start()
@@ -45,6 +64,7 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable
         animator.SetBool("ChasePlayer", false);
         animator.SetBool("AttackPlayer", false);
         playerController = player.GetComponent<FirstPersonController>();
+        //layer = playerController.gameObject;
     }
 
     private void Update()
@@ -54,8 +74,27 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable
 
         if (distanceToPlayer <= distanceToFollow)
         {
-            chasePlayer = true;
+            if (isSwarm)
+            {
+                chasePlayer = true;
+
+                if (hideBehavior.enabled == true) hideBehavior.enabled = false;
+            }
+            else
+            {
+                chasePlayer = false;
+                //FacePlayer();
+
+                if (hideBehavior.enabled == false)
+                {
+                    navMeshAgent.ResetPath();
+                    hideBehavior.enabled = true;
+                    hideBehavior.StartHideProcessRemote(player.transform);
+                }
+            }
+            
         }
+        
 
         if (!ignorePlayer && chasePlayer)
         {

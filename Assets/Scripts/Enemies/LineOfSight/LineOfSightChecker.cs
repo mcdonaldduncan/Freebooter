@@ -24,10 +24,8 @@ public class LineOfSightChecker : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            Debug.Log("Player Trigger Enter");
-        }
+        if (!other.CompareTag("Player")) return;
+        
 
         if (!CheckLineOfSight(other.transform))
         {
@@ -37,10 +35,7 @@ public class LineOfSightChecker : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            Debug.Log("Player Trigger Exit");
-        }
+        if (!other.CompareTag("Player")) return;
 
         OnLoseSight?.Invoke(other.transform);
         
@@ -59,7 +54,7 @@ public class LineOfSightChecker : MonoBehaviour
 
         float dot = Vector3.Dot(transform.forward, direction);
 
-        if (dot >= Mathf.Cos(FOV))
+        if (dot >= Mathf.Cos(FOV * Mathf.Deg2Rad))
         {
             if (!Physics.Raycast(transform.position, direction, out RaycastHit hit, sphereCollider.radius, layerMask)) return false;
 
