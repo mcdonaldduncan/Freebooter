@@ -14,10 +14,12 @@ public class OnDeathExplosion : MonoBehaviour
 
     int deathFrames;
 
+    public GameObject explosionparticle;
+    bool explodeOnce = false;
     //private void Start()
     //{
     //    rb = transform.parent.GetComponent<Rigidbody>();
-        
+
     //    rb.isKinematic = true;
     //    rb.useGravity = false;
     //}
@@ -89,11 +91,17 @@ public class OnDeathExplosion : MonoBehaviour
     {
         explosion = true;
         explosionGO.GetComponent<SphereCollider>().enabled = true;
+        if (explodeOnce == false)
+        {
+            explodeOnce = true;
+            Instantiate(explosionparticle, this.transform);
+        }
     }
 
     void stopExplosion()
     {
         explosionGO.GetComponent<SphereCollider>().enabled = false;
+        
         Destroy(transform.parent.gameObject);
     }
 
@@ -102,7 +110,6 @@ public class OnDeathExplosion : MonoBehaviour
         if (!dead) return;
         landed = true;
         ExplodeOnImpact();
-
     }
 
     private void OnTriggerEnter(Collider other)

@@ -134,7 +134,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
     void Aim() //This is pointing the soldier towards the player as long as he is in range
     {
         float tempSpeed = rotationspeed;
-        if (Vector3.Distance(this.transform.position, target.transform.position) < range)
+        if (distanceToPlayer < range)
         {
             targetDiretion = target.transform.position - tip.transform.position;
             rotation = Quaternion.LookRotation(targetDiretion);
@@ -160,7 +160,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
 
     void Shoot() //Shoots at the player
     {
-        RaycastHit hit;
+        RaycastHit hit, hit2;
         Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
         var offsetx = 0;
         var offsety = 0;
@@ -177,20 +177,25 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
         Physics.Raycast(tip.transform.position, new Vector3(targetDiretion.x + offsetx, targetDiretion.y + offsety, targetDiretion.z), out hit, range);
         if (hit.collider != null)
         {
-         
-                if (Time.time > ShootRate + lastShot)
+            if (Physics.Raycast(tip.transform.position, targetDiretion, out hit2, range)) //check line of sight
+            {
+                if (hit2.collider.tag == target.tag) //if player is in line of sight, shoot
                 {
-                    var bt = Instantiate(BulletTrail, tip.transform.position, rotation);
-                    bt.GetComponent<MoveForward>().origin = this.gameObject.transform.rotation;
-                    bt.GetComponent<MoveForward>().target = hit.point;
-                    //bt.GetComponent<MoveForward>().damage = Damage;
-                    //Debug.Log("Player was shot, dealing damage.");
-                    if (hit.collider.tag == target.tag)
+                    if (Time.time > ShootRate + lastShot)
                     {
-                        target.GetComponent<FirstPersonController>().TakeDamage(Damage);
+                        var bt = Instantiate(BulletTrail, tip.transform.position, rotation);
+                        bt.GetComponent<MoveForward>().origin = this.gameObject.transform.rotation;
+                        bt.GetComponent<MoveForward>().target = hit.point;
+                        //bt.GetComponent<MoveForward>().damage = Damage;
+                        //Debug.Log("Player was shot, dealing damage.");
+                        if (hit.collider.tag == target.tag)
+                        {
+                            target.GetComponent<FirstPersonController>().TakeDamage(Damage);
+                        }
+                        lastShot = Time.time;
                     }
-                    lastShot = Time.time;
                 }
+            }    
         }
         if (Vector3.Distance(this.transform.position, target.transform.position) > range)
         {
@@ -279,7 +284,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
 
     void RetaliationShoot()
     {
-        RaycastHit hit;
+        RaycastHit hit, hit2;
         Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
         var offsetx = 0;
         var offsety = 0;
@@ -296,19 +301,25 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
         Physics.Raycast(tip.transform.position, new Vector3(targetDiretion.x + offsetx, targetDiretion.y + offsety, targetDiretion.z), out hit, range);
         if (hit.collider != null)
         {
-                if (Time.time > ShootRate + lastShot)
+            if (Physics.Raycast(tip.transform.position, targetDiretion, out hit2, range)) //check line of sight
+            {
+                if (hit2.collider.tag == target.tag) //if player is in line of sight, shoot
                 {
-                    var bt = Instantiate(BulletTrail, tip.transform.position, rotation);
-                    bt.GetComponent<MoveForward>().origin = tip.transform.rotation;
-                    bt.GetComponent<MoveForward>().target = hit.point;
-                    //bt.GetComponent<MoveForward>().damage = Damage;
-                    //Debug.Log("Player was shot, dealing damage.");
-                    if (hit.collider.tag == target.tag)
+                    if (Time.time > ShootRate + lastShot)
                     {
-                        target.GetComponent<FirstPersonController>().TakeDamage(Damage);
+                        var bt = Instantiate(BulletTrail, tip.transform.position, rotation);
+                        bt.GetComponent<MoveForward>().origin = this.gameObject.transform.rotation;
+                        bt.GetComponent<MoveForward>().target = hit.point;
+                        //bt.GetComponent<MoveForward>().damage = Damage;
+                        //Debug.Log("Player was shot, dealing damage.");
+                        if (hit.collider.tag == target.tag)
+                        {
+                            target.GetComponent<FirstPersonController>().TakeDamage(Damage);
+                        }
+                        lastShot = Time.time;
                     }
-                    lastShot = Time.time;
                 }
+            }
         }
     }
 
