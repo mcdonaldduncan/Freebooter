@@ -236,12 +236,12 @@ public class AutoGun : MonoBehaviour, IGun
 
 
     //fix bug that doesn't restart canceled reload    
-    public void StartReload(WaitForSeconds reloadWait)
+    public void StartReload()
     {
-        reloadCo = GunManager.StartCoroutine(this.Reload(reloadWait));
+        reloadCo = GunManager.StartCoroutine(this.Reload(ReloadWait));
     }
 
-    private void OnWeaponSwitch(WaitForSeconds reloadWait)
+    private void OnWeaponSwitch()
     {
         this.holdingTrigger = false;
         if (reloadCo != null)

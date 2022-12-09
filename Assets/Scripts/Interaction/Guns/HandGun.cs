@@ -183,7 +183,7 @@ public class HandGun : MonoBehaviour, IGun
             }
             catch
             {
-                var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                var p = Instantiate(HitNonEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
                 Destroy(p, 1);
             }
         }
@@ -194,21 +194,10 @@ public class HandGun : MonoBehaviour, IGun
         }
 
     }
-    //public void StartReload()
-    //{
-    //    GunManager.Reloading = true;
-    //    reloadStartTime = Time.time;
-    //}
 
-    //private void Reload()
-    //{
-    //    GunManager.HandGunCurrentAmmo = GunManager.HandGunMaxAmmo;
-    //    GunManager.Reloading = false;
-    //}
-
-    public void StartReload(WaitForSeconds reloadWait)
+    public void StartReload()
     {
-        reloadCo = GunManager.StartCoroutine(this.Reload(reloadWait));
+        reloadCo = GunManager.StartCoroutine(this.Reload(ReloadWait));
     }
 
     public IEnumerator Reload(WaitForSeconds reloadWait)
@@ -222,12 +211,8 @@ public class HandGun : MonoBehaviour, IGun
         }
     }
 
-    private void OnWeaponSwitch(WaitForSeconds reloadWait)
+    private void OnWeaponSwitch()
     {
-        //if (GunManager.Reloading)
-        //{
-        //    GunManager.Reloading = false;
-        //}
         if (reloadCo != null)
         {
             GunManager.StopCoroutine(reloadCo);

@@ -217,9 +217,9 @@ public class ShotGun : MonoBehaviour, IGun
     //    }
     //}
 
-    public void StartReload(WaitForSeconds reloadWait)
+    public void StartReload()
     {
-        reloadCo = GunManager.StartCoroutine(this.Reload(reloadWait));
+        reloadCo = GunManager.StartCoroutine(this.Reload(ReloadWait));
     }
 
     public IEnumerator Reload(WaitForSeconds reloadWait)
@@ -230,7 +230,7 @@ public class ShotGun : MonoBehaviour, IGun
         GunManager.ShotGunCurrentAmmo = GunManager.ShotGunMaxAmmo;
     }
 
-    private void OnWeaponSwitch(WaitForSeconds reloadWait)
+    private void OnWeaponSwitch()
     {
         //if (GunManager.Reloading)
         //{

@@ -63,9 +63,9 @@ public class GrenadeGun : MonoBehaviour, IGun
         gRB.AddForce(grenadeLaunchForce);
     }
 
-    public void StartReload(WaitForSeconds reloadWait)
+    public void StartReload()
     {
-        reloadCo = GunManager.StartCoroutine(this.Reload(reloadWait));
+        reloadCo = GunManager.StartCoroutine(this.Reload(ReloadWait));
     }
 
     public IEnumerator Reload(WaitForSeconds reloadWait)
@@ -76,7 +76,7 @@ public class GrenadeGun : MonoBehaviour, IGun
         GunManager.GrenadeGunCurrentAmmo = GunManager.GrenadeGunMaxAmmo;
     }
 
-    private void OnWeaponSwitch(WaitForSeconds reloadWait)
+    private void OnWeaponSwitch()
     {
         //if (GunManager.Reloading)
         //{

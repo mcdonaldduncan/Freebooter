@@ -28,7 +28,7 @@ public class GunHandler : MonoBehaviour
     public bool Reloading { get { return reloading; } set { reloading = value; } }
     public bool InfiniteAmmo { get { return infiniteAmmo; } }
 
-    public delegate void GunSwitchDelegate(WaitForSeconds reloadWait);
+    public delegate void GunSwitchDelegate();
     public static GunSwitchDelegate weaponSwitched;
 
     public enum GunType
@@ -205,6 +205,7 @@ public class GunHandler : MonoBehaviour
             gun.DamageDrop = this.autoGunDamageDrop != 0 ? this.autoGunDamageDrop : 1;
             autoGun.GunShotAudioList = this.autoGunShotAudioList;
             autoGun.TriggerReleasedAudio = this.triggerReleasedAudio;
+            gun.ReloadWait = this.autoGunReloadWait;
         }
         if (gun is HandGun)
         {
@@ -218,6 +219,7 @@ public class GunHandler : MonoBehaviour
             gun.GunReticle = this.handGunReticle;
             gun.GunShotAudio = this.handGunShotAudio;
             gun.DamageDrop = this.handGunDamageDrop != 0 ? this.handGunDamageDrop : 1;
+            gun.ReloadWait = this.handGunReloadWait;
         }
         if (gun is ShotGun)
         {
@@ -231,6 +233,7 @@ public class GunHandler : MonoBehaviour
             gun.GunReticle = this.shotGunReticle;
             gun.GunShotAudio = this.shotGunShotAudio;
             gun.DamageDrop = this.shotGunDamageDrop != 0 ? this.shotGunDamageDrop : 1;
+            gun.ReloadWait = this.shotGunReloadWait;
         }
         if (gun is GrenadeGun)
         {
@@ -332,18 +335,21 @@ public class GunHandler : MonoBehaviour
         currentGun.GunModel.SetActive(true);
 
         WaitForSeconds reloadToInvoke = gunReloadWaitDict[currentGunState];
-        weaponSwitched?.Invoke(reloadToInvoke);
+        weaponSwitched?.Invoke();
     }
 
     public void OnWeaponPickup(GunType gunType)
     {
-        if (gunTypeDict[gunType] > guns.Count - 1)
+        if (!guns.Contains(gunType))
         {
-            guns.Add(gunType);
-        }
-        else
-        {
-            guns.Insert(gunTypeDict[gunType], gunType);
+            if (gunTypeDict[gunType] > guns.Count - 1)
+            {
+                guns.Add(gunType);
+            }
+            else
+            {
+                guns.Insert(gunTypeDict[gunType], gunType);
+            }
         }
 
         currentGun.GunReticle.alpha = 0;
@@ -357,43 +363,7 @@ public class GunHandler : MonoBehaviour
 
     public void Shoot(InputAction.CallbackContext context)
     {
-        //if (currentGunAmmo > 0 && !reloading)
-        //{
-        //    currentGun.Shoot()
-        //}
-
-        //if (!IsOwner) return;
-
         currentGun.ShootTriggered(context);
-        
-        /*if (currentGunState == GunType.autoGun)
-        {
-            autoGun.ShootTriggered(context);
-            RequestFireServerRpc();
-        }
-        if ((currentGunState == GunType.handGun || currentGunState == GunType.longGun) && context.performed && handGunCurrentAmmo > 0 && !reloading)
-        {
-            handGun.Shoot();
-            RequestFireServerRpc();
-        }
-
-        if (currentGunState == GunType.shotGun && context.performed && shotGunCurrentAmmo > 0 && !reloading)
-        {
-            shotGun.Shoot();
-            RequestFireServerRpc();
-        }*/
-    }
-
-    [ServerRpc]
-    private void RequestFireServerRpc()
-    {
-        FireClientRpc();
-    }
-
-    [ClientRpc]
-    private void FireClientRpc()
-    {
-        //if (!IsOwner) ExecuteShoot();
     }
 
     private void ExecuteShoot()
@@ -401,66 +371,9 @@ public class GunHandler : MonoBehaviour
         handGun.Shoot();
     }
 
-    // network stuff do not delete
-    //public void ShootOther(InputAction.CallbackContext context)
-    //{
-    //    //if (currentGunAmmo > 0 && !reloading)
-    //    //{
-    //    //    currentGun.Shoot()
-    //    //}
-
-    //    if (currentGunState == GunType.autoGun)
-    //    {
-    //        autoGun.ShootTriggered(context);
-    //    }
-    //    if ((currentGunState == GunType.handGun || currentGunState == GunType.longGun) && context.performed && handGunCurrentAmmo > 0 && !reloading)
-    //    {
-    //        handGun.Shoot();
-    //    }
-
-    //    if (currentGunState == GunType.shotGun && context.performed && shotGunCurrentAmmo > 0 && !reloading)
-    //    {
-    //        shotGun.Shoot();
-    //    }
-    //}
-
-
-    //[ServerRpc(RequireOwnership = false)]
-    //void SyncShootingServerRPC()
-    //{
-    //    SyncShootingClientRPC();
-    //}
-
-    //[ClientRpc]
-    //void SyncShootingClientRPC()
-    //{
-    //    var gunHandlers = FindObjectsOfType<GunHandler>();
-    //    foreach (GunHandler gh in gunHandlers)
-    //    {
-    //        //gh.ShootOther();
-    //    }
-    //}
-
-
     public void Reload(InputAction.CallbackContext context)
     {
-        currentGun.StartReload(currentGun.ReloadWait);
-
-        //if (!IsOwner) return;
-        //if (currentGunState == GunType.autoGun && autoGunCurrentAmmo < autoGunMaxAmmo && !reloading)
-        //{
-        //    autoGun.StartReload(autoGunReloadWait);
-        //}
-
-        //if (currentGunState == GunType.handGun && handGunCurrentAmmo < handGunMaxAmmo && !reloading)
-        //{
-        //    handGun.StartReload(handGunReloadWait);
-        //}
-
-        //if (currentGunState == GunType.shotGun && shotGunCurrentAmmo < shotGunMaxAmmo && !reloading)
-        //{
-        //    shotGun.StartReload(shotGunReloadWait);
-        //}
+        currentGun.StartReload();
     }
     public void InfAmmoActive()
     {
