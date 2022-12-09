@@ -9,13 +9,17 @@ public class Barrier : MonoBehaviour
     [SerializeField] public BarrierState m_State;
     [SerializeField] AccessType m_AccessType;
     [SerializeField] bool m_ShouldClose;
-
+    [SerializeField] float m_CloseDelay;
+    
     [Header("Segment Parameters")]
     [SerializeField] public float MoveSpeed;
 
     [Header("Prefabs")]
     [SerializeField] GameObject m_KeyPrefab;
     [SerializeField] GameObject m_SegmentPrefab;
+
+    [Header("Activation Object")]
+    [SerializeField] GameObject m_Activator;
 
     [Header("")]
     [SerializeField] public List<Key> m_RequiredKeys;
@@ -24,7 +28,11 @@ public class Barrier : MonoBehaviour
     public event ActionDelegate Activation;
     public event ActionDelegate SetState;
 
+    IActivator m_IActivator;
+
     bool HasKeys => KeyManager.Instance.KeyInventory.Intersect(m_RequiredKeys).Count() == m_RequiredKeys.Count;
+
+    bool AutoClose => m_AccessType == AccessType.ACTIVATE && m_ShouldClose && m_State == BarrierState.OPEN;
 
     bool m_InTrigger;
 
@@ -40,6 +48,27 @@ public class Barrier : MonoBehaviour
 
 #endif
 
+    private void OnEnable()
+    {
+        if (m_Activator == null || m_AccessType != AccessType.ACTIVATE) return;
+
+        try
+        {
+            m_IActivator = (IActivator)m_Activator.GetComponent(typeof(IActivator));
+            m_IActivator.Activate += Activate;
+        }
+        catch (System.Exception)
+        {
+            Debug.LogError("Valid IActivator Not Found");
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (m_IActivator == null || m_AccessType != AccessType.ACTIVATE) return;
+        m_IActivator.Activate -= Activate;
+    }
+
     void Start()
     {
 
@@ -54,6 +83,10 @@ public class Barrier : MonoBehaviour
         Activation?.Invoke();
         OnActivation();
         Debug.Log("Activated");
+        if (AutoClose)
+        {
+            Invoke(nameof(Activate), m_CloseDelay);
+        }
     }
 
     void OnActivation()

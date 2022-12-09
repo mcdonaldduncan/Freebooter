@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,8 @@ public class MovingPlatform : MonoBehaviour
 {
     [Header("Movement Properties")]
     [SerializeField] MovementType m_MovementType;
+    [SerializeField] GameObject m_Activator;
+    
     [SerializeField] float m_MoveSpeed;
     [SerializeField] float m_nodeDelay;
     [SerializeField] bool m_ShouldLoop;
@@ -23,6 +26,7 @@ public class MovingPlatform : MonoBehaviour
     Transform m_Transform;
 
     FirstPersonController Player;
+    IActivator m_IActivator;
 
     Vector3 lastPosition;
 
@@ -54,6 +58,30 @@ public class MovingPlatform : MonoBehaviour
 #endif
     #endregion
 
+    private void OnEnable()
+    {
+        if (m_Activator == null || m_MovementType != MovementType.ACTIVATE) return;
+
+        try
+        {
+            m_IActivator = (IActivator)m_Activator.GetComponent(typeof(IActivator));
+            m_IActivator.Activate += AgnosticActivate;
+            m_IActivator.Deactivate += OnDeactivate;
+        }
+        catch (System.Exception)
+        {
+            Debug.LogError("Valid IActivator Not Found");
+        }
+
+    }
+
+    private void OnDisable()
+    {
+        if (m_IActivator == null || m_MovementType != MovementType.ACTIVATE) return;
+        m_IActivator.Activate -= AgnosticActivate;
+        m_IActivator.Deactivate -= OnDeactivate;
+    }
+
 
     void Start()
     {
@@ -75,11 +103,31 @@ public class MovingPlatform : MonoBehaviour
 
     void ApplyMotionToPlayer()
     {
-        if (!isAttached) return;
+        if (isAttached)
+        {
+            Vector3 platformTranslation = Base.transform.position - lastPosition;
+            Player.surfaceMotion += platformTranslation;
+        }
         if (lastPosition == Base.transform.position) return;
-        Vector3 platformTranslation = Base.transform.position - lastPosition;
-        Player.surfaceMotion += platformTranslation;
         lastPosition = Base.transform.position;
+    }
+
+    void AgnosticActivate()
+    {
+        isActivated = !isActivated;
+        Base.SetState(isActivated);
+    }
+
+    void OnActivate()
+    {
+        isActivated = true;
+        Base.SetState(true);
+    }
+
+    void OnDeactivate()
+    {
+        isActivated = false;
+        Base.SetState(false);
     }
 
     public void UpdateFromBase()
@@ -142,8 +190,7 @@ public class MovingPlatform : MonoBehaviour
         isAttached = true;
         if (m_MovementType == MovementType.CONTACT)
         {
-            isActivated = true;
-            Base.SetState(true);
+            OnActivate();
         }
     }
 
@@ -152,8 +199,7 @@ public class MovingPlatform : MonoBehaviour
         isAttached = false;
         if (m_MovementType == MovementType.CONTACT)
         {
-            isActivated = false;
-            Base.SetState(false);
+            OnDeactivate();
         }
     }
 
