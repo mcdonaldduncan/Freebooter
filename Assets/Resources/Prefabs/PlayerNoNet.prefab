@@ -1393,6 +1393,10 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1476683241220888901, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: canvasGroup
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1878793315105719145, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
       propertyPath: m_RootOrder
       value: 13
@@ -1581,7 +1585,8 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 7
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4165754616473771977, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
 --- !u!114 &297426593183231647 stripped
 MonoBehaviour:
