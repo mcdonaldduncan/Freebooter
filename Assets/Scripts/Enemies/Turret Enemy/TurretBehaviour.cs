@@ -15,7 +15,9 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
     private float distance;
     Vector3 targetDiretion;
     Quaternion rotation;
-    
+
+    float distanceToPlayer;
+
     private float lastShot, ShootRate = .5f;
 
     private float lastValidY = 0f;
@@ -26,6 +28,8 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
 
     public float Health { get { return health; } set { health = value; } }
     [SerializeField] private float health;
+
+    [SerializeField] private float maxHealth = 75;
     public void TakeDamage(float damageTaken)
     {
         Health -= damageTaken;
@@ -37,6 +41,10 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
         if (Health <= 0)
         {
             //this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
+            if (distanceToPlayer <= target.GetComponent<FirstPersonController>().DistanceToHeal)
+            {
+                target.GetComponent<FirstPersonController>().Health += (target.GetComponent<FirstPersonController>().PercentToHeal * maxHealth);
+            }
             Destroy(this.gameObject);
         }
     }
@@ -48,6 +56,7 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
     }
     void FixedUpdate()
     {
+        distanceToPlayer = Vector3.Distance(gameObject.transform.position, target.transform.position);
         switch (state) //handles what the turret shhould be doing at cetain states.
         {
             case TurretState.LookingForTarget:
