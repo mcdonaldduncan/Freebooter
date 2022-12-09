@@ -17,7 +17,7 @@ public class ShotGun : MonoBehaviour, IGun
     public float AimOffset { get; set; }
     public GameObject HitEnemy { get; set; }
     public GameObject HitNonEnemy { get; set; }
-    public float ReloadTime { get; set; }
+    public WaitForSeconds ReloadWait { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
     private float ShotGunBulletAmount { get { return GunManager.ShotGunBulletAmount; } }
     public int CurrentAmmo { get { return GunManager.ShotGunCurrentAmmo; } set { GunManager.ShotGunCurrentAmmo = value; } }

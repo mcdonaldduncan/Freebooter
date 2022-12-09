@@ -167,7 +167,7 @@ public class NetGunHandler : NetworkBehaviour
             gun.VerticalSpread = this.autoGunVerticalSpread;
             gun.HorizontalSpread = this.autoGunHorizontalSpread;
             gun.AimOffset = this.autoGunAimOffset;
-            gun.ReloadTime = this.autoGunReloadTime;
+            //gun.ReloadTime = this.autoGunReloadTime;
             gun.GunReticle = this.autoGunReticle;
             gun.GunShotAudio = this.autoGunShotAudio;
         }
@@ -178,7 +178,7 @@ public class NetGunHandler : NetworkBehaviour
             gun.VerticalSpread = this.handGunVerticalSpread;
             gun.HorizontalSpread = this.handGunHorizontalSpread;
             gun.AimOffset = this.handGunAimOffset;
-            gun.ReloadTime = this.handGunReloadTime;
+            //gun.ReloadTime = this.handGunReloadTime;
             gun.GunReticle = this.handGunReticle;
             gun.GunShotAudio = this.handGunShotAudio;
         }
@@ -189,7 +189,7 @@ public class NetGunHandler : NetworkBehaviour
             gun.VerticalSpread = this.shotGunVerticalSpread;
             gun.HorizontalSpread = this.shotGunHorizontalSpread;
             gun.AimOffset = this.shotGunAimOffset;
-            gun.ReloadTime = this.shotGunReloadTime;
+            //gun.ReloadTime = this.shotGunReloadTime;
             gun.GunReticle = this.shotGunReticle;
             gun.GunShotAudio = this.shotGunShotAudio;
         }

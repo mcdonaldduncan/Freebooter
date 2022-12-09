@@ -22,6 +22,8 @@ public class GunHandler : MonoBehaviour
     public int ShotGunBulletAmount { get { return shotGunBulletAmount; } }
     public int AutoGunCurrentAmmo { get { return autoGunCurrentAmmo; } set { autoGunCurrentAmmo = value; } }
     public int AutoGunMaxAmmo { get { return autoGunMaxAmmo; } }
+    public int GrenadeGunCurrentAmmo { get { return grenadeGunCurrentAmmo; } set { grenadeGunCurrentAmmo = value; } }
+    public int GrenadeGunMaxAmmo { get { return grenadeGunMaxAmmo; } }
 
     public bool Reloading { get { return reloading; } set { reloading = value; } }
     public bool InfiniteAmmo { get { return infiniteAmmo; } }
@@ -33,7 +35,7 @@ public class GunHandler : MonoBehaviour
     {
         handGun,
         shotGun,
-        longGun,
+        grenadeGun,
         autoGun
     }
 
@@ -102,8 +104,21 @@ public class GunHandler : MonoBehaviour
     [SerializeField] private AudioClip[] autoGunShotAudioList;
     [SerializeField] private AudioClip triggerReleasedAudio;
 
-    [Header("Longgun Parameters")]
-    [SerializeField] private float longGunBulletDamage = 10f;
+    [Header("Grenade Launcher Parameters")]
+    [SerializeField] private GameObject grenadeObject;
+    [SerializeField] private GameObject grenadeGunModel;
+    [SerializeField] private Transform grenadeGunShootFrom;
+    [SerializeField] private float grenadeDamage = 10f;
+    [SerializeField] private float grenadeGunHorizontalSpread;
+    [SerializeField] private float grenadeGunVerticalSpread;
+    [SerializeField] private int grenadeGunCurrentAmmo;
+    [SerializeField] private int grenadeGunMaxAmmo;
+    [SerializeField] private float grenadeGunReloadTime;
+    [SerializeField] private float grenadeFireRate;
+    [Tooltip("This will offset how the shot is centered from the tip of the gun")]
+    [SerializeField] private float grenadeGunAimOffset = 15f;
+    [SerializeField] private CanvasGroup grenadeGunReticle;
+    [SerializeField] private AudioClip grenadeGunShotAudio;
 
     [SerializeField] private List<GameObject> gunInventory;
 
@@ -112,6 +127,7 @@ public class GunHandler : MonoBehaviour
     private AutoGun autoGun;
     private HandGun handGun;
     private ShotGun shotGun;
+    private GrenadeGun grenadeGun;
     private IGun currentGun;
 
     private GameObject lineDrawer;
@@ -123,6 +139,7 @@ public class GunHandler : MonoBehaviour
     private WaitForSeconds handGunReloadWait;
     private WaitForSeconds shotGunReloadWait;
     private WaitForSeconds autoGunReloadWait;
+    private WaitForSeconds grenadeGunReloadWait;
 
     private Renderer gunRenderer;
 
@@ -141,14 +158,17 @@ public class GunHandler : MonoBehaviour
         handGunReloadWait = new WaitForSeconds(handGunReloadTime);
         shotGunReloadWait = new WaitForSeconds(shotGunReloadTime);
         autoGunReloadWait = new WaitForSeconds(autoGunReloadTime);
+        grenadeGunReloadWait = new WaitForSeconds(grenadeGunReloadTime);
 
         autoGun = gameObject.AddComponent<AutoGun>();
         handGun = gameObject.AddComponent<HandGun>();
         shotGun = gameObject.AddComponent<ShotGun>();
+        grenadeGun = gameObject.AddComponent<GrenadeGun>();
 
         PopulateGunProperties(autoGun);
         PopulateGunProperties(handGun);
         PopulateGunProperties(shotGun);
+        PopulateGunProperties(grenadeGun);
 
         gunDict = new Dictionary<GunType, IGun>();
         gunTypeDict = new Dictionary<GunType, int>();
@@ -180,7 +200,6 @@ public class GunHandler : MonoBehaviour
             gun.VerticalSpread = this.autoGunVerticalSpread;
             gun.HorizontalSpread = this.autoGunHorizontalSpread;
             gun.AimOffset = this.autoGunAimOffset;
-            gun.ReloadTime = this.autoGunReloadTime;
             gun.GunReticle = this.autoGunReticle;
             gun.DamageDrop = this.autoGunDamageDrop != 0 ? this.autoGunDamageDrop : 1;
             autoGun.GunShotAudioList = this.autoGunShotAudioList;
@@ -195,7 +214,6 @@ public class GunHandler : MonoBehaviour
             gun.VerticalSpread = this.handGunVerticalSpread;
             gun.HorizontalSpread = this.handGunHorizontalSpread;
             gun.AimOffset = this.handGunAimOffset;
-            gun.ReloadTime = this.handGunReloadTime;
             gun.GunReticle = this.handGunReticle;
             gun.GunShotAudio = this.handGunShotAudio;
             gun.DamageDrop = this.handGunDamageDrop != 0 ? this.handGunDamageDrop : 1;
@@ -209,10 +227,23 @@ public class GunHandler : MonoBehaviour
             gun.VerticalSpread = this.shotGunVerticalSpread;
             gun.HorizontalSpread = this.shotGunHorizontalSpread;
             gun.AimOffset = this.shotGunAimOffset;
-            gun.ReloadTime = this.shotGunReloadTime;
             gun.GunReticle = this.shotGunReticle;
             gun.GunShotAudio = this.shotGunShotAudio;
             gun.DamageDrop = this.shotGunDamageDrop != 0 ? this.shotGunDamageDrop : 1;
+        }
+        if (gun is GrenadeGun)
+        {
+            gun.FireRate = this.grenadeFireRate;
+            gun.GunModel = this.grenadeGunModel;
+            gun.ShootFrom = this.grenadeGunShootFrom;
+            gun.BulletDamage = this.grenadeDamage;
+            gun.VerticalSpread = this.grenadeGunVerticalSpread;
+            gun.HorizontalSpread = this.grenadeGunHorizontalSpread;
+            gun.AimOffset = this.grenadeGunAimOffset;
+            gun.ReloadWait = this.grenadeGunReloadWait;
+            gun.GunReticle = this.grenadeGunReticle;
+            gun.GunShotAudio = this.grenadeGunShotAudio;
+            grenadeGun.Grenade = this.grenadeObject;
         }
     }
     private void Start()
@@ -222,26 +253,32 @@ public class GunHandler : MonoBehaviour
         handGunReticle.alpha = 0;
         shotGunReticle.alpha = 0;
         autoGunReticle.alpha = 0;
+        grenadeGunReticle.alpha = 0;
 
         handGunModel.SetActive(false);
         shotGunModel.SetActive(false);
         autoGunModel.SetActive(false);
+        grenadeGunModel.SetActive(false);
 
         handGunCurrentAmmo = handGunMaxAmmo;
         shotGunCurrentAmmo = shotGunMaxAmmo;
         autoGunCurrentAmmo = autoGunMaxAmmo;
+        grenadeGunCurrentAmmo = grenadeGunMaxAmmo;
 
         gunDict.Add(GunType.handGun, handGun);
         gunDict.Add(GunType.shotGun, shotGun);
         gunDict.Add(GunType.autoGun, autoGun);
+        gunDict.Add(GunType.grenadeGun, grenadeGun);
 
         gunTypeDict.Add(GunType.handGun, 0);
         gunTypeDict.Add(GunType.shotGun, 1);
         gunTypeDict.Add(GunType.autoGun, 2);
+        gunTypeDict.Add(GunType.grenadeGun, 3);
 
         gunReloadWaitDict.Add(GunType.handGun, handGunReloadWait);
         gunReloadWaitDict.Add(GunType.shotGun, shotGunReloadWait);
         gunReloadWaitDict.Add(GunType.autoGun, autoGunReloadWait);
+        gunReloadWaitDict.Add(GunType.grenadeGun, grenadeGunReloadWait);
 
         lineRenderer = lineDrawer.AddComponent<LineRenderer>();
         lineRenderer.startWidth = 0.1f;
@@ -406,21 +443,23 @@ public class GunHandler : MonoBehaviour
 
     public void Reload(InputAction.CallbackContext context)
     {
+        currentGun.StartReload(currentGun.ReloadWait);
+
         //if (!IsOwner) return;
-        if (currentGunState == GunType.autoGun && autoGunCurrentAmmo < autoGunMaxAmmo && !reloading)
-        {
-            autoGun.StartReload(autoGunReloadWait);
-        }
+        //if (currentGunState == GunType.autoGun && autoGunCurrentAmmo < autoGunMaxAmmo && !reloading)
+        //{
+        //    autoGun.StartReload(autoGunReloadWait);
+        //}
 
-        if (currentGunState == GunType.handGun && handGunCurrentAmmo < handGunMaxAmmo && !reloading)
-        {
-            handGun.StartReload(handGunReloadWait);
-        }
+        //if (currentGunState == GunType.handGun && handGunCurrentAmmo < handGunMaxAmmo && !reloading)
+        //{
+        //    handGun.StartReload(handGunReloadWait);
+        //}
 
-        if (currentGunState == GunType.shotGun && shotGunCurrentAmmo < shotGunMaxAmmo && !reloading)
-        {
-            shotGun.StartReload(shotGunReloadWait);
-        }
+        //if (currentGunState == GunType.shotGun && shotGunCurrentAmmo < shotGunMaxAmmo && !reloading)
+        //{
+        //    shotGun.StartReload(shotGunReloadWait);
+        //}
     }
     public void InfAmmoActive()
     {
