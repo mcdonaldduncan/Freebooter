@@ -10,7 +10,6 @@ using Random = UnityEngine.Random;
 
 public class GunHandler : MonoBehaviour
 {
-    //TODO: Consider making ammo properties in interface and implementing into different guntypes, as this would prevent the need for passing so many parameters
     public IGun CurrentGun { get { return currentGun; } }
     public Camera FPSCam { get { return fpsCam; } }
     public AudioSource GunShotAudioSource { get { return gunShotAudioSource; } }
@@ -123,26 +122,18 @@ public class GunHandler : MonoBehaviour
 
     [SerializeField] private List<GameObject> gunInventory;
 
-    private bool holdingTrigger;
-
     private AutoGun autoGun;
     private HandGun handGun;
     private ShotGun shotGun;
     private GrenadeGun grenadeGun;
     private IGun currentGun;
 
-    private GameObject lineDrawer;
-    private LineRenderer lineRenderer;
-
     private List<GunType> guns;
 
-    private WaitForSeconds fireRateWait;
     private WaitForSeconds handGunReloadWait;
     private WaitForSeconds shotGunReloadWait;
     private WaitForSeconds autoGunReloadWait;
     private WaitForSeconds grenadeGunReloadWait;
-
-    private Renderer gunRenderer;
 
     private Dictionary<GunType, IGun> gunDict;
     private Dictionary<GunType, int> gunTypeDict;
@@ -154,8 +145,6 @@ public class GunHandler : MonoBehaviour
 
     private void Awake()
     {
-        fireRateWait = new WaitForSeconds(autoFireRate);
-
         handGunReloadWait = new WaitForSeconds(handGunReloadTime);
         shotGunReloadWait = new WaitForSeconds(shotGunReloadTime);
         autoGunReloadWait = new WaitForSeconds(autoGunReloadTime);
@@ -173,14 +162,8 @@ public class GunHandler : MonoBehaviour
 
         gunDict = new Dictionary<GunType, IGun>();
         gunTypeDict = new Dictionary<GunType, int>();
-        gunReloadWaitDict = new Dictionary<GunType, WaitForSeconds>();
-
-        gunRenderer = gameObject.GetComponent<Renderer>();
 
         gunShotAudioSource = gameObject.GetComponent<AudioSource>();
-
-        lineDrawer = new GameObject();
-
     }
 
 
@@ -279,15 +262,6 @@ public class GunHandler : MonoBehaviour
         gunTypeDict.Add(GunType.autoGun, 2);
         gunTypeDict.Add(GunType.grenadeGun, 3);
 
-        gunReloadWaitDict.Add(GunType.handGun, handGunReloadWait);
-        gunReloadWaitDict.Add(GunType.shotGun, shotGunReloadWait);
-        gunReloadWaitDict.Add(GunType.autoGun, autoGunReloadWait);
-        gunReloadWaitDict.Add(GunType.grenadeGun, grenadeGunReloadWait);
-
-        lineRenderer = lineDrawer.AddComponent<LineRenderer>();
-        lineRenderer.startWidth = 0.1f;
-        lineRenderer.endWidth = 0.1f;
-
         currentGun = gunDict[GunType.handGun];
         currentGun.GunReticle.alpha = 1;
         currentGun.GunModel.SetActive(true);
@@ -334,7 +308,6 @@ public class GunHandler : MonoBehaviour
         currentGun.GunReticle.alpha = 1;
         currentGun.GunModel.SetActive(true);
 
-        WaitForSeconds reloadToInvoke = gunReloadWaitDict[currentGunState];
         weaponSwitched?.Invoke();
     }
 
@@ -357,6 +330,7 @@ public class GunHandler : MonoBehaviour
 
         currentGunState = guns[guns.IndexOf(gunType)];
         currentGun = gunDict[currentGunState];
+
         currentGun.GunReticle.alpha = 1;
         currentGun.GunModel.SetActive(true);
     }
@@ -366,21 +340,8 @@ public class GunHandler : MonoBehaviour
         currentGun.ShootTriggered(context);
     }
 
-    private void ExecuteShoot()
-    {
-        handGun.Shoot();
-    }
-
     public void Reload(InputAction.CallbackContext context)
     {
         currentGun.StartReload();
-    }
-    public void InfAmmoActive()
-    {
-        infiniteAmmo = true;
-    }
-    public void InfAmmoInactive()
-    {
-        infiniteAmmo = false;
     }
 }
