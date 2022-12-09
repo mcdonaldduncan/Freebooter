@@ -147,7 +147,7 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
              {
                     var bt = Instantiate(BulletTrail, tip.transform.position, rotation);
                     bt.GetComponent<MoveForward>().origin = body.gameObject.transform.rotation;
-                    bt.GetComponent<MoveForward>().target = target;
+                    bt.GetComponent<MoveForward>().target = hit.point;
                     //bt.GetComponent<MoveForward>().damage = Damage;
                     Debug.Log("Player was shot, dealing damage.");
                     target.GetComponent<FirstPersonController>().TakeDamage(Damage);

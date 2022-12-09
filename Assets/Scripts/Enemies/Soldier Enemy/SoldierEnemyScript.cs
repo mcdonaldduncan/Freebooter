@@ -52,18 +52,14 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
 
     public void CheckForDeath()
     {
-        Debug.Log("Checking for death...");
         if (Health <= 0)
         {
-            Debug.Log("should die...");
             if (distanceToPlayer <= playerController.DistanceToHeal)
             {
                 playerController.Health += (playerController.PercentToHeal * maxHealth);
-                Debug.Log("Healed player");
             }
             //this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
             Destroy(this.gameObject);
-            Debug.Log("done...");
         }
     }
 
@@ -80,13 +76,12 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
     // Update is called once per frame
     void FixedUpdate()
     {
-        Debug.Log(st);
+        animator.SetFloat("Blend", agent.velocity.magnitude);
         switch (st)
         {
             case SoldierState.guard:
                 Aim();
                 LineOfSightWithPlayer();
-                animator.SetTrigger("Idle");
                 break;
             case SoldierState.wanderer:
                 Aim();
@@ -141,7 +136,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
         float tempSpeed = rotationspeed;
         if (Vector3.Distance(this.transform.position, target.transform.position) < range)
         {
-            targetDiretion = target.transform.position - transform.position;
+            targetDiretion = target.transform.position - tip.transform.position;
             rotation = Quaternion.LookRotation(targetDiretion);
             body.transform.rotation = Quaternion.RotateTowards(body.transform.rotation, rotation, tempSpeed * Time.deltaTime * 180);
         }
@@ -167,29 +162,35 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
     {
         RaycastHit hit;
         Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
-
-        Physics.Raycast(tip.transform.position, targetDiretion, out hit, range);
+        var offsetx = 0;
+        var offsety = 0;
+        if (Vector3.Distance(tip.transform.position, target.transform.position) > range/2)
+        {
+            offsetx = Random.Range(-5, 5);
+            offsety = Random.Range(0, 5);
+        }
+        if (Vector3.Distance(tip.transform.position, target.transform.position) > ((range / 3) * 2))
+        {
+            offsetx = Random.Range(-10, 10);
+            offsety = Random.Range(0, 5);
+        }
+        Physics.Raycast(tip.transform.position, new Vector3(targetDiretion.x + offsetx, targetDiretion.y + offsety, targetDiretion.z), out hit, range);
         if (hit.collider != null)
         {
-            if (hit.collider.tag == target.tag || hit.collider.tag == "Gun")
-            {
+         
                 if (Time.time > ShootRate + lastShot)
                 {
                     var bt = Instantiate(BulletTrail, tip.transform.position, rotation);
                     bt.GetComponent<MoveForward>().origin = this.gameObject.transform.rotation;
-                    bt.GetComponent<MoveForward>().target = target;
+                    bt.GetComponent<MoveForward>().target = hit.point;
                     //bt.GetComponent<MoveForward>().damage = Damage;
                     //Debug.Log("Player was shot, dealing damage.");
-                    target.GetComponent<FirstPersonController>().TakeDamage(Damage);
+                    if (hit.collider.tag == target.tag)
+                    {
+                        target.GetComponent<FirstPersonController>().TakeDamage(Damage);
+                    }
                     lastShot = Time.time;
                 }
-            }
-            //else 
-            //{
-            //    agent.SetDestination(target.transform.position);
-            //    animator.SetTrigger("RunAndShoot");
-            //}
-
         }
         if (Vector3.Distance(this.transform.position, target.transform.position) > range)
         {
@@ -205,7 +206,6 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
             return;
         }
         agent.SetDestination(RandomPosInSphere(originalPos, wonderDistanceRange, layerMask)); //Set destination inside a random sphere
-        animator.SetTrigger("RunAndShoot");
 
         wanderMiniState = !wanderMiniState;
         // I just made a bool to make sure it doesnt call again after it sets path to make animating it easier and prevent setting more paths while its not completed
@@ -217,7 +217,6 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
         return;
 
         waitTimer = Random.Range(minWaitTimeWander, maxWaitTimeWander);
-        animator.SetTrigger("Idle");
         wanderMiniState = !wanderMiniState; // I just made a bool to make sure it doesnt call again after it completes path to make animating it easier.
     }
 
@@ -239,12 +238,10 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
        if (dist <= range/3)
        {
             agent.ResetPath();
-            animator.SetTrigger("Shoot");
        }
        else if ( dist < range &&  dist > range/1.25)
        {
             agent.SetDestination(target.transform.position);
-            animator.SetTrigger("RunAndShoot");
        }
 
     }
@@ -259,7 +256,6 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
     void ReturnToOriginalSpot()
     {
         agent.SetDestination(originalPos);
-        animator.SetTrigger("RunAndShoot");
         if (Vector3.Distance(this.transform.position, originalPos) < originalPosOFFSET)
         {
             this.transform.rotation = originalrot;
@@ -285,23 +281,34 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
     {
         RaycastHit hit;
         Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
-
-        Physics.Raycast(tip.transform.position, targetDiretion, out hit, range);
+        var offsetx = 0;
+        var offsety = 0;
+        if (Vector3.Distance(tip.transform.position, target.transform.position) > range / 2)
+        {
+            offsetx = Random.Range(-5, 5);
+            offsety = Random.Range(0, 5);
+        }
+        if (Vector3.Distance(tip.transform.position, target.transform.position) > ((range / 3)*2))
+        {
+            offsetx = Random.Range(-10, 10);
+            offsety = Random.Range(0, 5);
+        }
+        Physics.Raycast(tip.transform.position, new Vector3(targetDiretion.x + offsetx, targetDiretion.y + offsety, targetDiretion.z), out hit, range);
         if (hit.collider != null)
         {
-            if (hit.collider.tag == target.tag || hit.collider.tag == "Gun")
-            {
                 if (Time.time > ShootRate + lastShot)
                 {
                     var bt = Instantiate(BulletTrail, tip.transform.position, rotation);
-                    bt.GetComponent<MoveForward>().origin = this.gameObject.transform.rotation;
-                    bt.GetComponent<MoveForward>().target = target;
+                    bt.GetComponent<MoveForward>().origin = tip.transform.rotation;
+                    bt.GetComponent<MoveForward>().target = hit.point;
                     //bt.GetComponent<MoveForward>().damage = Damage;
                     //Debug.Log("Player was shot, dealing damage.");
-                    target.GetComponent<FirstPersonController>().TakeDamage(Damage);
+                    if (hit.collider.tag == target.tag)
+                    {
+                        target.GetComponent<FirstPersonController>().TakeDamage(Damage);
+                    }
                     lastShot = Time.time;
                 }
-            }
         }
     }
 
@@ -311,12 +318,10 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
         if (dist <= range / 3)
         {
             agent.ResetPath();
-            animator.SetTrigger("Shoot");
         }
         else if (dist > range)
         {
             agent.SetDestination(target.transform.position);
-            animator.SetTrigger("RunAndShoot");
         }
     }
 
@@ -330,12 +335,11 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
             //if (hitRC.collider.tag != target.tag)
             //{
                 agent.SetDestination(hit.position);
-                animator.SetTrigger("RunAndShoot");
             //}
             if (this.transform.position == hit.position)
             {
                 agent.ResetPath();
-                animator.SetTrigger("Idle"); // there was no animation for healing with bandages or anything of that type
+                
                 return 1;
             }
         }
