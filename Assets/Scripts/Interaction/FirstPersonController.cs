@@ -218,6 +218,11 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     // Update is called once per frame
     void Update()
     {
+        if (Health > MaxHealth)
+        {
+            Health = MaxHealth;
+        }
+
         if (!playerOnSpecialMovement)
         {
             if (PlayerCanMove)
