@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using UnityEngine;
 using UnityEngine.AI;
 using static UnityEngine.GraphicsBuffer;
@@ -92,10 +93,6 @@ public class HideBehavior : MonoBehaviour
                 {
                     break;
                 }
-                else
-                {
-                    Debug.LogError($"Unable to find NavMesh near object {m_Colliders[i].name} at {m_Colliders[i].transform.position}");
-                }
             }
             yield return m_Wait;
         }
@@ -103,11 +100,12 @@ public class HideBehavior : MonoBehaviour
 
     private bool HideAttempt(Transform target, Vector3 attempt, int i, int mod, int iterations)
     {
+        if (iterations > 3) return false;
         if (NavMesh.SamplePosition(m_Colliders[i].transform.position - attempt * mod, out NavMeshHit hit, 4f, m_Agent.areaMask))
         {
             if (!NavMesh.FindClosestEdge(hit.position, out hit, m_Agent.areaMask))
             {
-                Debug.LogError($"Unable to find edge close to {hit.position}");
+                //Debug.LogError($"Unable to find edge close to {hit.position}");
             }
 
             if (!ProcessHideAttempt(hit, (target.position - hit.position).normalized, iterations))
