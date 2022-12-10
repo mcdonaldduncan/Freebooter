@@ -154,7 +154,11 @@ public class HandGun : MonoBehaviour, IGun
         if (hitEffect != null)
         {
             var damageableTarget = hitInfo.transform.GetComponent<IDamageable>();
-            HitEnemyBehavior(hitInfo, damageableTarget);
+            if (damageableTarget != null)
+            {
+                HitEnemyBehavior(hitInfo, damageableTarget);
+            }
+            
         }
     }
 
@@ -162,30 +166,31 @@ public class HandGun : MonoBehaviour, IGun
     {
         if (damageableTarget != null)
         {
-            //using a try catch to prevent destroyed enemies from throwing null reference exceptions
-            try
-            {
-                //Get the position of the hit enemy
-                Vector3 targetPosition = hitInfo.transform.position;
+            //Get the position of the hit enemy
+            Vector3 targetPosition = hitInfo.transform.position;
 
-                //Play blood particle effects on the enemy, where they were hit
-                var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-                Destroy(p, 1);
+            //Play blood particle effects on the enemy, where they were hit
+            var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+            Destroy(p, 1);
 
-                //Get the distance between the enemy and the gun
-                float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);
+            //Get the distance between the enemy and the gun
+            float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);
 
-                //calculate damage dropoff
-                float totalDamage = Mathf.Abs(BulletDamage / ((distance / DamageDrop)));
+            //calculate damage dropoff
+            float totalDamage = Mathf.Abs(BulletDamage / ((distance / DamageDrop)));
 
-                //Damage the target
-                damageableTarget.TakeDamage(totalDamage);
-            }
-            catch
-            {
-                var p = Instantiate(HitNonEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-                Destroy(p, 1);
-            }
+            //Damage the target
+            damageableTarget.TakeDamage(totalDamage);
+            ////using a try catch to prevent destroyed enemies from throwing null reference exceptions
+            //try
+            //{
+                
+            //}
+            //catch
+            //{
+            //    var p = Instantiate(HitNonEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+            //    Destroy(p, 1);
+            //}
         }
         else
         {

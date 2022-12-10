@@ -19,23 +19,30 @@ public class PlatformBase : MonoBehaviour
     
     Transform m_Transform;
     Transform m_Navigator;
+    MeshRenderer m_Renderer;
 
     MovingPlatform m_Platform;
+    FirstPersonController m_Player;
 
     Vector3 m_Velocity;
     Vector3 m_Acceleration;
+    Vector3 m_CurrentPos;
+    Vector3 m_LastPos;
     Vector3 m_LinearPos;
 
     float m_Speed;
     float m_LerpTime;
 
     bool m_ShouldMove;
+    bool m_IsAttached;
 
     void Start()
     {
-        m_Transform = transform;
+        m_Player = GameObject.FindWithTag("Player").GetComponent<FirstPersonController>();
+        m_Renderer = GetComponent<MeshRenderer>();
         m_Platform = GetComponentInParent<MovingPlatform>();
         m_Navigator = m_Platform.gameObject.FindChildWithTag("Navigator").transform;
+        m_Transform = transform;
         
         if (m_TranslationType == TranslationType.DAMP)
         {
@@ -49,7 +56,19 @@ public class PlatformBase : MonoBehaviour
 
     void Update()
     {
+        m_CurrentPos = transform.position;
+        if (m_IsAttached && m_CurrentPos != m_LastPos)
+        {
+            var surfaceMotion = m_CurrentPos - m_LastPos;
+            m_Player.surfaceMotion += surfaceMotion;
+        }
         HandleMovementState();
+        m_LastPos = m_CurrentPos;
+    }
+
+    public void SetMaterial(Material mat)
+    {
+        m_Renderer.material = mat;
     }
 
     #region Movement Logic
@@ -175,6 +194,7 @@ public class PlatformBase : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             m_Platform.OnPlayerContact();
+            m_IsAttached = true;
         }
     }
 
@@ -183,6 +203,7 @@ public class PlatformBase : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             m_Platform.OnPlayerExit();
+            m_IsAttached = false;
         }
     }
 

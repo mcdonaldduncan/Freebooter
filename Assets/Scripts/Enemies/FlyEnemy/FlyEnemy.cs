@@ -55,13 +55,17 @@ public class FlyEnemy : MonoBehaviour, IDamageable
     {
         if (Health <= 0)
         {
+            
+            st = SoldierState.Death;
+
+            if (playerController == null) return;
+
             if (distanceToPlayer <= playerController.DistanceToHeal)
             {
                 playerController.Health += (playerController.PercentToHeal * maxHealth);
             }
             //this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
-            Destroy(this.gameObject);
-            st = SoldierState.Death;
+            
         }
     }
 

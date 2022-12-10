@@ -54,12 +54,12 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
     {
         if (Health <= 0)
         {
-            if (distanceToPlayer <= playerController.DistanceToHeal)
-            {
-                playerController.Health += (playerController.PercentToHeal * maxHealth);
-            }
+            //if (distanceToPlayer <= playerController.DistanceToHeal)
+            //{
+            //    playerController.Health += (playerController.PercentToHeal * maxHealth);
+            //}
             //this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
     }
 

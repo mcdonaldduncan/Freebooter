@@ -501,7 +501,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         // move the player based on the parameters gathered in the "Handle-" functions
 
         // Apply accumulated motion from attached platforms before clearing the vector
-        characterController.Move(surfaceMotion + moveDirection * Time.deltaTime);
+        characterController.Move(surfaceMotion + (moveDirection * Time.deltaTime));
         surfaceMotion = Vector3.zero;
 
         if (jumpsRemaining < jumpsAllowed && characterController.isGrounded && !holdingJump)

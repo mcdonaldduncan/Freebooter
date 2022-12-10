@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using static UtilityFunctions;
 
 public class MovingPlatform : MonoBehaviour
@@ -14,6 +15,8 @@ public class MovingPlatform : MonoBehaviour
     [SerializeField] float m_MoveSpeed;
     [SerializeField] float m_nodeDelay;
     [SerializeField] bool m_ShouldLoop;
+
+    [SerializeField] Material[] m_Materials; 
 
     [Header("Node Prefab")]
     [SerializeField] GameObject Node;
@@ -28,11 +31,11 @@ public class MovingPlatform : MonoBehaviour
     FirstPersonController Player;
     IActivator m_IActivator;
 
-    Vector3 lastPosition;
+    public Vector3 lastPosition;
 
     bool isActivated;
     bool isLooping;
-    bool isAttached;
+    public bool isAttached;
 
     int currentIndex = 0;
 
@@ -90,14 +93,28 @@ public class MovingPlatform : MonoBehaviour
         Base = Platform.GetComponent<PlatformBase>();
         isActivated = m_MovementType == MovementType.CONSTANT;
         Base.Init(m_MoveSpeed, isActivated, m_Nodes[0] ?? transform);
-        lastPosition = Base.transform.position;
+        lastPosition = Platform.transform.position;
     }
 
     void Update()
     {
+        //ApplyMotionToPlayer();
         MonitorBase();
-        ApplyMotionToPlayer();
+        
     }
+
+    
+
+    //private void LateUpdate()
+    //{
+    //    if (lastPosition == Base.transform.position) return;
+    //    lastPosition = Platform.transform.position;
+    //}
+
+    //private void FixedUpdate()
+    //{
+    //    ApplyMotionToPlayer();
+    //}
 
     #region Core Logic
 
@@ -105,11 +122,10 @@ public class MovingPlatform : MonoBehaviour
     {
         if (isAttached)
         {
-            Vector3 platformTranslation = Base.transform.position - lastPosition;
+            Vector3 platformTranslation = Platform.transform.position - lastPosition;
             Player.surfaceMotion += platformTranslation;
         }
-        if (lastPosition == Base.transform.position) return;
-        lastPosition = Base.transform.position;
+        lastPosition = Platform.transform.position;
     }
 
     void AgnosticActivate()
@@ -137,9 +153,11 @@ public class MovingPlatform : MonoBehaviour
 
     void MonitorBase()
     {
-        if (!isActivated) return;
-        if (!(m_Transform.position == m_Nodes[currentIndex].position)) return;
+        //lastPosition = Platform.transform.position;
 
+        if (!isActivated) return;
+        //if (!(m_Transform.position == m_Nodes[currentIndex].position)) return;
+        if (Vector3.Distance(m_Transform.position, m_Nodes[currentIndex].position) > .5f) return;
         TransitionTargets();
     }
 
@@ -188,6 +206,8 @@ public class MovingPlatform : MonoBehaviour
     public void OnPlayerContact()
     {
         isAttached = true;
+        Base.SetMaterial(m_Materials[0]);
+        //Player.transform.SetParent(transform, true);
         if (m_MovementType == MovementType.CONTACT)
         {
             OnActivate();
@@ -197,6 +217,8 @@ public class MovingPlatform : MonoBehaviour
     public void OnPlayerExit()
     {
         isAttached = false;
+        Base.SetMaterial(m_Materials[1]);
+        //Player.transform.SetParent(null, true);
         if (m_MovementType == MovementType.CONTACT)
         {
             OnDeactivate();

@@ -7,7 +7,7 @@ using UnityEngine.AI;
 
 public class EnemySwarmerBehavior : MonoBehaviour, IDamageable
 {
-    public float Health { get { return health; } set { health = value; } }
+    public float Health { get; set;}
 
     [SerializeField] private bool ignorePlayer;
 
@@ -58,7 +58,7 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable
 
     private void Start()
     {
-        health = maxHealth;
+        Health = maxHealth;
         chasePlayer = false;
         animator.SetBool("PlayerTooFar", true);
         animator.SetBool("ChasePlayer", false);
@@ -190,11 +190,11 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable
         if (Health <= 0)
         {
             //this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
-            if (distanceToPlayer <= playerController.DistanceToHeal)
-            {
-                playerController.Health += (playerController.PercentToHeal * maxHealth);
-            }
-            DestroyImmediate(gameObject);
+            //if (distanceToPlayer <= playerController.DistanceToHeal)
+            //{
+            //    playerController.Health += (playerController.PercentToHeal * maxHealth);
+            //}
+            Destroy(gameObject);
         }
     }
 }
