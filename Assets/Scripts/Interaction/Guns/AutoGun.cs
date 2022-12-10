@@ -16,7 +16,7 @@ public class AutoGun : MonoBehaviour, IGun
     public float AimOffset { get; set; }
     public GameObject HitEnemy { get; set; }
     public GameObject HitNonEnemy { get; set; }
-    public float ReloadTime { get; set; }
+    public WaitForSeconds ReloadWait { get; set; }
     public int CurrentAmmo { get { return GunManager.AutoGunCurrentAmmo; } set { GunManager.AutoGunCurrentAmmo = value; } }
     public int CurrentMaxAmmo { get { return GunManager.AutoGunMaxAmmo; } }
     public CanvasGroup GunReticle { get; set; }
@@ -236,12 +236,12 @@ public class AutoGun : MonoBehaviour, IGun
 
 
     //fix bug that doesn't restart canceled reload    
-    public void StartReload(WaitForSeconds reloadWait)
+    public void StartReload()
     {
-        reloadCo = GunManager.StartCoroutine(this.Reload(reloadWait));
+        reloadCo = GunManager.StartCoroutine(this.Reload(ReloadWait));
     }
 
-    private void OnWeaponSwitch(WaitForSeconds reloadWait)
+    private void OnWeaponSwitch()
     {
         this.holdingTrigger = false;
         if (reloadCo != null)

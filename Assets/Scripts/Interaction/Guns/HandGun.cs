@@ -17,7 +17,7 @@ public class HandGun : MonoBehaviour, IGun
     public float AimOffset { get; set; }
     public GameObject HitEnemy { get; set; }
     public GameObject HitNonEnemy { get; set; }
-    public float ReloadTime { get; set; }
+    public WaitForSeconds ReloadWait { get; set; }
     public int CurrentAmmo { get { return GunManager.HandGunCurrentAmmo; } set { GunManager.HandGunCurrentAmmo = value; } }
     public int CurrentMaxAmmo { get { return GunManager.HandGunMaxAmmo; } }
     public CanvasGroup GunReticle { get; set; }
@@ -27,7 +27,7 @@ public class HandGun : MonoBehaviour, IGun
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
 
     private bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading && CurrentAmmo > 0;
-    private bool ReloadNow => reloadStartTime + ReloadTime < Time.time && GunManager.Reloading;
+    //private bool ReloadNow => reloadStartTime + ReloadTime < Time.time && GunManager.Reloading;
     private float lastShotTime;
     private float reloadStartTime;
     private Coroutine reloadCo;
@@ -183,7 +183,7 @@ public class HandGun : MonoBehaviour, IGun
             }
             catch
             {
-                var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                var p = Instantiate(HitNonEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
                 Destroy(p, 1);
             }
         }
@@ -194,21 +194,10 @@ public class HandGun : MonoBehaviour, IGun
         }
 
     }
-    //public void StartReload()
-    //{
-    //    GunManager.Reloading = true;
-    //    reloadStartTime = Time.time;
-    //}
 
-    //private void Reload()
-    //{
-    //    GunManager.HandGunCurrentAmmo = GunManager.HandGunMaxAmmo;
-    //    GunManager.Reloading = false;
-    //}
-
-    public void StartReload(WaitForSeconds reloadWait)
+    public void StartReload()
     {
-        reloadCo = GunManager.StartCoroutine(this.Reload(reloadWait));
+        reloadCo = GunManager.StartCoroutine(this.Reload(ReloadWait));
     }
 
     public IEnumerator Reload(WaitForSeconds reloadWait)
@@ -222,12 +211,8 @@ public class HandGun : MonoBehaviour, IGun
         }
     }
 
-    private void OnWeaponSwitch(WaitForSeconds reloadWait)
+    private void OnWeaponSwitch()
     {
-        //if (GunManager.Reloading)
-        //{
-        //    GunManager.Reloading = false;
-        //}
         if (reloadCo != null)
         {
             GunManager.StopCoroutine(reloadCo);

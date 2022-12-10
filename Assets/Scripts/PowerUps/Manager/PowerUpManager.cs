@@ -166,7 +166,7 @@ public class PowerUpManager : Singleton<PowerUpManager>
     }
     void ApplyEffectAmmo()
     {
-        gunHandler.InfAmmoActive();
+        //gunHandler.InfAmmoActive();
     }
     void ApplyEffectHealth()
     {
@@ -198,7 +198,7 @@ public class PowerUpManager : Singleton<PowerUpManager>
     }
     void RemoveEffectAmmo()
     { 
-        gunHandler.InfAmmoInactive();
+        //gunHandler.InfAmmoInactive();
         AmmoApp = false;
     }
     public void IntakeData(float d, ApplyPowerUp.PowerType currentType)//d for duration

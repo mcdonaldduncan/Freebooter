@@ -14,7 +14,10 @@ public class GunPickup : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        gunHandler.OnWeaponPickup(gunTypeToPickup);
-        Destroy(gameObject);
+        if (other.CompareTag("Player"))
+        {
+            gunHandler.OnWeaponPickup(gunTypeToPickup);
+            Destroy(gameObject);
+        }
     }
 }
