@@ -22,7 +22,7 @@ public class PlatformBase : MonoBehaviour
     MeshRenderer m_Renderer;
 
     MovingPlatform m_Platform;
-    FirstPersonController m_Player;
+    //FirstPersonController m_Player;
 
     Vector3 m_Velocity;
     Vector3 m_Acceleration;
@@ -38,7 +38,7 @@ public class PlatformBase : MonoBehaviour
 
     void Start()
     {
-        m_Player = GameObject.FindWithTag("Player").GetComponent<FirstPersonController>();
+        //m_Player = GameObject.FindWithTag("Player").GetComponent<FirstPersonController>();
         m_Renderer = GetComponent<MeshRenderer>();
         m_Platform = GetComponentInParent<MovingPlatform>();
         m_Navigator = m_Platform.gameObject.FindChildWithTag("Navigator").transform;
@@ -60,7 +60,7 @@ public class PlatformBase : MonoBehaviour
         if (m_IsAttached && m_CurrentPos != m_LastPos)
         {
             var surfaceMotion = m_CurrentPos - m_LastPos;
-            m_Player.surfaceMotion += surfaceMotion;
+            LevelManager.Instance.Player.surfaceMotion += surfaceMotion;
         }
         HandleMovementState();
         m_LastPos = m_CurrentPos;

@@ -9,7 +9,7 @@ public class GunPickup : MonoBehaviour
 
     private void Start()
     {
-        gunHandler = GameObject.FindWithTag("Player").GetComponentInChildren<GunHandler>();
+        gunHandler = LevelManager.Instance.Player.GetComponentInChildren<GunHandler>();
     }
 
     private void OnTriggerEnter(Collider other)

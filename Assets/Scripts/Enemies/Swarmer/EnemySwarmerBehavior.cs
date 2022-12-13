@@ -31,8 +31,8 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable
     [Tooltip("The layer of colliders that will be considered when counting nearby enemies")]
     [SerializeField] private LayerMask enemies;
 
-    private FirstPersonController playerController;
-    private GameObject player;
+    //private FirstPersonController playerController;
+    //private GameObject player;
     private HideBehavior hideBehavior;
     private NavMeshAgent navMeshAgent;
     private RaycastHit hitInfo;
@@ -53,7 +53,7 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable
         hideBehavior = GetComponent<HideBehavior>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
-        player = GameObject.FindWithTag("Player");
+        //player = GameObject.FindWithTag("Player");
     }
 
     private void Start()
@@ -63,13 +63,13 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable
         animator.SetBool("PlayerTooFar", true);
         animator.SetBool("ChasePlayer", false);
         animator.SetBool("AttackPlayer", false);
-        playerController = player.GetComponent<FirstPersonController>();
+        //playerController = player.GetComponent<FirstPersonController>();
         //layer = playerController.gameObject;
     }
 
     private void Update()
     {
-        distanceToPlayer = Vector3.Distance(gameObject.transform.position, player.transform.position);
+        distanceToPlayer = Vector3.Distance(gameObject.transform.position, LevelManager.Instance.Player.transform.position);
 
 
         if (distanceToPlayer <= distanceToFollow)
@@ -89,7 +89,7 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable
                 {
                     navMeshAgent.ResetPath();
                     hideBehavior.enabled = true;
-                    hideBehavior.StartHideProcessRemote(player.transform);
+                    hideBehavior.StartHideProcessRemote(LevelManager.Instance.Player.transform);
                 }
             }
             
@@ -101,11 +101,11 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable
             if (!attackingPlayer)
             {
                 navMeshAgent.ResetPath();
-                navMeshAgent.SetDestination(player.transform.position);
+                navMeshAgent.SetDestination(LevelManager.Instance.Player.transform.position);
             }
             if (attackingPlayer)
             {
-                navMeshAgent.Stop();
+                navMeshAgent.isStopped = true;
                 if (!inAttackAnim)
                 {
                     FacePlayer();
@@ -118,7 +118,7 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable
 
     private void FacePlayer()
     {
-        Vector3 lookPos = player.transform.position - transform.position;
+        Vector3 lookPos = LevelManager.Instance.Player.transform.position - transform.position;
         lookPos.y = 0;
         Quaternion rotation = Quaternion.LookRotation(lookPos);
         transform.rotation = Quaternion.Slerp(transform.rotation, rotation, attackRotateSpeed * Time.deltaTime);
@@ -175,7 +175,7 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable
 
     private void GiveDamage(float damageToDeal)
     {
-        playerController.TakeDamage(damageToDeal);
+        LevelManager.Instance.Player.TakeDamage(damageToDeal);
         mostRecentHit = Time.time;
     }
 
@@ -190,10 +190,10 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable
         if (Health <= 0)
         {
             //this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
-            //if (distanceToPlayer <= playerController.DistanceToHeal)
-            //{
-            //    playerController.Health += (playerController.PercentToHeal * maxHealth);
-            //}
+            if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
+            {
+                LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
+            }
             Destroy(gameObject);
         }
     }

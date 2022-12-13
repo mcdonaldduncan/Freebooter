@@ -28,14 +28,14 @@ public class MovingPlatform : MonoBehaviour
 
     Transform m_Transform;
 
-    FirstPersonController Player;
+    //FirstPersonController Player;
     IActivator m_IActivator;
 
     public Vector3 lastPosition;
 
     bool isActivated;
     bool isLooping;
-    public bool isAttached;
+    bool isAttached;
 
     int currentIndex = 0;
 
@@ -88,7 +88,7 @@ public class MovingPlatform : MonoBehaviour
 
     void Start()
     {
-        Player = GameObject.FindGameObjectWithTag("Player").GetComponent<FirstPersonController>();
+        //Player = GameObject.FindGameObjectWithTag("Player").GetComponent<FirstPersonController>();
         Platform = gameObject.FindChildWithTag("Platform");
         Base = Platform.GetComponent<PlatformBase>();
         isActivated = m_MovementType == MovementType.CONSTANT;
@@ -123,7 +123,7 @@ public class MovingPlatform : MonoBehaviour
         if (isAttached)
         {
             Vector3 platformTranslation = Platform.transform.position - lastPosition;
-            Player.surfaceMotion += platformTranslation;
+            LevelManager.Instance.Player.surfaceMotion += platformTranslation;
         }
         lastPosition = Platform.transform.position;
     }
