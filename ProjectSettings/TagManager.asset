@@ -7,6 +7,8 @@ TagManager:
   - Ladder
   - Ground
   - Platform
+  - Navigator
+  - ContactlessProjectile
   layers:
   - Default
   - TransparentFX
@@ -18,9 +20,9 @@ TagManager:
   - Ground
   - Player
   - Enemy
-  - 
-  - 
-  - 
+  - NonContactProjectile
+  - LineOfSight
+  - NoContact
   - 
   - 
   - 

@@ -7,14 +7,26 @@ public class OnDeathExplosion : MonoBehaviour
     [SerializeField] float blinkrate = .3f, lastblink, fallspeed;
     Renderer m;
     bool dead = false, landed = false, explosion = false;
-
+    Rigidbody rb;
     public float ExplosionDuration = 1.5f;
 
     [SerializeField] private GameObject explosionGO;
- 
+
+    int deathFrames;
+
+    public GameObject explosionparticle;
+    bool explodeOnce = false;
+    //private void Start()
+    //{
+    //    rb = transform.parent.GetComponent<Rigidbody>();
+
+    //    rb.isKinematic = true;
+    //    rb.useGravity = false;
+    //}
+
     private void Update()
     {
-        if (dead == true)
+        if (dead == true) // you do not need to evaluate as true dead is a boolean so if (dead == true) is the same thing as if (dead)
         {
             blink();
             FallOnDeath();
@@ -31,6 +43,7 @@ public class OnDeathExplosion : MonoBehaviour
                 stopExplosion();
             }
         }
+        
     }
 
     public void OnDeathVariables()
@@ -42,49 +55,68 @@ public class OnDeathExplosion : MonoBehaviour
     
     void blink()
     {
-            if (Time.time > blinkrate + lastblink && m.material.color == Color.white)
-            {
-                m.material.color = Color.red;
-                lastblink = Time.time;
-            }
-            if (Time.time > blinkrate + lastblink && m.material.color == Color.red)
-            {
-                m.material.color = Color.white;
-                lastblink = Time.time;
-            }
+        if (Time.time > blinkrate + lastblink && m.material.color == Color.white)
+        {
+            m.material.color = Color.red;
+            lastblink = Time.time;
+        }
+        if (Time.time > blinkrate + lastblink && m.material.color == Color.red)
+        {
+            m.material.color = Color.white;
+            lastblink = Time.time;
+        }
     }
 
     void FallOnDeath()
     {
-        if (landed == false)
+        if (deathFrames == 0)
         {
-            transform.position = new Vector3(this.transform.position.x, this.transform.position.y - (fallspeed * Time.deltaTime), this.transform.position.z);
+            rb = gameObject.AddComponent<Rigidbody>();
+            Vector3 explosiveForce = new Vector3(Random.Range(-5f, 5f), Random.Range(3f, 7f), Random.Range(-5f, 5f));
+            rb.AddForce(explosiveForce, ForceMode.Impulse);
         }
+        
+
+        //rb.useGravity = true;
+        //rb.isKinematic = false;
+        deathFrames++;
+        
+        //if (landed == false)
+        //{
+        //    transform.position = new Vector3(this.transform.position.x, this.transform.position.y - (fallspeed * Time.deltaTime), this.transform.position.z);
+        //}
     }
 
     void ExplodeOnImpact()
     {
         explosion = true;
         explosionGO.GetComponent<SphereCollider>().enabled = true;
+        if (explodeOnce == false)
+        {
+            explodeOnce = true;
+            //Instantiate(explosionparticle, this.transform);
+        }
     }
 
     void stopExplosion()
     {
         explosionGO.GetComponent<SphereCollider>().enabled = false;
-        Destroy(gameObject.transform.parent.gameObject);
+        
+        Destroy(transform.parent.gameObject);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-            landed = true;
-            ExplodeOnImpact();
-
+        if (!dead) return;
+        landed = true;
+        ExplodeOnImpact();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-            landed = true;
-            ExplodeOnImpact();
+        if (!dead) return;
+        landed = true;
+        ExplodeOnImpact();
     }
 
 }

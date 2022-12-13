@@ -20,12 +20,28 @@ public class Follower : MonoBehaviour
     private Inquisitor _Inquisitor;
     private List<IDamageable> _IDamageables = new List<IDamageable>();
 
+    private Collider col;
+
+    private void OnEnable()
+    {
+        _Transform = transform;
+        col = GetComponent<Collider>();
+    }
+
     public void Init(Transform target, Inquisitor inquisitor)
     {
+        gameObject.SetActive(true);
         _Target = target;
         _Inquisitor = inquisitor;
         _Transform.position = new Vector3(_Target.position.x, 15f, _Target.position.z);
         isInitialized = true;
+    }
+
+    public void Despawn()
+    {
+        _Inquisitor.isTracking = false;
+        isInitialized = false;
+        gameObject.SetActive(false);
     }
 
     Vector3 CalculateSteering(Vector3 currentTarget)
@@ -47,42 +63,44 @@ public class Follower : MonoBehaviour
         acceleration = Vector3.zero;
     }
 
-    private void OnEnable()
-    {
-        _Transform = transform;
-    }
-
     private void Update()
     {
-        
-        //_IDamageables = _IDamageables.Where(x => x != null).ToList();
-        ApplySteering();
-
-        //if (_IDamageables == null || _IDamageables.Count == 0)
-        //    return;
-
-        //for (int i = 0; i < _IDamageables.Count; i++)
-        //{
-        //    if (_IDamageables[i] == null)
-        //        continue;
-        //    _IDamageables[i].TakeDamage(damage * Time.deltaTime);
-        //}
         if (!isInitialized)
             return;
-        if (_Inquisitor == null)
-            Destroy(gameObject);
+        ApplySteering();
     }
 
-    private void OnCollisionEnter(Collision collision)
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    if (collision.gameObject.CompareTag("Player"))
+    //    {
+    //        Physics.IgnoreCollision(collision.collider, col);
+    //    }
+    //    else
+    //    {
+    //        _Inquisitor.isTracking = false;
+    //        Destroy(gameObject);
+    //    }
+    //}
+
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.transform.TryGetComponent<IDamageable>(out IDamageable damageable))
+        Debug.Log("trigger enter");
+        if (other.gameObject.CompareTag("ContactlessProjectile")) return;
+        if (other.gameObject.CompareTag("Player")) return;
+        if (other.gameObject.CompareTag("Ground")) return;
+        
+        try
         {
-            
+            IDamageable damageable = other.transform.GetComponent<IDamageable>();
+            if (damageable == null) Despawn();
+            return;
         }
-        else
+        catch
         {
-            _Inquisitor.isTracking = false;
-            Destroy(gameObject);
+            Debug.Log("Hit non idamageable");
+            Despawn();
+            return;
         }
     }
 

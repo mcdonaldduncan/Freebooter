@@ -23,7 +23,7 @@ public class Attractor : MonoBehaviour
 
     // Objects assigned at runtime
     SphereCollider sphereCollider;
-    OptionManager optionManager;
+    //OptionManager optionManager;
 
     // Arbitrarily defined gravitational constant
     const float G = .67f;
@@ -36,7 +36,7 @@ public class Attractor : MonoBehaviour
     // Cache relevant objects and scripts
     void OnEnable()
     {
-        optionManager = GameObject.Find("OptionManager").GetComponent<OptionManager>();
+        //optionManager = GameObject.Find("OptionManager").GetComponent<OptionManager>();
         rb = gameObject.GetComponent<Rigidbody>();
         sphereCollider = gameObject.GetComponent<SphereCollider>();
         rb.mass = CalculateMass();
@@ -188,8 +188,8 @@ public class Attractor : MonoBehaviour
         if (other.gameObject.CompareTag("Star"))
             Destroy(gameObject);
 
-        if (!optionManager.destroyOnImpact)
-            return;
+        //if (!optionManager.destroyOnImpact)
+        //    return;
 
         if (other.gameObject.transform.localScale.x > gameObject.transform.localScale.x)
             Destroy(gameObject);

@@ -5,7 +5,6 @@ using UnityEngine;
 public class ExplosionDealDamage : MonoBehaviour
 {
     public float damage;
-   
     List<IDamageable> AlreadyHitTargets = new List<IDamageable>();
     private void OnTriggerEnter(Collider other)
     {

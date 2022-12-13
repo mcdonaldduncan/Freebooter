@@ -2,9 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class FlyEnemy : MonoBehaviour, IDamageable
 {
+    [SerializeField] private LayerMask layerMask = 0; // for wondering
+    [SerializeField] private float minWaitTimeWander, maxWaitTimeWander, wonderDistanceRange; // wait timer for wandering
+
+    float waitTimer;
+    bool wanderMiniState; //state for wandering and wanderingIdle
+
+
     int shotCount;
     bool dead = false;
     private enum SoldierState { guard, wanderer, chase, originalSpot, Relocating, Death, retaliate};
@@ -16,10 +24,9 @@ public class FlyEnemy : MonoBehaviour, IDamageable
     [SerializeField] private UnityEngine.AI.NavMeshAgent agent;
     Vector3 targetDiretion, originalPos;
     Quaternion rotation, originalrot;
-    
-    [SerializeField] List<Vector3> wanderSpots = new List<Vector3>();
+
     [Tooltip("Distance to current wander spot before the player moves to next wander spot.")]
-    [SerializeField] private float wanderSpotOffset = 1f, delayBeforeMove = 2, originalPosOFFSET = 1f, wanderDistanceR, wanderDistanceL, wanderDistanceF, wanderDistanceB;
+    [SerializeField] private float wanderSpotOffset = 1f, delayBeforeMove = 2, originalPosOFFSET = 1f;
     private float lastShot, ShootRate = .5f;
     int i = 0;
     bool changeDir = false;
@@ -29,7 +36,11 @@ public class FlyEnemy : MonoBehaviour, IDamageable
     [SerializeField] private float Damage;
 
     public float Health { get { return health; } set { health = value; } }
-    [SerializeField] private float health;
+    [SerializeField] private float health, maxHealth;
+
+    float distanceToPlayer;
+    FirstPersonController playerController;
+
     public void TakeDamage(float damageTaken)
     {
         if (st == SoldierState.guard || st == SoldierState.wanderer)
@@ -44,8 +55,17 @@ public class FlyEnemy : MonoBehaviour, IDamageable
     {
         if (Health <= 0)
         {
-            //this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
+            
             st = SoldierState.Death;
+
+            if (playerController == null) return;
+
+            if (distanceToPlayer <= playerController.DistanceToHeal)
+            {
+                playerController.Health += (playerController.PercentToHeal * maxHealth);
+            }
+            //this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
+            
         }
     }
 
@@ -56,10 +76,6 @@ public class FlyEnemy : MonoBehaviour, IDamageable
         originalPos = transform.position;
         originalrot = this.transform.rotation;
         var pos = this.transform.position;
-        wanderSpots.Add(new Vector3(pos.x + wanderDistanceR, pos.y, pos.z));
-        wanderSpots.Add(new Vector3(pos.x - wanderDistanceL, pos.y, pos.z));
-        wanderSpots.Add(new Vector3(pos.x, pos.y, pos.z + wanderDistanceF));
-        wanderSpots.Add(new Vector3(pos.x, pos.y, pos.z - wanderDistanceB));
     }
     // Update is called once per frame
     void FixedUpdate()
@@ -77,8 +93,15 @@ public class FlyEnemy : MonoBehaviour, IDamageable
                 break;
             case SoldierState.wanderer:
                 Aim();
-                LineOfSightWithPlayer();
-                Wander();
+                LineOfSightWithPlayer(); 
+                if (wanderMiniState)
+                {
+                    ShouldIWander();
+                }
+                else if (!wanderMiniState)
+                {
+                    WanderIde();
+                }
                 break;
 
             case (SoldierState.chase):
@@ -150,23 +173,41 @@ public class FlyEnemy : MonoBehaviour, IDamageable
 
     void Shoot() //Shoots at the player
     {
-        RaycastHit hit;
+        RaycastHit hit, hit2;
         Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
-
-        Physics.Raycast(tip.transform.position, targetDiretion, out hit, range);
+        var offsetx = 0;
+        var offsety = 0;
+        if (Vector3.Distance(tip.transform.position, target.transform.position) > range / 2)
+        {
+            offsetx = Random.Range(-5, 5);
+            offsety = Random.Range(0, 5);
+        }
+        if (Vector3.Distance(tip.transform.position, target.transform.position) > ((range / 3) * 2))
+        {
+            offsetx = Random.Range(-10, 10);
+            offsety = Random.Range(0, 5);
+        }
+        Physics.Raycast(tip.transform.position, new Vector3(targetDiretion.x + offsetx, targetDiretion.y + offsety, targetDiretion.z), out hit, range);
         if (hit.collider != null)
         {
-            if (hit.collider.tag == target.tag)
+
+            if (Physics.Raycast(tip.transform.position, targetDiretion, out hit2, range)) //check line of sight
             {
-                if (Time.time > ShootRate + lastShot)
+                if (hit2.collider.tag == target.tag) //if player is in line of sight, shoot
                 {
-                    var bt = Instantiate(BulletTrail, tip.transform.position, rotation);
-                    bt.GetComponent<MoveForward>().origin = this.gameObject.transform.rotation;
-                    bt.GetComponent<MoveForward>().target = target;
-                    //bt.GetComponent<MoveForward>().damage = Damage;
-                    Debug.Log("Player was shot, dealing damage.");
-                    target.GetComponent<FirstPersonController>().TakeDamage(Damage);
-                    lastShot = Time.time;
+                    if (Time.time > ShootRate + lastShot)
+                    {
+                        var bt = Instantiate(BulletTrail, tip.transform.position, rotation);
+                        bt.GetComponent<MoveForward>().origin = this.gameObject.transform.rotation;
+                        bt.GetComponent<MoveForward>().target = hit.point;
+                        //bt.GetComponent<MoveForward>().damage = Damage;
+                        //Debug.Log("Player was shot, dealing damage.");
+                        if (hit.collider.tag == target.tag)
+                        {
+                            target.GetComponent<FirstPersonController>().TakeDamage(Damage);
+                        }
+                        lastShot = Time.time;
+                    }
                 }
             }
         }
@@ -176,36 +217,38 @@ public class FlyEnemy : MonoBehaviour, IDamageable
         }
     }
 
-    void Wander()
+    private void ShouldIWander()
     {
-        if (i >= wanderSpots.Count) { i = 0; }
-        if (Vector3.Distance(this.transform.position, wanderSpots[i]) < wanderSpotOffset)
+        if (waitTimer > 0) // if wait timer is > 0 do nothing except waiting
         {
-            if (changeDir == false)
-            {
-                Invoke("WaitBeforeWanderToNextSpot", delayBeforeMove);
-                changeDir = true;
-            }
+            waitTimer -= Time.deltaTime;
+            return;
         }
-        else if (Vector3.Distance(this.transform.position, wanderSpots[i]) >= wanderSpotOffset)
-        {
-            agent.SetDestination(wanderSpots[i]);
-            //Debug.Log(wanderSpots[i].transform.position);
-        }
+        agent.SetDestination(RandomPosInSphere(originalPos, wonderDistanceRange, layerMask)); //Set destination inside a random sphere
 
+        wanderMiniState = !wanderMiniState;
+        // I just made a bool to make sure it doesnt call again after it sets path to make animating it easier and prevent setting more paths while its not completed
     }
 
-    void WaitBeforeWanderToNextSpot()
+    private void WanderIde()
     {
-        if (i + 1 >= wanderSpots.Count)
-        {
-            i = 0;
-        }
-        else
-        {
-            i++;
-        }
-        changeDir = false;
+        if (agent.pathStatus != NavMeshPathStatus.PathComplete)
+            return;
+
+        waitTimer = Random.Range(minWaitTimeWander, maxWaitTimeWander);
+        wanderMiniState = !wanderMiniState; // I just made a bool to make sure it doesnt call again after it completes path to make animating it easier.
+    }
+
+    Vector3 RandomPosInSphere(Vector3 origin, float distance, LayerMask layerMask)
+    {
+        Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * distance; //Create a sphere
+        randomDirection += origin; //add origin to place it at the origin
+
+        NavMeshHit navHit;
+
+        NavMesh.SamplePosition(randomDirection, out navHit, distance, layerMask); //get an appropriate navHit where we can set destination later
+
+        return navHit.position; //return hit position to set destination on it.
     }
 
     void ChasePlayer()
@@ -308,29 +351,42 @@ public class FlyEnemy : MonoBehaviour, IDamageable
 
     void RetaliationShoot()
     {
-        RaycastHit hit;
+        RaycastHit hit,hit2;
         Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
-
-        Physics.Raycast(tip.transform.position, targetDiretion, out hit, range);
+        var offsetx = 0;
+        var offsety = 0;
+        if (Vector3.Distance(tip.transform.position, target.transform.position) > range / 2)
+        {
+            offsetx = Random.Range(-5, 5);
+            offsety = Random.Range(0, 5);
+        }
+        if (Vector3.Distance(tip.transform.position, target.transform.position) > ((range / 3) * 2))
+        {
+            offsetx = Random.Range(-10, 10);
+            offsety = Random.Range(0, 5);
+        }
+        Physics.Raycast(tip.transform.position, new Vector3(targetDiretion.x + offsetx, targetDiretion.y + offsety, targetDiretion.z), out hit, range);
         if (hit.collider != null)
         {
-            if (hit.collider.tag == target.tag)
+            if (Physics.Raycast(tip.transform.position, targetDiretion, out hit2, range)) //check line of sight
             {
-                if (Time.time > ShootRate + lastShot)
+                if (hit2.collider.tag == target.tag) //if player is in line of sight, shoot
                 {
-                    var bt = Instantiate(BulletTrail, tip.transform.position, rotation);
-                    bt.GetComponent<MoveForward>().origin = this.gameObject.transform.rotation;
-                    bt.GetComponent<MoveForward>().target = target;
-                    //bt.GetComponent<MoveForward>().damage = Damage;
-                    Debug.Log("Player was shot, dealing damage.");
-                    target.GetComponent<FirstPersonController>().TakeDamage(Damage);
-                    lastShot = Time.time;
+                    if (Time.time > ShootRate + lastShot)
+                    {
+                        var bt = Instantiate(BulletTrail, tip.transform.position, rotation);
+                        bt.GetComponent<MoveForward>().origin = this.gameObject.transform.rotation;
+                        bt.GetComponent<MoveForward>().target = hit.point;
+                        //bt.GetComponent<MoveForward>().damage = Damage;
+                        //Debug.Log("Player was shot, dealing damage.");
+                        if (hit.collider.tag == target.tag)
+                        {
+                            target.GetComponent<FirstPersonController>().TakeDamage(Damage);
+                        }
+                        lastShot = Time.time;
+                    }
                 }
             }
-        }
-        if (shotCount%5 == 0)
-        {
-            Relocate(st);
         }
     }
 

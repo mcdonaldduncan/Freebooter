@@ -6,7 +6,7 @@ public class MoveForward : MonoBehaviour
 {
     public float speed = 15;
     public Quaternion origin;
-    public GameObject target;
+    public Vector3 target;
     Vector3 targetDiretion;
     //public float damage;
     // Start is called before the first frame update
@@ -14,7 +14,7 @@ public class MoveForward : MonoBehaviour
     {
         try
         {
-            targetDiretion = target.transform.position - transform.position;
+            targetDiretion = target - transform.position;
             transform.rotation = origin;
             
         }

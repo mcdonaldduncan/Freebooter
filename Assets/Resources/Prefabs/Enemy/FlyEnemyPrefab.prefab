@@ -246,7 +246,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 9014040487133508552}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: 0.5000001
   m_Height: 2
   m_Direction: 1
@@ -262,7 +262,6 @@ GameObject:
   - component: {fileID: 9014040487749469228}
   - component: {fileID: 1731908634}
   - component: {fileID: 1513274620143034692}
-  - component: {fileID: 2793531108834329128}
   - component: {fileID: 8143964890246340086}
   m_Layer: 0
   m_Name: FlyEnemyPrefab
@@ -324,6 +323,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b603de6fab946646bee25741608148a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  minWaitTimeWander: 3
+  maxWaitTimeWander: 6
+  wonderDistanceRange: 15
   st: 1
   target: {fileID: 0}
   tip: {fileID: 9014040488091691167}
@@ -335,29 +340,13 @@ MonoBehaviour:
   rotationspeed: 15
   range: 20
   agent: {fileID: 1731908634}
-  wanderSpots: []
   wanderSpotOffset: 7.15
   delayBeforeMove: 2
   originalPosOFFSET: 4
-  wanderDistanceR: 10
-  wanderDistanceL: 15
-  wanderDistanceF: 6
-  wanderDistanceB: 6
   BulletTrail: {fileID: 6952378413150019911, guid: 24acd6d67a692a64298fcd8e875417a9, type: 3}
   Damage: 1
   health: 150
---- !u!114 &2793531108834329128
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9014040487749469227}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b6371196a28d04468bd146636a4f6c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  maxHealth: 75
 --- !u!136 &8143964890246340086
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -658,7 +647,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9014040488476938554}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5

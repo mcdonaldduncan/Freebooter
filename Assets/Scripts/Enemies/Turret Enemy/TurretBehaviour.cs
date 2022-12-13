@@ -15,7 +15,9 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
     private float distance;
     Vector3 targetDiretion;
     Quaternion rotation;
-    
+
+    float distanceToPlayer;
+
     private float lastShot, ShootRate = .5f;
 
     private float lastValidY = 0f;
@@ -26,6 +28,8 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
 
     public float Health { get { return health; } set { health = value; } }
     [SerializeField] private float health;
+
+    [SerializeField] private float maxHealth = 75;
     public void TakeDamage(float damageTaken)
     {
         Health -= damageTaken;
@@ -37,6 +41,10 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
         if (Health <= 0)
         {
             //this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
+            if (distanceToPlayer <= target.GetComponent<FirstPersonController>().DistanceToHeal)
+            {
+                target.GetComponent<FirstPersonController>().Health += (target.GetComponent<FirstPersonController>().PercentToHeal * maxHealth);
+            }
             Destroy(this.gameObject);
         }
     }
@@ -48,6 +56,7 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
     }
     void FixedUpdate()
     {
+        distanceToPlayer = Vector3.Distance(gameObject.transform.position, target.transform.position);
         switch (state) //handles what the turret shhould be doing at cetain states.
         {
             case TurretState.LookingForTarget:
@@ -123,12 +132,12 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
         {
             if (hit.collider.tag == target.tag)
             { 
-            Debug.Log("Player Detected");
+            //Debug.Log("Player Detected");
             Invoke("StateShootTarget",2);
             }
             else if (hit.collider.tag != target.tag)
             {
-            Debug.Log("Player NOT Detected");
+            //Debug.Log("Player NOT Detected");
             }
         }
         else { }
@@ -147,7 +156,7 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
              {
                     var bt = Instantiate(BulletTrail, tip.transform.position, rotation);
                     bt.GetComponent<MoveForward>().origin = body.gameObject.transform.rotation;
-                    bt.GetComponent<MoveForward>().target = target;
+                    bt.GetComponent<MoveForward>().target = hit.point;
                     //bt.GetComponent<MoveForward>().damage = Damage;
                     Debug.Log("Player was shot, dealing damage.");
                     target.GetComponent<FirstPersonController>().TakeDamage(Damage);

@@ -163,7 +163,7 @@ public class NetFlyEnemy : NetworkBehaviour, IDamageable
                 {
                     var bt = Instantiate(BulletTrail, tip.transform.position, rotation);
                     bt.GetComponent<MoveForward>().origin = this.gameObject.transform.rotation;
-                    bt.GetComponent<MoveForward>().target = target.gameObject;
+                    bt.GetComponent<MoveForward>().target = hit.point;
                     //bt.GetComponent<MoveForward>().damage = Damage;
                     Debug.Log("Player was shot, dealing damage.");
                     target.TakeDamage(Damage);

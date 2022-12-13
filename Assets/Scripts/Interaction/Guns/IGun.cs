@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public interface IGun
 {
@@ -15,14 +16,15 @@ public interface IGun
     float AimOffset { get; set; }
     GameObject HitEnemy { get; set; }
     GameObject HitNonEnemy { get; set; }
-    float ReloadTime { get; set; }
     int CurrentAmmo { get; set; }
     int CurrentMaxAmmo { get; }
     CanvasGroup GunReticle { get; set; }
     TrailRenderer BulletTrail { get; set; }
     AudioClip GunShotAudio { get; set; }
+    GameObject GunModel { get; set; }
+    WaitForSeconds ReloadWait { get; set; }
 
-    //void Shoot();
+    void ShootTriggered(InputAction.CallbackContext context);
+    void StartReload();
     IEnumerator Reload(WaitForSeconds reloadWait);
-    //IEnumerator SpawnTrail(TrailRenderer trail, RaycastHit hit);
 }

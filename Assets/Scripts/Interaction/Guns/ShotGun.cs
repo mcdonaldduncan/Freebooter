@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ShotGun : MonoBehaviour, IGun
 {
@@ -16,7 +17,7 @@ public class ShotGun : MonoBehaviour, IGun
     public float AimOffset { get; set; }
     public GameObject HitEnemy { get; set; }
     public GameObject HitNonEnemy { get; set; }
-    public float ReloadTime { get; set; }
+    public WaitForSeconds ReloadWait { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
     private float ShotGunBulletAmount { get { return GunManager.ShotGunBulletAmount; } }
     public int CurrentAmmo { get { return GunManager.ShotGunCurrentAmmo; } set { GunManager.ShotGunCurrentAmmo = value; } }
@@ -24,8 +25,9 @@ public class ShotGun : MonoBehaviour, IGun
     public CanvasGroup GunReticle { get; set; }
     public TrailRenderer BulletTrail { get; set; }
     public AudioClip GunShotAudio { get; set; }
+    public GameObject GunModel { get; set; }
 
-    private bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading;
+    private bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading && CurrentAmmo > 0;
 
     private float lastShotTime;
     private float reloadStartTime;
@@ -48,53 +50,55 @@ public class ShotGun : MonoBehaviour, IGun
         GunHandler.weaponSwitched -= OnWeaponSwitch;
     }
 
+    public void ShootTriggered(InputAction.CallbackContext context)
+    {
+        if (CanShoot && context.performed) Shoot();
+    }
+
     //Doesn't need to be static anymore since this script is added as a component now
     public void Shoot()
     {
-        if (CanShoot)
+        GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
+        for (int i = 0; i < ShotGunBulletAmount; i++)
         {
-            GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
-            for (int i = 0; i < ShotGunBulletAmount; i++)
+            Vector3 aimSpot = GunManager.FPSCam.transform.position;
+            aimSpot += GunManager.FPSCam.transform.forward * this.AimOffset;
+            this.ShootFrom.LookAt(aimSpot);
+
+            Vector3 direction = ShootFrom.transform.forward; // your initial aim.
+            Vector3 spread = Vector3.zero;
+            spread += ShootFrom.transform.up * Random.Range(-VerticalSpread, VerticalSpread);
+            spread += ShootFrom.transform.right * Random.Range(-HorizontalSpread, HorizontalSpread);
+            direction += spread.normalized * Random.Range(0f, 0.2f);
+
+            RaycastHit hitInfo;
+
+            if (Physics.Raycast(GunManager.FPSCam.transform.position, direction, out hitInfo, float.MaxValue, ~LayerToIgnore))
             {
-                Vector3 aimSpot = GunManager.FPSCam.transform.position;
-                aimSpot += GunManager.FPSCam.transform.forward * this.AimOffset;
-                this.ShootFrom.LookAt(aimSpot);
+                //Instantiate a bullet trail
+                TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, ShootFrom.transform.localRotation);
+                trail.transform.parent = ShootFrom.transform;
 
-                Vector3 direction = ShootFrom.transform.forward; // your initial aim.
-                Vector3 spread = Vector3.zero;
-                spread += ShootFrom.transform.up * Random.Range(-VerticalSpread, VerticalSpread);
-                spread += ShootFrom.transform.right * Random.Range(-HorizontalSpread, HorizontalSpread);
-                direction += spread.normalized * Random.Range(0f, 0.2f);
-
-                RaycastHit hitInfo;
-
-                if (Physics.Raycast(GunManager.FPSCam.transform.position, direction, out hitInfo, float.MaxValue, ~LayerToIgnore))
+                if (hitInfo.transform.name != "Player")
                 {
-                    //Instantiate a bullet trail
-                    TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, ShootFrom.transform.localRotation);
-                    trail.transform.parent = ShootFrom.transform;
-
-                    if (hitInfo.transform.name != "Player")
-                    {
-                        StartCoroutine(SpawnTrail(trail, hitInfo, HitEnemy));
-                    }
-                }
-                //if the player hit nothing
-                else
-                {
-                    //Spawn the bullet trail
-                    TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, ShootFrom.transform.localRotation);
-                    StartCoroutine(SpawnTrail(trail, ShootFrom.transform.position + direction * 10));
+                    StartCoroutine(SpawnTrail(trail, hitInfo, HitEnemy));
                 }
             }
-
-            if (!GunManager.InfiniteAmmo)
+            //if the player hit nothing
+            else
             {
-                CurrentAmmo--;
+                //Spawn the bullet trail
+                TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, ShootFrom.transform.localRotation);
+                StartCoroutine(SpawnTrail(trail, ShootFrom.transform.position + direction * 10));
             }
-
-            lastShotTime = Time.time;
         }
+
+        if (!GunManager.InfiniteAmmo)
+        {
+            CurrentAmmo--;
+        }
+
+        lastShotTime = Time.time;
     }
 
     /// <summary>
@@ -150,12 +154,19 @@ public class ShotGun : MonoBehaviour, IGun
 
         if (hitEffect != null)
         {
-            var damageableTarget = hitInfo.transform.GetComponent<IDamageable>();
-            HitEnemyBehavior(hitInfo, damageableTarget);
+            try
+            {
+                var damageableTarget = hitInfo.transform.GetComponent<IDamageable>();
+                HitEnemyBehavior(hitInfo, damageableTarget);
+            }
+            catch
+            {
+                HitEnemyBehavior(hitInfo);
+            }
         }
     }
 
-    private void HitEnemyBehavior(RaycastHit hitInfo, IDamageable damageableTarget)
+    private void HitEnemyBehavior(RaycastHit hitInfo, IDamageable damageableTarget = null)
     {
         if (damageableTarget != null)
         {
@@ -206,9 +217,9 @@ public class ShotGun : MonoBehaviour, IGun
     //    }
     //}
 
-    public void StartReload(WaitForSeconds reloadWait)
+    public void StartReload()
     {
-        reloadCo = GunManager.StartCoroutine(this.Reload(reloadWait));
+        reloadCo = GunManager.StartCoroutine(this.Reload(ReloadWait));
     }
 
     public IEnumerator Reload(WaitForSeconds reloadWait)
@@ -219,7 +230,7 @@ public class ShotGun : MonoBehaviour, IGun
         GunManager.ShotGunCurrentAmmo = GunManager.ShotGunMaxAmmo;
     }
 
-    private void OnWeaponSwitch(WaitForSeconds reloadWait)
+    private void OnWeaponSwitch()
     {
         //if (GunManager.Reloading)
         //{
