@@ -1513,6 +1513,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 585156789, guid: 91fd97a10ae64254eb9e9140e39afc58, type: 3}
+      propertyPath: damage
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 9014040487749469227, guid: 91fd97a10ae64254eb9e9140e39afc58, type: 3}
       propertyPath: m_Name
       value: FlyEnemyPrefab
@@ -30316,6 +30320,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Player: {fileID: 682813531}
+  CheckPoints: []
 --- !u!1 &1840082618
 GameObject:
   m_ObjectHideFlags: 0
