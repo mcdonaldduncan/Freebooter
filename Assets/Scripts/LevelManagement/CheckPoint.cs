@@ -24,7 +24,7 @@ public class CheckPoint : MonoBehaviour
         }
         catch (System.Exception)
         {
-            //Debug.LogError("Valid IActivator Not Found");
+            Debug.LogError("Valid IActivator Not Found");
         }
 
     }
