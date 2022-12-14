@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TurretBehaviour : MonoBehaviour, IDamageable
 {
-    [SerializeField] private GameObject target, body, tip, light;
+    [SerializeField] private GameObject body, tip, light;
     [SerializeField] private float speed, range;
     private enum TurretState {LookingForTarget, ShootTarget};
     [SerializeField] private TurretState state;
@@ -12,13 +12,13 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
     [SerializeField] private TurretRotationType rotationType;
     [SerializeField] private float delayBeforeFirstShot;
 
-    private float distance;
     Vector3 targetDiretion;
     Quaternion rotation;
 
     float distanceToPlayer;
 
-    private float lastShot, ShootRate = .5f;
+    private float lastShot;
+    [SerializeField] private float ShootRate = .5f;
 
     private float lastValidY = 0f;
    
@@ -30,6 +30,9 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
     [SerializeField] private float health;
 
     [SerializeField] private float maxHealth = 75;
+
+    string playerTag = "Player";
+
     public void TakeDamage(float damageTaken)
     {
         Health -= damageTaken;
@@ -40,23 +43,24 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
     {
         if (Health <= 0)
         {
-            //this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
-            if (distanceToPlayer <= target.GetComponent<FirstPersonController>().DistanceToHeal)
+            if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
             {
-                target.GetComponent<FirstPersonController>().Health += (target.GetComponent<FirstPersonController>().PercentToHeal * maxHealth);
+                LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
             }
-            Destroy(this.gameObject);
+            //this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
+            Destroy(gameObject);
         }
     }
+
     void Start()
     {
-        target = GameObject.FindWithTag("Player");
-        state = TurretState.LookingForTarget;
+       state = TurretState.LookingForTarget;
        rotationType = TurretRotationType.full;
     }
+
     void FixedUpdate()
     {
-        distanceToPlayer = Vector3.Distance(gameObject.transform.position, target.transform.position);
+        distanceToPlayer = Vector3.Distance(gameObject.transform.position, LevelManager.Instance.Player.transform.position);
         switch (state) //handles what the turret shhould be doing at cetain states.
         {
             case TurretState.LookingForTarget:
@@ -74,14 +78,13 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
             default:
                 break;
         }
-        distance = Vector3.Distance(this.transform.position, target.transform.position);
     }
     void Aim() //This is pointing the torret towards the player as long as he is in range
     {
         float tempSpeed = speed;
-        if (Vector3.Distance(this.transform.position, target.transform.position) < range)
+        if (distanceToPlayer < range)
         { 
-            targetDiretion = target.transform.position - transform.position;
+            targetDiretion = LevelManager.Instance.Player.transform.position - transform.position;
 
             if (rotationType == TurretRotationType.full)
             {
@@ -90,17 +93,6 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
             if (rotationType == TurretRotationType.half)
             {
                 Vector3 tempRotation = Quaternion.LookRotation(targetDiretion).eulerAngles;
-
-                // This would be the best option if we want it to "lose sight" of the player when it gets behind it,
-                // it wouldnt snap to the other side until the player enters their radius on that side.
-                //if (tempRotation.y <= 180 && tempRotation.y >= 0)
-                //{
-                //    lastValidY = tempRotation.y;
-                //}
-
-
-                // This would be best if the turret always knows where you are, it will snap to the side closest to where the player would reenter their radius.
-                // To make this work with the above commented out code, you would switch the if statements to if (tempRotation.y > 180) { tempRotation.y = lastValidY }
                 if (tempRotation.y > 270 && tempRotation.y > 180)
                 {
                     tempSpeed *= .1f;
@@ -114,11 +106,6 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
 
                 rotation = Quaternion.Euler(tempRotation);
             }
-
-            // Lerp can be somewhat low performance because it starts dealing with extremely small increments at the end,
-            // rotateTowards keeps the movement constant in degree/second
-
-            //transform.rotation = Quaternion.Lerp(transform.rotation, rotation, tempSpeed * Time.deltaTime);
             body.transform.rotation = Quaternion.RotateTowards(body.transform.rotation, rotation, tempSpeed * Time.deltaTime * 180);
         }
        
@@ -130,47 +117,58 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
         Physics.Raycast(tip.transform.position, targetDiretion, out hit, range);
         if (hit.collider != null)
         {
-            if (hit.collider.tag == target.tag)
+            if (hit.collider.CompareTag(playerTag))
             { 
-            //Debug.Log("Player Detected");
             Invoke("StateShootTarget",2);
-            }
-            else if (hit.collider.tag != target.tag)
-            {
-            //Debug.Log("Player NOT Detected");
             }
         }
         else { }
     }
     void Shoot() //Shoots at the player
     {
-        RaycastHit hit;
+        RaycastHit hit, hit2;
         Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
-       
-        Physics.Raycast(tip.transform.position, targetDiretion, out hit, range);
-        try
+        var offsetx = 0;
+        var offsety = 0;
+        var offsetz = 0;
+        if (distanceToPlayer > range / 2)
         {
-         if (hit.collider.tag == target.tag)
-          {
-             if (Time.time > ShootRate + lastShot)
-             {
-                    var bt = Instantiate(BulletTrail, tip.transform.position, rotation);
-                    bt.GetComponent<MoveForward>().origin = body.gameObject.transform.rotation;
-                    bt.GetComponent<MoveForward>().target = hit.point;
-                    //bt.GetComponent<MoveForward>().damage = Damage;
-                    Debug.Log("Player was shot, dealing damage.");
-                    target.GetComponent<FirstPersonController>().TakeDamage(Damage);
-                    lastShot = Time.time;
-                }
-          }
-            else
-            {
-                StateLookingForTarget();
-            }
+            offsetx = Random.Range(-5, 5);
+            offsety = Random.Range(0, 5);
+            offsetz = Random.Range(-5, 5);
+
         }
-        catch (System.Exception)
+        if (distanceToPlayer > ((range / 3) * 2))
         {
-         StateLookingForTarget();
+            offsetx = Random.Range(-10, 10);
+            offsety = Random.Range(0, 5);
+            offsetz = Random.Range(-10, 10);
+        }
+        // Why dont you do this same step for z? Our game is 3 dimensional, if you are on the same x plane they would only have a chance to miss on y and given the player is tall missing slightly in y will probably still hit
+        Physics.Raycast(tip.transform.position, new Vector3(targetDiretion.x + offsetx, targetDiretion.y + offsety, targetDiretion.z + offsetz), out hit, range);
+        if (hit.collider != null)
+        {
+            if (Physics.Raycast(tip.transform.position, targetDiretion, out hit2, range)) //check line of sight
+            {
+                if (hit2.collider.CompareTag(playerTag)) //if player is in line of sight, shoot
+                {
+                    // The player tag never changes, why get the tag from the player each time you check
+                    if (Time.time > ShootRate + lastShot)
+                    {
+                        var bt = Instantiate(BulletTrail, tip.transform.position, rotation);
+                        bt.GetComponent<MoveForward>().origin = this.gameObject.transform.rotation;
+                        bt.GetComponent<MoveForward>().target = hit.point;
+                        //bt.GetComponent<MoveForward>().damage = Damage;
+                        //Debug.Log("Player was shot, dealing damage.");
+                        //Use compare tag not equivalency
+                        if (hit.collider.CompareTag(playerTag))
+                        {
+                            LevelManager.Instance.Player.TakeDamage(Damage);
+                        }
+                        lastShot = Time.time;
+                    }
+                }
+            }
         }
     }
     void StateLookingForTarget() //swaps state to looking for target

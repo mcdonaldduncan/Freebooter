@@ -94,7 +94,7 @@ public class OnDeathExplosion : MonoBehaviour
         if (explodeOnce == false)
         {
             explodeOnce = true;
-            //Instantiate(explosionparticle, this.transform);
+            Instantiate(explosionparticle, this.transform);
         }
     }
 

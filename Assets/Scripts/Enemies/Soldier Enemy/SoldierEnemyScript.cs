@@ -14,7 +14,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
     float waitTimer;
     bool wanderMiniState; //state for wandering and wanderingIdle
 
-    private enum SoldierState {guard, wanderer, chase, originalSpot, retaliate, emergencyHeal};
+    private enum SoldierState {guard, wanderer, chase, originalSpot, retaliate};
     [Tooltip("/ Guard = Stand in one place until the player breaks line of sight / Wanderer = walks around / Chase = when the soldier goes after the enemy")]
     [SerializeField] private SoldierState st;
     private SoldierState origianlst;
@@ -124,23 +124,6 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
                 RetaliationShoot();
                 RetaliationChasePlayer();
                 break;
-
-            //Doesnt work yet - THEN DONT LEAVE IT IN!
-            //case (SoldierState.emergencyHeal): // 1 = got to destination, 0 = no destination, -1 = going to destination
-                //if (RunAway() == 1)
-                //{
-                //    //HealAfterRunAway();
-                //}
-                //if (RunAway() == 0)
-                //{
-                //    //st = SoldierState.retaliate; // no closest edge with cover from player = last stand fight to death
-                //}
-                //if (RunAway() == -1)
-                //{
-                //    //RunAway();
-                //}
-                //break;
-
             default:
                 break;
         }
@@ -166,6 +149,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
         if (hit.collider != null)
         {
             // Dont look up the players tag, we know it is player and it never changes
+            //Changed from tag to -> LevelManager.Instance.Player
             if (hit.collider.CompareTag(playerTag))
             {
                 //Debug.Log("Player Detected");
@@ -181,15 +165,19 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
         Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
         var offsetx = 0;
         var offsety = 0;
+        var offsetz = 0;
         if (distanceToPlayer > range/2)
         {
             offsetx = Random.Range(-5, 5);
             offsety = Random.Range(0, 5);
+            offsetz = Random.Range(-5, 5);
+
         }
         if (distanceToPlayer > ((range / 3) * 2))
         {
             offsetx = Random.Range(-10, 10);
             offsety = Random.Range(0, 5);
+            offsetz = Random.Range(-10, 10);
         }
         // Why dont you do this same step for z? Our game is 3 dimensional, if you are on the same x plane they would only have a chance to miss on y and given the player is tall missing slightly in y will probably still hit
         Physics.Raycast(tip.transform.position, new Vector3(targetDiretion.x + offsetx, targetDiretion.y + offsety, targetDiretion.z), out hit, range);
@@ -197,7 +185,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
         {
             if (Physics.Raycast(tip.transform.position, targetDiretion, out hit2, range)) //check line of sight
             {
-                if (hit2.collider.tag == playerTag) //if player is in line of sight, shoot
+                if (hit2.collider.CompareTag(playerTag)) //if player is in line of sight, shoot
                 {
                     // The player tag never changes, why get the tag from the player each time you check
                     if (Time.time > ShootRate + lastShot)
@@ -308,24 +296,29 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
     }
 
     // Why do you have a retaliation aim and retaliation shoot methods that are practically identical to normal shoot and aim
+    // I did it to make the ranges different. If they used the normal one, they would not chase the player since the player would be way out of range
     void RetaliationShoot()
     {
         RaycastHit hit, hit2;
         Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
         var offsetx = 0;
         var offsety = 0;
+        var offsetz = 0;
         if (distanceToPlayer > range / 2)
         {
             offsetx = Random.Range(-5, 5);
             offsety = Random.Range(0, 5);
+            offsetz = Random.Range(-5, 5);
+
         }
-        if (distanceToPlayer > ((range / 3)*2))
+        if (distanceToPlayer > ((range / 3) * 2))
         {
             offsetx = Random.Range(-10, 10);
             offsety = Random.Range(0, 5);
+            offsetz = Random.Range(-10, 10);
         }
         // Why dont you do this same step for z? Our game is 3 dimensional, if you are on the same x plane they would only have a chance to miss on y and given the player is tall missing slightly in y will probably still hit
-        Physics.Raycast(tip.transform.position, new Vector3(targetDiretion.x + offsetx, targetDiretion.y + offsety, targetDiretion.z), out hit, range);
+        Physics.Raycast(tip.transform.position, new Vector3(targetDiretion.x + offsetx, targetDiretion.y + offsety, targetDiretion.z + offsetz), out hit, range);
         if (hit.collider != null)
         {
             if (Physics.Raycast(tip.transform.position, targetDiretion, out hit2, range)) //check line of sight

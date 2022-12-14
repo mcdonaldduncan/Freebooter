@@ -19,7 +19,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable
     [Tooltip("/ Guard = Stand in one place until the player breaks line of sight / Wanderer = walks around / Chase = when the soldier goes after the enemy")]
     [SerializeField] private SoldierState st;
     private SoldierState origianlst;
-    [SerializeField] private GameObject target, tip, light, visionPoint, body,SensorR,SensorL;
+    [SerializeField] private GameObject tip, light, visionPoint, body,SensorR,SensorL;
     [SerializeField] private float rotationspeed, range;
     [SerializeField] private UnityEngine.AI.NavMeshAgent agent;
     Vector3 targetDiretion, originalPos;
@@ -27,10 +27,8 @@ public class FlyEnemy : MonoBehaviour, IDamageable
 
     [Tooltip("Distance to current wander spot before the player moves to next wander spot.")]
     [SerializeField] private float wanderSpotOffset = 1f, delayBeforeMove = 2, originalPosOFFSET = 1f;
-    private float lastShot, ShootRate = .5f;
-    int i = 0;
-    bool changeDir = false;
-    [SerializeField]
+    private float lastShot;
+    [SerializeField] private float ShootRate = .5f;
 
     public TrailRenderer BulletTrail;
     [SerializeField] private float Damage;
@@ -40,6 +38,8 @@ public class FlyEnemy : MonoBehaviour, IDamageable
 
     float distanceToPlayer;
     FirstPersonController playerController;
+
+    string playerTag = "Player";
 
     public void TakeDamage(float damageTaken)
     {
@@ -55,23 +55,17 @@ public class FlyEnemy : MonoBehaviour, IDamageable
     {
         if (Health <= 0)
         {
-            
             st = SoldierState.Death;
-
-            if (playerController == null) return;
-
-            if (distanceToPlayer <= playerController.DistanceToHeal)
+            if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
             {
-                playerController.Health += (playerController.PercentToHeal * maxHealth);
+                LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
             }
-            //this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
-            
+            //Destroy(gameObject);
         }
     }
 
     private void Start()
     {
-        target = GameObject.FindWithTag("Player");
         origianlst = st;
         originalPos = transform.position;
         originalrot = this.transform.rotation;
@@ -80,6 +74,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable
     // Update is called once per frame
     void FixedUpdate()
     {
+        distanceToPlayer = Vector3.Distance(this.transform.position, LevelManager.Instance.Player.transform.position);
         if (health <= 0)
         {
             st = SoldierState.Death;
@@ -142,9 +137,9 @@ public class FlyEnemy : MonoBehaviour, IDamageable
     void Aim() //This is pointing the torret towards the player as long as he is in range
     {
         float tempSpeed = rotationspeed;
-        if (Vector3.Distance(this.transform.position, target.transform.position) < range)
+        if (distanceToPlayer < range)
         {
-            targetDiretion = target.transform.position - transform.position;
+            targetDiretion = LevelManager.Instance.Player.transform.position - transform.position;
             rotation = Quaternion.LookRotation(targetDiretion);
             body.transform.rotation = Quaternion.RotateTowards(body.transform.rotation, rotation, tempSpeed * Time.deltaTime * 180);
         }
@@ -158,17 +153,12 @@ public class FlyEnemy : MonoBehaviour, IDamageable
         Physics.Raycast(visionPoint.transform.position, targetDiretion, out hit, range / 1.2f);
         if (hit.collider != null)
         {
-            if (hit.collider.tag == target.tag)
+            if (hit.collider.CompareTag(playerTag))
             {
                 Debug.Log("Player Detected");
                 Invoke("StateChase", 2);
             }
-            else if (hit.collider.tag != target.tag)
-            {
-                Debug.Log("Player NOT Detected");
-            }
         }
-        else { }
     }
 
     void Shoot() //Shoots at the player
@@ -177,23 +167,28 @@ public class FlyEnemy : MonoBehaviour, IDamageable
         Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
         var offsetx = 0;
         var offsety = 0;
-        if (Vector3.Distance(tip.transform.position, target.transform.position) > range / 2)
+        var offsetz = 0;
+        if (distanceToPlayer > range / 2)
         {
             offsetx = Random.Range(-5, 5);
             offsety = Random.Range(0, 5);
+            offsetz = Random.Range(-5, 5);
+
         }
-        if (Vector3.Distance(tip.transform.position, target.transform.position) > ((range / 3) * 2))
+        if (distanceToPlayer > ((range / 3) * 2))
         {
             offsetx = Random.Range(-10, 10);
             offsety = Random.Range(0, 5);
+            offsetz = Random.Range(-10, 10);
         }
-        Physics.Raycast(tip.transform.position, new Vector3(targetDiretion.x + offsetx, targetDiretion.y + offsety, targetDiretion.z), out hit, range);
+        // Why dont you do this same step for z? Our game is 3 dimensional, if you are on the same x plane they would only have a chance to miss on y and given the player is tall missing slightly in y will probably still hit
+        Physics.Raycast(tip.transform.position, new Vector3(targetDiretion.x + offsetx, targetDiretion.y + offsety, targetDiretion.z + offsetz), out hit, range);
         if (hit.collider != null)
         {
 
             if (Physics.Raycast(tip.transform.position, targetDiretion, out hit2, range)) //check line of sight
             {
-                if (hit2.collider.tag == target.tag) //if player is in line of sight, shoot
+                if (hit2.collider.CompareTag(playerTag)) //if player is in line of sight, shoot
                 {
                     if (Time.time > ShootRate + lastShot)
                     {
@@ -202,16 +197,16 @@ public class FlyEnemy : MonoBehaviour, IDamageable
                         bt.GetComponent<MoveForward>().target = hit.point;
                         //bt.GetComponent<MoveForward>().damage = Damage;
                         //Debug.Log("Player was shot, dealing damage.");
-                        if (hit.collider.tag == target.tag)
+                        if (hit.collider.CompareTag(playerTag))
                         {
-                            target.GetComponent<FirstPersonController>().TakeDamage(Damage);
+                            LevelManager.Instance.Player.GetComponent<FirstPersonController>().TakeDamage(Damage);
                         }
                         lastShot = Time.time;
                     }
                 }
             }
         }
-        if (Vector3.Distance(this.transform.position, target.transform.position) > range)
+        if (distanceToPlayer > range)
         {
             StateReturnOriginalSpot();
         }
@@ -253,10 +248,9 @@ public class FlyEnemy : MonoBehaviour, IDamageable
 
     void ChasePlayer()
     {
-        var dist = Vector3.Distance(this.transform.position, target.transform.position);
-        if (dist < range && dist > range / 2)
+        if (distanceToPlayer < range && distanceToPlayer > range / 2)
         {
-            agent.SetDestination(target.transform.position);
+            agent.SetDestination(LevelManager.Instance.Player.transform.position);
         }
     }
 
@@ -343,7 +337,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable
     {
         float tempSpeed = rotationspeed;
 
-        targetDiretion = target.transform.position - transform.position;
+        targetDiretion = LevelManager.Instance.Player.transform.position - transform.position;
         rotation = Quaternion.LookRotation(targetDiretion);
         body.transform.rotation = Quaternion.RotateTowards(body.transform.rotation, rotation, tempSpeed * Time.deltaTime * 180);
 
@@ -355,12 +349,12 @@ public class FlyEnemy : MonoBehaviour, IDamageable
         Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
         var offsetx = 0;
         var offsety = 0;
-        if (Vector3.Distance(tip.transform.position, target.transform.position) > range / 2)
+        if (distanceToPlayer > range / 2)
         {
             offsetx = Random.Range(-5, 5);
             offsety = Random.Range(0, 5);
         }
-        if (Vector3.Distance(tip.transform.position, target.transform.position) > ((range / 3) * 2))
+        if (distanceToPlayer > ((range / 3) * 2))
         {
             offsetx = Random.Range(-10, 10);
             offsety = Random.Range(0, 5);
@@ -370,7 +364,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable
         {
             if (Physics.Raycast(tip.transform.position, targetDiretion, out hit2, range)) //check line of sight
             {
-                if (hit2.collider.tag == target.tag) //if player is in line of sight, shoot
+                if (hit2.collider.CompareTag(playerTag)) //if player is in line of sight, shoot
                 {
                     if (Time.time > ShootRate + lastShot)
                     {
@@ -379,9 +373,9 @@ public class FlyEnemy : MonoBehaviour, IDamageable
                         bt.GetComponent<MoveForward>().target = hit.point;
                         //bt.GetComponent<MoveForward>().damage = Damage;
                         //Debug.Log("Player was shot, dealing damage.");
-                        if (hit.collider.tag == target.tag)
+                        if (hit.collider.CompareTag(playerTag))
                         {
-                            target.GetComponent<FirstPersonController>().TakeDamage(Damage);
+                            LevelManager.Instance.Player.GetComponent<FirstPersonController>().TakeDamage(Damage);
                         }
                         lastShot = Time.time;
                     }
@@ -392,14 +386,13 @@ public class FlyEnemy : MonoBehaviour, IDamageable
 
     void RetaliationChasePlayer()
     {
-        var dist = Vector3.Distance(this.transform.position, target.transform.position);
-        if (dist <= range / 3)
+        if (distanceToPlayer <= range / 3)
         {
             agent.ResetPath();
         }
-        else if (dist > range)
+        else if (distanceToPlayer > range)
         {
-            agent.SetDestination(target.transform.position);
+            agent.SetDestination(LevelManager.Instance.Player.transform.position);
         }
 
     }
