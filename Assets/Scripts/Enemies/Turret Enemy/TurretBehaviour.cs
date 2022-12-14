@@ -5,7 +5,7 @@ using UnityEngine;
 public class TurretBehaviour : MonoBehaviour, IDamageable
 {
     [SerializeField] private GameObject body, tip, light;
-    [SerializeField] private float speed, range;
+    [SerializeField] private float rotationSpeed, range;
     private enum TurretState {LookingForTarget, ShootTarget};
     [SerializeField] private TurretState state;
     private enum TurretRotationType {full, half}; [Tooltip("Full = 360, Half = 180")]
@@ -81,7 +81,7 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
     }
     void Aim() //This is pointing the torret towards the player as long as he is in range
     {
-        float tempSpeed = speed;
+        float tempSpeed = rotationSpeed;
         if (distanceToPlayer < range)
         { 
             targetDiretion = LevelManager.Instance.Player.transform.position - transform.position;
@@ -119,7 +119,7 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
         {
             if (hit.collider.CompareTag(playerTag))
             { 
-            Invoke("StateShootTarget",2);
+            Invoke("StateShootTarget",delayBeforeFirstShot);
             }
         }
         else { }
