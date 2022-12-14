@@ -18,7 +18,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
     [Tooltip("/ Guard = Stand in one place until the player breaks line of sight / Wanderer = walks around / Chase = when the soldier goes after the enemy")]
     [SerializeField] private SoldierState st;
     private SoldierState origianlst;
-    [SerializeField] private GameObject tip, visionPoint, body;
+    [SerializeField] private GameObject tip, visionPoint, body, gun;
     [SerializeField] private float rotationspeed, range;
     [SerializeField] private NavMeshAgent agent; 
     Vector3 targetDiretion, originalPos;
@@ -39,9 +39,8 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
     public float Health { get { return health; } set { health = value; } }
     [SerializeField] private float health, maxHealth;
     float distanceToPlayer;
-    //FirstPersonController playerController;
 
-
+    [SerializeField] private Transform Hand;
 
     // READ
     // You were checking distance like 15 times per frame, if you are going to have class variables use them as such
@@ -51,6 +50,11 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
 
 
     string playerTag = "Player";
+
+    private void Awake()
+    {
+        gun.transform.SetParent(Hand); //set parent of the gun as the hand on awake
+    }
 
     public void TakeDamage(float damageTaken)
     {
@@ -136,8 +140,8 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
         if (distanceToPlayer < range)
         {
             targetDiretion = LevelManager.Instance.Player.transform.position - tip.transform.position;
-            rotation = Quaternion.LookRotation(targetDiretion);
-            body.transform.rotation = Quaternion.RotateTowards(body.transform.rotation, rotation, tempSpeed * Time.deltaTime * 180);
+            rotation = Quaternion.LookRotation(targetDiretion.normalized);
+            transform.rotation = Quaternion.RotateTowards(new Quaternion(0, transform.rotation.y, 0, 360), rotation, tempSpeed * Time.deltaTime * 180);
         }
     }
     
@@ -263,14 +267,17 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
        }
 
     }
+
     void StateChase() //swaps state to Chase
     {
         st = SoldierState.chase;
     }
+
     void StateReturnOriginalSpot()
     {
         st = SoldierState.originalSpot;
     }
+
     void ReturnToOriginalSpot()
     {
         agent.SetDestination(originalPos);
@@ -280,6 +287,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
             ReturnToOriginalState();
         }
     }
+
     void ReturnToOriginalState()
     {
         st = origianlst;
@@ -353,40 +361,6 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
         else if (dist > range)
         {
             agent.SetDestination(LevelManager.Instance.Player.transform.position);
-        }
-    }
-
-    int RunAway()
-    {
-        NavMeshHit hit;
-        RaycastHit hitRC;
-        if (NavMesh.FindClosestEdge(transform.position, out hit, NavMesh.AllAreas))
-        {
-            Physics.Raycast(tip.transform.position, targetDiretion, out hitRC);
-            //if (hitRC.collider.tag != target.tag)
-            //{
-                agent.SetDestination(hit.position);
-            //}
-            if (this.transform.position == hit.position)
-            {
-                agent.ResetPath();
-                
-                return 1;
-            }
-        }
-        else
-        {
-            return 0;
-        }
-        return -1;
-    }
-
-    void HealAfterRunAway()
-    {
-        if (Time.time > ShootRate + lastShot)
-        {
-            TakeDamage(-10);
-            lastShot = Time.time;
         }
     }
 }
