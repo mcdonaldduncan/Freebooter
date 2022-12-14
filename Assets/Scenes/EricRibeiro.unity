@@ -1314,9 +1314,45 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 585156787, guid: 91fd97a10ae64254eb9e9140e39afc58, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5447561733742993269, guid: 91fd97a10ae64254eb9e9140e39afc58, type: 3}
+      propertyPath: Body
+      value: 
+      objectReference: {fileID: 1885541437}
+    - target: {fileID: 5447561733742993269, guid: 91fd97a10ae64254eb9e9140e39afc58, type: 3}
+      propertyPath: explosionparticle
+      value: 
+      objectReference: {fileID: 130090, guid: c89f79686d89e7841a3386694fb086e1, type: 3}
+    - target: {fileID: 5847183793462315723, guid: 91fd97a10ae64254eb9e9140e39afc58, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8143964890246340086, guid: 91fd97a10ae64254eb9e9140e39afc58, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8772785927216014671, guid: 91fd97a10ae64254eb9e9140e39afc58, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 9014040487129825757, guid: 91fd97a10ae64254eb9e9140e39afc58, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 9014040487133508552, guid: 91fd97a10ae64254eb9e9140e39afc58, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 9014040487749469227, guid: 91fd97a10ae64254eb9e9140e39afc58, type: 3}
       propertyPath: m_Name
       value: FlyEnemyPrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 9014040487749469227, guid: 91fd97a10ae64254eb9e9140e39afc58, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 9014040487749469228, guid: 91fd97a10ae64254eb9e9140e39afc58, type: 3}
       propertyPath: m_RootOrder
@@ -1361,6 +1397,34 @@ PrefabInstance:
     - target: {fileID: 9014040487749469228, guid: 91fd97a10ae64254eb9e9140e39afc58, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9014040488091691167, guid: 91fd97a10ae64254eb9e9140e39afc58, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 9014040488171668010, guid: 91fd97a10ae64254eb9e9140e39afc58, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 9014040488200987485, guid: 91fd97a10ae64254eb9e9140e39afc58, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 9014040488429798431, guid: 91fd97a10ae64254eb9e9140e39afc58, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 9014040488476938554, guid: 91fd97a10ae64254eb9e9140e39afc58, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 9014040488476938556, guid: 91fd97a10ae64254eb9e9140e39afc58, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9014040488885049117, guid: 91fd97a10ae64254eb9e9140e39afc58, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 91fd97a10ae64254eb9e9140e39afc58, type: 3}
@@ -10173,7 +10237,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Player: {fileID: 1315336962}
-  CheckPoints: []
+  CheckPointPrefab: {fileID: 0}
+  m_CheckPoints: []
 --- !u!4 &1460970088
 Transform:
   m_ObjectHideFlags: 0
@@ -12839,6 +12904,11 @@ LightingSettings:
   m_PVRFilteringAtrousPositionSigmaIndirect: 2
   m_PVRFilteringAtrousPositionSigmaAO: 1
   m_PVRTiledBaking: 0
+--- !u!1 &1885541437 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9014040488476938554, guid: 91fd97a10ae64254eb9e9140e39afc58, type: 3}
+  m_PrefabInstance: {fileID: 110206353}
+  m_PrefabAsset: {fileID: 0}
 --- !u!43 &1930306284
 Mesh:
   m_ObjectHideFlags: 0

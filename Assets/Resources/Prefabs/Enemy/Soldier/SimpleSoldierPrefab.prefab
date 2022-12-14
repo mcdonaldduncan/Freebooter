@@ -157,7 +157,6 @@ MonoBehaviour:
   maxWaitTimeWander: 6
   wonderDistanceRange: 10
   st: 1
-  target: {fileID: 0}
   tip: {fileID: 965038701042483596}
   visionPoint: {fileID: 965038701042483596}
   body: {fileID: 105307549136551168}
@@ -168,6 +167,7 @@ MonoBehaviour:
   wanderSpotOffset: 5
   delayBeforeMove: 3
   originalPosOFFSET: 1
+  ShootRate: 0.5
   BulletTrail: {fileID: 6952378413150019911, guid: 24acd6d67a692a64298fcd8e875417a9, type: 3}
   Damage: 1
   health: 100
@@ -315,15 +315,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3728983199928678530, guid: 08d94c7d0b1ecfa4fbde6d8d4e500abf, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.182
+      value: -0.201
       objectReference: {fileID: 0}
     - target: {fileID: 3728983199928678530, guid: 08d94c7d0b1ecfa4fbde6d8d4e500abf, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.359
+      value: 1.36
       objectReference: {fileID: 0}
     - target: {fileID: 3728983199928678530, guid: 08d94c7d0b1ecfa4fbde6d8d4e500abf, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.286
+      value: 0.283
       objectReference: {fileID: 0}
     - target: {fileID: 3728983199928678530, guid: 08d94c7d0b1ecfa4fbde6d8d4e500abf, type: 3}
       propertyPath: m_LocalRotation.w

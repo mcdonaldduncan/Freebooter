@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 585156788}
   - component: {fileID: 585156790}
   - component: {fileID: 585156789}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Explosion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -68,7 +68,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6003437356422354188}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sensors Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -99,7 +99,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2742033101941595638}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sensors Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -130,7 +130,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9014040487129825756}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: w1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -164,7 +164,7 @@ GameObject:
   - component: {fileID: 9014040487133508556}
   - component: {fileID: 9014040487133508557}
   - component: {fileID: 9014040487133508554}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: muzzle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -263,7 +263,7 @@ GameObject:
   - component: {fileID: 1731908634}
   - component: {fileID: 1513274620143034692}
   - component: {fileID: 8143964890246340086}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: FlyEnemyPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -330,7 +330,6 @@ MonoBehaviour:
   maxWaitTimeWander: 6
   wonderDistanceRange: 15
   st: 1
-  target: {fileID: 0}
   tip: {fileID: 9014040488091691167}
   light: {fileID: 9014040488429798431}
   visionPoint: {fileID: 9014040488091691167}
@@ -343,6 +342,7 @@ MonoBehaviour:
   wanderSpotOffset: 7.15
   delayBeforeMove: 2
   originalPosOFFSET: 4
+  ShootRate: 0.5
   BulletTrail: {fileID: 6952378413150019911, guid: 24acd6d67a692a64298fcd8e875417a9, type: 3}
   Damage: 1
   health: 150
@@ -370,7 +370,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9014040488091691166}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Tip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -401,7 +401,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9014040488171668013}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: wanderSpots
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -435,7 +435,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9014040488200987484}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: w2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -467,7 +467,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9014040488429798430}
   - component: {fileID: 9014040488429798401}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Point Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -564,7 +564,7 @@ GameObject:
   - component: {fileID: 9014040488476938559}
   - component: {fileID: 9014040488476938556}
   - component: {fileID: 5447561733742993269}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: FlyEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -669,6 +669,8 @@ MonoBehaviour:
   fallspeed: 3
   ExplosionDuration: 1.5
   explosionGO: {fileID: 585156787}
+  Body: {fileID: 9014040488476938554}
+  explosionparticle: {fileID: 130090, guid: c89f79686d89e7841a3386694fb086e1, type: 3}
 --- !u!1 &9014040488885049117
 GameObject:
   m_ObjectHideFlags: 0
@@ -678,7 +680,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9014040488885049116}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: w3
   m_TagString: Untagged
   m_Icon: {fileID: 0}

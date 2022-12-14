@@ -10,7 +10,7 @@ public class OnDeathExplosion : MonoBehaviour
     Rigidbody rb;
     public float ExplosionDuration = 1.5f;
 
-    [SerializeField] private GameObject explosionGO;
+    [SerializeField] private GameObject explosionGO, Body;
 
     int deathFrames;
 
@@ -36,6 +36,11 @@ public class OnDeathExplosion : MonoBehaviour
         {
             if (ExplosionDuration > 0)
             {
+                if (explodeOnce == false)
+                {
+                    explodeOnce = true;
+                    Instantiate(explosionparticle, this.transform); // spawn in the explosion particle once during the explosion
+                }
                 ExplosionDuration -= Time.deltaTime;
             }
             if (ExplosionDuration < 0)
@@ -75,48 +80,28 @@ public class OnDeathExplosion : MonoBehaviour
             Vector3 explosiveForce = new Vector3(Random.Range(-5f, 5f), Random.Range(3f, 7f), Random.Range(-5f, 5f));
             rb.AddForce(explosiveForce, ForceMode.Impulse);
         }
-        
-
-        //rb.useGravity = true;
-        //rb.isKinematic = false;
         deathFrames++;
-        
-        //if (landed == false)
-        //{
-        //    transform.position = new Vector3(this.transform.position.x, this.transform.position.y - (fallspeed * Time.deltaTime), this.transform.position.z);
-        //}
     }
 
     void ExplodeOnImpact()
     {
         explosion = true;
         explosionGO.GetComponent<SphereCollider>().enabled = true;
-        if (explodeOnce == false)
-        {
-            explodeOnce = true;
-            Instantiate(explosionparticle, this.transform);
-        }
     }
 
     void stopExplosion()
     {
         explosionGO.GetComponent<SphereCollider>().enabled = false;
-        
         Destroy(transform.parent.gameObject);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (!dead) return;
-        landed = true;
-        ExplodeOnImpact();
+        if (collision.collider.gameObject.layer != 9) // Make sure the collision is with something other than enemy because it would collide with itself since the parent object has a collider
+        {
+            landed = true;
+            ExplodeOnImpact();
+        }
     }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (!dead) return;
-        landed = true;
-        ExplodeOnImpact();
-    }
-
 }
