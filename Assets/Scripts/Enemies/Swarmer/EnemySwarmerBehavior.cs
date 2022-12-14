@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemySwarmerBehavior : MonoBehaviour, IDamageable
+public class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
 {
     public float Health { get; set;}
 
@@ -44,8 +44,11 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable
     private bool attackingPlayer;
     private bool inAttackAnim;
 
+    private bool isSwarm => Physics.OverlapSphereNonAlloc(transform.position, 10f, hits, enemies) >= hideThreshold;
 
-    private bool isSwarm => Physics.OverlapSphereNonAlloc(transform.position, 10f, hits, enemies) > hideThreshold;
+    public Vector3 StartingPosition { get { return m_StartingPosition; } set { m_StartingPosition = value; } }
+    private Vector3 m_StartingPosition;
+
     private Collider[] hits = new Collider[5];
 
     private void Awake()
@@ -53,18 +56,17 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable
         hideBehavior = GetComponent<HideBehavior>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
-        //player = GameObject.FindWithTag("Player");
     }
 
     private void Start()
     {
+        m_StartingPosition = transform.position;
         Health = maxHealth;
         chasePlayer = false;
         animator.SetBool("PlayerTooFar", true);
         animator.SetBool("ChasePlayer", false);
         animator.SetBool("AttackPlayer", false);
-        //playerController = player.GetComponent<FirstPersonController>();
-        //layer = playerController.gameObject;
+        LevelManager.Instance.PlayerRespawn += OnPlayerRespawn;
     }
 
     private void Update()
@@ -150,6 +152,7 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable
             animator.SetBool("AttackPlayer", false);
             animator.SetBool("PlayerTooFar", true);
         }
+
     }
 
     private void AttackPlayer()
@@ -189,12 +192,58 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable
     {
         if (Health <= 0)
         {
-            //this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
-            if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
-            {
-                LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
-            }
-            Destroy(gameObject);
+            OnDeath();
         }
     }
+
+    public void OnDeath()
+    {
+        if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
+        {
+            LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
+        }
+        navMeshAgent.Warp(m_StartingPosition);
+        CycleAgent();
+        gameObject.SetActive(false);
+        hideBehavior.EndHideProcessRemote();
+        hideBehavior.enabled = false;
+        LevelManager.Instance.CheckPointReached += OnCheckPointReached;
+    }
+
+    public void OnPlayerRespawn()
+    {
+        if (!gameObject.activeSelf)
+        {
+            gameObject.SetActive(true);
+        }
+        navMeshAgent.Warp(m_StartingPosition);
+        CycleAgent();
+        health = maxHealth;
+    }
+
+    void CycleAgent()
+    {
+        if (!navMeshAgent.isOnNavMesh)
+        {
+            navMeshAgent.enabled = false;
+            navMeshAgent.enabled = true;
+        }
+        else
+        {
+            navMeshAgent.isStopped = true;
+            navMeshAgent.isStopped = false;
+            
+        }
+
+        attackingPlayer = false;
+        inAttackAnim = false;
+
+    }
+
+    public void OnCheckPointReached()
+    {
+        LevelManager.Instance.PlayerRespawn -= OnPlayerRespawn;
+    }
+
+    
 }

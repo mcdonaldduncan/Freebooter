@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -182,6 +183,8 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
     [NonSerialized] public Vector3 surfaceMotion;
 
+    Vector3 startingPos;
+
     public enum MovementState
     {
         basic,
@@ -213,6 +216,12 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
         jumpsRemaining = jumpsAllowed;
         dashesRemaining = dashesAllowed;
+        
+    }
+
+    private void Start()
+    {
+        startingPos = transform.position;
     }
 
     // Update is called once per frame
@@ -641,7 +650,19 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         if (Health <= 0)
         {
             Debug.Log("Player died!");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            
+            
+            OnDeath();
+            
         }
+    }
+
+    void OnDeath()
+    {
+        characterController.transform.position = LevelManager.Instance.CurrentCheckPoint?.transform.position ?? startingPos;
+        
+        health = maxHealth;
+        LevelManager.Instance.FirePlayerRespawn();
     }
 }

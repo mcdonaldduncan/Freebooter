@@ -169,4 +169,12 @@ public class HideBehavior : MonoBehaviour
 
         m_MovementCoroutine = StartCoroutine(Hide(target));
     }
+
+    public void EndHideProcessRemote()
+    {
+        if (m_MovementCoroutine != null)
+        {
+            StopCoroutine(m_MovementCoroutine);
+        }
+    }
 }
