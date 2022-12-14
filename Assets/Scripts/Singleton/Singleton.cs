@@ -39,21 +39,12 @@ public class Singleton<T> :
         if (_instance == null)
         {
             _instance = this as T;
-            //DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
             Destroy(gameObject);
-            Reset();
         }
     }
 
-
-
-    public virtual void Reset()
-    {
-
-
-
-    }
 }

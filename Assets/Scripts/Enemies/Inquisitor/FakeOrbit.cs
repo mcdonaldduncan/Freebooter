@@ -52,7 +52,7 @@ public class FakeOrbit : MonoBehaviour, IDamageable
     public void TakeDamage(float damageTaken)
     {
         Health -= damageTaken;
-        Debug.Log("Orbit Damaged");
+        //Debug.Log("Orbit Damaged");
         CheckForDeath();
     }
 
@@ -60,7 +60,7 @@ public class FakeOrbit : MonoBehaviour, IDamageable
     {
         if (Health <= 0)
         {
-            Debug.Log("Orbit Destroyed");
+            //Debug.Log("Orbit Destroyed");
             _Inquisitor.orbits.Remove(this);
             Destroy(gameObject);
         }

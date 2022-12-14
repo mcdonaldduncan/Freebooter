@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
+public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
 {
     public float Health { get; set;}
 
@@ -66,7 +66,7 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
         animator.SetBool("PlayerTooFar", true);
         animator.SetBool("ChasePlayer", false);
         animator.SetBool("AttackPlayer", false);
-        LevelManager.Instance.PlayerRespawn += OnPlayerRespawn;
+        LevelManager.PlayerRespawn += OnPlayerRespawn;
     }
 
     private void Update()
@@ -207,7 +207,7 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
         gameObject.SetActive(false);
         hideBehavior.EndHideProcessRemote();
         hideBehavior.enabled = false;
-        LevelManager.Instance.CheckPointReached += OnCheckPointReached;
+        LevelManager.CheckPointReached += OnCheckPointReached;
     }
 
     public void OnPlayerRespawn()
@@ -218,7 +218,7 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
         }
         navMeshAgent.Warp(m_StartingPosition);
         CycleAgent();
-        health = maxHealth;
+        Health = maxHealth;
     }
 
     void CycleAgent()
@@ -237,12 +237,12 @@ public class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
 
         attackingPlayer = false;
         inAttackAnim = false;
-
+        chasePlayer = false;
     }
 
     public void OnCheckPointReached()
     {
-        LevelManager.Instance.PlayerRespawn -= OnPlayerRespawn;
+        LevelManager.PlayerRespawn -= OnPlayerRespawn;
     }
 
     

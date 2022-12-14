@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Random = UnityEngine.Random;
 
-public class GunHandler : MonoBehaviour
+public sealed class GunHandler : MonoBehaviour
 {
     public IGun CurrentGun { get { return currentGun; } }
     public Camera FPSCam { get { return fpsCam; } }
@@ -271,6 +271,7 @@ public class GunHandler : MonoBehaviour
     {
         currentGunAmmo = currentGun.CurrentAmmo;
 
+        // change this to either an event or check that only updates when necessary, lots of garbage collection from this
         ammoText.text = $"Ammo: {currentGunAmmo}/{currentGun.CurrentMaxAmmo}";
     }
 

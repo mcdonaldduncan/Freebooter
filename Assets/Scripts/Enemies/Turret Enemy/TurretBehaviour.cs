@@ -113,7 +113,7 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
     void LookForLineOfSight() //Shoots raycasts at the player and if it hits the player then it has line of sight
     {
         RaycastHit hit;
-        Debug.DrawRay(tip.transform.position, targetDiretion, Color.green);
+        //Debug.DrawRay(tip.transform.position, targetDiretion, Color.green);
         Physics.Raycast(tip.transform.position, targetDiretion, out hit, range);
         if (hit.collider != null)
         {
@@ -127,7 +127,7 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
     void Shoot() //Shoots at the player
     {
         RaycastHit hit, hit2;
-        Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
+        //Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
         var offsetx = 0;
         var offsety = 0;
         var offsetz = 0;

@@ -29,7 +29,7 @@ public class Inquisitor : MonoBehaviour, IDamageable
     {
         if (orbits.Any())
             return;
-        Debug.Log("Inquisitor Damaged");
+        //Debug.Log("Inquisitor Damaged");
         Health -= damageTaken;
         CheckForDeath();
     }
@@ -38,7 +38,7 @@ public class Inquisitor : MonoBehaviour, IDamageable
     {
         if (Health <= 0)
         {
-            Debug.Log("Inquisitor Destroyed");
+            //Debug.Log("Inquisitor Destroyed");
             follower.Despawn();
             gameObject.SetActive(false);
         }

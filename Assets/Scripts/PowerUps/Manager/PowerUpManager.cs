@@ -105,12 +105,12 @@ public class PowerUpManager : Singleton<PowerUpManager>
         if (SpeedTimer > 0 && SpeedAPP == true)
         {
             ApplyEffectSpeed();
-            Debug.Log("ApplyEffectSpeed();");
+            //Debug.Log("ApplyEffectSpeed();");
             SpeedImg.enabled = true;
         }
         else if (SpeedTimer < 0 && SpeedAPP == true)
         {
-            Debug.Log("RemovedxD");
+            //Debug.Log("RemovedxD");
             RemoveEffectSpeed();
             SpeedImg.enabled = false;
         }
@@ -178,7 +178,7 @@ public class PowerUpManager : Singleton<PowerUpManager>
     }
     void Heal()
     {
-        Debug.Log("healed for " + healAmmount);
+        //Debug.Log("healed for " + healAmmount);
         firstPersonController.HealthRegen(healAmmount);
     }
     void RemoveHealing()
@@ -222,7 +222,7 @@ public class PowerUpManager : Singleton<PowerUpManager>
                 SpeedDuration = d;
                 SpeedTimer = d;
                 SpeedAPP = true;
-                Debug.Log("ApplyEffectSpeed!!!" +SpeedDuration+SpeedTimer + SpeedAPP);
+                //Debug.Log("ApplyEffectSpeed!!!" +SpeedDuration+SpeedTimer + SpeedAPP);
                 break;
             default:
                 break;

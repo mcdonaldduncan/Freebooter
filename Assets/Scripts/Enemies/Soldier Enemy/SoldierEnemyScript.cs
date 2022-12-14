@@ -148,7 +148,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
     void LineOfSightWithPlayer()
     {
         RaycastHit hit;
-        Debug.DrawRay(visionPoint.transform.position, targetDiretion, Color.green);
+        //Debug.DrawRay(visionPoint.transform.position, targetDiretion, Color.green);
         Physics.Raycast(visionPoint.transform.position, targetDiretion, out hit, range/1.2f);
         if (hit.collider != null)
         {
@@ -166,7 +166,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
     void Shoot() //Shoots at the player
     {
         RaycastHit hit, hit2;
-        Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
+        //Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
         var offsetx = 0;
         var offsety = 0;
         var offsetz = 0;
@@ -308,7 +308,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
     void RetaliationShoot()
     {
         RaycastHit hit, hit2;
-        Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
+        //Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
         var offsetx = 0;
         var offsety = 0;
         var offsetz = 0;

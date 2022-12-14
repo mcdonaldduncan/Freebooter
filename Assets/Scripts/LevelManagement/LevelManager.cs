@@ -1,24 +1,42 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelManager : Singleton<LevelManager>
+public sealed class LevelManager : MonoBehaviour
 {
     [SerializeField] public FirstPersonController Player;
     [SerializeField] public GameObject CheckPointPrefab;
 
-    [SerializeField] List<CheckPoint> m_CheckPoints;
+    List<CheckPoint> m_CheckPoints;
 
     CheckPoint m_CurrentCheckPoint;
-    List<IDamageable> m_RespawnBuffer;
-
-    public List<IDamageable> RespawnBuffer { get { return m_RespawnBuffer; } set { m_RespawnBuffer = value; } }
+    
     public CheckPoint CurrentCheckPoint { get { return m_CurrentCheckPoint; } set { m_CurrentCheckPoint = value; } }
 
+    public static LevelManager Instance { get; private set; }
 
     public delegate void PlayerRespawnDelegate();
-    public PlayerRespawnDelegate PlayerRespawn;
-    public PlayerRespawnDelegate CheckPointReached;
+    public static PlayerRespawnDelegate PlayerRespawn;
+    public static PlayerRespawnDelegate CheckPointReached;
+
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
+
+    private void Start()
+    {
+        if (Player == null)
+        {
+            Player = GameObject.FindGameObjectWithTag("Player").GetComponent<FirstPersonController>();
+        }
+    }
 
     public void FirePlayerRespawn()
     {
@@ -52,6 +70,13 @@ public class LevelManager : Singleton<LevelManager>
         {
             m_CheckPoints[i].m_Index = i;
         }
+        //Debug.Log("");
     }
 
 }
+
+
+
+//List<IDamageable> m_RespawnBuffer;
+
+//public List<IDamageable> RespawnBuffer { get { return m_RespawnBuffer; } set { m_RespawnBuffer = value; } }

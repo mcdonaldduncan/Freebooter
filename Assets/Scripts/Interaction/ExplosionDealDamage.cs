@@ -17,7 +17,7 @@ public class ExplosionDealDamage : MonoBehaviour
             }
             catch (System.Exception)
             {
-                Debug.Log("Not Idamageble");
+                //Debug.Log("Not Idamageble");
             }
         }
     }

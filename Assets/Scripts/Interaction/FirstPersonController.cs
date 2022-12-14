@@ -5,10 +5,11 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.PlayerLoop;
 using UnityEngine.SceneManagement;
 
 //TODO Abstract into classes that are managed by this class (i.e. defualt movement, wallrun movement, etc.)
-public class FirstPersonController : MonoBehaviour, IDamageable
+public sealed class FirstPersonController : MonoBehaviour, IDamageable
 {
     public float MaxHealth { get { return maxHealth; } set { maxHealth = value; } }
     public float Health { get { return health; } set { health = value; } }
@@ -185,6 +186,9 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
     Vector3 startingPos;
 
+    public bool isDead;
+    int isDeadFrameCount;
+
     public enum MovementState
     {
         basic,
@@ -217,7 +221,12 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         jumpsRemaining = jumpsAllowed;
         dashesRemaining = dashesAllowed;
         
+        
+       
     }
+
+
+    
 
     private void Start()
     {
@@ -227,6 +236,9 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     // Update is called once per frame
     void Update()
     {
+        
+        if (!characterController.enabled) return;
+
         if (Health > MaxHealth)
         {
             Health = MaxHealth;
@@ -254,6 +266,16 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         }
 
         HandleMouseLook();
+        
+    }
+
+    private void LateUpdate()
+    {
+        if (!isDead) return;
+        if (++isDeadFrameCount < 2) return;
+        isDead = false;
+        characterController.enabled = true;
+        isDeadFrameCount = 0;
     }
 
     private void FixedUpdate()
@@ -289,6 +311,8 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         _input.Gun.Shoot.canceled += playerGun.Shoot;
         _input.Gun.SwitchWeapon.performed += playerGun.SwitchWeapon;
         _input.Gun.Reload.performed += playerGun.Reload;
+
+        if (LevelManager.Instance.Player == null) LevelManager.Instance.Player = this;
     }
 
     private void OnDisable()
@@ -642,16 +666,16 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         {
             health = MaxHealth;
         }
-        Debug.Log($"Player healed. Current health is {health}");
+        //Debug.Log($"Player healed. Current health is {health}");
     }
 
     public void CheckForDeath()
     {
         if (Health <= 0)
         {
-            Debug.Log("Player died!");
+            //Debug.Log("Player died!");
             //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            
+
             
             OnDeath();
             
@@ -660,9 +684,13 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
     void OnDeath()
     {
-        characterController.transform.position = LevelManager.Instance.CurrentCheckPoint?.transform.position ?? startingPos;
+        isDead = true;
+        characterController.enabled = false;
         
+        transform.position = LevelManager.Instance.CurrentCheckPoint?.transform.position ?? startingPos;
+
         health = maxHealth;
+
         LevelManager.Instance.FirePlayerRespawn();
     }
 }

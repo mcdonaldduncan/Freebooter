@@ -149,13 +149,13 @@ public class FlyEnemy : MonoBehaviour, IDamageable
     void LineOfSightWithPlayer()
     {
         RaycastHit hit;
-        Debug.DrawRay(visionPoint.transform.position, targetDiretion, Color.green);
+        //Debug.DrawRay(visionPoint.transform.position, targetDiretion, Color.green);
         Physics.Raycast(visionPoint.transform.position, targetDiretion, out hit, range / 1.2f);
         if (hit.collider != null)
         {
             if (hit.collider.CompareTag(playerTag))
             {
-                Debug.Log("Player Detected");
+                //Debug.Log("Player Detected");
                 Invoke("StateChase", 2);
             }
         }
@@ -164,7 +164,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable
     void Shoot() //Shoots at the player
     {
         RaycastHit hit, hit2;
-        Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
+        //Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
         var offsetx = 0;
         var offsety = 0;
         var offsetz = 0;
@@ -199,7 +199,8 @@ public class FlyEnemy : MonoBehaviour, IDamageable
                         //Debug.Log("Player was shot, dealing damage.");
                         if (hit.collider.CompareTag(playerTag))
                         {
-                            LevelManager.Instance.Player.GetComponent<FirstPersonController>().TakeDamage(Damage);
+                            // you do not need to get the component out of the player, it is already an idamageable
+                            LevelManager.Instance.Player.TakeDamage(Damage);
                         }
                         lastShot = Time.time;
                     }
@@ -311,7 +312,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable
     bool Right(Vector3 pos, float dist)
     {
         RaycastHit hit;
-        Debug.DrawRay(SensorR.transform.position, Vector3.right, Color.blue);
+        //Debug.DrawRay(SensorR.transform.position, Vector3.right, Color.blue);
         Physics.Raycast(SensorR.transform.position, Vector3.right, out hit, range / 2);
         if (hit.collider == null)
         {
@@ -323,7 +324,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable
     bool Left(Vector3 pos, float dist)
     {
         RaycastHit hit;
-        Debug.DrawRay(SensorL.transform.position, -Vector3.right, Color.blue);
+        //Debug.DrawRay(SensorL.transform.position, -Vector3.right, Color.blue);
         Physics.Raycast(SensorR.transform.position, -Vector3.right, out hit, range / 2);
         if (hit.collider == null)
         {
@@ -346,7 +347,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable
     void RetaliationShoot()
     {
         RaycastHit hit,hit2;
-        Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
+        //Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
         var offsetx = 0;
         var offsety = 0;
         if (distanceToPlayer > range / 2)
@@ -375,7 +376,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable
                         //Debug.Log("Player was shot, dealing damage.");
                         if (hit.collider.CompareTag(playerTag))
                         {
-                            LevelManager.Instance.Player.GetComponent<FirstPersonController>().TakeDamage(Damage);
+                            LevelManager.Instance.Player.TakeDamage(Damage);
                         }
                         lastShot = Time.time;
                     }

@@ -85,7 +85,7 @@ public class Follower : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("trigger enter");
+        //Debug.Log("trigger enter");
         if (other.gameObject.CompareTag("ContactlessProjectile")) return;
         if (other.gameObject.CompareTag("Player")) return;
         if (other.gameObject.CompareTag("Ground")) return;
@@ -98,7 +98,7 @@ public class Follower : MonoBehaviour
         }
         catch
         {
-            Debug.Log("Hit non idamageable");
+            //Debug.Log("Hit non idamageable");
             Despawn();
             return;
         }
@@ -110,7 +110,7 @@ public class Follower : MonoBehaviour
         {
             IDamageable damageable = other.transform.GetComponent<IDamageable>();
             damageable.TakeDamage(damage * Time.deltaTime);
-            Debug.Log($"{other.transform.name}: {damageable.Health}");
+            //Debug.Log($"{other.transform.name}: {damageable.Health}");
         }
         catch
         {

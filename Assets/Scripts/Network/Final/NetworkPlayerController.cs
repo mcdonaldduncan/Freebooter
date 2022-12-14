@@ -431,7 +431,7 @@ public class NetworkPlayerController : NetworkBehaviour, IDamageable
         {
             dashesRemaining++;
             dashCooldownStartTime = Time.time;
-            Debug.Log("Cooldown Complete!");
+            //Debug.Log("Cooldown Complete!");
         }
     }
 
@@ -596,7 +596,7 @@ public class NetworkPlayerController : NetworkBehaviour, IDamageable
     public void TakeDamage(float damageTaken)
     {
         Health -= damageTaken;
-        Debug.Log($"Player Health: {health}");
+        //Debug.Log($"Player Health: {health}");
         CheckForDeath();
     }
     public void HealthRegen(float heal)
@@ -606,14 +606,14 @@ public class NetworkPlayerController : NetworkBehaviour, IDamageable
         {
             health = MaxHealth;
         }
-        Debug.Log($"Player healed. Current health is {health}");
+        //Debug.Log($"Player healed. Current health is {health}");
     }
 
     public void CheckForDeath()
     {
         if (Health <= 0)
         {
-            Debug.Log("Player died!");
+            //Debug.Log("Player died!");
             //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }

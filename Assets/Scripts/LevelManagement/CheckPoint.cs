@@ -24,7 +24,7 @@ public class CheckPoint : MonoBehaviour
         }
         catch (System.Exception)
         {
-            Debug.LogError("Valid IActivator Not Found");
+            //Debug.LogError("Valid IActivator Not Found");
         }
 
     }
@@ -38,7 +38,7 @@ public class CheckPoint : MonoBehaviour
 
     void OnActivate()
     {
-        Debug.Log("CP activated");
+        //Debug.Log("CP activated");
         if (isActivated) return;
 
         LevelManager.Instance.UpdateCurrentCP(this);
