@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TurretBehaviour : MonoBehaviour, IDamageable
+public class TurretBehaviour : MonoBehaviour, IDamageable, IEnemy
 {
     [SerializeField] private GameObject body, tip, light;
     [SerializeField] private float rotationSpeed, range;
@@ -33,6 +33,9 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
 
     string playerTag = "Player";
 
+    public Vector3 StartingPosition { get { return m_StartingPosition; } set { m_StartingPosition = value; } } // turret doesnt need this but its necessery to put this here for the interface
+    private Vector3 m_StartingPosition; // turret doesnt need this but its necessery to put this here for the interface
+
     public void TakeDamage(float damageTaken)
     {
         Health -= damageTaken;
@@ -47,13 +50,44 @@ public class TurretBehaviour : MonoBehaviour, IDamageable
             {
                 LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
             }
-            //this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
-            Destroy(gameObject);
+            OnDeath();
         }
+    }
+
+    public void OnDeath()
+    {
+        if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
+        {
+            LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
+        }
+        CycleAgent();
+        gameObject.SetActive(false);
+        LevelManager.CheckPointReached += OnCheckPointReached;
+    }
+
+    public void OnCheckPointReached()
+    {
+        LevelManager.PlayerRespawn -= OnPlayerRespawn;
+    }
+
+    public void OnPlayerRespawn()
+    {
+        if (!gameObject.activeSelf)
+        {
+            gameObject.SetActive(true);
+        }
+        CycleAgent();
+        Health = maxHealth;
+    }
+
+    void CycleAgent()
+    {
+        state = TurretState.LookingForTarget;
     }
 
     void Start()
     {
+       LevelManager.PlayerRespawn += OnPlayerRespawn;
        state = TurretState.LookingForTarget;
        rotationType = TurretRotationType.full;
     }
