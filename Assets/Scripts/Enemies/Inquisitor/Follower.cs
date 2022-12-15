@@ -92,10 +92,11 @@ public class Follower : MonoBehaviour
         if (other.gameObject.CompareTag("ContactlessProjectile")) return;
         if (other.gameObject.CompareTag("Player")) return;
         if (other.gameObject.CompareTag("Ground")) return;
-        
+
         try
         {
             IDamageable damageable = other.transform.GetComponent<IDamageable>();
+            damageable.TakeDamage(damage * Time.deltaTime);
             if (damageable == null) Despawn();
             return;
         }

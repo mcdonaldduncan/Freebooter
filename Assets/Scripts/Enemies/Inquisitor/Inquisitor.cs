@@ -12,6 +12,8 @@ public class Inquisitor : MonoBehaviour, IDamageable
     [SerializeField] GameObject m_AttackSpawn;
     [SerializeField] GameObject m_Shield;
     [SerializeField] GameObject m_DeathExplosion;
+    [SerializeField] GameObject m_PhaseEntry;
+    [SerializeField] GameObject m_ShieldExplosion;
     [SerializeField] Transform m_Target;
     [SerializeField] float m_TimeBetweenAttacks;
     [SerializeField] float m_StartingHealth;
@@ -38,6 +40,7 @@ public class Inquisitor : MonoBehaviour, IDamageable
     bool inPhase2;
     bool isAttacking;
     bool isReacting;
+    bool laserActive;
 
     Vector3 m_Velocity;
     Vector3 m_Acceleration;
@@ -74,16 +77,18 @@ public class Inquisitor : MonoBehaviour, IDamageable
 
         if (!shieldsUp)
         {
+            EndAttack();
             m_Animator.SetBool("isAttacking", false);
             m_Animator.SetBool("isReacting", true);
             isReacting = true;
-            Invoke(nameof(DeactivateShield), 2);
+            Invoke(nameof(DeactivateShield), 2.5f);
         }
 
         if (shieldsUp && !inPhase2)
         {
             m_Animator.SetBool("Phase2", true);
             StartCoroutine(ResetOrbits());
+            m_PhaseEntry.SetActive(true);
             shieldsUp = false;
             inPhase2 = true;
         }
@@ -91,6 +96,7 @@ public class Inquisitor : MonoBehaviour, IDamageable
 
     void DeactivateShield()
     {
+        m_ShieldExplosion.SetActive(true);
         m_Shield.SetActive(false);
     }
 
@@ -126,7 +132,6 @@ public class Inquisitor : MonoBehaviour, IDamageable
     {
         if (Health <= 0)
         {
-            //Debug.Log("Inquisitor Destroyed");
             m_DeathExplosion.SetActive(true);
             gameObject.SetActive(false);
             if (m_Follower == null) return;
@@ -151,6 +156,7 @@ public class Inquisitor : MonoBehaviour, IDamageable
         Invoke(nameof(EndAttack), 8);
         m_AttackSpawn.SetActive(true);
         isAttacking = true;
+        laserActive = true;
         m_TargetPosition = m_Target.position;
         m_AttackSpawn.transform.LookAt(LevelManager.Instance.Player.transform.position);
     }
@@ -166,6 +172,7 @@ public class Inquisitor : MonoBehaviour, IDamageable
     void Endbeam()
     {
         m_AttackSpawn.SetActive(false);
+        laserActive = false;
     }
 
     void Update()
@@ -207,25 +214,32 @@ public class Inquisitor : MonoBehaviour, IDamageable
         if (!canAttack) return;
 
         m_Animator.SetBool("isAttacking", true);
+        isAttacking = true;
     }
 
     void HandleRotation()
     {
-        if (!isAttacking) return;
-        
+        if (!inPhase2) return;
+
         Vector3 lookDirection = transform.position - m_Target.position;
         Vector3 cross = Vector3.Cross(m_Target.TransformDirection(Vector3.up), lookDirection);
         Vector3 normalCross = cross.normalized;
-
-        transform.LookAt(new Vector3(m_Target.position.x, transform.position.y, m_Target.position.z)  + normalCross * 15f);
-
+        
+        if (!isAttacking)
+        {
+            normalCross = Vector3.zero;
+        }
+        Vector3 adjustedLook = (m_Target.position + normalCross * 30f) - transform.position;
+        var rotGoal = Quaternion.LookRotation(adjustedLook);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, rotGoal, 20f * Time.deltaTime);
+        
         m_AttackSpawn.transform.LookAt(m_TargetPosition);
 
     }
 
     void HandleDamage()
     {
-        if (!isAttacking) return;
+        if (!laserActive) return;
 
         if (Physics.Raycast(m_AttackSpawn.transform.position, m_TargetPosition - m_AttackSpawn.transform.position, out RaycastHit hit))
         {
@@ -234,7 +248,6 @@ public class Inquisitor : MonoBehaviour, IDamageable
                 LevelManager.Instance.Player.TakeDamage(m_LaserDamage * Time.deltaTime);
             }
         }
-
     }
 
     void HandleTargeting()
