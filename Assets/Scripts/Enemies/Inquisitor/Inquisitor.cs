@@ -2,36 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Inquisitor : MonoBehaviour, IDamageable
 {
     [SerializeField] Animator m_Animator;
-    [SerializeField] GameObject follower_GO;
-    [SerializeField] public List<FakeOrbit> orbits;
-    [SerializeField] float StartingHealth;
-    [SerializeField] float cooldown;
-    [SerializeField] List<Transform> followerSpawns;
-    [SerializeField] GameObject Shield;
-    [SerializeField] float timeBetweenAttacks;
-    [SerializeField] GameObject attackSpawn;
+    [SerializeField] GameObject m_Follower_GO;
+    [SerializeField] GameObject m_AttackSpawn;
+    [SerializeField] GameObject m_Shield;
+    [SerializeField] float m_TimeBetweenAttacks;
+    [SerializeField] float m_StartingHealth;
+    [SerializeField] float m_FollowerCooldown;
     [SerializeField] float m_Damping;
-    [SerializeField] float laserDamage;
+    [SerializeField] float m_LaserDamage;
+    [SerializeField] float m_MaxFollowerDistance;
+    [SerializeField] public List<FakeOrbit> m_Orbits;
+    [SerializeField] List<Transform> m_FollowerSpawns;
 
     float lastAttackTime;
 
-    bool canAttack => Time.time - lastAttackTime > timeBetweenAttacks && !isReacting;
+    bool canAttack => Time.time - lastAttackTime > m_TimeBetweenAttacks && !isReacting;
 
-    Follower follower;
+    Follower m_Follower;
 
     public float Health { get; set; }
 
-    //public List<Transform> potentialTargets;
-
-    public bool isTracking = false;
-
     float cooldownProgress;
 
+    bool isTracking = false;
     bool shieldsUp = true;
     bool inPhase2;
     bool isAttacking;
@@ -47,6 +44,16 @@ public class Inquisitor : MonoBehaviour, IDamageable
         //potentialTargets = FindObjectsOfType<FirstPersonController>().Select(item => item.transform).ToList();
     }
 
+    void Start()
+    {
+        Init();
+    }
+
+    public void Init()
+    {
+        Health = m_StartingHealth;
+    }
+
     public void TakeDamage(float damageTaken)
     {
         Health -= damageTaken;
@@ -55,7 +62,7 @@ public class Inquisitor : MonoBehaviour, IDamageable
 
     public void CheckOrbits()
     {
-        if (orbits.Where(x => x.gameObject.activeSelf).Any())
+        if (m_Orbits.Where(x => x.gameObject.activeSelf).Any())
             return;
 
         if (!shieldsUp)
@@ -76,22 +83,22 @@ public class Inquisitor : MonoBehaviour, IDamageable
 
     void DeactivateShield()
     {
-        Shield.SetActive(false);
+        m_Shield.SetActive(false);
     }
 
     IEnumerator ResetOrbits()
     {
         int i = 0;
 
-        while (i < 2 && i < orbits.Count)
+        while (i < 2 && i < m_Orbits.Count)
         {
-            orbits[i].gameObject.SetActive(true);
-            orbits[i].Health = 3;
+            m_Orbits[i].gameObject.SetActive(true);
+            m_Orbits[i].Health = 3;
             i++;
             yield return null;
         }
 
-        foreach (var orbit in orbits)
+        foreach (var orbit in m_Orbits)
         {
             if (!orbit.gameObject.activeSelf)
             {
@@ -102,6 +109,11 @@ public class Inquisitor : MonoBehaviour, IDamageable
         }
     }
 
+    public void SetTracking(bool state)
+    {
+        isTracking = state;
+    }
+
     public void CheckForDeath()
     {
         if (Health <= 0)
@@ -109,8 +121,8 @@ public class Inquisitor : MonoBehaviour, IDamageable
             //Debug.Log("Inquisitor Destroyed");
             
             gameObject.SetActive(false);
-            if (follower == null) return;
-            follower.Despawn();
+            if (m_Follower == null) return;
+            m_Follower.Despawn();
         }
     }
 
@@ -129,9 +141,9 @@ public class Inquisitor : MonoBehaviour, IDamageable
     {
         m_Animator.SetFloat("SpeedMult", 0);
         Invoke(nameof(EndAttack), 8);
-        attackSpawn.SetActive(true);
+        m_AttackSpawn.SetActive(true);
         m_TargetPosition = LevelManager.Instance.Player.transform.position;
-        attackSpawn.transform.LookAt(LevelManager.Instance.Player.transform.position);
+        m_AttackSpawn.transform.LookAt(LevelManager.Instance.Player.transform.position);
     }
 
     private void EndAttack()
@@ -144,17 +156,7 @@ public class Inquisitor : MonoBehaviour, IDamageable
 
     void Endbeam()
     {
-        attackSpawn.SetActive(false);
-    }
-
-    void Start()
-    {
-        Initialize();
-    }
-
-    public void Initialize()
-    {
-        Health = StartingHealth;
+        m_AttackSpawn.SetActive(false);
     }
 
     void Update()
@@ -167,22 +169,22 @@ public class Inquisitor : MonoBehaviour, IDamageable
 
     public void SpawnFollower()
     {
-        if (isTracking)
-            return;
+        if (Vector3.Distance(transform.position, LevelManager.Instance.Player.transform.position) > m_MaxFollowerDistance) return;
+        
+        if (isTracking) return;
 
         cooldownProgress += Time.deltaTime;
 
-        if (cooldownProgress < cooldown)
-            return;
+        if (cooldownProgress < m_FollowerCooldown) return;
 
-        if (follower == null)
+        if (m_Follower == null)
         {
-            follower = Instantiate(follower_GO).GetComponent<Follower>();
-            follower.Init(LevelManager.Instance.Player.transform, this, followerSpawns[0].position);
+            m_Follower = Instantiate(m_Follower_GO).GetComponent<Follower>();
+            m_Follower.Init(LevelManager.Instance.Player.transform, this, m_FollowerSpawns[0].position);
         }
         else
         {
-            follower.Init(LevelManager.Instance.Player.transform, this, followerSpawns[0].position);
+            m_Follower.Init(LevelManager.Instance.Player.transform, this, m_FollowerSpawns[0].position);
         }
         
         isTracking = true;
@@ -216,7 +218,7 @@ public class Inquisitor : MonoBehaviour, IDamageable
 
         m_TargetPosition += m_Velocity * Time.deltaTime;
 
-        attackSpawn.transform.LookAt(m_TargetPosition);
+        m_AttackSpawn.transform.LookAt(m_TargetPosition);
 
     }
 
@@ -224,11 +226,11 @@ public class Inquisitor : MonoBehaviour, IDamageable
     {
         if (!isAttacking) return;
 
-        if (Physics.Raycast(attackSpawn.transform.position, m_TargetPosition - attackSpawn.transform.position, out RaycastHit hit))
+        if (Physics.Raycast(m_AttackSpawn.transform.position, m_TargetPosition - m_AttackSpawn.transform.position, out RaycastHit hit))
         {
             if (hit.collider.CompareTag("Player"))
             {
-                LevelManager.Instance.Player.TakeDamage(laserDamage * Time.deltaTime);
+                LevelManager.Instance.Player.TakeDamage(m_LaserDamage * Time.deltaTime);
             }
         }
 

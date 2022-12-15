@@ -5445,8 +5445,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Animator: {fileID: 5866666019878924528}
-  follower_GO: {fileID: 3537218446233725566, guid: 7ca6fe87758ee5743808000f59fdcfb5, type: 3}
-  orbits:
+  m_Follower_GO: {fileID: 3537218446233725566, guid: 7ca6fe87758ee5743808000f59fdcfb5, type: 3}
+  m_AttackSpawn: {fileID: 1018225476}
+  m_Shield: {fileID: 637578554}
+  m_TimeBetweenAttacks: 5
+  m_StartingHealth: 500
+  m_FollowerCooldown: 5
+  m_Damping: 1
+  m_LaserDamage: 15
+  m_MaxFollowerDistance: 30
+  m_Orbits:
   - {fileID: 79345972402554067}
   - {fileID: 4272117626597220321}
   - {fileID: 4272117626175284352}
@@ -5459,16 +5467,8 @@ MonoBehaviour:
   - {fileID: 1463609424}
   - {fileID: 2109002158}
   - {fileID: 1888297801}
-  StartingHealth: 600
-  cooldown: 5
-  followerSpawns:
+  m_FollowerSpawns:
   - {fileID: 211435220}
-  Shield: {fileID: 637578554}
-  timeBetweenAttacks: 5
-  attackSpawn: {fileID: 1018225476}
-  m_Damping: 1
-  laserDamage: 15
-  isTracking: 0
 --- !u!136 &5866666019878924530
 CapsuleCollider:
   m_ObjectHideFlags: 0

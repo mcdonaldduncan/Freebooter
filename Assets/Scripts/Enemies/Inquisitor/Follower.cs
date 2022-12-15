@@ -39,7 +39,7 @@ public class Follower : MonoBehaviour
 
     public void Despawn()
     {
-        _Inquisitor.isTracking = false;
+        _Inquisitor.SetTracking(false);
         isInitialized = false;
         if (gameObject == null) return;
         
