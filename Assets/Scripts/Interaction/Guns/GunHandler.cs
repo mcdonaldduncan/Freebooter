@@ -54,8 +54,14 @@ public sealed class GunHandler : MonoBehaviour
     [Header("Handgun Parameters")]
     [SerializeField] private GameObject handGunModel;
     [SerializeField] private Transform handGunShootFrom;
-    [SerializeField] private float handGunBulletDamage = 10f;
-    [SerializeField] private float handGunDamageDrop = 1f;
+    [Tooltip("At which distance should damage start to fall?")]
+    [SerializeField] private float handGunDamageDropStart;
+    [Tooltip("At which point should damage always be minimum?")]
+    [SerializeField] private float handGunDamageDropEnd;
+    [Tooltip("The maxmimum amount of damage the gun can do. This will always be the total damage if the enemy is closer than Damage Drop Start")]
+    [SerializeField] private float handGunMaxDamage;
+    [Tooltip("The minimum amount of damage the gun can do when the enemy is far away. This will always be the total if enemy is further than Damage Drop End")]
+    [SerializeField] private float handGunMinDamage;
     [SerializeField] private float handGunVerticalSpread;
     [SerializeField] private float handGunHorizontalSpread;
     [SerializeField] private int handGunCurrentAmmo;
@@ -70,9 +76,14 @@ public sealed class GunHandler : MonoBehaviour
     [Header("Shotgun Parameters")]
     [SerializeField] private GameObject shotGunModel;
     [SerializeField] private Transform shotGunShootFrom;
-    [Tooltip("This will apply to EACH 'bullet' the shotgun fires")]
-    [SerializeField] private float shotGunBulletDamage = 10f;
-    [SerializeField] private float shotGunDamageDrop = 1f;
+    [Tooltip("At which distance should damage start to fall?")]
+    [SerializeField] private float shotGunDamageDropStart;
+    [Tooltip("At which point should damage always be minimum?")]
+    [SerializeField] private float shotGunDamageDropEnd;
+    [Tooltip("The maxmimum amount of damage the gun can do. This will always be the total damage if the enemy is closer than Damage Drop Start")]
+    [SerializeField] private float shotGunMaxDamage;
+    [Tooltip("The minimum amount of damage the gun can do when the enemy is far away. This will always be the total if enemy is further than Damage Drop End")]
+    [SerializeField] private float shotGunMinDamage;
     [SerializeField] private int shotGunBulletAmount;
     [Tooltip("Increase for wider vertical spread. This will be used to a find a random number between the negative of this and the positive.")]
     [SerializeField] private float shotGunVerticalSpread;
@@ -90,8 +101,14 @@ public sealed class GunHandler : MonoBehaviour
     [Header("Autogun Parameters")]
     [SerializeField] private GameObject autoGunModel;
     [SerializeField] private Transform autoGunShootFrom;
-    [SerializeField] private float autoGunBulletDamage = 10f;
-    [SerializeField] private float autoGunDamageDrop = 1f;
+    [Tooltip("At which distance should damage start to fall?")]
+    [SerializeField] private float autoGunDamageDropStart;
+    [Tooltip("At which point should damage always be minimum?")]
+    [SerializeField] private float autoGunDamageDropEnd;
+    [Tooltip("The maxmimum amount of damage the gun can do. This will always be the total damage if the enemy is closer than Damage Drop Start")]
+    [SerializeField] private float autoGunMaxDamage;
+    [Tooltip("The minimum amount of damage the gun can do when the enemy is far away. This will always be the total if enemy is further than Damage Drop End")]
+    [SerializeField] private float autoGunMinDamage;
     [SerializeField] private float autoGunHorizontalSpread;
     [SerializeField] private float autoGunVerticalSpread;
     [SerializeField] private int autoGunCurrentAmmo;
@@ -180,12 +197,14 @@ public sealed class GunHandler : MonoBehaviour
             gun.FireRate = this.autoFireRate;
             gun.GunModel = this.autoGunModel;
             gun.ShootFrom = this.autoGunShootFrom;
-            gun.BulletDamage = this.autoGunBulletDamage;
+            gun.MinDamage = this.autoGunMinDamage;
+            gun.MaxDamage = this.autoGunMaxDamage;
+            gun.DropEnd = this.autoGunDamageDropEnd;
+            gun.DropStart = this.autoGunDamageDropStart;
             gun.VerticalSpread = this.autoGunVerticalSpread;
             gun.HorizontalSpread = this.autoGunHorizontalSpread;
             gun.AimOffset = this.autoGunAimOffset;
             gun.GunReticle = this.autoGunReticle;
-            gun.DamageDrop = this.autoGunDamageDrop != 0 ? this.autoGunDamageDrop : 1;
             autoGun.GunShotAudioList = this.autoGunShotAudioList;
             autoGun.TriggerReleasedAudio = this.triggerReleasedAudio;
             gun.ReloadWait = this.autoGunReloadWait;
@@ -195,13 +214,15 @@ public sealed class GunHandler : MonoBehaviour
             gun.FireRate = this.handGunFireRate;
             gun.GunModel = this.handGunModel;
             gun.ShootFrom = this.handGunShootFrom;
-            gun.BulletDamage = this.handGunBulletDamage;
+            gun.MinDamage = this.handGunMinDamage;
+            gun.MaxDamage = this.handGunMaxDamage;
+            gun.DropEnd = this.handGunDamageDropEnd;
+            gun.DropStart = this.handGunDamageDropStart;
             gun.VerticalSpread = this.handGunVerticalSpread;
             gun.HorizontalSpread = this.handGunHorizontalSpread;
             gun.AimOffset = this.handGunAimOffset;
             gun.GunReticle = this.handGunReticle;
             gun.GunShotAudio = this.handGunShotAudio;
-            gun.DamageDrop = this.handGunDamageDrop != 0 ? this.handGunDamageDrop : 1;
             gun.ReloadWait = this.handGunReloadWait;
         }
         if (gun is ShotGun)
@@ -209,13 +230,15 @@ public sealed class GunHandler : MonoBehaviour
             gun.FireRate = this.shotGunFireRate; //TODO get rid of coroutine reloads
             gun.GunModel = this.shotGunModel;
             gun.ShootFrom = this.shotGunShootFrom;
-            gun.BulletDamage = this.shotGunBulletDamage;
+            gun.MinDamage = this.shotGunMinDamage;
+            gun.MaxDamage = this.shotGunMaxDamage;
+            gun.DropEnd = this.shotGunDamageDropEnd;
+            gun.DropStart = this.shotGunDamageDropStart;
             gun.VerticalSpread = this.shotGunVerticalSpread;
             gun.HorizontalSpread = this.shotGunHorizontalSpread;
             gun.AimOffset = this.shotGunAimOffset;
             gun.GunReticle = this.shotGunReticle;
             gun.GunShotAudio = this.shotGunShotAudio;
-            gun.DamageDrop = this.shotGunDamageDrop != 0 ? this.shotGunDamageDrop : 1;
             gun.ReloadWait = this.shotGunReloadWait;
         }
         if (gun is GrenadeGun)
@@ -223,7 +246,6 @@ public sealed class GunHandler : MonoBehaviour
             gun.FireRate = this.grenadeFireRate;
             gun.GunModel = this.grenadeGunModel;
             gun.ShootFrom = this.grenadeGunShootFrom;
-            gun.BulletDamage = this.grenadeDamage;
             gun.VerticalSpread = this.grenadeGunVerticalSpread;
             gun.HorizontalSpread = this.grenadeGunHorizontalSpread;
             gun.AimOffset = this.grenadeGunAimOffset;
@@ -231,6 +253,7 @@ public sealed class GunHandler : MonoBehaviour
             gun.GunReticle = this.grenadeGunReticle;
             gun.GunShotAudio = this.grenadeGunShotAudio;
             grenadeGun.Grenade = this.grenadeObject;
+            grenadeGun.GrenadeDamage = this.grenadeDamage;
         }
     }
     private void Start()

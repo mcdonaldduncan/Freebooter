@@ -7,7 +7,7 @@ using UnityEngine.AI;
 
 public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
 {
-    public float Health { get; set;}
+    public float Health { get { return health; } set { health = value; } }
 
     [SerializeField] private bool ignorePlayer;
 

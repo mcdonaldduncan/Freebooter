@@ -456,8 +456,10 @@ MonoBehaviour:
     m_Bits: 2304
   handGunModel: {fileID: 8433409136838652493}
   handGunShootFrom: {fileID: 8119341505407714208}
-  handGunBulletDamage: 40
-  handGunDamageDrop: 20
+  handGunDamageDropStart: 10
+  handGunDamageDropEnd: 20
+  handGunMaxDamage: 33
+  handGunMinDamage: 7
   handGunVerticalSpread: 0
   handGunHorizontalSpread: 0
   handGunCurrentAmmo: 0
@@ -469,27 +471,31 @@ MonoBehaviour:
   handGunShotAudio: {fileID: 8300000, guid: 0e54aeef289ca2a468f328b56436e7ed, type: 3}
   shotGunModel: {fileID: 8336511976717804042}
   shotGunShootFrom: {fileID: 5503994785366333370}
-  shotGunBulletDamage: 30
-  shotGunDamageDrop: 10
+  shotGunDamageDropStart: 3
+  shotGunDamageDropEnd: 10
+  shotGunMaxDamage: 15
+  shotGunMinDamage: 2
   shotGunBulletAmount: 12
   shotGunVerticalSpread: 10
   shotGunHorizontalSpread: 10
   shotGunCurrentAmmo: 0
   shotGunMaxAmmo: 12
-  shotGunReloadTime: 3
+  shotGunReloadTime: 3.5
   shotGunFireRate: 1
   shotGunAimOffset: 15
   shotGunReticle: {fileID: 2291208426676616775}
   shotGunShotAudio: {fileID: 8300000, guid: c15d23ec2ec14b949aa86c30705b3da5, type: 3}
   autoGunModel: {fileID: 1250051382278646626}
   autoGunShootFrom: {fileID: 9160297267325692952}
-  autoGunBulletDamage: 25
-  autoGunDamageDrop: 15
+  autoGunDamageDropStart: 20
+  autoGunDamageDropEnd: 50
+  autoGunMaxDamage: 25
+  autoGunMinDamage: 10
   autoGunHorizontalSpread: 0
   autoGunVerticalSpread: 0
   autoGunCurrentAmmo: 0
   autoGunMaxAmmo: 30
-  autoGunReloadTime: 2
+  autoGunReloadTime: 2.3
   autoFireRate: 0.15
   autoGunAimOffset: 15
   autoGunReticle: {fileID: 2291571642965968571}

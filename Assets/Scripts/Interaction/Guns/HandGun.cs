@@ -10,8 +10,10 @@ public class HandGun : MonoBehaviour, IGun
     public Transform ShootFrom { get; set; }
     public LayerMask LayerToIgnore { get; set; }
     public float FireRate { get; set; }
-    public float BulletDamage { get; set; }
-    public float DamageDrop { get; set; }
+    public float MaxDamage { get; set; }
+    public float MinDamage { get; set; }
+    public float DropStart { get; set; }
+    public float DropEnd { get; set; }
     public float VerticalSpread { get; set; }
     public float HorizontalSpread { get; set; }
     public float AimOffset { get; set; }
@@ -27,6 +29,7 @@ public class HandGun : MonoBehaviour, IGun
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
 
     public bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading && CurrentAmmo > 0;
+
     //private bool ReloadNow => reloadStartTime + ReloadTime < Time.time && GunManager.Reloading;
     private float lastShotTime;
     private float reloadStartTime;
@@ -186,10 +189,25 @@ public class HandGun : MonoBehaviour, IGun
                 float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);
 
                 //calculate damage dropoff
-                float totalDamage = Mathf.Abs(BulletDamage / ((distance / DamageDrop)));
+                float realDamage;
+
+                if (distance >= DropEnd)
+                {
+                    realDamage = MinDamage;
+                }
+                else if (distance <= DropStart)
+                {
+                    realDamage = MaxDamage;
+                }
+                else
+                {
+                    float clampedDistance = Mathf.Clamp(distance, DropStart, DropEnd) - DropStart;
+                    float distancePercent = 100 - clampedDistance * (100 / (DropEnd - DropStart));
+                    realDamage = (MaxDamage - MinDamage) * (distancePercent / 100);
+                }
 
                 //Damage the target
-                damageableTarget.TakeDamage(totalDamage);
+                damageableTarget.TakeDamage(realDamage);
             }
             catch
             {

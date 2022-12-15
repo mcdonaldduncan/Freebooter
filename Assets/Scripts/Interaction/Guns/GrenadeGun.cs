@@ -9,7 +9,7 @@ public class GrenadeGun : MonoBehaviour, IGun
     public Transform ShootFrom { get; set; }
     public LayerMask LayerToIgnore { get; set; }
     public float FireRate { get; set; }
-    public float BulletDamage { get; set; }
+    public float GrenadeDamage { get; set; }
     public float DamageDrop { get; set; }
     public float VerticalSpread { get; set; }
     public float HorizontalSpread { get; set; }
@@ -27,6 +27,12 @@ public class GrenadeGun : MonoBehaviour, IGun
     public GameObject Grenade { get; set; }
 
     public bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading && CurrentAmmo > 0;
+
+    //THIS CAN BE IGNORED IT IS NEEDED SO THAT GRENADE GUN CAN STILL USE IGUN INTERFACE
+    public float MaxDamage { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public float MinDamage { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public float DropStart { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public float DropEnd { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
     private float lastShotTime;
     private float reloadStartTime;
