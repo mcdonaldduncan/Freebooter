@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AudioManager : Singleton<AudioManager>
 {
     [SerializeField] AudioSource m_AudioSource;
+    [SerializeField] Image m_NavImage;
 
     Queue<AudioClip> m_ClipQueue;
 
@@ -24,6 +26,22 @@ public class AudioManager : Singleton<AudioManager>
         }
     }
 
+    public void PlayClip(AudioClip clip)
+    {
+        m_AudioSource.clip = clip;
+        m_AudioSource.Play();
+    }
+
+    public void EnableNavImage(Sprite sprite)
+    {
+        m_NavImage.sprite = sprite;
+        m_NavImage.enabled = true;
+    }
+
+    public void DisableNavImage()
+    {
+        m_NavImage.enabled = false;
+    }
 
     public void QueueSound(AudioClip clip)
     {
@@ -33,5 +51,10 @@ public class AudioManager : Singleton<AudioManager>
     public void OverrideQueue()
     {
         m_ClipQueue.Clear();
+    }
+
+    public bool ClearCheck(AudioClip clip)
+    {
+        return m_AudioSource.clip == clip && !m_AudioSource.isPlaying;
     }
 }

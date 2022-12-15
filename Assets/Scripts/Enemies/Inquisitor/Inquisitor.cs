@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Inquisitor : MonoBehaviour, IDamageable
 {
@@ -9,12 +11,15 @@ public class Inquisitor : MonoBehaviour, IDamageable
     [SerializeField] GameObject m_Follower_GO;
     [SerializeField] GameObject m_AttackSpawn;
     [SerializeField] GameObject m_Shield;
+    [SerializeField] GameObject m_DeathExplosion;
+    [SerializeField] Transform m_Target;
     [SerializeField] float m_TimeBetweenAttacks;
     [SerializeField] float m_StartingHealth;
     [SerializeField] float m_FollowerCooldown;
-    [SerializeField] float m_Damping;
     [SerializeField] float m_LaserDamage;
     [SerializeField] float m_MaxFollowerDistance;
+    [SerializeField] float m_MaxForce;
+    [SerializeField] float m_Speed;
     [SerializeField] public List<FakeOrbit> m_Orbits;
     [SerializeField] List<Transform> m_FollowerSpawns;
 
@@ -35,6 +40,7 @@ public class Inquisitor : MonoBehaviour, IDamageable
     bool isReacting;
 
     Vector3 m_Velocity;
+    Vector3 m_Acceleration;
     Vector3 m_TargetPosition;
 
     WaitForSeconds resetDelay = new WaitForSeconds(.25f);
@@ -51,6 +57,7 @@ public class Inquisitor : MonoBehaviour, IDamageable
 
     public void Init()
     {
+        m_Target = LevelManager.Instance.Player.transform;
         Health = m_StartingHealth;
     }
 
@@ -67,6 +74,7 @@ public class Inquisitor : MonoBehaviour, IDamageable
 
         if (!shieldsUp)
         {
+            m_Animator.SetBool("isAttacking", false);
             m_Animator.SetBool("isReacting", true);
             isReacting = true;
             Invoke(nameof(DeactivateShield), 2);
@@ -119,7 +127,7 @@ public class Inquisitor : MonoBehaviour, IDamageable
         if (Health <= 0)
         {
             //Debug.Log("Inquisitor Destroyed");
-            
+            m_DeathExplosion.SetActive(true);
             gameObject.SetActive(false);
             if (m_Follower == null) return;
             m_Follower.Despawn();
@@ -142,15 +150,16 @@ public class Inquisitor : MonoBehaviour, IDamageable
         m_Animator.SetFloat("SpeedMult", 0);
         Invoke(nameof(EndAttack), 8);
         m_AttackSpawn.SetActive(true);
-        m_TargetPosition = LevelManager.Instance.Player.transform.position;
+        isAttacking = true;
+        m_TargetPosition = m_Target.position;
         m_AttackSpawn.transform.LookAt(LevelManager.Instance.Player.transform.position);
     }
 
     private void EndAttack()
     {
+        isAttacking = false;
         m_Animator.SetFloat("SpeedMult", 1);
         Invoke(nameof(Endbeam), 1);
-        isAttacking = false;
         lastAttackTime = Time.time;
     }
 
@@ -165,11 +174,12 @@ public class Inquisitor : MonoBehaviour, IDamageable
         HandleAttacking();
         HandleRotation();
         HandleDamage();
+        HandleTargeting();
     }
 
     public void SpawnFollower()
     {
-        if (Vector3.Distance(transform.position, LevelManager.Instance.Player.transform.position) > m_MaxFollowerDistance) return;
+        if (Vector3.Distance(transform.position, m_Target.position) > m_MaxFollowerDistance) return;
         
         if (isTracking) return;
 
@@ -180,11 +190,11 @@ public class Inquisitor : MonoBehaviour, IDamageable
         if (m_Follower == null)
         {
             m_Follower = Instantiate(m_Follower_GO).GetComponent<Follower>();
-            m_Follower.Init(LevelManager.Instance.Player.transform, this, m_FollowerSpawns[0].position);
+            m_Follower.Init(m_Target, this, m_FollowerSpawns[0].position);
         }
         else
         {
-            m_Follower.Init(LevelManager.Instance.Player.transform, this, m_FollowerSpawns[0].position);
+            m_Follower.Init(m_Target, this, m_FollowerSpawns[0].position);
         }
         
         isTracking = true;
@@ -197,26 +207,17 @@ public class Inquisitor : MonoBehaviour, IDamageable
         if (!canAttack) return;
 
         m_Animator.SetBool("isAttacking", true);
-        isAttacking = true;
-
-        
     }
 
     void HandleRotation()
     {
         if (!isAttacking) return;
         
-        Vector3 lookDirection = transform.position - LevelManager.Instance.Player.transform.position;
-        Vector3 cross = Vector3.Cross(LevelManager.Instance.Player.transform.TransformDirection(Vector3.up), lookDirection);
+        Vector3 lookDirection = transform.position - m_Target.position;
+        Vector3 cross = Vector3.Cross(m_Target.TransformDirection(Vector3.up), lookDirection);
         Vector3 normalCross = cross.normalized;
 
-        transform.LookAt(new Vector3(LevelManager.Instance.Player.transform.position.x, transform.position.y, LevelManager.Instance.Player.transform.position.z)  + normalCross * 15f);
-
-        var n1 = m_Velocity - (m_TargetPosition - LevelManager.Instance.Player.transform.position) * Mathf.Pow(m_Damping, 2) * Time.deltaTime;
-        var n2 = 1 + m_Damping * Time.deltaTime;
-        m_Velocity = n1 / n2;
-
-        m_TargetPosition += m_Velocity * Time.deltaTime;
+        transform.LookAt(new Vector3(m_Target.position.x, transform.position.y, m_Target.position.z)  + normalCross * 15f);
 
         m_AttackSpawn.transform.LookAt(m_TargetPosition);
 
@@ -234,5 +235,24 @@ public class Inquisitor : MonoBehaviour, IDamageable
             }
         }
 
+    }
+
+    void HandleTargeting()
+    {
+        m_Acceleration += CalculateSteering(m_Target.position);
+        m_Velocity += m_Acceleration;
+        m_TargetPosition += m_Velocity * Time.deltaTime;
+        m_Acceleration = Vector3.zero;
+    }
+
+    Vector3 CalculateSteering(Vector3 currentTarget)
+    {
+        Vector3 desired = currentTarget - m_TargetPosition;
+        desired = desired.normalized;
+        desired *= m_Speed;
+        Vector3 steer = desired - m_Velocity;
+        steer = steer.normalized;
+        steer *= m_MaxForce;
+        return steer;
     }
 }
