@@ -68,7 +68,6 @@ public class HandGun : MonoBehaviour, IGun
 
         //Play the shooting sound of this gun
         GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
-        Debug.Log($"Played sound after: {Time.time - timeShot} seconds...");
 
         Ray ray = GunManager.FPSCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 
