@@ -18,7 +18,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
     private enum SoldierState { guard, wanderer, chase, originalSpot, Relocating, Death, retaliate};
     [Tooltip("/ Guard = Stand in one place until the player breaks line of sight / Wanderer = walks around / Chase = when the soldier goes after the enemy")]
     [SerializeField] private SoldierState st;
-    private SoldierState origianlst;
+    private SoldierState OriginalState;
     [SerializeField] private GameObject tip, light, visionPoint, body,SensorR,SensorL;
     [SerializeField] private float rotationspeed, range;
     [SerializeField] private UnityEngine.AI.NavMeshAgent agent;
@@ -107,7 +107,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
             agent.isStopped = true;
             agent.isStopped = false;
         }
-        st = SoldierState.wanderer;
+        st = OriginalState;
     }
 
 
@@ -115,10 +115,9 @@ public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
     {
         m_StartingPosition = transform.position;
         LevelManager.PlayerRespawn += OnPlayerRespawn;
-        origianlst = st;
+        OriginalState = st;
         originalPos = transform.position;
         originalrot = this.transform.rotation;
-        var pos = this.transform.position;
     }
     // Update is called once per frame
     void FixedUpdate()
@@ -330,7 +329,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
 
     void ReturnToOriginalState()
     {
-        st = origianlst;
+        st = OriginalState;
     }
 
     void RecolcateState()
