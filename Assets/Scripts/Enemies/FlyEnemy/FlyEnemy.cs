@@ -4,7 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class FlyEnemy : MonoBehaviour, IDamageable
+public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
 {
     [SerializeField] private LayerMask layerMask = 0; // for wondering
     [SerializeField] private float minWaitTimeWander, maxWaitTimeWander, wonderDistanceRange; // wait timer for wandering
@@ -41,6 +41,9 @@ public class FlyEnemy : MonoBehaviour, IDamageable
 
     string playerTag = "Player";
 
+    public Vector3 StartingPosition { get { return m_StartingPosition; } set { m_StartingPosition = value; } }
+    private Vector3 m_StartingPosition;
+
     public void TakeDamage(float damageTaken)
     {
         if (st == SoldierState.guard || st == SoldierState.wanderer)
@@ -60,12 +63,58 @@ public class FlyEnemy : MonoBehaviour, IDamageable
             {
                 LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
             }
-            //Destroy(gameObject);
+            OnDeath();
         }
     }
 
+    public void OnDeath()
+    {
+        if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
+        {
+            LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
+        }
+        agent.Warp(m_StartingPosition);
+        CycleAgent();
+        gameObject.SetActive(false);
+        LevelManager.CheckPointReached += OnCheckPointReached;
+    }
+
+    public void OnCheckPointReached()
+    {
+        LevelManager.PlayerRespawn -= OnPlayerRespawn;
+    }
+
+    public void OnPlayerRespawn()
+    {
+        if (!gameObject.activeSelf)
+        {
+            gameObject.SetActive(true);
+        }
+        agent.Warp(m_StartingPosition);
+        CycleAgent();
+        Health = maxHealth;
+    }
+
+    void CycleAgent()
+    {
+        if (!agent.isOnNavMesh)
+        {
+            agent.enabled = false;
+            agent.enabled = true;
+        }
+        else
+        {
+            agent.isStopped = true;
+            agent.isStopped = false;
+        }
+        st = SoldierState.wanderer;
+    }
+
+
     private void Start()
     {
+        m_StartingPosition = transform.position;
+        LevelManager.PlayerRespawn += OnPlayerRespawn;
         origianlst = st;
         originalPos = transform.position;
         originalrot = this.transform.rotation;

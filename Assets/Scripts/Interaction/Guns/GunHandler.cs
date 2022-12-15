@@ -338,6 +338,10 @@ public sealed class GunHandler : MonoBehaviour
 
     public void Shoot(InputAction.CallbackContext context)
     {
+        if (currentGunAmmo <= 0)
+        {
+            currentGun.StartReload();
+        }
         currentGun.ShootTriggered(context);
     }
 

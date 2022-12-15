@@ -2,13 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AudioTrigger : MonoBehaviour
 {
-    //[SerializeField] BehaviorType m_BehaviorType;
     [SerializeField] GameObject m_Activator;
-    [SerializeField] AudioSource m_AudioSource;
-    [SerializeField] AudioClip m_clip;
+    [SerializeField] AudioClip m_Clip;
+    [SerializeField] Sprite m_Sprite;
     [SerializeField] bool m_ActivateMultiple;
 
     IActivator m_IActivator;
@@ -40,13 +40,21 @@ public class AudioTrigger : MonoBehaviour
     void OnActivate()
     {
         if (m_IsActive && !m_ActivateMultiple) return;
-        m_AudioSource.clip = m_clip;
-        m_AudioSource.Play();
-        
-        
+
+        AudioManager.Instance.PlayClip(m_Clip);
+        AudioManager.Instance.EnableNavImage(m_Sprite);
+
         m_IsActive = true;
     }
 
+    private void Update()
+    {
+        if (!m_IsActive) return;
+        if (AudioManager.Instance.ClearCheck(m_Clip))
+        {
+            AudioManager.Instance.DisableNavImage();
+        }
+    }
 
 }
 
