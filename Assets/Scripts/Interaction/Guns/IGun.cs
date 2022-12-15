@@ -23,6 +23,7 @@ public interface IGun
     AudioClip GunShotAudio { get; set; }
     GameObject GunModel { get; set; }
     WaitForSeconds ReloadWait { get; set; }
+    bool CanShoot { get; }
 
     void ShootTriggered(InputAction.CallbackContext context);
     void StartReload();

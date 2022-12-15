@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class SoldierEnemyScript : MonoBehaviour, IDamageable
+public class SoldierEnemyScript : MonoBehaviour, IDamageable, IEnemy
 {
     [SerializeField]
     private Animator animator;
@@ -37,6 +37,10 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
     [SerializeField] private float Damage;
 
     public float Health { get { return health; } set { health = value; } }
+
+    public Vector3 StartingPosition { get { return m_StartingPosition; } set { m_StartingPosition = value; } }
+    private Vector3 m_StartingPosition;
+
     [SerializeField] private float health, maxHealth;
     float distanceToPlayer;
 
@@ -70,12 +74,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
     {
         if (Health <= 0)
         {
-            if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
-            {
-                LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
-            }
-            //this.gameObject.GetComponent<CheckForDrops>().DropOrNot();
-            Destroy(gameObject);
+            OnDeath();
         }
     }
 
@@ -88,6 +87,9 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
         originalPos = transform.position;
         originalrot = this.transform.rotation;
         var pos = this.transform.position;
+
+        m_StartingPosition = transform.position;
+        LevelManager.PlayerRespawn += OnPlayerRespawn;
     }
 
     //Spaces between methods!!!
@@ -362,5 +364,31 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable
         {
             agent.SetDestination(LevelManager.Instance.Player.transform.position);
         }
+    }
+
+    public void OnDeath()
+    {
+        if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
+        {
+            LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
+        }
+        agent.Warp(m_StartingPosition);
+        gameObject.SetActive(false);
+        LevelManager.CheckPointReached += OnCheckPointReached;
+    }
+
+    public void OnPlayerRespawn()
+    {
+        if (!gameObject.activeSelf)
+        {
+            gameObject.SetActive(true);
+        }
+        agent.Warp(m_StartingPosition);
+        Health = maxHealth;
+    }
+
+    public void OnCheckPointReached()
+    {
+        LevelManager.PlayerRespawn -= OnPlayerRespawn;
     }
 }

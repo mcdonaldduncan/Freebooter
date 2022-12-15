@@ -269,10 +269,10 @@ public sealed class GunHandler : MonoBehaviour
 
     private void Update()
     {
-        currentGunAmmo = currentGun.CurrentAmmo;
+        //currentGunAmmo = currentGun.CurrentAmmo;
 
         // change this to either an event or check that only updates when necessary, lots of garbage collection from this
-        ammoText.text = $"Ammo: {currentGunAmmo}/{currentGun.CurrentMaxAmmo}";
+        ammoText.text = $"Ammo: {currentGun.CurrentAmmo}/{currentGun.CurrentMaxAmmo}";
     }
 
     public void SwitchWeapon(InputAction.CallbackContext context)
@@ -338,7 +338,7 @@ public sealed class GunHandler : MonoBehaviour
 
     public void Shoot(InputAction.CallbackContext context)
     {
-        if (currentGunAmmo <= 0)
+        if (currentGun.CurrentAmmo <= 0)
         {
             currentGun.StartReload();
         }
@@ -347,6 +347,9 @@ public sealed class GunHandler : MonoBehaviour
 
     public void Reload(InputAction.CallbackContext context)
     {
-        currentGun.StartReload();
+        if (currentGun.CurrentAmmo < currentGun.CurrentMaxAmmo)
+        {
+            currentGun.StartReload();
+        }
     }
 }

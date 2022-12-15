@@ -27,7 +27,7 @@ public class AutoGun : MonoBehaviour, IGun
     public GameObject GunModel { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
 
-    private bool CanShoot => lastShotTime + FireRate < Time.time && CurrentAmmo > 0 && GunManager.CurrentGun is AutoGun;
+    public bool CanShoot => lastShotTime + FireRate < Time.time && CurrentAmmo > 0 && GunManager.CurrentGun is AutoGun;
 
     private bool holdingTrigger;
     private float lastShotTime;
@@ -62,7 +62,7 @@ public class AutoGun : MonoBehaviour, IGun
     {
         if (context.canceled)
         {
-            if (this.holdingTrigger && GunManager.AutoGunCurrentAmmo > 0)
+            if (this.holdingTrigger && GunManager.AutoGunCurrentAmmo > 0 && !GunManager.Reloading)
             {
                 GunManager.GunShotAudioSource.PlayOneShot(TriggerReleasedAudio);
             }

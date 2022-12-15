@@ -26,7 +26,7 @@ public class GrenadeGun : MonoBehaviour, IGun
     public GameObject GunModel { get; set; }
     public GameObject Grenade { get; set; }
 
-    private bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading && CurrentAmmo > 0;
+    public bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading && CurrentAmmo > 0;
 
     private float lastShotTime;
     private float reloadStartTime;

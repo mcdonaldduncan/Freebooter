@@ -27,7 +27,7 @@ public class ShotGun : MonoBehaviour, IGun
     public AudioClip GunShotAudio { get; set; }
     public GameObject GunModel { get; set; }
 
-    private bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading && CurrentAmmo > 0;
+    public bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading && CurrentAmmo > 0;
 
     private float lastShotTime;
     private float reloadStartTime;
