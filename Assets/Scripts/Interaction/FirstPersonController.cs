@@ -312,7 +312,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         _input.Gun.SwitchWeapon.performed += playerGun.SwitchWeapon;
         _input.Gun.Reload.performed += playerGun.Reload;
 
-        if (LevelManager.Instance.Player == null) LevelManager.Instance.Player = this;
+        //if (LevelManager.Instance.Player == null) LevelManager.Instance.Player = this;
     }
 
     private void OnDisable()

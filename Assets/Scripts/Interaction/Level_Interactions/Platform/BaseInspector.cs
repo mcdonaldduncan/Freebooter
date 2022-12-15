@@ -53,6 +53,7 @@ public class BaseInspector : Editor
                 break;
             case TranslationType.DAMP:
                 EditorGUILayout.PropertyField(damping_Prop);
+                EditorGUILayout.PropertyField(maxSpeed_Prop);
                 break;
             default:
                 break;
