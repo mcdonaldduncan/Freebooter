@@ -404,7 +404,7 @@ MonoBehaviour:
   shotGunHorizontalSpread: 10
   shotGunCurrentAmmo: 0
   shotGunMaxAmmo: 12
-  shotGunReloadTime: 3.5
+  shotGunReloadTime: 3
   shotGunFireRate: 1
   shotGunAimOffset: 15
   shotGunReticle: {fileID: 2291208426676616775}
@@ -419,7 +419,7 @@ MonoBehaviour:
   autoGunVerticalSpread: 0
   autoGunCurrentAmmo: 0
   autoGunMaxAmmo: 30
-  autoGunReloadTime: 2.3
+  autoGunReloadTime: 2
   autoFireRate: 0.15
   autoGunAimOffset: 15
   autoGunReticle: {fileID: 2291571642965968571}
@@ -957,6 +957,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 208.67215
       objectReference: {fileID: 0}
+    - target: {fileID: 2103727198378389841, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: m_VerticalAlignment
+      value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 2103727198378389841, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2326925274147959905, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
       propertyPath: m_fontStyle
       value: 0
@@ -1081,6 +1089,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 208.67215
       objectReference: {fileID: 0}
+    - target: {fileID: 3875076895944599315, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: m_UseSpriteMesh
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4562221553111881085, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
       propertyPath: m_fontStyle
       value: 0
@@ -1097,6 +1109,38 @@ PrefabInstance:
       propertyPath: Cgun
       value: 
       objectReference: {fileID: 297426594336726720}
+    - target: {fileID: 6996534184939410446, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 11e5ab06858788e4283a67ae91eca8b5, type: 3}
+    - target: {fileID: 6996534184939410446, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: m_UseSpriteMesh
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8122098814747410082, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 8122098814747410082, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 8564991945342876994, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 8564991945342876994, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 9067329525842909151, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: c186448c466fad9478c38ce9c2f7b71b, type: 3}
+    - target: {fileID: 9067329525842909151, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: m_UseSpriteMesh
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
 --- !u!224 &297426593898452143 stripped

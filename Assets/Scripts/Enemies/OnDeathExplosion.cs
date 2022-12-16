@@ -92,8 +92,9 @@ public class OnDeathExplosion : MonoBehaviour
         explosionGO.GetComponent<SphereCollider>().enabled = false;
         Destroy(temp);
 
+        transform.parent.gameObject.SetActive(false);
 
-        prefab.SetActive(false);
+        //prefab.SetActive(false);
         ResetVariables();
     }
 

@@ -70,7 +70,7 @@ public class MovingPlatform : MonoBehaviour
         }
         catch (System.Exception)
         {
-            //Debug.LogError("Valid IActivator Not Found");
+            Debug.LogError("Valid IActivator Not Found");
         }
 
     }
