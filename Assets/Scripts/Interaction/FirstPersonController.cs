@@ -690,6 +690,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         characterController.enabled = false;
         
         transform.position = LevelManager.Instance.CurrentCheckPoint?.transform.position ?? startingPos;
+        transform.rotation = LevelManager.Instance.CurrentCheckPoint?.transform.rotation ?? Quaternion.identity;
 
         health = maxHealth;
 

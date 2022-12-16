@@ -60,6 +60,8 @@ public class MovingPlatform : MonoBehaviour
 
     private void OnEnable()
     {
+        LevelManager.PlayerRespawn += Reset;
+
         if (m_Activator == null || m_MovementType != MovementType.ACTIVATE) return;
 
         try
@@ -73,10 +75,14 @@ public class MovingPlatform : MonoBehaviour
             Debug.LogError("Valid IActivator Not Found");
         }
 
+        
+
     }
 
     private void OnDisable()
     {
+        LevelManager.PlayerRespawn -= Reset;
+
         if (m_IActivator == null || m_MovementType != MovementType.ACTIVATE) return;
         m_IActivator.Activate -= AgnosticActivate;
         m_IActivator.Deactivate -= OnDeactivate;
@@ -126,6 +132,13 @@ public class MovingPlatform : MonoBehaviour
     {
         isActivated = false;
         Base.SetState(false);
+    }
+
+    private void Reset()
+    {
+        isActivated = m_MovementType == MovementType.CONSTANT;
+        Base.SetState(isActivated);
+        Platform.transform.position = transform.position;
     }
 
     public void UpdateFromBase()
