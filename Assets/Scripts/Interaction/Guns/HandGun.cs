@@ -202,7 +202,7 @@ public class HandGun : MonoBehaviour, IGun
                 else
                 {
                     float clampedDistance = Mathf.Clamp(distance, DropStart, DropEnd) - DropStart;
-                    float distancePercent = 100 - clampedDistance * (100 / (DropEnd - DropStart));
+                    float distancePercent = DropEnd - clampedDistance * (100 / (DropEnd - DropStart));
                     realDamage = (MaxDamage - MinDamage) * (distancePercent / 100);
                 }
 
