@@ -164,8 +164,8 @@ public class Barrier : MonoBehaviour
         if (!m_InTrigger) return;
         if (!other.gameObject.CompareTag("Player")) return;
         //Debug.Log("Trigger Exit");
-        if (m_State == BarrierState.CLOSED) return;
         m_InTrigger = false;
+        if (m_State == BarrierState.CLOSED) return;
         OnActivate();
     }
 }
