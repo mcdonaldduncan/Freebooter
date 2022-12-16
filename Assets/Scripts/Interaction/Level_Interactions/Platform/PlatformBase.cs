@@ -196,7 +196,7 @@ public class PlatformBase : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             m_Platform.OnPlayerContact();
-            collision.transform.SetParent(this.transform, true);
+            collision.transform.SetParent(transform);
             m_IsAttached = true;
         }
     }
