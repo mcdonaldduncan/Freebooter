@@ -67,6 +67,8 @@ public sealed class LevelManager : MonoBehaviour
 
     public void ReturnToMainMenu()
     {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         SceneManager.LoadScene(0);
     }
 
