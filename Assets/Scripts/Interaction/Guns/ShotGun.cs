@@ -199,7 +199,7 @@ public class ShotGun : MonoBehaviour, IGun
                 else
                 {
                     float clampedDistance = Mathf.Clamp(distance, DropStart, DropEnd) - DropStart;
-                    float distancePercent = 100 - clampedDistance * (100 / (DropEnd - DropStart));
+                    float distancePercent = 100 - clampedDistance * (100 / (DropEnd - DropStart)); float distancePercent = 100 - clampedDistance * (100 / (DropEnd - DropStart)); //Listen idk why this needs to be subtracted from 100 to work but it does so yeah
                     realDamage = Mathf.Abs(MinDamage + (MaxDamage - MinDamage) * (distancePercent / 100));
                     if (realDamage <= MinDamage)
                     {
