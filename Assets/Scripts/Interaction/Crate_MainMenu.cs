@@ -24,7 +24,10 @@ public class Crate_MainMenu : MonoBehaviour, IDamageable
 
     private void Start()
     {
-        defaultConstraints = this.gameObject.GetComponent<Rigidbody>().constraints;
+        if (this.gameObject.GetComponent<Rigidbody>() != null)
+        {
+            defaultConstraints = this.gameObject.GetComponent<Rigidbody>().constraints;
+        }
         defaultPosition = this.gameObject.transform.position;
     }
 
