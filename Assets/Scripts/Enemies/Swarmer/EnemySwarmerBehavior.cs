@@ -29,7 +29,9 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
 
     //private FirstPersonController playerController;
     //private GameObject player;
+    private Transform m_Target;
     private HideBehavior hideBehavior;
+    private LineOfSightChecker checker;
     private NavMeshAgent navMeshAgent;
     private RaycastHit hitInfo;
     private Animator animator;
@@ -63,30 +65,42 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
         animator.SetBool("ChasePlayer", false);
         animator.SetBool("AttackPlayer", false);
         LevelManager.PlayerRespawn += OnPlayerRespawn;
+        m_Target = LevelManager.Instance.Player.transform;
         //hideBehavior.enabled = false;
+        
     }
 
     private void Update()
     {
-        distanceToPlayer = Vector3.Distance(gameObject.transform.position, LevelManager.Instance.Player.transform.position);
+        distanceToPlayer = Vector3.Distance(transform.position, m_Target.position);
 
 
         if (distanceToPlayer <= distanceToFollow)
         {
+            navMeshAgent.isStopped = false;
             if (isSwarm)
             {
+                if (navMeshAgent.isPathStale)
+                {
+                    navMeshAgent.ResetPath();
+                }
                 chasePlayer = true;
-                //foreach (var item in hits)
-                //{
-                //    if (item == null) continue;
-                //    if (item.TryGetComponent(out EnemySwarmerBehavior temp))
-                //    {
-                //        temp.chasePlayer = true;
-                //        temp.hideBehavior.enabled = false;
-                //    }
-                //    //item.GetComponent<EnemySwarmerBehavior>().chasePlayer = true;
-                //}
-                if (hideBehavior.enabled == true) hideBehavior.EndHideProcessRemote();
+                foreach (var item in hits)
+                {
+                    if (item == null) continue;
+                    if (item.TryGetComponent(out EnemySwarmerBehavior temp))
+                    {
+                        temp.chasePlayer = true;
+                        temp.hideBehavior.enabled = false;
+                    }
+                }
+                if (hideBehavior.enabled == true)
+                {
+                    hideBehavior.EndHideProcessRemote();
+                    hideBehavior.enabled = false;
+                    
+
+                }
             }
             else
             {
@@ -95,10 +109,15 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
 
                 if (hideBehavior.enabled == false)
                 {
-                    
-                    navMeshAgent.ResetPath();
+                    if (navMeshAgent.isPathStale)
+                    {
+                        navMeshAgent.ResetPath();
+                        //hideBehavior.StartHideProcessRemote(LevelManager.Instance.Player.transform);
+                    }
+
+                    //navMeshAgent.ResetPath();
                     hideBehavior.enabled = true;
-                    hideBehavior.StartHideProcessRemote(LevelManager.Instance.Player.transform);
+                    hideBehavior.StartHideProcessRemote(m_Target);
                 }
             }
             
@@ -109,7 +128,12 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
         {
             if (!attackingPlayer)
             {
-                navMeshAgent.ResetPath();
+                //navMeshAgent.ResetPath();
+                if (navMeshAgent.isPathStale)
+                {
+                    navMeshAgent.ResetPath();
+                }
+
                 navMeshAgent.SetDestination(LevelManager.Instance.Player.transform.position);
             }
             if (attackingPlayer)

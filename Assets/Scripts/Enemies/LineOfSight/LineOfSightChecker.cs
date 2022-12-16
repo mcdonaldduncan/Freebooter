@@ -15,7 +15,7 @@ public class LineOfSightChecker : MonoBehaviour
     public GainSightDelegate OnGainSight;
     public LoseSightDelegate OnLoseSight;
 
-    WaitForSeconds wait = new WaitForSeconds(.25f);
+    WaitForSeconds wait = new WaitForSeconds(.15f);
 
     private void Awake()
     {
