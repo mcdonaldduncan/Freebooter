@@ -667,10 +667,12 @@ MonoBehaviour:
   blinkrate: 0.3
   lastblink: 0
   fallspeed: 3
-  ExplosionDuration: 1.5
+  ExplosionDuration: 3
   explosionGO: {fileID: 585156787}
   Body: {fileID: 9014040488476938554}
+  prefab: {fileID: 9014040487749469227}
   explosionparticle: {fileID: 130090, guid: c89f79686d89e7841a3386694fb086e1, type: 3}
+  temp: {fileID: 0}
 --- !u!1 &9014040488885049117
 GameObject:
   m_ObjectHideFlags: 0
