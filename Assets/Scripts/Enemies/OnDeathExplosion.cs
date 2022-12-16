@@ -4,69 +4,55 @@ using UnityEngine;
 
 public class OnDeathExplosion : MonoBehaviour
 {
-    [SerializeField] float blinkrate = .3f, lastblink, fallspeed;
-    Renderer m;
-    bool dead = false, landed = false, explosion = false;
+    [SerializeField] GameObject Body;
+    [SerializeField] GameObject prefab;
+    [SerializeField] GameObject explosionparticle;
+    [SerializeField] float m_Damage;
+    [SerializeField] float m_Radius;
+    [SerializeField] float blinkrate = .3f;
+
+    float m_LastBlinkTime;
+
     Rigidbody rb;
-    public float ExplosionDuration = 1.5f;
+    Renderer m_Renderer;
 
-    [SerializeField] private GameObject explosionGO, Body, prefab;
-
+    bool dead = false;
+    bool landed = false; 
+    bool explosion = false;
+    
     int deathFrames;
 
-    public GameObject explosionparticle, temp;
-    bool explodeOnce = false;
+    Collider[] m_HitsSaved = new Collider[10];
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        m_Renderer = GetComponent<Renderer>();
     }
 
     private void Update()
     {
-        if (dead == true) // you do not need to evaluate as true dead is a boolean so if (dead == true) is the same thing as if (dead)
-        {
-            blink();
-            FallOnDeath();
-
-            if (explosion == true)
-            {
-                if (ExplosionDuration > 0)
-                {
-                    if (explodeOnce == false)
-                    {
-                        explodeOnce = true;
-                        temp = Instantiate(explosionparticle, this.transform);
-                        // spawn in the explosion particle once during the explosion
-                    }
-                ExplosionDuration -= Time.deltaTime;
-                }
-                if (ExplosionDuration < 0)
-                {
-                    stopExplosion();
-                }
-            }
-        }
+        if (!dead) return;
+        blink();
+        FallOnDeath();
     }
 
     public void OnDeathVariables()
     {
-        m = this.gameObject.GetComponent<Renderer>();
         dead = true;
-        fallspeed = 1;
     }  
     
     void blink()
     {
-        if (Time.time > blinkrate + lastblink && m.material.color == Color.white)
+        if (Time.time > blinkrate + m_LastBlinkTime && m_Renderer.material.color == Color.white)
         {
-            m.material.color = Color.red;
-            lastblink = Time.time;
+            m_Renderer.material.color = Color.red;
+            m_LastBlinkTime = Time.time;
         }
-        if (Time.time > blinkrate + lastblink && m.material.color == Color.red)
+        if (Time.time > blinkrate + m_LastBlinkTime && m_Renderer.material.color == Color.red)
         {
-            m.material.color = Color.white;
-            lastblink = Time.time;
+            m_Renderer.material.color = Color.white;
+            m_LastBlinkTime = Time.time;
         }
     }
 
@@ -82,46 +68,44 @@ public class OnDeathExplosion : MonoBehaviour
         deathFrames++;
     }
 
-    void ExplodeOnImpact()
-    {
-        explosion = true;
-        explosionGO.GetComponent<SphereCollider>().enabled = true;
-    }
-
-    void stopExplosion()
-    {
-        explosionGO.GetComponent<SphereCollider>().enabled = false;
-        Destroy(temp);
-        Instantiate(explosionparticle, this.transform);
-        transform.parent.gameObject.SetActive(false);
-
-        //prefab.SetActive(false);
-        ResetVariables();
-    }
-
     public void ResetVariables()
     {
         dead = false;
         landed = false;
         explosion = false;
-        explodeOnce = false;
         deathFrames = 0;
-        ExplosionDuration = 1.5f;
         Destroy(rb);
-        m.material.color = Color.white;
-        this.transform.position = transform.parent.position;
-        this.transform.rotation = transform.parent.rotation;
-        var explosiondealdamage = explosionGO.GetComponent<ExplosionDealDamage>();
-        explosiondealdamage.ClearList();
+        m_Renderer.material.color = Color.white;
+        transform.position = transform.parent.position;
+        transform.rotation = transform.parent.rotation;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (dead == false) return;
+        if (!dead) return;
+
         if (collision.collider.gameObject.layer != 9 && collision.collider.gameObject.layer != 8) // Make sure the collision is with something other than enemy because it would collide with itself since the parent object has a collider
         {
             landed = true;
-            ExplodeOnImpact();
+            Instantiate(explosionparticle, transform.position, Quaternion.identity);
+            ExplosionDamage();
+            transform.parent.gameObject.SetActive(false);
         }
     }
+
+    void ExplosionDamage()
+    {
+        var hits = Physics.OverlapSphereNonAlloc(transform.position, m_Radius, m_HitsSaved);
+        for (int i = 0; i < hits; i++)
+        {
+            if (m_HitsSaved[i] == null || !m_HitsSaved[i].gameObject.activeSelf) continue;
+            
+            if (m_HitsSaved[i].TryGetComponent(out IDamageable damageable))
+            {
+                damageable.TakeDamage(m_Damage);
+                m_HitsSaved[i] = null;
+            }
+        }
+    }
+
 }
