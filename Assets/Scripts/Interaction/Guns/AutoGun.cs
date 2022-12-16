@@ -216,8 +216,16 @@ public class AutoGun : MonoBehaviour, IGun
                 else
                 {
                     float clampedDistance = Mathf.Clamp(distance, DropStart, DropEnd) - DropStart;
-                    float distancePercent = DropEnd - clampedDistance * (100 / (DropEnd - DropStart));
-                    realDamage = Mathf.Abs((MaxDamage - MinDamage) * (distancePercent / 100));
+                    float distancePercent = 100 - clampedDistance * (100 / (DropEnd - DropStart));
+                    realDamage = Mathf.Abs(MinDamage + (MaxDamage - MinDamage) * (distancePercent / 100));
+                    if (realDamage <= MinDamage)
+                    {
+                        realDamage = MinDamage;
+                    }
+                    if (realDamage >= MaxDamage)
+                    {
+                        realDamage = MaxDamage;
+                    }
                 }
 
                 //Damage the target
