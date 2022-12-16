@@ -21,7 +21,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
     private SoldierState OriginalState;
     [SerializeField] private GameObject tip, light, visionPoint, body,SensorR,SensorL;
     [SerializeField] private float rotationspeed, range;
-    [SerializeField] private UnityEngine.AI.NavMeshAgent agent;
+    [SerializeField] private NavMeshAgent agent;
     Vector3 targetDiretion, originalPos;
     Quaternion rotation, originalrot;
 
@@ -43,6 +43,8 @@ public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
 
     public Vector3 StartingPosition { get { return m_StartingPosition; } set { m_StartingPosition = value; } }
     private Vector3 m_StartingPosition;
+
+    int ResetOnce;
 
     public void TakeDamage(float damageTaken)
     {
@@ -73,9 +75,6 @@ public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
         {
             LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
         }
-        agent.Warp(m_StartingPosition);
-        CycleAgent();
-        gameObject.SetActive(false);
         LevelManager.CheckPointReached += OnCheckPointReached;
     }
 
@@ -86,13 +85,13 @@ public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
 
     public void OnPlayerRespawn()
     {
-        if (!gameObject.activeSelf)
+        if (!gameObject.activeSelf || st == SoldierState.Death)
         {
+            Resetvalues();
+            var script = body.GetComponent<OnDeathExplosion>();
+            script.ResetVariables();
             gameObject.SetActive(true);
         }
-        agent.Warp(m_StartingPosition);
-        CycleAgent();
-        Health = maxHealth;
     }
 
     void CycleAgent()
@@ -107,9 +106,17 @@ public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
             agent.isStopped = true;
             agent.isStopped = false;
         }
+
         st = OriginalState;
+        dead = false;
     }
 
+    public void Resetvalues()
+    {
+        CycleAgent();
+        agent.Warp(m_StartingPosition);
+        Health = maxHealth;
+    }
 
     private void Start()
     {
@@ -122,7 +129,9 @@ public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
     // Update is called once per frame
     void FixedUpdate()
     {
+
         distanceToPlayer = Vector3.Distance(this.transform.position, LevelManager.Instance.Player.transform.position);
+
         if (health <= 0)
         {
             st = SoldierState.Death;
@@ -167,9 +176,9 @@ public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
             case SoldierState.Death:
                 if (dead == false)
                 {
-                    dead = true;
-                    agent.ResetPath();
-                    body.GetComponent<OnDeathExplosion>().OnDeathVariables();
+                        dead = true;
+                        agent.ResetPath();
+                        body.GetComponent<OnDeathExplosion>().OnDeathVariables();
                 }
                 break;
             case (SoldierState.retaliate):
@@ -346,15 +355,18 @@ public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
     {
         var pos = this.transform.position;
         float dist = range / 2;
-        if (Right(pos, dist) == true)
+        if (!dead)
         {
-            agent.SetDestination(new Vector3(pos.x + dist, pos.y, pos.z));
+            if (Right(pos, dist) == true)
+            {
+                agent.SetDestination(new Vector3(pos.x + dist, pos.y, pos.z));
+            }
+            else if (Left(pos, dist) == true)
+            {
+                agent.SetDestination(new Vector3(pos.x - dist, pos.y, pos.z + dist));
+            }
+            st = lastState;
         }
-        else if (Left(pos, dist) == true)
-        {
-            agent.SetDestination(new Vector3(pos.x - dist, pos.y, pos.z + dist));
-        }
-        st = lastState;
     }
 
     bool Right(Vector3 pos, float dist)

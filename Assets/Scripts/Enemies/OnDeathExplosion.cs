@@ -10,19 +10,17 @@ public class OnDeathExplosion : MonoBehaviour
     Rigidbody rb;
     public float ExplosionDuration = 1.5f;
 
-    [SerializeField] private GameObject explosionGO, Body;
+    [SerializeField] private GameObject explosionGO, Body, prefab;
 
     int deathFrames;
 
-    public GameObject explosionparticle;
+    public GameObject explosionparticle, temp;
     bool explodeOnce = false;
-    //private void Start()
-    //{
-    //    rb = transform.parent.GetComponent<Rigidbody>();
 
-    //    rb.isKinematic = true;
-    //    rb.useGravity = false;
-    //}
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
 
     private void Update()
     {
@@ -31,24 +29,23 @@ public class OnDeathExplosion : MonoBehaviour
             blink();
             FallOnDeath();
 
-        }
-        if (explosion == true)
-        {
-            if (ExplosionDuration > 0)
+            if (explosion == true)
             {
-                if (explodeOnce == false)
+                if (ExplosionDuration > 0)
                 {
+                    if (explodeOnce == false)
+                    {
                     explodeOnce = true;
-                    Instantiate(explosionparticle, this.transform); // spawn in the explosion particle once during the explosion
-                }
+                    temp = Instantiate(explosionparticle, this.transform); // spawn in the explosion particle once during the explosion
+                    }
                 ExplosionDuration -= Time.deltaTime;
-            }
-            if (ExplosionDuration < 0)
-            {
+                }
+                if (ExplosionDuration < 0)
+                {
                 stopExplosion();
+                }
             }
         }
-        
     }
 
     public void OnDeathVariables()
@@ -77,6 +74,7 @@ public class OnDeathExplosion : MonoBehaviour
         if (deathFrames == 0)
         {
             rb = gameObject.AddComponent<Rigidbody>();
+            rb.useGravity = true;
             Vector3 explosiveForce = new Vector3(Random.Range(-5f, 5f), Random.Range(3f, 7f), Random.Range(-5f, 5f));
             rb.AddForce(explosiveForce, ForceMode.Impulse);
         }
@@ -92,13 +90,33 @@ public class OnDeathExplosion : MonoBehaviour
     void stopExplosion()
     {
         explosionGO.GetComponent<SphereCollider>().enabled = false;
-        Destroy(transform.parent.gameObject);
+        Destroy(temp);
+
+
+        prefab.SetActive(false);
+        ResetVariables();
+    }
+
+    public void ResetVariables()
+    {
+        dead = false;
+        landed = false;
+        explosion = false;
+        explodeOnce = false;
+        deathFrames = 0;
+        ExplosionDuration = 1.5f;
+        Destroy(rb);
+        m.material.color = Color.white;
+        this.transform.position = prefab.transform.position;
+        this.transform.rotation = prefab.transform.rotation;
+        var explosiondealdamage = explosionGO.GetComponent<ExplosionDealDamage>();
+        explosiondealdamage.ClearList();
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (!dead) return;
-        if (collision.collider.gameObject.layer != 9) // Make sure the collision is with something other than enemy because it would collide with itself since the parent object has a collider
+        if (dead == false) return;
+        if (collision.collider.gameObject.layer != 9 && collision.collider.gameObject.layer != 8) // Make sure the collision is with something other than enemy because it would collide with itself since the parent object has a collider
         {
             landed = true;
             ExplodeOnImpact();
