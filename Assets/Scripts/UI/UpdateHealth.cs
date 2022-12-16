@@ -10,6 +10,7 @@ public class UpdateHealth : MonoBehaviour
     public Image HealthCriticalOverlay;
     public float CurrentHealth = 100;
     private float MaxHealth;
+    private bool soundPlayed = false;
     FirstPersonController Player;
 
     void Start()
@@ -24,13 +25,21 @@ public class UpdateHealth : MonoBehaviour
     {
         CurrentHealth = Player.Health;
         HealthBar.fillAmount = CurrentHealth / MaxHealth;
-        if(CurrentHealth <= MaxHealth * .30)
+        if(CurrentHealth <= MaxHealth * .30 && !HealthCriticalOverlay.enabled)
         {
             HealthCriticalOverlay.enabled = true;
+            if (!soundPlayed)
+            {
+                Player.PlayerAudioSource.PlayOneShot(Player.LowHealthAudio);
+                soundPlayed = true;
+                Debug.Log("Sound Played");
+            }
+
         }
-        else
+        else if (CurrentHealth > MaxHealth * .30 && HealthCriticalOverlay.enabled)
         {
             HealthCriticalOverlay.enabled = false;
+            soundPlayed = false;
         }
     }
 
