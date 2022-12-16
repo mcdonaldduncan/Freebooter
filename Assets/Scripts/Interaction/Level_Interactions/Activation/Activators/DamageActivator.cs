@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class DamageActivator : MonoBehaviour, IDamageable, IActivator
 {
     [SerializeField] float m_Health;
     [SerializeField] GameObject m_DeathParticles;
+    
 
     public float Health { get; set; }
 
@@ -64,7 +66,6 @@ public class DamageActivator : MonoBehaviour, IDamageable, IActivator
         if (m_DeathParticles == null) return;
 
         Instantiate(m_DeathParticles, this.transform.position, Quaternion.identity);
-
     }
 
     void SetUsable()

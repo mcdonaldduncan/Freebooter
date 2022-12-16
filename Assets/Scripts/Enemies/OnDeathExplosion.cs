@@ -108,8 +108,8 @@ public class OnDeathExplosion : MonoBehaviour
         ExplosionDuration = 1.5f;
         Destroy(rb);
         m.material.color = Color.white;
-        this.transform.position = prefab.transform.position;
-        this.transform.rotation = prefab.transform.rotation;
+        this.transform.position = transform.parent.position;
+        this.transform.rotation = transform.parent.rotation;
         var explosiondealdamage = explosionGO.GetComponent<ExplosionDealDamage>();
         explosiondealdamage.ClearList();
     }

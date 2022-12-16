@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public sealed class LevelManager : MonoBehaviour
 {
@@ -62,6 +63,11 @@ public sealed class LevelManager : MonoBehaviour
         CheckPoint temp = m_CheckPoints[m_CheckPoints.Count - 1];
         m_CheckPoints.RemoveAt(m_CheckPoints.Count - 1);
         return temp.gameObject;
+    }
+
+    public void ReturnToMainMenu()
+    {
+        SceneManager.LoadScene(0);
     }
 
     void SetIndices()

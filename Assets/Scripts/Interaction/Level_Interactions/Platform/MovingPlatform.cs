@@ -185,6 +185,7 @@ public class MovingPlatform : MonoBehaviour
 
     public void OnPlayerContact()
     {
+        
         isAttached = true;
         if (m_MovementType == MovementType.CONTACT)
         {
