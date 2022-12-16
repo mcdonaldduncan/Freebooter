@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
 {
@@ -67,6 +68,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
         animator.SetBool("ChasePlayer", false);
         animator.SetBool("AttackPlayer", false);
         LevelManager.PlayerRespawn += OnPlayerRespawn;
+        hideBehavior.enabled = false;
     }
 
     private void Update()
@@ -79,7 +81,16 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
             if (isSwarm)
             {
                 chasePlayer = true;
-
+                //foreach (var item in hits)
+                //{
+                //    if (item == null) continue;
+                //    if (item.TryGetComponent(out EnemySwarmerBehavior temp))
+                //    {
+                //        temp.chasePlayer = true;
+                //        temp.hideBehavior.enabled = false;
+                //    }
+                //    //item.GetComponent<EnemySwarmerBehavior>().chasePlayer = true;
+                //}
                 if (hideBehavior.enabled == true) hideBehavior.enabled = false;
             }
             else
@@ -89,6 +100,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
 
                 if (hideBehavior.enabled == false)
                 {
+                    
                     navMeshAgent.ResetPath();
                     hideBehavior.enabled = true;
                     hideBehavior.StartHideProcessRemote(LevelManager.Instance.Player.transform);

@@ -35,14 +35,15 @@ public class OnDeathExplosion : MonoBehaviour
                 {
                     if (explodeOnce == false)
                     {
-                    explodeOnce = true;
-                    temp = Instantiate(explosionparticle, this.transform); // spawn in the explosion particle once during the explosion
+                        explodeOnce = true;
+                        temp = Instantiate(explosionparticle, this.transform);
+                        // spawn in the explosion particle once during the explosion
                     }
                 ExplosionDuration -= Time.deltaTime;
                 }
                 if (ExplosionDuration < 0)
                 {
-                stopExplosion();
+                    stopExplosion();
                 }
             }
         }
@@ -91,7 +92,7 @@ public class OnDeathExplosion : MonoBehaviour
     {
         explosionGO.GetComponent<SphereCollider>().enabled = false;
         Destroy(temp);
-
+        Instantiate(explosionparticle, this.transform);
         transform.parent.gameObject.SetActive(false);
 
         //prefab.SetActive(false);

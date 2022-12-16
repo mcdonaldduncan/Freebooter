@@ -14,7 +14,7 @@ public class HideBehavior : MonoBehaviour
     [Range(-1, 1)]
     [SerializeField] float m_Sensitivity;
 
-    [Range(1, 10)]
+    [Range(1, 20)]
     [SerializeField] float m_MinDistance;
 
     LineOfSightChecker m_LineOfSightChecker;
@@ -58,6 +58,7 @@ public class HideBehavior : MonoBehaviour
         if (m_MovementCoroutine != null)
         {
             StopCoroutine(m_MovementCoroutine);
+            //this.enabled = false;
         }
     }
 
