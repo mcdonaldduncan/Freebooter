@@ -6,10 +6,12 @@ public class GunPickup : MonoBehaviour
 {
     [SerializeField] private GunHandler.GunType gunTypeToPickup;
     private GunHandler gunHandler;
+    private FirstPersonController player;
 
     private void Start()
     {
         gunHandler = LevelManager.Instance.Player.GetComponentInChildren<GunHandler>();
+        player = LevelManager.Instance.Player.GetComponent<FirstPersonController>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -17,6 +19,7 @@ public class GunPickup : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             gunHandler.OnWeaponPickup(gunTypeToPickup);
+            player.PlayerAudioSource.PlayOneShot(player.GunPickupAudio);
             Destroy(gameObject);
         }
     }

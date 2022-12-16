@@ -11,6 +11,9 @@ using UnityEngine.SceneManagement;
 //TODO Abstract into classes that are managed by this class (i.e. defualt movement, wallrun movement, etc.)
 public sealed class FirstPersonController : MonoBehaviour, IDamageable
 {
+    public AudioSource PlayerAudioSource { get { return playerAudioSource; } }
+    public AudioClip LowHealthAudio { get { return lowHealthAudio; } }
+    public AudioClip GunPickupAudio { get { return gunPickupAudio; } }
     public float MaxHealth { get { return maxHealth; } set { maxHealth = value; } }
     public float Health { get { return health; } set { health = value; } }
     public float DistanceToHeal { get { return distanceToHeal; } }
@@ -151,6 +154,13 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     public bool basicMovement;
     public bool wallRunning;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip dashAudio;
+    [SerializeField] private AudioClip lowHealthAudio;
+    [SerializeField] private AudioClip playerHitAudio;
+    [SerializeField] private AudioClip gunPickupAudio;
+    private AudioSource playerAudioSource;
+
     private Camera playerCamera;
     private CharacterController characterController;
     private Rigidbody playerRB;
@@ -220,9 +230,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
         jumpsRemaining = jumpsAllowed;
         dashesRemaining = dashesAllowed;
-        
-        
-       
+
+        playerAudioSource = GetComponent<AudioSource>();
     }
 
 
@@ -420,6 +429,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
         //While loop where the dash happens
         hasIFrames = true; //turn on iframes
+        playerAudioSource.Stop();
+        playerAudioSource.PlayOneShot(dashAudio);
         while (Time.time < startTime + dashTime)
         {
             UpdateDashBar = true;
@@ -652,6 +663,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         if (CanBeDamaged)
         {
             Health -= damageTaken;
+            playerAudioSource.PlayOneShot(playerHitAudio);
             //Debug.Log($"Player Health: { health }");
             CheckForDeath();
         }
