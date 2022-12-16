@@ -364,7 +364,9 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
     private void ReloadScene(InputAction.CallbackContext context)
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        SceneManager.LoadScene(0);
     }
 
     private void AdaptFOV()

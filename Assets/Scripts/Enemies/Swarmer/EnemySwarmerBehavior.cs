@@ -1,10 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Net.Sockets;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.UIElements;
 
 public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
 {
@@ -45,7 +40,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
     private bool attackingPlayer;
     private bool inAttackAnim;
 
-    private bool isSwarm => Physics.OverlapSphereNonAlloc(transform.position, 10f, hits, enemies) >= hideThreshold;
+    private bool isSwarm => Physics.OverlapSphereNonAlloc(transform.position, 15f, hits, enemies) >= hideThreshold;
 
     public Vector3 StartingPosition { get { return m_StartingPosition; } set { m_StartingPosition = value; } }
     private Vector3 m_StartingPosition;
@@ -68,7 +63,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
         animator.SetBool("ChasePlayer", false);
         animator.SetBool("AttackPlayer", false);
         LevelManager.PlayerRespawn += OnPlayerRespawn;
-        hideBehavior.enabled = false;
+        //hideBehavior.enabled = false;
     }
 
     private void Update()
@@ -91,7 +86,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
                 //    }
                 //    //item.GetComponent<EnemySwarmerBehavior>().chasePlayer = true;
                 //}
-                if (hideBehavior.enabled == true) hideBehavior.enabled = false;
+                if (hideBehavior.enabled == true) hideBehavior.EndHideProcessRemote();
             }
             else
             {
