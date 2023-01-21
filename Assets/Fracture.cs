@@ -3,29 +3,49 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class Fracture : MonoBehaviour
+public class Fracture : MonoBehaviour, IDamageable
 {
-    public GameObject fractured;
-    public float breakForce;
+    [SerializeField] private float health;
+    [SerializeField] private float breakForce;
+    private Collider colliderToDisable;
 
-    private void OnTriggerEnter(Collider other)
+    public float Health { get { return health; } set { health = value; } }
+
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if(other.tag == "Player")
+    //    {
+    //        Breakage();
+    //    }
+    //}
+
+    private void Start()
     {
-        if(other.tag == "Player")
-        {
-            Breakage();
-        }
+        colliderToDisable = GetComponent<Collider>();
     }
 
     public void Breakage()
     {
-       GameObject frac = Instantiate(fractured,transform.position,transform.rotation);
-
-        foreach (Rigidbody rb in frac.GetComponentsInChildren<Rigidbody>())
+        colliderToDisable.enabled = false;
+        foreach (Rigidbody rb in gameObject.GetComponentsInChildren<Rigidbody>())
         {
+            rb.isKinematic = false;
             Vector3 force = (rb.transform.position - transform.position).normalized * breakForce;
             rb.AddForce(force);
         }
+    }
 
-        Destroy(gameObject);
+    public void TakeDamage(float damageTaken)
+    {
+        Health -= damageTaken;
+        CheckForDeath();
+    }
+
+    public void CheckForDeath()
+    {
+        if (Health <= 0)
+        {
+            Breakage();
+        }
     }
 }
