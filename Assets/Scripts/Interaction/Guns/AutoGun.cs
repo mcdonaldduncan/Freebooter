@@ -35,6 +35,7 @@ public class AutoGun : MonoBehaviour, IGun
     private float lastShotTime;
     private float reloadStartTime;
     private Coroutine reloadCo;
+    private AutoGunAnimationHandler autoGunAnimationHandler;
 
     private void Update()
     {
@@ -53,6 +54,8 @@ public class AutoGun : MonoBehaviour, IGun
     private void OnEnable()
     {
         GunHandler.weaponSwitched += OnWeaponSwitch;
+        autoGunAnimationHandler = GetComponentInChildren<AutoGunAnimationHandler>();
+        FireRate = autoGunAnimationHandler.RecoilAnimClip.length;
     }
     private void OnDisable()
     {
@@ -69,6 +72,7 @@ public class AutoGun : MonoBehaviour, IGun
                 GunManager.GunShotAudioSource.PlayOneShot(TriggerReleasedAudio);
             }
             this.holdingTrigger = false;
+            autoGunAnimationHandler.RecoilAnim.ResetTrigger("RecoilTrigger");
         }
         else if (context.performed)
         {
@@ -84,6 +88,8 @@ public class AutoGun : MonoBehaviour, IGun
             {
                 CurrentAmmo--;
             }
+
+            autoGunAnimationHandler.RecoilAnim.SetTrigger("RecoilTrigger");
 
             //Add the customized spread of the specific gun
             Vector3 spread = Vector3.zero;
