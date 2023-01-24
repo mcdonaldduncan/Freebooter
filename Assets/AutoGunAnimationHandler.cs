@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class AutoGunAnimationHandler : MonoBehaviour
 {
-    public Animator RecoilAnim { get { return recoilAnim; } }
-    public AnimationClip RecoilAnimClip { get { return recoilAnimClip; } }
+    //public Animator RecoilAnim { get { return recoilAnim; } }
+    //public AnimationClip RecoilAnimClip { get { return recoilAnimClip; } }
 
-    [SerializeField] private Animator recoilAnim;
-    [SerializeField] private AnimationClip recoilAnimClip;
+    public Animator recoilAnim;
+    public AnimationClip recoilAnimClip;
 }

@@ -29,6 +29,7 @@ public interface IGun
     WaitForSeconds ReloadWait { get; set; }
     bool CanShoot { get; }
 
+    void OnPickup();
     void ShootTriggered(InputAction.CallbackContext context);
     void StartReload();
     IEnumerator Reload(WaitForSeconds reloadWait);

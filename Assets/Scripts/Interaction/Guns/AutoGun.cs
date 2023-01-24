@@ -27,6 +27,7 @@ public class AutoGun : MonoBehaviour, IGun
     public AudioClip TriggerReleasedAudio { get; set; }
     public AudioClip[] GunShotAudioList { get; set; }
     public GameObject GunModel { get; set; }
+    public AutoGunAnimationHandler GunAnimationHandler { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
 
     public bool CanShoot => lastShotTime + FireRate < Time.time && CurrentAmmo > 0 && GunManager.CurrentGun is AutoGun;
@@ -35,7 +36,6 @@ public class AutoGun : MonoBehaviour, IGun
     private float lastShotTime;
     private float reloadStartTime;
     private Coroutine reloadCo;
-    private AutoGunAnimationHandler autoGunAnimationHandler;
 
     private void Update()
     {
@@ -54,12 +54,16 @@ public class AutoGun : MonoBehaviour, IGun
     private void OnEnable()
     {
         GunHandler.weaponSwitched += OnWeaponSwitch;
-        autoGunAnimationHandler = GetComponentInChildren<AutoGunAnimationHandler>();
-        FireRate = autoGunAnimationHandler.RecoilAnimClip.length;
     }
     private void OnDisable()
     {
         GunHandler.weaponSwitched -= OnWeaponSwitch;
+    }
+
+    public void OnPickup()
+    {
+        //GunAnimationHandler = GetComponentInChildren<GunAnimationHandler>();
+        FireRate = GunAnimationHandler.recoilAnimClip.length;
     }
 
     //Doesn't need to be static anymore since this script is added as a component now
@@ -72,7 +76,7 @@ public class AutoGun : MonoBehaviour, IGun
                 GunManager.GunShotAudioSource.PlayOneShot(TriggerReleasedAudio);
             }
             this.holdingTrigger = false;
-            autoGunAnimationHandler.RecoilAnim.ResetTrigger("RecoilTrigger");
+            GunAnimationHandler.recoilAnim.ResetTrigger("RecoilTrigger");
         }
         else if (context.performed)
         {
@@ -89,7 +93,7 @@ public class AutoGun : MonoBehaviour, IGun
                 CurrentAmmo--;
             }
 
-            autoGunAnimationHandler.RecoilAnim.SetTrigger("RecoilTrigger");
+            GunAnimationHandler.recoilAnim.SetTrigger("RecoilTrigger");
 
             //Add the customized spread of the specific gun
             Vector3 spread = Vector3.zero;

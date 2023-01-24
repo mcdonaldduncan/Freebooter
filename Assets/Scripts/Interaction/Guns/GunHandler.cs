@@ -120,6 +120,7 @@ public sealed class GunHandler : MonoBehaviour
     [SerializeField] private CanvasGroup autoGunReticle;
     [SerializeField] private AudioClip[] autoGunShotAudioList;
     [SerializeField] private AudioClip triggerReleasedAudio;
+    [SerializeField] private AutoGunAnimationHandler autoGunAnimationHandler;
 
     [Header("Grenade Launcher Parameters")]
     [SerializeField] private GameObject grenadeObject;
@@ -208,6 +209,7 @@ public sealed class GunHandler : MonoBehaviour
             autoGun.GunShotAudioList = this.autoGunShotAudioList;
             autoGun.TriggerReleasedAudio = this.triggerReleasedAudio;
             gun.ReloadWait = this.autoGunReloadWait;
+            autoGun.GunAnimationHandler = this.autoGunAnimationHandler;
         }
         if (gun is HandGun)
         {
@@ -352,6 +354,7 @@ public sealed class GunHandler : MonoBehaviour
         currentGun.GunReticle.alpha = 0;
         currentGun.GunModel.SetActive(false);
 
+        currentGun.OnPickup();
         currentGunState = guns[guns.IndexOf(gunType)];
         currentGun = gunDict[currentGunState];
 

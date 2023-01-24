@@ -434,6 +434,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: c90e7c79574f7e349b2c1430350264b5, type: 3}
   - {fileID: 8300000, guid: 690bae71bb6865348898b7fdf76b0dad, type: 3}
   triggerReleasedAudio: {fileID: 8300000, guid: 857e550ef93099249bcb04313653764a, type: 3}
+  autoGunAnimationHandler: {fileID: 449692374}
   grenadeObject: {fileID: 2469417936984378629, guid: 8178c7fb6a6b5ce46ad893fc448533fe, type: 3}
   grenadeGunModel: {fileID: 297426593897619845}
   grenadeGunShootFrom: {fileID: 297426594248173848}
@@ -935,6 +936,40 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: bfdf0a3cd80b1de43936b2cfb74b6c62, type: 3}
   m_PrefabInstance: {fileID: 3209609873797203431}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &449692373
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2327159229049862326}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2f928ebdee64d454f917a5cb832b04cb, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &449692374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2327159229049862326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6af24bf1178600e478e3e272b4618c4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  recoilAnim: {fileID: 449692373}
+  recoilAnimClip: {fileID: 7400000, guid: 6c61421aa3792cc4db50603a76977dc4, type: 2}
 --- !u!4 &3098593442808832524 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: bfdf0a3cd80b1de43936b2cfb74b6c62, type: 3}
