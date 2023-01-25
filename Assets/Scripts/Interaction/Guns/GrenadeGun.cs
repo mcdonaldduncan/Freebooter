@@ -47,6 +47,11 @@ public class GrenadeGun : MonoBehaviour, IGun
         GunHandler.weaponSwitched -= OnWeaponSwitch;
     }
 
+    public void OnPickup()
+    {
+
+    }
+
     public void ShootTriggered(InputAction.CallbackContext context)
     {
         if (CanShoot && context.performed) Shoot();
