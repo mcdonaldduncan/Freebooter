@@ -72,6 +72,7 @@ public sealed class GunHandler : MonoBehaviour
     [SerializeField] private float handGunAimOffset = 15f;
     [SerializeField] private CanvasGroup handGunReticle;
     [SerializeField] private AudioClip handGunShotAudio;
+    [SerializeField] private HandgunAnimationHandler handgunAnimationHandler;
 
     [Header("Shotgun Parameters")]
     [SerializeField] private GameObject shotGunModel;
@@ -214,7 +215,6 @@ public sealed class GunHandler : MonoBehaviour
         }
         if (gun is HandGun)
         {
-            gun.FireRate = this.handGunFireRate;
             gun.GunModel = this.handGunModel;
             gun.ShootFrom = this.handGunShootFrom;
             gun.MinDamage = this.handGunMinDamage;
@@ -227,6 +227,8 @@ public sealed class GunHandler : MonoBehaviour
             gun.GunReticle = this.handGunReticle;
             gun.GunShotAudio = this.handGunShotAudio;
             gun.ReloadWait = this.handGunReloadWait;
+            handGun.GunAnimationHandler = this.handgunAnimationHandler;
+            gun.FireRate = this.handgunAnimationHandler.RecoilAnimClip.length;
         }
         if (gun is ShotGun)
         {

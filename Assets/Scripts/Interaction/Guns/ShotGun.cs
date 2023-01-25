@@ -271,5 +271,6 @@ public class ShotGun : MonoBehaviour, IGun
             GunManager.StopCoroutine(reloadCo);
             GunManager.Reloading = false;
         }
+        GunAnimationHandler.RecoilAnim.ResetTrigger("RecoilTrigger");
     }
 }

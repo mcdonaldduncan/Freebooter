@@ -280,7 +280,8 @@ public class AutoGun : MonoBehaviour, IGun
             GunManager.StopCoroutine(reloadCo);
             GunManager.Reloading = false;
         }
-        
+        GunAnimationHandler.RecoilAnim.ResetTrigger("RecoilTrigger");
+
         //if (GunManager.Reloading)
         //{
         //    GunManager.Reloading = false;

@@ -26,6 +26,7 @@ public class HandGun : MonoBehaviour, IGun
     public TrailRenderer BulletTrail { get; set; }
     public AudioClip GunShotAudio { get; set; }
     public GameObject GunModel { get; set; }
+    public HandgunAnimationHandler GunAnimationHandler { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
 
     public bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading && CurrentAmmo > 0;
@@ -59,6 +60,8 @@ public class HandGun : MonoBehaviour, IGun
 
     public void Shoot()
     {
+        GunAnimationHandler.RecoilAnim.SetTrigger("RecoilTrigger");
+        //  GunAnimationHandler.RecoilAnim.ResetTrigger("IdleTrigger");
         var timeShot = Time.time;
         RaycastHit hitInfo;
 
@@ -256,5 +259,6 @@ public class HandGun : MonoBehaviour, IGun
             GunManager.StopCoroutine(reloadCo);
             GunManager.Reloading = false;
         }
+        GunAnimationHandler.RecoilAnim.ResetTrigger("RecoilTrigger");
     }
 }

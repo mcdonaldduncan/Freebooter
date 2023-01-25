@@ -9,4 +9,8 @@ public class ShotgunAnimationHandler : MonoBehaviour
 
     [SerializeField] private Animator recoilAnim;
     [SerializeField] private AnimationClip recoilAnimClip;
+    public void RecoilEnd()
+    {
+        RecoilAnim.ResetTrigger("RecoilTrigger");
+    }
 }
