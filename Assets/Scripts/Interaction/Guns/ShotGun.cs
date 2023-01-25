@@ -28,6 +28,7 @@ public class ShotGun : MonoBehaviour, IGun
     public TrailRenderer BulletTrail { get; set; }
     public AudioClip GunShotAudio { get; set; }
     public GameObject GunModel { get; set; }
+    public ShotgunAnimationHandler GunAnimationHandler { get; set; }
 
     public bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading && CurrentAmmo > 0;
 
@@ -52,11 +53,6 @@ public class ShotGun : MonoBehaviour, IGun
         GunHandler.weaponSwitched -= OnWeaponSwitch;
     }
 
-    public void OnPickup()
-    {
-
-    }
-
     public void ShootTriggered(InputAction.CallbackContext context)
     {
         if (CanShoot && context.performed) Shoot();
@@ -66,6 +62,7 @@ public class ShotGun : MonoBehaviour, IGun
     public void Shoot()
     {
         GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
+        GunAnimationHandler.RecoilAnim.SetTrigger("RecoilTrigger");
         for (int i = 0; i < ShotGunBulletAmount; i++)
         {
             Vector3 aimSpot = GunManager.FPSCam.transform.position;

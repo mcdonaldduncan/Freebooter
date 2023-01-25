@@ -60,12 +60,6 @@ public class AutoGun : MonoBehaviour, IGun
         GunHandler.weaponSwitched -= OnWeaponSwitch;
     }
 
-    public void OnPickup()
-    {
-        //GunAnimationHandler = GetComponentInChildren<GunAnimationHandler>();
-        FireRate = GunAnimationHandler.recoilAnimClip.length;
-    }
-
     //Doesn't need to be static anymore since this script is added as a component now
     public void ShootTriggered(InputAction.CallbackContext context)
     {
@@ -76,7 +70,7 @@ public class AutoGun : MonoBehaviour, IGun
                 GunManager.GunShotAudioSource.PlayOneShot(TriggerReleasedAudio);
             }
             this.holdingTrigger = false;
-            GunAnimationHandler.recoilAnim.ResetTrigger("RecoilTrigger");
+            GunAnimationHandler.RecoilAnim.ResetTrigger("RecoilTrigger");
         }
         else if (context.performed)
         {
@@ -93,7 +87,7 @@ public class AutoGun : MonoBehaviour, IGun
                 CurrentAmmo--;
             }
 
-            GunAnimationHandler.recoilAnim.SetTrigger("RecoilTrigger");
+            GunAnimationHandler.RecoilAnim.SetTrigger("RecoilTrigger");
 
             //Add the customized spread of the specific gun
             Vector3 spread = Vector3.zero;

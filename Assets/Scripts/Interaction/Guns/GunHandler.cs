@@ -97,6 +97,7 @@ public sealed class GunHandler : MonoBehaviour
     [SerializeField] private float shotGunAimOffset = 15f;
     [SerializeField] private CanvasGroup shotGunReticle;
     [SerializeField] private AudioClip shotGunShotAudio;
+    [SerializeField] private ShotgunAnimationHandler shotgunAnimationHandler;
 
     [Header("Autogun Parameters")]
     [SerializeField] private GameObject autoGunModel;
@@ -195,7 +196,6 @@ public sealed class GunHandler : MonoBehaviour
 
         if (gun is AutoGun)
         {
-            gun.FireRate = this.autoFireRate;
             gun.GunModel = this.autoGunModel;
             gun.ShootFrom = this.autoGunShootFrom;
             gun.MinDamage = this.autoGunMinDamage;
@@ -210,6 +210,7 @@ public sealed class GunHandler : MonoBehaviour
             autoGun.TriggerReleasedAudio = this.triggerReleasedAudio;
             gun.ReloadWait = this.autoGunReloadWait;
             autoGun.GunAnimationHandler = this.autoGunAnimationHandler;
+            gun.FireRate = this.autoGunAnimationHandler.RecoilAnimClip.length;
         }
         if (gun is HandGun)
         {
@@ -242,6 +243,8 @@ public sealed class GunHandler : MonoBehaviour
             gun.GunReticle = this.shotGunReticle;
             gun.GunShotAudio = this.shotGunShotAudio;
             gun.ReloadWait = this.shotGunReloadWait;
+            shotGun.GunAnimationHandler = this.shotgunAnimationHandler;
+            gun.FireRate = this.shotgunAnimationHandler.RecoilAnimClip.length;
         }
         if (gun is GrenadeGun)
         {
@@ -354,7 +357,6 @@ public sealed class GunHandler : MonoBehaviour
         currentGun.GunReticle.alpha = 0;
         currentGun.GunModel.SetActive(false);
 
-        currentGun.OnPickup();
         currentGunState = guns[guns.IndexOf(gunType)];
         currentGun = gunDict[currentGunState];
 
