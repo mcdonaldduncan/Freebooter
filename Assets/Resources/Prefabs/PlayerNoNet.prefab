@@ -420,7 +420,7 @@ MonoBehaviour:
   handGunCurrentAmmo: 0
   handGunMaxAmmo: 10
   handGunReloadTime: 1
-  handGunFireRate: 0
+  handGunFireRate: 0.5
   handGunAimOffset: 15
   handGunReticle: {fileID: 6976750457327859168}
   handGunShotAudio: {fileID: 8300000, guid: 0e54aeef289ca2a468f328b56436e7ed, type: 3}
@@ -453,7 +453,7 @@ MonoBehaviour:
   autoGunCurrentAmmo: 0
   autoGunMaxAmmo: 30
   autoGunReloadTime: 2
-  autoFireRate: 0.15
+  autoFireRate: 0.25
   autoGunAimOffset: 15
   autoGunReticle: {fileID: 2291571642965968571}
   autoGunShotAudioList:
