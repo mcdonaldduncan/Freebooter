@@ -42,8 +42,6 @@ public class ReplaceWithPrefab : EditorWindow
                     // -- If you update the original prefab, the replaced items will
                     // -- update as well.
                     newObject = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
-                    //newObject.transform.rotation = Quaternion.Euler(Vector3.zero);
-                    //newObject.transform.localScale = Vector3.one;
                 }
                 else
                 {
@@ -51,8 +49,6 @@ public class ReplaceWithPrefab : EditorWindow
                     // -- it will just Instantiate whatever you did drag over.
                     newObject = Instantiate(prefab);
                     newObject.name = prefab.name;
-                    //newObject.transform.rotation = Quaternion.Euler(Vector3.zero);
-                    //newObject.transform.localScale = Vector3.one;
                 }
 
                 // -- if for some reason Unity couldn't perform your request, print an error
@@ -66,11 +62,8 @@ public class ReplaceWithPrefab : EditorWindow
                 Undo.RegisterCreatedObjectUndo(newObject, "Replace With Prefabs");
                 newObject.transform.parent = selected.transform.parent;
                 newObject.transform.localPosition = selected.transform.localPosition;
-                if (newObject.name != "FracturedBarrel")
-                {
-                    newObject.transform.localRotation = selected.transform.localRotation;
-                    newObject.transform.localScale = selected.transform.localScale;
-                }
+                newObject.transform.localRotation = selected.transform.localRotation;
+                newObject.transform.localScale = selected.transform.localScale;
                 newObject.transform.SetSiblingIndex(selected.transform.GetSiblingIndex());
                 // -- now delete the old prefab
                 try

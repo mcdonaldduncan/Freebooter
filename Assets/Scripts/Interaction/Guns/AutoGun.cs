@@ -27,7 +27,6 @@ public class AutoGun : MonoBehaviour, IGun
     public AudioClip TriggerReleasedAudio { get; set; }
     public AudioClip[] GunShotAudioList { get; set; }
     public GameObject GunModel { get; set; }
-    public AutoGunAnimationHandler GunAnimationHandler { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
 
     public bool CanShoot => lastShotTime + FireRate < Time.time && CurrentAmmo > 0 && GunManager.CurrentGun is AutoGun;
@@ -70,7 +69,6 @@ public class AutoGun : MonoBehaviour, IGun
                 GunManager.GunShotAudioSource.PlayOneShot(TriggerReleasedAudio);
             }
             this.holdingTrigger = false;
-            GunAnimationHandler.RecoilAnim.ResetTrigger("RecoilTrigger");
         }
         else if (context.performed)
         {
@@ -86,8 +84,6 @@ public class AutoGun : MonoBehaviour, IGun
             {
                 CurrentAmmo--;
             }
-
-            GunAnimationHandler.RecoilAnim.SetTrigger("RecoilTrigger");
 
             //Add the customized spread of the specific gun
             Vector3 spread = Vector3.zero;
@@ -193,8 +189,6 @@ public class AutoGun : MonoBehaviour, IGun
     {
         if (damageableTarget != null)
         {
-            bool breakableObject = hitInfo.transform.TryGetComponent<Fracture>(out Fracture component);
-
             //using a try catch to prevent destroyed enemies from throwing null reference exceptions
             try
             {
@@ -202,7 +196,7 @@ public class AutoGun : MonoBehaviour, IGun
                 Vector3 targetPosition = hitInfo.transform.position;
 
                 //Play blood particle effects on the enemy, where they were hit
-                var p = Instantiate(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
                 Destroy(p, 1);
 
                 //Get the distance between the enemy and the gun
@@ -239,7 +233,7 @@ public class AutoGun : MonoBehaviour, IGun
             }
             catch
             {
-                var p = Instantiate(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
                 Destroy(p, 1);
             }
         }
@@ -280,8 +274,7 @@ public class AutoGun : MonoBehaviour, IGun
             GunManager.StopCoroutine(reloadCo);
             GunManager.Reloading = false;
         }
-        GunAnimationHandler.RecoilAnim.ResetTrigger("RecoilTrigger");
-
+        
         //if (GunManager.Reloading)
         //{
         //    GunManager.Reloading = false;
