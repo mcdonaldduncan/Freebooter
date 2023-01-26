@@ -2,13 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.PlayerLoop;
 using UnityEngine.SceneManagement;
 
 //TODO Abstract into classes that are managed by this class (i.e. defualt movement, wallrun movement, etc.)
-public class FirstPersonController : MonoBehaviour, IDamageable
+public sealed class FirstPersonController : MonoBehaviour, IDamageable
 {
+    public AudioSource PlayerAudioSource { get { return playerAudioSource; } }
+    public AudioClip LowHealthAudio { get { return lowHealthAudio; } }
+    public AudioClip GunPickupAudio { get { return gunPickupAudio; } }
     public float MaxHealth { get { return maxHealth; } set { maxHealth = value; } }
     public float Health { get { return health; } set { health = value; } }
     public float DistanceToHeal { get { return distanceToHeal; } }
@@ -149,6 +154,13 @@ public class FirstPersonController : MonoBehaviour, IDamageable
     public bool basicMovement;
     public bool wallRunning;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip dashAudio;
+    [SerializeField] private AudioClip lowHealthAudio;
+    [SerializeField] private AudioClip playerHitAudio;
+    [SerializeField] private AudioClip gunPickupAudio;
+    private AudioSource playerAudioSource;
+
     private Camera playerCamera;
     private CharacterController characterController;
     private Rigidbody playerRB;
@@ -182,6 +194,11 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
     [NonSerialized] public Vector3 surfaceMotion;
 
+    Vector3 startingPos;
+
+    public bool isDead;
+    int isDeadFrameCount;
+
     public enum MovementState
     {
         basic,
@@ -213,11 +230,24 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
         jumpsRemaining = jumpsAllowed;
         dashesRemaining = dashesAllowed;
+
+        playerAudioSource = GetComponent<AudioSource>();
+    }
+
+
+    
+
+    private void Start()
+    {
+        startingPos = transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
+        
+        if (!characterController.enabled) return;
+
         if (Health > MaxHealth)
         {
             Health = MaxHealth;
@@ -245,6 +275,16 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         }
 
         HandleMouseLook();
+        
+    }
+
+    private void LateUpdate()
+    {
+        if (!isDead) return;
+        if (++isDeadFrameCount < 2) return;
+        isDead = false;
+        characterController.enabled = true;
+        isDeadFrameCount = 0;
     }
 
     private void FixedUpdate()
@@ -280,6 +320,8 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         _input.Gun.Shoot.canceled += playerGun.Shoot;
         _input.Gun.SwitchWeapon.performed += playerGun.SwitchWeapon;
         _input.Gun.Reload.performed += playerGun.Reload;
+
+        //if (LevelManager.Instance.Player == null) LevelManager.Instance.Player = this;
     }
 
     private void OnDisable()
@@ -331,7 +373,9 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
     private void ReloadScene(InputAction.CallbackContext context)
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        SceneManager.LoadScene(0);
     }
 
     private void AdaptFOV()
@@ -385,6 +429,8 @@ public class FirstPersonController : MonoBehaviour, IDamageable
 
         //While loop where the dash happens
         hasIFrames = true; //turn on iframes
+        playerAudioSource.Stop();
+        playerAudioSource.PlayOneShot(dashAudio);
         while (Time.time < startTime + dashTime)
         {
             UpdateDashBar = true;
@@ -617,6 +663,7 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         if (CanBeDamaged)
         {
             Health -= damageTaken;
+            playerAudioSource.PlayOneShot(playerHitAudio);
             //Debug.Log($"Player Health: { health }");
             CheckForDeath();
         }
@@ -633,15 +680,32 @@ public class FirstPersonController : MonoBehaviour, IDamageable
         {
             health = MaxHealth;
         }
-        Debug.Log($"Player healed. Current health is {health}");
+        //Debug.Log($"Player healed. Current health is {health}");
     }
 
     public void CheckForDeath()
     {
         if (Health <= 0)
         {
-            Debug.Log("Player died!");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            //Debug.Log("Player died!");
+            //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+            
+            OnDeath();
+            
         }
+    }
+
+    void OnDeath()
+    {
+        isDead = true;
+        characterController.enabled = false;
+        
+        transform.position = LevelManager.Instance.CurrentCheckPoint?.transform.position ?? startingPos;
+        transform.rotation = LevelManager.Instance.CurrentCheckPoint?.transform.rotation ?? Quaternion.identity;
+
+        health = maxHealth;
+
+        LevelManager.Instance.FirePlayerRespawn();
     }
 }

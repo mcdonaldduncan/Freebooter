@@ -54,14 +54,16 @@ public class PlatformBase : MonoBehaviour
         }
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        m_CurrentPos = transform.position;
-        if (m_IsAttached && m_CurrentPos != m_LastPos)
-        {
-            var surfaceMotion = m_CurrentPos - m_LastPos;
-            LevelManager.Instance.Player.surfaceMotion += surfaceMotion;
-        }
+        //m_CurrentPos = transform.position;
+        //if (m_IsAttached && m_CurrentPos != m_LastPos)
+        //{
+        //    Vector3 temp1 = new Vector3(m_CurrentPos.x, 0, m_CurrentPos.z);
+        //    Vector3 temp2 = new Vector3(m_LastPos.x, 0, m_LastPos.z);
+        //    var surfaceMotion = m_CurrentPos - m_LastPos;
+        //    LevelManager.Instance.Player.surfaceMotion += surfaceMotion;
+        //}
         HandleMovementState();
         m_LastPos = m_CurrentPos;
     }
@@ -194,6 +196,7 @@ public class PlatformBase : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             m_Platform.OnPlayerContact();
+            collision.transform.SetParent(transform);
             m_IsAttached = true;
         }
     }
@@ -203,6 +206,7 @@ public class PlatformBase : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             m_Platform.OnPlayerExit();
+            collision.transform.SetParent(null, true);
             m_IsAttached = false;
         }
     }

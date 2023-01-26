@@ -26,9 +26,9 @@ public class FakeOrbit : MonoBehaviour, IDamageable
         _Transform = transform;
         Health = StartingHealth;
         _Inquisitor = GetComponentInParent<Inquisitor>();
-        radius = Vector3.Distance(_Transform.position, target.position);
+        radius = Random.Range(5f, 7f);
         angle = Mathf.Deg2Rad * Random.Range(0f, 360f);
-        startY = transform.localPosition.y;
+        startY = transform.position.y - target.position.y;
     }
 
     void Update()
@@ -40,6 +40,8 @@ public class FakeOrbit : MonoBehaviour, IDamageable
     void Orbit()
     {
         angle += rotationSpeed * Time.deltaTime;
+        //transform.RotateAround(new Vector3(target.position.x, startY, target.position.z), Vector3.up, angle);
+
 
         float x = radius * Mathf.Cos(angle);
         float z = radius * Mathf.Sin(angle);
@@ -52,7 +54,7 @@ public class FakeOrbit : MonoBehaviour, IDamageable
     public void TakeDamage(float damageTaken)
     {
         Health -= damageTaken;
-        Debug.Log("Orbit Damaged");
+        //Debug.Log("Orbit Damaged");
         CheckForDeath();
     }
 
@@ -60,9 +62,11 @@ public class FakeOrbit : MonoBehaviour, IDamageable
     {
         if (Health <= 0)
         {
-            Debug.Log("Orbit Destroyed");
-            _Inquisitor.orbits.Remove(this);
-            Destroy(gameObject);
+            //Debug.Log("Orbit Destroyed");
+            //_Inquisitor.orbits.Remove(this);
+            gameObject.SetActive(false);
+            _Inquisitor.CheckOrbits();
+            
         }
     }
 }

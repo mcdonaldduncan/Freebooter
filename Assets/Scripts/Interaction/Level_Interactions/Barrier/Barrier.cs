@@ -50,42 +50,56 @@ public class Barrier : MonoBehaviour
 
     private void OnEnable()
     {
+        Activation += OnActivation;
+
         if (m_Activator == null || m_AccessType != AccessType.ACTIVATE) return;
 
         try
         {
             m_IActivator = (IActivator)m_Activator.GetComponent(typeof(IActivator));
-            m_IActivator.Activate += Activate;
+            m_IActivator.Activate += OnActivate;
+            m_IActivator.Deactivate += OnDeactivate; 
         }
         catch (System.Exception)
         {
-            Debug.LogError("Valid IActivator Not Found");
+            //Debug.LogError("Valid IActivator Not Found");
         }
     }
 
     private void OnDisable()
     {
+        Activation -= OnActivation;
+
         if (m_IActivator == null || m_AccessType != AccessType.ACTIVATE) return;
-        m_IActivator.Activate -= Activate;
+        m_IActivator.Activate -= OnActivate;
+        m_IActivator.Deactivate -= OnDeactivate;
     }
 
     void Start()
     {
-
         if (m_State == BarrierState.OPEN)
         {
             SetState?.Invoke();
         }
     }
 
-    private void Activate()
+    private void OnActivate()
     {
+        if (!m_ShouldClose && m_State == BarrierState.OPEN) return;
+
         Activation?.Invoke();
-        OnActivation();
-        Debug.Log("Activated");
+
         if (AutoClose)
         {
-            Invoke(nameof(Activate), m_CloseDelay);
+            Invoke(nameof(OnActivate), m_CloseDelay);
+        }
+    }
+
+    private void OnDeactivate()
+    {
+        if (m_State == BarrierState.OPEN)
+        {
+            Activation?.Invoke();
         }
     }
 
@@ -111,15 +125,15 @@ public class Barrier : MonoBehaviour
     {
         if (m_InTrigger) return;
         if (!other.gameObject.CompareTag("Player")) return;
-        Debug.Log("Trigger Enter");
-        Debug.Log(Time.time);
+        //Debug.Log("Trigger Enter");
+        //Debug.Log(Time.time);
         m_InTrigger = true;
         if (!m_ShouldClose && m_State == BarrierState.OPEN) return;
 
         switch (m_AccessType)
         {
             case AccessType.PROXIMITY:
-                Activate();
+                OnActivate();
                 break;
 
             case AccessType.ACTIVATE:
@@ -134,7 +148,7 @@ public class Barrier : MonoBehaviour
                 }
                 else
                 {
-                    Activate();
+                    OnActivate();
                 }
 
                 break;
@@ -149,12 +163,10 @@ public class Barrier : MonoBehaviour
     {
         if (!m_InTrigger) return;
         if (!other.gameObject.CompareTag("Player")) return;
-        Debug.Log("Trigger Exit");
+        //Debug.Log("Trigger Exit");
         m_InTrigger = false;
-        if (!m_ShouldClose) return;
-
-        if (m_State == BarrierState.OPEN) Activate();
-
+        if (m_State == BarrierState.CLOSED) return;
+        OnActivate();
     }
 }
 

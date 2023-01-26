@@ -28,19 +28,21 @@ public class Follower : MonoBehaviour
         col = GetComponent<Collider>();
     }
 
-    public void Init(Transform target, Inquisitor inquisitor)
+    public void Init(Transform target, Inquisitor inquisitor, Vector3 position)
     {
         gameObject.SetActive(true);
         _Target = target;
         _Inquisitor = inquisitor;
-        _Transform.position = new Vector3(_Target.position.x, 15f, _Target.position.z);
+        _Transform.position = position;
         isInitialized = true;
     }
 
     public void Despawn()
     {
-        _Inquisitor.isTracking = false;
+        _Inquisitor.SetTracking(false);
         isInitialized = false;
+        if (gameObject == null) return;
+        
         gameObject.SetActive(false);
     }
 
@@ -60,6 +62,7 @@ public class Follower : MonoBehaviour
         acceleration += CalculateSteering(_Target.position);
         velocity += acceleration;
         _Transform.position += velocity * Time.deltaTime;
+        _Transform.LookAt(_Transform.position + velocity);
         acceleration = Vector3.zero;
     }
 
@@ -85,20 +88,21 @@ public class Follower : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("trigger enter");
+        //Debug.Log("trigger enter");
         if (other.gameObject.CompareTag("ContactlessProjectile")) return;
         if (other.gameObject.CompareTag("Player")) return;
         if (other.gameObject.CompareTag("Ground")) return;
-        
+
         try
         {
             IDamageable damageable = other.transform.GetComponent<IDamageable>();
+            damageable.TakeDamage(damage * Time.deltaTime);
             if (damageable == null) Despawn();
             return;
         }
         catch
         {
-            Debug.Log("Hit non idamageable");
+            //Debug.Log("Hit non idamageable");
             Despawn();
             return;
         }
@@ -110,7 +114,7 @@ public class Follower : MonoBehaviour
         {
             IDamageable damageable = other.transform.GetComponent<IDamageable>();
             damageable.TakeDamage(damage * Time.deltaTime);
-            Debug.Log($"{other.transform.name}: {damageable.Health}");
+            //Debug.Log($"{other.transform.name}: {damageable.Health}");
         }
         catch
         {

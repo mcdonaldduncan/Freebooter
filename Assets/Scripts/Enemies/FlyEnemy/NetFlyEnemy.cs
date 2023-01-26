@@ -132,18 +132,18 @@ public class NetFlyEnemy : NetworkBehaviour, IDamageable
     {
         if (target == null) return;
         RaycastHit hit;
-        Debug.DrawRay(visionPoint.transform.position, targetDiretion, Color.green);
+        //Debug.DrawRay(visionPoint.transform.position, targetDiretion, Color.green);
         Physics.Raycast(visionPoint.transform.position, targetDiretion, out hit, range / 1.2f);
         if (hit.collider != null)
         {
             if (hit.collider.tag == target.tag)
             {
-                Debug.Log("Player Detected");
+                //Debug.Log("Player Detected");
                 Invoke("StateChase", 2);
             }
             else if (hit.collider.tag != target.tag)
             {
-                Debug.Log("Player NOT Detected");
+                //Debug.Log("Player NOT Detected");
             }
         }
         else { }
@@ -152,7 +152,7 @@ public class NetFlyEnemy : NetworkBehaviour, IDamageable
     {
         if (target == null) return;
         RaycastHit hit;
-        Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
+        //Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
 
         Physics.Raycast(tip.transform.position, targetDiretion, out hit, range);
         if (hit.collider != null)
@@ -165,7 +165,7 @@ public class NetFlyEnemy : NetworkBehaviour, IDamageable
                     bt.GetComponent<MoveForward>().origin = this.gameObject.transform.rotation;
                     bt.GetComponent<MoveForward>().target = hit.point;
                     //bt.GetComponent<MoveForward>().damage = Damage;
-                    Debug.Log("Player was shot, dealing damage.");
+                    //Debug.Log("Player was shot, dealing damage.");
                     target.TakeDamage(Damage);
                     lastShot = Time.time;
                 }

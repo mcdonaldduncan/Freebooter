@@ -21,7 +21,7 @@ public class MoveForward : MonoBehaviour
         catch (System.Exception)
         {
         }
-        Destroy(this.gameObject, 4);
+       //Destroy(this.gameObject, 4);
     }
 
     // Update is called once per frame
@@ -29,5 +29,13 @@ public class MoveForward : MonoBehaviour
     {
         this.transform.position += targetDiretion * speed * Time.deltaTime;
     }
-    
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!other.name.Contains(gameObject.name))
+        {
+            Destroy(this.gameObject, 0.2f);
+        }
+    }
+
 }

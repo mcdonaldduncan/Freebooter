@@ -9,9 +9,11 @@ public class ShotGun : MonoBehaviour, IGun
     public GunHandler GunManager { get; set; }
     public Transform ShootFrom { get; set; }
     public LayerMask LayerToIgnore { get; set; }
-    public float FireRate { get; set; } 
-    public float BulletDamage { get; set; }
-    public float DamageDrop { get; set; }
+    public float FireRate { get; set; }
+    public float MaxDamage { get; set; }
+    public float MinDamage { get; set; }
+    public float DropStart { get; set; }
+    public float DropEnd { get; set; }
     public float VerticalSpread { get; set; }
     public float HorizontalSpread { get; set; }
     public float AimOffset { get; set; }
@@ -27,7 +29,7 @@ public class ShotGun : MonoBehaviour, IGun
     public AudioClip GunShotAudio { get; set; }
     public GameObject GunModel { get; set; }
 
-    private bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading && CurrentAmmo > 0;
+    public bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading && CurrentAmmo > 0;
 
     private float lastShotTime;
     private float reloadStartTime;
@@ -184,10 +186,33 @@ public class ShotGun : MonoBehaviour, IGun
                 float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);
 
                 //calculate damage dropoff
-                float totalDamage = Mathf.Abs(BulletDamage / ((distance / DamageDrop)));
+                float realDamage;
+
+                if (distance >= DropEnd)
+                {
+                    realDamage = MinDamage;
+                }
+                else if (distance <= DropStart)
+                {
+                    realDamage = MaxDamage;
+                }
+                else
+                {
+                    float clampedDistance = Mathf.Clamp(distance, DropStart, DropEnd) - DropStart;
+                    float distancePercent = 100 - clampedDistance * (100 / (DropEnd - DropStart)); //Listen idk why this needs to be subtracted from 100 to work but it does so yeah
+                    realDamage = Mathf.Abs(MinDamage + (MaxDamage - MinDamage) * (distancePercent / 100));
+                    if (realDamage <= MinDamage)
+                    {
+                        realDamage = MinDamage;
+                    }
+                    if (realDamage >= MaxDamage)
+                    {
+                        realDamage = MaxDamage;
+                    }
+                }
 
                 //Damage the target
-                damageableTarget.TakeDamage(totalDamage);
+                damageableTarget.TakeDamage(realDamage);
             }
             catch
             {

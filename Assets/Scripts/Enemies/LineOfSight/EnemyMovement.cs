@@ -43,19 +43,19 @@ public class EnemyMovement : MonoBehaviour
 
     void HandleSightGain(Transform target)
     {
-        Debug.Log("Gained sight");
+        //Debug.Log("Gained sight");
         if (m_MovementCoroutine != null)
         {
             StopCoroutine(m_MovementCoroutine);
         }
 
         m_MovementCoroutine = StartCoroutine(Hide(target));
-        Debug.Log("Hide routine started");
+        //Debug.Log("Hide routine started");
     }
 
     void HandleSightLost(Transform target)
     {
-        Debug.Log("Lost sight");
+        //Debug.Log("Lost sight");
         if (m_MovementCoroutine != null)
         {
             StopCoroutine(m_MovementCoroutine);
@@ -96,7 +96,7 @@ public class EnemyMovement : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogError($"Unable to find NavMesh near object {m_Colliders[i].name} at {m_Colliders[i].transform.position}");
+                    //Debug.LogError($"Unable to find NavMesh near object {m_Colliders[i].name} at {m_Colliders[i].transform.position}");
                 }
             }
             yield return m_Wait;
@@ -109,7 +109,7 @@ public class EnemyMovement : MonoBehaviour
         {
             if (!NavMesh.FindClosestEdge(hit.position, out hit, m_Agent.areaMask))
             {
-                Debug.LogError($"Unable to find edge close to {hit.position}");
+                //Debug.LogError($"Unable to find edge close to {hit.position}");
             }
 
             if (!ProcessHideAttempt(hit, (target.position - hit.position).normalized, iterations))

@@ -1,64 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &585156787
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 585156788}
-  - component: {fileID: 585156790}
-  - component: {fileID: 585156789}
-  m_Layer: 0
-  m_Name: Explosion
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &585156788
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 585156787}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 9014040488476938557}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &585156790
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 585156787}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Radius: 5
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &585156789
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 585156787}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19852cf3bf5276c48acd94af76be61d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 50
 --- !u!1 &5847183793462315723
 GameObject:
   m_ObjectHideFlags: 0
@@ -68,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6003437356422354188}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sensors Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -99,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2742033101941595638}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sensors Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -130,7 +71,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9014040487129825756}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: w1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -164,7 +105,7 @@ GameObject:
   - component: {fileID: 9014040487133508556}
   - component: {fileID: 9014040487133508557}
   - component: {fileID: 9014040487133508554}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: muzzle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -263,7 +204,7 @@ GameObject:
   - component: {fileID: 1731908634}
   - component: {fileID: 1513274620143034692}
   - component: {fileID: 8143964890246340086}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: FlyEnemyPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -330,7 +271,6 @@ MonoBehaviour:
   maxWaitTimeWander: 6
   wonderDistanceRange: 15
   st: 1
-  target: {fileID: 0}
   tip: {fileID: 9014040488091691167}
   light: {fileID: 9014040488429798431}
   visionPoint: {fileID: 9014040488091691167}
@@ -343,6 +283,7 @@ MonoBehaviour:
   wanderSpotOffset: 7.15
   delayBeforeMove: 2
   originalPosOFFSET: 4
+  ShootRate: 0.5
   BulletTrail: {fileID: 6952378413150019911, guid: 24acd6d67a692a64298fcd8e875417a9, type: 3}
   Damage: 1
   health: 150
@@ -370,7 +311,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9014040488091691166}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Tip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -401,7 +342,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9014040488171668013}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: wanderSpots
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -435,7 +376,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9014040488200987484}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: w2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -467,7 +408,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9014040488429798430}
   - component: {fileID: 9014040488429798401}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Point Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -564,7 +505,7 @@ GameObject:
   - component: {fileID: 9014040488476938559}
   - component: {fileID: 9014040488476938556}
   - component: {fileID: 5447561733742993269}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: FlyEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -585,7 +526,6 @@ Transform:
   m_Children:
   - {fileID: 9014040487133508555}
   - {fileID: 9014040488429798430}
-  - {fileID: 585156788}
   m_Father: {fileID: 9014040487749469228}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -664,11 +604,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e90b6d3c874647c46bd8c3b958239e1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Damage: 20
+  m_Radius: 2
   blinkrate: 0.3
   lastblink: 0
   fallspeed: 3
-  ExplosionDuration: 1.5
-  explosionGO: {fileID: 585156787}
+  ExplosionDuration: 3
+  explosionGO: {fileID: 0}
+  Body: {fileID: 9014040488476938554}
+  prefab: {fileID: 9014040487749469227}
+  explosionparticle: {fileID: 130090, guid: c89f79686d89e7841a3386694fb086e1, type: 3}
+  temp: {fileID: 0}
 --- !u!1 &9014040488885049117
 GameObject:
   m_ObjectHideFlags: 0
@@ -678,7 +624,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9014040488885049116}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: w3
   m_TagString: Untagged
   m_Icon: {fileID: 0}

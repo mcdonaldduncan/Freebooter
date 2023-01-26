@@ -10,8 +10,10 @@ public class HandGun : MonoBehaviour, IGun
     public Transform ShootFrom { get; set; }
     public LayerMask LayerToIgnore { get; set; }
     public float FireRate { get; set; }
-    public float BulletDamage { get; set; }
-    public float DamageDrop { get; set; }
+    public float MaxDamage { get; set; }
+    public float MinDamage { get; set; }
+    public float DropStart { get; set; }
+    public float DropEnd { get; set; }
     public float VerticalSpread { get; set; }
     public float HorizontalSpread { get; set; }
     public float AimOffset { get; set; }
@@ -26,7 +28,8 @@ public class HandGun : MonoBehaviour, IGun
     public GameObject GunModel { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
 
-    private bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading && CurrentAmmo > 0;
+    public bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading && CurrentAmmo > 0;
+
     //private bool ReloadNow => reloadStartTime + ReloadTime < Time.time && GunManager.Reloading;
     private float lastShotTime;
     private float reloadStartTime;
@@ -56,6 +59,7 @@ public class HandGun : MonoBehaviour, IGun
 
     public void Shoot()
     {
+        var timeShot = Time.time;
         RaycastHit hitInfo;
 
         //Add the customized spread of the specific gun
@@ -154,10 +158,15 @@ public class HandGun : MonoBehaviour, IGun
         if (hitEffect != null)
         {
             var damageableTarget = hitInfo.transform.GetComponent<IDamageable>();
-            if (damageableTarget != null)
-            {
-                HitEnemyBehavior(hitInfo, damageableTarget);
-            }
+            HitEnemyBehavior(hitInfo, damageableTarget);
+            //if (damageableTarget != null)
+            //{
+            //    HitEnemyBehavior(hitInfo, damageableTarget);
+            //}
+            //else
+            //{
+            //    HitEnemyBehavior(hitInfo);
+            //}
             
         }
     }
@@ -166,31 +175,53 @@ public class HandGun : MonoBehaviour, IGun
     {
         if (damageableTarget != null)
         {
-            //Get the position of the hit enemy
-            Vector3 targetPosition = hitInfo.transform.position;
+            //using a try catch to prevent destroyed enemies from throwing null reference exceptions
+            try
+            {
+                //Get the position of the hit enemy
+                Vector3 targetPosition = hitInfo.transform.position;
 
-            //Play blood particle effects on the enemy, where they were hit
-            var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-            Destroy(p, 1);
+                //Play blood particle effects on the enemy, where they were hit
+                var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                Destroy(p, 1);
 
-            //Get the distance between the enemy and the gun
-            float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);
+                //Get the distance between the enemy and the gun
+                float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);
 
-            //calculate damage dropoff
-            float totalDamage = Mathf.Abs(BulletDamage / ((distance / DamageDrop)));
+                //calculate damage dropoff
+                float realDamage;
 
-            //Damage the target
-            damageableTarget.TakeDamage(totalDamage);
-            ////using a try catch to prevent destroyed enemies from throwing null reference exceptions
-            //try
-            //{
-                
-            //}
-            //catch
-            //{
-            //    var p = Instantiate(HitNonEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-            //    Destroy(p, 1);
-            //}
+                if (distance >= DropEnd)
+                {
+                    realDamage = MinDamage;
+                }
+                else if (distance <= DropStart)
+                {
+                    realDamage = MaxDamage;
+                }
+                else
+                {
+                    float clampedDistance = Mathf.Clamp(distance, DropStart, DropEnd) - DropStart;
+                    float distancePercent = 100 - clampedDistance * (100 / (DropEnd - DropStart)); //Listen idk why this needs to be subtracted from 100 to work but it does so yeah
+                    realDamage = Mathf.Abs(MinDamage + (MaxDamage - MinDamage) * (distancePercent / 100));
+                    if (realDamage <= MinDamage)
+                    {
+                        realDamage = MinDamage;
+                    }
+                    if (realDamage >= MaxDamage)
+                    {
+                        realDamage = MaxDamage;
+                    }
+                }
+
+                //Damage the target
+                damageableTarget.TakeDamage(realDamage);
+            }
+            catch
+            {
+                var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                Destroy(p, 1);
+            }
         }
         else
         {

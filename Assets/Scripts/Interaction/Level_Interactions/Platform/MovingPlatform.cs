@@ -16,8 +16,6 @@ public class MovingPlatform : MonoBehaviour
     [SerializeField] float m_nodeDelay;
     [SerializeField] bool m_ShouldLoop;
 
-    [SerializeField] Material[] m_Materials; 
-
     [Header("Node Prefab")]
     [SerializeField] GameObject Node;
     GameObject Platform;
@@ -28,10 +26,9 @@ public class MovingPlatform : MonoBehaviour
 
     Transform m_Transform;
 
-    //FirstPersonController Player;
-    IActivator m_IActivator;
+    Vector3 lastPosition;
 
-    public Vector3 lastPosition;
+    IActivator m_IActivator;
 
     bool isActivated;
     bool isLooping;
@@ -63,6 +60,8 @@ public class MovingPlatform : MonoBehaviour
 
     private void OnEnable()
     {
+        LevelManager.PlayerRespawn += Reset;
+
         if (m_Activator == null || m_MovementType != MovementType.ACTIVATE) return;
 
         try
@@ -76,10 +75,14 @@ public class MovingPlatform : MonoBehaviour
             Debug.LogError("Valid IActivator Not Found");
         }
 
+        
+
     }
 
     private void OnDisable()
     {
+        LevelManager.PlayerRespawn -= Reset;
+
         if (m_IActivator == null || m_MovementType != MovementType.ACTIVATE) return;
         m_IActivator.Activate -= AgnosticActivate;
         m_IActivator.Deactivate -= OnDeactivate;
@@ -98,23 +101,8 @@ public class MovingPlatform : MonoBehaviour
 
     void Update()
     {
-        //ApplyMotionToPlayer();
         MonitorBase();
-        
     }
-
-    
-
-    //private void LateUpdate()
-    //{
-    //    if (lastPosition == Base.transform.position) return;
-    //    lastPosition = Platform.transform.position;
-    //}
-
-    //private void FixedUpdate()
-    //{
-    //    ApplyMotionToPlayer();
-    //}
 
     #region Core Logic
 
@@ -146,6 +134,13 @@ public class MovingPlatform : MonoBehaviour
         Base.SetState(false);
     }
 
+    private void Reset()
+    {
+        isActivated = m_MovementType == MovementType.CONSTANT;
+        Base.SetState(isActivated);
+        Platform.transform.position = transform.position;
+    }
+
     public void UpdateFromBase()
     {
         TransitionTargets();
@@ -153,10 +148,8 @@ public class MovingPlatform : MonoBehaviour
 
     void MonitorBase()
     {
-        //lastPosition = Platform.transform.position;
-
         if (!isActivated) return;
-        //if (!(m_Transform.position == m_Nodes[currentIndex].position)) return;
+        
         if (Vector3.Distance(m_Transform.position, m_Nodes[currentIndex].position) > .5f) return;
         TransitionTargets();
     }
@@ -205,9 +198,8 @@ public class MovingPlatform : MonoBehaviour
 
     public void OnPlayerContact()
     {
+        
         isAttached = true;
-        Base.SetMaterial(m_Materials[0]);
-        //Player.transform.SetParent(transform, true);
         if (m_MovementType == MovementType.CONTACT)
         {
             OnActivate();
@@ -217,8 +209,6 @@ public class MovingPlatform : MonoBehaviour
     public void OnPlayerExit()
     {
         isAttached = false;
-        Base.SetMaterial(m_Materials[1]);
-        //Player.transform.SetParent(null, true);
         if (m_MovementType == MovementType.CONTACT)
         {
             OnDeactivate();

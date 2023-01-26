@@ -541,18 +541,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8eae2d91e7874444b8d0de5a39d0ad64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
   body: {fileID: 7936307943390632097}
   tip: {fileID: 7936307943014886290}
   light: {fileID: 5774120490667646057}
-  speed: 25
+  rotationSpeed: 5
   range: 50
   state: 0
   rotationType: 0
-  delayBeforeFirstShot: 0
+  delayBeforeFirstShot: 1
+  ShootRate: 0.5
   BulletTrail: {fileID: 6952378413150019911, guid: 24acd6d67a692a64298fcd8e875417a9, type: 3}
   Damage: 1
   health: 150
+  maxHealth: 75
 --- !u!65 &873283035421134823
 BoxCollider:
   m_ObjectHideFlags: 0

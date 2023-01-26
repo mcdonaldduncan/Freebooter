@@ -9,8 +9,12 @@ public interface IGun
     Transform ShootFrom { get; set; }
     LayerMask LayerToIgnore { get; set; }
     float FireRate { get; set; }
-    float BulletDamage { get; set; }
-    float DamageDrop { get; set; }
+    //float GrenadeDamage { get; set; }
+    float MaxDamage { get; set; }
+    float MinDamage { get; set; }
+    float DropStart { get; set; }
+    float DropEnd { get; set; }
+    //float DamageDrop { get; set; }
     float VerticalSpread { get; set; }
     float HorizontalSpread { get; set; }
     float AimOffset { get; set; }
@@ -23,6 +27,7 @@ public interface IGun
     AudioClip GunShotAudio { get; set; }
     GameObject GunModel { get; set; }
     WaitForSeconds ReloadWait { get; set; }
+    bool CanShoot { get; }
 
     void ShootTriggered(InputAction.CallbackContext context);
     void StartReload();

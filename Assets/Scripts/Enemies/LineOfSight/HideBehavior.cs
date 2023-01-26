@@ -14,7 +14,7 @@ public class HideBehavior : MonoBehaviour
     [Range(-1, 1)]
     [SerializeField] float m_Sensitivity;
 
-    [Range(1, 10)]
+    [Range(1, 20)]
     [SerializeField] float m_MinDistance;
 
     LineOfSightChecker m_LineOfSightChecker;
@@ -58,6 +58,7 @@ public class HideBehavior : MonoBehaviour
         if (m_MovementCoroutine != null)
         {
             StopCoroutine(m_MovementCoroutine);
+            //this.enabled = false;
         }
     }
 
@@ -100,7 +101,6 @@ public class HideBehavior : MonoBehaviour
 
     private bool HideAttempt(Transform target, Vector3 attempt, int i, int mod, int iterations)
     {
-        if (iterations > 3) return false;
         if (NavMesh.SamplePosition(m_Colliders[i].transform.position - attempt * mod, out NavMeshHit hit, 4f, m_Agent.areaMask))
         {
             if (!NavMesh.FindClosestEdge(hit.position, out hit, m_Agent.areaMask))
@@ -168,5 +168,13 @@ public class HideBehavior : MonoBehaviour
         }
 
         m_MovementCoroutine = StartCoroutine(Hide(target));
+    }
+
+    public void EndHideProcessRemote()
+    {
+        if (m_MovementCoroutine != null)
+        {
+            StopCoroutine(m_MovementCoroutine);
+        }
     }
 }

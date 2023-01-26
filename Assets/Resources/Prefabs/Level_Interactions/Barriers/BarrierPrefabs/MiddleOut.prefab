@@ -141,7 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cadbf2f16d0658c469eebfe8506a539c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NodePrefab: {fileID: 0}
+  NodePrefab: {fileID: 2406288870819825807, guid: 7ab0d21521d81ce4ba8a47ad718a2617, type: 3}
   m_Nodes:
   - {fileID: 166151120770966928}
   - {fileID: 166151119481977158}
@@ -186,7 +186,7 @@ GameObject:
   m_Component:
   - component: {fileID: 166151119481977158}
   m_Layer: 0
-  m_Name: Node
+  m_Name: Node_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -351,7 +351,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cadbf2f16d0658c469eebfe8506a539c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NodePrefab: {fileID: 0}
+  NodePrefab: {fileID: 2406288870819825807, guid: 7ab0d21521d81ce4ba8a47ad718a2617, type: 3}
   m_Nodes:
   - {fileID: 166151119400564683}
   - {fileID: 166151119860381463}
@@ -705,7 +705,7 @@ GameObject:
   m_Component:
   - component: {fileID: 166151120770966928}
   m_Layer: 0
-  m_Name: BaseNode
+  m_Name: Node_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -892,9 +892,11 @@ MonoBehaviour:
   m_State: 0
   m_AccessType: 0
   m_ShouldClose: 1
+  m_CloseDelay: 0
   MoveSpeed: 5
   m_KeyPrefab: {fileID: 2486069850687451847, guid: b9eba5e00edf95c4d87398ea1adcf8b3, type: 3}
   m_SegmentPrefab: {fileID: 8834124494461213054, guid: 3df60c29a7e9eae4491e3111620ee9bd, type: 3}
+  m_Activator: {fileID: 0}
   m_RequiredKeys: []
 --- !u!65 &1032035997510993819
 BoxCollider:

@@ -366,6 +366,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Player: {fileID: 979524430}
+  CheckPointPrefab: {fileID: 0}
 --- !u!4 &109302338
 Transform:
   m_ObjectHideFlags: 0
@@ -2875,7 +2876,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fc871b6147406048a0409ef9007d8a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TranslationType: 3
+  m_TranslationType: 0
   m_AnimationCurve:
     serializedVersion: 2
     m_Curve:
@@ -3413,7 +3414,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1189646326
 Transform:
   m_ObjectHideFlags: 0
@@ -4032,7 +4033,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1714560702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4045,19 +4046,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8354c3f0f5cad543a94e8d2d1006f9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_MovementType: 2
+  m_MovementType: 0
   m_Activator: {fileID: 1398482454}
   m_MoveSpeed: 5
   m_nodeDelay: 0
   m_ShouldLoop: 1
-  m_Materials: []
   Node: {fileID: 5825494410198264411, guid: 0223d2631dc8c91478db4d8889d54a35, type: 3}
   m_Nodes:
   - {fileID: 1262076232}
   - {fileID: 858050030}
   - {fileID: 697932398}
   - {fileID: 1798907065}
-  lastPosition: {x: 0, y: 0, z: 0}
 --- !u!4 &1714560703
 Transform:
   m_ObjectHideFlags: 0
@@ -4286,7 +4285,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1872617947
 Transform:
   m_ObjectHideFlags: 0
