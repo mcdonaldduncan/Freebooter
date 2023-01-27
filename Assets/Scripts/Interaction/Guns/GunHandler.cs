@@ -142,6 +142,8 @@ public sealed class GunHandler : MonoBehaviour
     [SerializeField] private float grenadeGunAimOffset = 15f;
     [SerializeField] private CanvasGroup grenadeGunReticle;
     [SerializeField] private AudioClip grenadeGunShotAudio;
+    [SerializeField] private float grenadeLaunchForce;
+    [SerializeField] private float grenadeLaunchArc;
 
     [SerializeField] private List<GameObject> gunInventory;
 
@@ -264,6 +266,8 @@ public sealed class GunHandler : MonoBehaviour
             gun.GunShotAudio = this.grenadeGunShotAudio;
             grenadeGun.Grenade = this.grenadeObject;
             grenadeGun.GrenadeDamage = this.grenadeDamage;
+            grenadeGun.GrenadeLaunchForce = this.grenadeLaunchForce;
+            grenadeGun.GrenadeLaunchArcVector = new Vector3(0f, grenadeLaunchArc, 0f);
         }
     }
     private void Start()

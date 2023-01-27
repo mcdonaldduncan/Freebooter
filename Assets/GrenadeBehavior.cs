@@ -20,9 +20,17 @@ public class GrenadeBehavior : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    //void Update()
+    //{
+    //    if (ShouldExplode)
+    //    {
+    //        Explode();
+    //    }
+    //}
+
+    private void OnCollisionEnter(Collision collision)
     {
-        if (ShouldExplode)
+        if (collision.gameObject.tag != "Player")
         {
             Explode();
         }
