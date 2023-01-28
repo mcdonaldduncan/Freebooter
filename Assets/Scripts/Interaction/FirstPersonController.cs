@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.PlayerLoop;
@@ -130,6 +131,12 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     private float timer;
 
     [Header("Dash Parameters")]
+    [SerializeField]
+    private float dashDamage;
+    [SerializeField]
+    private Transform dashRaySource;
+    [SerializeField]
+    private float dashRayDistance;
     [SerializeField]
     private int dashesAllowed = 2;
     [SerializeField]
@@ -437,6 +444,21 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
             playerDashing = true;
             characterController.Move(moveDirection * dashSpeed * Time.deltaTime);
             moveDirection.y = 0;
+
+            RaycastHit hitInfo;
+
+            //Raycast infront of player to see if they hit an IDamagable, and should thus deal damage
+            if (Physics.Raycast(dashRaySource.position, dashRaySource.forward, out hitInfo, dashRayDistance))
+            {
+                if (hitInfo.transform.name != "Player")
+                {
+                    var damageableTarget = hitInfo.transform.GetComponent<IDamageable>();
+                    if (damageableTarget != null)
+                    {
+                        damageableTarget.TakeDamage(dashDamage);
+                    }
+                }
+            }
 
             //lastDashEnd = Time.time;
 

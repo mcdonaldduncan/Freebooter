@@ -61,7 +61,6 @@ public class HandGun : MonoBehaviour, IGun
     public void Shoot()
     {
         GunAnimationHandler.RecoilAnim.SetTrigger("RecoilTrigger");
-        //  GunAnimationHandler.RecoilAnim.ResetTrigger("IdleTrigger");
         var timeShot = Time.time;
         RaycastHit hitInfo;
 
