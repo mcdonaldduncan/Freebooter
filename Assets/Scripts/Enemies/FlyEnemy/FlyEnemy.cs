@@ -12,8 +12,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
     float waitTimer;
     bool wanderMiniState; //state for wandering and wanderingIdle
 
-
-    int shotCount;
+    float radius = 5;
     bool dead = false;
     private enum SoldierState { guard, wanderer, chase, originalSpot, Relocating, Death, retaliate};
     [Tooltip("/ Guard = Stand in one place until the player breaks line of sight / Wanderer = walks around / Chase = when the soldier goes after the enemy")]
@@ -37,14 +36,11 @@ public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
     [SerializeField] private float health, maxHealth;
 
     float distanceToPlayer;
-    FirstPersonController playerController;
 
     string playerTag = "Player";
 
     public Vector3 StartingPosition { get { return m_StartingPosition; } set { m_StartingPosition = value; } }
     private Vector3 m_StartingPosition;
-
-    int ResetOnce;
 
     public void TakeDamage(float damageTaken)
     {
@@ -308,7 +304,12 @@ public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
     {
         if (distanceToPlayer < range && distanceToPlayer > range / 2)
         {
-            agent.SetDestination(LevelManager.Instance.Player.transform.position);
+            //var destinationX = (LevelManager.Instance.Player.transform.position.x + (distanceToPlayer / 2));
+            //var destinationZ = (LevelManager.Instance.Player.transform.position.z + (distanceToPlayer / 2));
+            //agent.SetDestination(new Vector3(destinationX,LevelManager.Instance.Player.transform.position.y,destinationZ));
+            Vector3 PointingToPlayer = LevelManager.Instance.Player.transform.position - transform.position;
+
+            agent.SetDestination(transform.position + PointingToPlayer.normalized * radius);
         }
     }
 
@@ -447,13 +448,11 @@ public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
 
     void RetaliationChasePlayer()
     {
-        if (distanceToPlayer <= range / 3)
+        if (distanceToPlayer > range)
         {
-            agent.ResetPath();
-        }
-        else if (distanceToPlayer > range)
-        {
-            agent.SetDestination(LevelManager.Instance.Player.transform.position);
+            Vector3 PointingToPlayer = LevelManager.Instance.Player.transform.position - transform.position;
+
+            agent.SetDestination(transform.position + PointingToPlayer.normalized * radius);
         }
 
     }
