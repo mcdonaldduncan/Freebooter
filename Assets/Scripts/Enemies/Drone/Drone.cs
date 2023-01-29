@@ -319,9 +319,9 @@ public class Drone : MonoBehaviour, IDamageable, IEnemy
             //var destinationX = (LevelManager.Instance.Player.transform.position.x + (distanceToPlayer / 2));
             //var destinationZ = (LevelManager.Instance.Player.transform.position.z + (distanceToPlayer / 2));
             //agent.SetDestination(new Vector3(destinationX,LevelManager.Instance.Player.transform.position.y,destinationZ));
-            Vector3 PointingToPlayer = LevelManager.Instance.Player.transform.position - transform.position;
+            Vector3 FromPlayerToAgent = LevelManager.Instance.Player.transform.position - transform.position;
 
-            agent.SetDestination(transform.position + PointingToPlayer.normalized * radius);
+            agent.SetDestination(transform.position + FromPlayerToAgent.normalized * radius);
         }
     }
 

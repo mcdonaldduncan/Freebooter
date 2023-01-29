@@ -365,10 +365,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4576846895115156391, guid: d7d8f96912b1e7944aedacfd12136b6c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7789221693854972693, guid: d7d8f96912b1e7944aedacfd12136b6c, type: 3}
       propertyPath: m_ProjectilePrefab
       value: 
-      objectReference: {fileID: 196044, guid: e95a7700630bc504696faca51f4dce9f, type: 3}
+      objectReference: {fileID: 196044, guid: 1e84f30cb39097c4ab5119e76519f052, type: 3}
     - target: {fileID: 7936307944237820728, guid: d7d8f96912b1e7944aedacfd12136b6c, type: 3}
       propertyPath: m_Name
       value: Turret (1)

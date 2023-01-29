@@ -272,6 +272,7 @@ public class Soldier : MonoBehaviour, IDamageable, IEnemy
        {
             agent.ResetPath();
        }
+       // please look at the boolean logic here, does this statement make sense?
        else if ( distanceToPlayer < range &&  distanceToPlayer > range/1.25)
        {
             agent.SetDestination(LevelManager.Instance.Player.transform.position);
