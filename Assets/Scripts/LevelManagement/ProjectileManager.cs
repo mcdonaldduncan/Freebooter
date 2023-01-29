@@ -47,6 +47,6 @@ public class ProjectileManager : Singleton<ProjectileManager>
             return;
         }
         obj.SetActive(false);
-        m_Pool[poolItem.prefab].Enqueue(obj);
+        m_Pool[poolItem.Prefab].Enqueue(obj);
     }
 }
