@@ -70,6 +70,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     [SerializeField]
     private float fovIncrement = 5f;
 
+    [SerializeField] private float maxSpeedScale;
+
     //Parameters for looking around with mouse
     [Header("Look Parameters")]
     [SerializeField]
@@ -161,6 +163,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     public bool basicMovement;
     public bool wallRunning;
 
+
     [Header("Audio")]
     [SerializeField] private AudioClip dashAudio;
     [SerializeField] private AudioClip lowHealthAudio;
@@ -206,6 +209,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     public bool isDead;
     int isDeadFrameCount;
 
+    float speedScale => 1 + ((maxSpeedScale - 1) * (1 - (health / maxHealth)));
+
     public enum MovementState
     {
         basic,
@@ -240,9 +245,6 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
         playerAudioSource = GetComponent<AudioSource>();
     }
-
-
-    
 
     private void Start()
     {
@@ -282,7 +284,6 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         }
 
         HandleMouseLook();
-        
     }
 
     private void LateUpdate()
@@ -401,7 +402,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     {
         //when the player presses W and S or A and D
         currentInput = (context.ReadValue<Vector2>());
-        MoveInput = new Vector2(currentInput.x * walkSpeed, currentInput.y * walkSpeed);
+        MoveInput = new Vector2(currentInput.x * walkSpeed * speedScale, currentInput.y * walkSpeed);
 
     }
 
@@ -442,7 +443,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         {
             UpdateDashBar = true;
             playerDashing = true;
-            characterController.Move(moveDirection * dashSpeed * Time.deltaTime);
+            characterController.Move(moveDirection * dashSpeed * speedScale * Time.deltaTime);
             moveDirection.y = 0;
 
             RaycastHit hitInfo;

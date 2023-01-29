@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class SoldierEnemyScript : MonoBehaviour, IDamageable, IEnemy
+public class Soldier : MonoBehaviour, IDamageable, IEnemy
 {
-    [SerializeField]
-    private Animator animator;
+    [SerializeField] GameObject m_ProjectilePrefab;
+
+    [SerializeField] Animator animator;
 
     [SerializeField] private LayerMask layerMask = 0; // for wondering
     [SerializeField] private float minWaitTimeWander, maxWaitTimeWander, wonderDistanceRange; // wait timer for wandering
@@ -21,7 +22,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable, IEnemy
     [SerializeField] private GameObject tip, visionPoint, body, gun;
     [SerializeField] private float rotationspeed, range;
     [SerializeField] private NavMeshAgent agent; 
-    Vector3 targetDiretion, originalPos;
+    Vector3 targetDirection, originalPos;
     Quaternion rotation, originalrot;
 
     [SerializeField] List<Vector3> wanderSpots = new List<Vector3>();
@@ -52,6 +53,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable, IEnemy
     // updating at the beginning of each frame and run calculations off those variables, dont recalulate variables over and over again on the same frame
     // Be conscious of your code when building features
 
+    bool shouldShoot => Time.time > ShootRate + lastShot;
 
     string playerTag = "Player";
 
@@ -64,7 +66,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable, IEnemy
     {
         if (st == SoldierState.guard || st == SoldierState.wanderer)
         {
-            st = SoldierState.retaliate;
+            st = SoldierState.chase;
         }
         Health -= damageTaken;
         CheckForDeath();
@@ -141,8 +143,8 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable, IEnemy
         float tempSpeed = rotationspeed;
         if (distanceToPlayer < range)
         {
-            targetDiretion = LevelManager.Instance.Player.transform.position - tip.transform.position;
-            rotation = Quaternion.LookRotation(targetDiretion.normalized);
+            targetDirection = LevelManager.Instance.Player.transform.position - tip.transform.position;
+            rotation = Quaternion.LookRotation(targetDirection.normalized);
             transform.rotation = Quaternion.RotateTowards(new Quaternion(0, transform.rotation.y, 0, 360), rotation, tempSpeed * Time.deltaTime * 180);
         }
     }
@@ -151,7 +153,7 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable, IEnemy
     {
         RaycastHit hit;
         //Debug.DrawRay(visionPoint.transform.position, targetDiretion, Color.green);
-        Physics.Raycast(visionPoint.transform.position, targetDiretion, out hit, range/1.2f);
+        Physics.Raycast(visionPoint.transform.position, targetDirection, out hit, range/1.2f);
         if (hit.collider != null)
         {
             // Dont look up the players tag, we know it is player and it never changes
@@ -167,50 +169,57 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable, IEnemy
 
     void Shoot() //Shoots at the player
     {
-        RaycastHit hit, hit2;
-        //Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
-        var offsetx = 0;
-        var offsety = 0;
-        var offsetz = 0;
-        if (distanceToPlayer > range/2)
-        {
-            offsetx = Random.Range(-5, 5);
-            offsety = Random.Range(0, 5);
-            offsetz = Random.Range(-5, 5);
+        if (!shouldShoot) return;
 
-        }
-        if (distanceToPlayer > ((range / 3) * 2))
-        {
-            offsetx = Random.Range(-10, 10);
-            offsety = Random.Range(0, 5);
-            offsetz = Random.Range(-10, 10);
-        }
-        // Why dont you do this same step for z? Our game is 3 dimensional, if you are on the same x plane they would only have a chance to miss on y and given the player is tall missing slightly in y will probably still hit
-        Physics.Raycast(tip.transform.position, new Vector3(targetDiretion.x + offsetx, targetDiretion.y + offsety, targetDiretion.z), out hit, range);
-        if (hit.collider != null)
-        {
-            if (Physics.Raycast(tip.transform.position, targetDiretion, out hit2, range)) //check line of sight
-            {
-                if (hit2.collider.CompareTag(playerTag)) //if player is in line of sight, shoot
-                {
-                    // The player tag never changes, why get the tag from the player each time you check
-                    if (Time.time > ShootRate + lastShot)
-                    {
-                        var bt = Instantiate(BulletTrail, tip.transform.position, rotation);
-                        bt.GetComponent<MoveForward>().origin = this.gameObject.transform.rotation;
-                        bt.GetComponent<MoveForward>().target = hit.point;
-                        //bt.GetComponent<MoveForward>().damage = Damage;
-                        //Debug.Log("Player was shot, dealing damage.");
-                        //Use compare tag not equivalency
-                        if (hit.collider.CompareTag(playerTag))
-                        {
-                            LevelManager.Instance.Player.TakeDamage(Damage);
-                        }
-                        lastShot = Time.time;
-                    }
-                }
-            }    
-        }
+        GameObject newObj = ProjectileManager.Instance.TakeFromPool(m_ProjectilePrefab, tip.transform.position, out Projectile projectile);
+        projectile.Launch(targetDirection);
+
+        lastShot = Time.time;
+
+        //RaycastHit hit, hit2;
+        ////Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
+        //var offsetx = 0;
+        //var offsety = 0;
+        //var offsetz = 0;
+        //if (distanceToPlayer > range/2)
+        //{
+        //    offsetx = Random.Range(-5, 5);
+        //    offsety = Random.Range(0, 5);
+        //    offsetz = Random.Range(-5, 5);
+
+        //}
+        //if (distanceToPlayer > ((range / 3) * 2))
+        //{
+        //    offsetx = Random.Range(-10, 10);
+        //    offsety = Random.Range(0, 5);
+        //    offsetz = Random.Range(-10, 10);
+        //}
+        //// Why dont you do this same step for z? Our game is 3 dimensional, if you are on the same x plane they would only have a chance to miss on y and given the player is tall missing slightly in y will probably still hit
+        //Physics.Raycast(tip.transform.position, new Vector3(targetDiretion.x + offsetx, targetDiretion.y + offsety, targetDiretion.z), out hit, range);
+        //if (hit.collider != null)
+        //{
+        //    if (Physics.Raycast(tip.transform.position, targetDiretion, out hit2, range)) //check line of sight
+        //    {
+        //        if (hit2.collider.CompareTag(playerTag)) //if player is in line of sight, shoot
+        //        {
+        //            // The player tag never changes, why get the tag from the player each time you check
+        //            if (Time.time > ShootRate + lastShot)
+        //            {
+        //                var bt = Instantiate(BulletTrail, tip.transform.position, rotation);
+        //                bt.GetComponent<MoveForward>().origin = this.gameObject.transform.rotation;
+        //                bt.GetComponent<MoveForward>().target = hit.point;
+        //                //bt.GetComponent<MoveForward>().damage = Damage;
+        //                //Debug.Log("Player was shot, dealing damage.");
+        //                //Use compare tag not equivalency
+        //                if (hit.collider.CompareTag(playerTag))
+        //                {
+        //                    LevelManager.Instance.Player.TakeDamage(Damage);
+        //                }
+        //                lastShot = Time.time;
+        //            }
+        //        }
+        //    }    
+        //}
         if (distanceToPlayer > range)
         {
             StateReturnOriginalSpot();
@@ -299,8 +308,8 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable, IEnemy
     {
         float tempSpeed = rotationspeed;
 
-        targetDiretion = LevelManager.Instance.Player.transform.position - transform.position;
-        rotation = Quaternion.LookRotation(targetDiretion);
+        targetDirection = LevelManager.Instance.Player.transform.position - transform.position;
+        rotation = Quaternion.LookRotation(targetDirection);
         body.transform.rotation = Quaternion.RotateTowards(body.transform.rotation, rotation, tempSpeed * Time.deltaTime * 180);
 
     }
@@ -328,10 +337,10 @@ public class SoldierEnemyScript : MonoBehaviour, IDamageable, IEnemy
             offsetz = Random.Range(-10, 10);
         }
         // Why dont you do this same step for z? Our game is 3 dimensional, if you are on the same x plane they would only have a chance to miss on y and given the player is tall missing slightly in y will probably still hit
-        Physics.Raycast(tip.transform.position, new Vector3(targetDiretion.x + offsetx, targetDiretion.y + offsety, targetDiretion.z + offsetz), out hit, range);
+        Physics.Raycast(tip.transform.position, new Vector3(targetDirection.x + offsetx, targetDirection.y + offsety, targetDirection.z + offsetz), out hit, range);
         if (hit.collider != null)
         {
-            if (Physics.Raycast(tip.transform.position, targetDiretion, out hit2, range)) //check line of sight
+            if (Physics.Raycast(tip.transform.position, targetDirection, out hit2, range)) //check line of sight
             {
                 if (hit2.collider.CompareTag(playerTag)) //if player is in line of sight, shoot
                 {

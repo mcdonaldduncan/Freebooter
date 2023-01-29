@@ -4,8 +4,9 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
+public class Drone : MonoBehaviour, IDamageable, IEnemy
 {
+    [SerializeField] GameObject m_ProjectilePrefab;
     [SerializeField] private LayerMask layerMask = 0; // for wondering
     [SerializeField] private float minWaitTimeWander, maxWaitTimeWander, wonderDistanceRange; // wait timer for wandering
 
@@ -21,7 +22,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
     [SerializeField] private GameObject tip, light, visionPoint, body,SensorR,SensorL;
     [SerializeField] private float rotationspeed, range;
     [SerializeField] private NavMeshAgent agent;
-    Vector3 targetDiretion, originalPos;
+    Vector3 targetDirection, originalPos;
     Quaternion rotation, originalrot;
 
     [Tooltip("Distance to current wander spot before the player moves to next wander spot.")]
@@ -42,11 +43,14 @@ public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
     public Vector3 StartingPosition { get { return m_StartingPosition; } set { m_StartingPosition = value; } }
     private Vector3 m_StartingPosition;
 
+    bool shouldShoot => Time.time > ShootRate + lastShot;
+
     public void TakeDamage(float damageTaken)
     {
         if (st == SoldierState.guard || st == SoldierState.wanderer)
         {
-            st = SoldierState.retaliate;
+            // do retaliate and chase do anything differently?
+            st = SoldierState.chase;
         }
         Health -= damageTaken;
         CheckForDeath();
@@ -57,10 +61,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
         if (Health <= 0)
         {
             st = SoldierState.Death;
-            if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
-            {
-                LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
-            }
+            
             OnDeath();
         }
     }
@@ -122,6 +123,8 @@ public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
         originalPos = transform.position;
         originalrot = this.transform.rotation;
     }
+
+    // Why are you using fixed update?
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -177,6 +180,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
                         body.GetComponent<OnDeathExplosion>().OnDeathVariables();
                 }
                 break;
+                // why do you have aim, shoot, chase and also retaliate aim, retaliate shoot, etc? dont they do the same thing?
             case (SoldierState.retaliate):
                 RetaliationAim();
                 RetaliationShoot();
@@ -192,8 +196,8 @@ public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
         float tempSpeed = rotationspeed;
         if (distanceToPlayer < range)
         {
-            targetDiretion = LevelManager.Instance.Player.transform.position - transform.position;
-            rotation = Quaternion.LookRotation(targetDiretion);
+            targetDirection = LevelManager.Instance.Player.transform.position - transform.position;
+            rotation = Quaternion.LookRotation(targetDirection);
             body.transform.rotation = Quaternion.RotateTowards(body.transform.rotation, rotation, tempSpeed * Time.deltaTime * 180);
         }
 
@@ -203,7 +207,7 @@ public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
     {
         RaycastHit hit;
         //Debug.DrawRay(visionPoint.transform.position, targetDiretion, Color.green);
-        Physics.Raycast(visionPoint.transform.position, targetDiretion, out hit, range / 1.2f);
+        Physics.Raycast(visionPoint.transform.position, targetDirection, out hit, range / 1.2f);
         if (hit.collider != null)
         {
             if (hit.collider.CompareTag(playerTag))
@@ -216,50 +220,58 @@ public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
 
     void Shoot() //Shoots at the player
     {
-        RaycastHit hit, hit2;
-        //Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
-        var offsetx = 0;
-        var offsety = 0;
-        var offsetz = 0;
-        if (distanceToPlayer > range / 2)
-        {
-            offsetx = Random.Range(-5, 5);
-            offsety = Random.Range(0, 5);
-            offsetz = Random.Range(-5, 5);
+        if (!shouldShoot) return;
 
-        }
-        if (distanceToPlayer > ((range / 3) * 2))
-        {
-            offsetx = Random.Range(-10, 10);
-            offsety = Random.Range(0, 5);
-            offsetz = Random.Range(-10, 10);
-        }
-        // Why dont you do this same step for z? Our game is 3 dimensional, if you are on the same x plane they would only have a chance to miss on y and given the player is tall missing slightly in y will probably still hit
-        Physics.Raycast(tip.transform.position, new Vector3(targetDiretion.x + offsetx, targetDiretion.y + offsety, targetDiretion.z + offsetz), out hit, range);
-        if (hit.collider != null)
-        {
+        GameObject newObj = ProjectileManager.Instance.TakeFromPool(m_ProjectilePrefab, tip.transform.position + body.transform.forward, out Projectile projectile);
+        projectile.Launch(targetDirection);
 
-            if (Physics.Raycast(tip.transform.position, targetDiretion, out hit2, range)) //check line of sight
-            {
-                if (hit2.collider.CompareTag(playerTag)) //if player is in line of sight, shoot
-                {
-                    if (Time.time > ShootRate + lastShot)
-                    {
-                        var bt = Instantiate(BulletTrail, tip.transform.position, rotation);
-                        bt.GetComponent<MoveForward>().origin = this.gameObject.transform.rotation;
-                        bt.GetComponent<MoveForward>().target = hit.point;
-                        //bt.GetComponent<MoveForward>().damage = Damage;
-                        //Debug.Log("Player was shot, dealing damage.");
-                        if (hit.collider.CompareTag(playerTag))
-                        {
-                            // you do not need to get the component out of the player, it is already an idamageable
-                            LevelManager.Instance.Player.TakeDamage(Damage);
-                        }
-                        lastShot = Time.time;
-                    }
-                }
-            }
-        }
+        lastShot = Time.time;
+
+
+        //RaycastHit hit, hit2;
+        ////Debug.DrawRay(tip.transform.position, targetDiretion, Color.red);
+        //var offsetx = 0;
+        //var offsety = 0;
+        //var offsetz = 0;
+        //if (distanceToPlayer > range / 2)
+        //{
+        //    offsetx = Random.Range(-5, 5);
+        //    offsety = Random.Range(0, 5);
+        //    offsetz = Random.Range(-5, 5);
+
+        //}
+        //if (distanceToPlayer > ((range / 3) * 2))
+        //{
+        //    offsetx = Random.Range(-10, 10);
+        //    offsety = Random.Range(0, 5);
+        //    offsetz = Random.Range(-10, 10);
+        //}
+        //// Why dont you do this same step for z? Our game is 3 dimensional, if you are on the same x plane they would only have a chance to miss on y and given the player is tall missing slightly in y will probably still hit
+        //Physics.Raycast(tip.transform.position, new Vector3(targetDiretion.x + offsetx, targetDiretion.y + offsety, targetDiretion.z + offsetz), out hit, range);
+        //if (hit.collider != null)
+        //{
+
+        //    if (Physics.Raycast(tip.transform.position, targetDiretion, out hit2, range)) //check line of sight
+        //    {
+        //        if (hit2.collider.CompareTag(playerTag)) //if player is in line of sight, shoot
+        //        {
+        //            if (Time.time > ShootRate + lastShot)
+        //            {
+        //                var bt = Instantiate(BulletTrail, tip.transform.position, rotation);
+        //                bt.GetComponent<MoveForward>().origin = this.gameObject.transform.rotation;
+        //                bt.GetComponent<MoveForward>().target = hit.point;
+        //                //bt.GetComponent<MoveForward>().damage = Damage;
+        //                //Debug.Log("Player was shot, dealing damage.");
+        //                if (hit.collider.CompareTag(playerTag))
+        //                {
+        //                    // you do not need to get the component out of the player, it is already an idamageable
+        //                    LevelManager.Instance.Player.TakeDamage(Damage);
+        //                }
+        //                lastShot = Time.time;
+        //            }
+        //        }
+        //    }
+        //}
         if (distanceToPlayer > range)
         {
             StateReturnOriginalSpot();
@@ -399,8 +411,8 @@ public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
     {
         float tempSpeed = rotationspeed;
 
-        targetDiretion = LevelManager.Instance.Player.transform.position - transform.position;
-        rotation = Quaternion.LookRotation(targetDiretion);
+        targetDirection = LevelManager.Instance.Player.transform.position - transform.position;
+        rotation = Quaternion.LookRotation(targetDirection);
         body.transform.rotation = Quaternion.RotateTowards(body.transform.rotation, rotation, tempSpeed * Time.deltaTime * 180);
 
     }
@@ -421,10 +433,10 @@ public class FlyEnemy : MonoBehaviour, IDamageable, IEnemy
             offsetx = Random.Range(-10, 10);
             offsety = Random.Range(0, 5);
         }
-        Physics.Raycast(tip.transform.position, new Vector3(targetDiretion.x + offsetx, targetDiretion.y + offsety, targetDiretion.z), out hit, range);
+        Physics.Raycast(tip.transform.position, new Vector3(targetDirection.x + offsetx, targetDirection.y + offsety, targetDirection.z), out hit, range);
         if (hit.collider != null)
         {
-            if (Physics.Raycast(tip.transform.position, targetDiretion, out hit2, range)) //check line of sight
+            if (Physics.Raycast(tip.transform.position, targetDirection, out hit2, range)) //check line of sight
             {
                 if (hit2.collider.CompareTag(playerTag)) //if player is in line of sight, shoot
                 {

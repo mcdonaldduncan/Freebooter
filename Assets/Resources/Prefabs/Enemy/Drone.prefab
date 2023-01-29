@@ -205,7 +205,7 @@ GameObject:
   - component: {fileID: 1513274620143034692}
   - component: {fileID: 8143964890246340086}
   m_Layer: 9
-  m_Name: FlyEnemyPrefab
+  m_Name: Drone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -264,6 +264,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b603de6fab946646bee25741608148a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_ProjectilePrefab: {fileID: 196044, guid: 938459aeb26fb124998973f4dfcfb24d, type: 3}
   layerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -604,17 +605,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e90b6d3c874647c46bd8c3b958239e1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Damage: 20
-  m_Radius: 2
-  blinkrate: 0.3
-  lastblink: 0
-  fallspeed: 3
-  ExplosionDuration: 3
-  explosionGO: {fileID: 0}
   Body: {fileID: 9014040488476938554}
   prefab: {fileID: 9014040487749469227}
   explosionparticle: {fileID: 130090, guid: c89f79686d89e7841a3386694fb086e1, type: 3}
-  temp: {fileID: 0}
+  m_Damage: 20
+  m_Radius: 2
+  blinkrate: 0.3
 --- !u!1 &9014040488885049117
 GameObject:
   m_ObjectHideFlags: 0
