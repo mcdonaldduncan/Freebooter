@@ -401,13 +401,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4494839375484134484, guid: e95a7700630bc504696faca51f4dce9f, type: 3}
-      propertyPath: m_IsTracking
+    - target: {fileID: 5517252135568293388, guid: e95a7700630bc504696faca51f4dce9f, type: 3}
+      propertyPath: m_Height
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5517252135568293388, guid: e95a7700630bc504696faca51f4dce9f, type: 3}
+      propertyPath: m_Radius
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5517252135568293388, guid: e95a7700630bc504696faca51f4dce9f, type: 3}
+      propertyPath: m_Center.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4494839375484134484, guid: e95a7700630bc504696faca51f4dce9f, type: 3}
-      propertyPath: m_EnableGravity
-      value: 0
+    - target: {fileID: 5517252135568293388, guid: e95a7700630bc504696faca51f4dce9f, type: 3}
+      propertyPath: m_Direction
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e95a7700630bc504696faca51f4dce9f, type: 3}

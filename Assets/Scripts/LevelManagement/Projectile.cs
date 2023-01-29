@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(SphereCollider))]
+[RequireComponent(typeof(Collider), typeof(Rigidbody))]
 public class Projectile : MonoBehaviour, IPoolable
 {
     [SerializeField] GameObject m_Prefab;
@@ -62,7 +62,7 @@ public class Projectile : MonoBehaviour, IPoolable
                 }
             }
 
-            ProjectileManager.Instance.TakeFromPool(m_ExplosionPrefab, out IPoolable poolable);
+            ProjectileManager.Instance.TakeFromPool(m_ExplosionPrefab);
         }
         else
         {
