@@ -23,6 +23,11 @@ public class Projectile : MonoBehaviour, IPoolable
 
     Rigidbody m_Rigidbody;
 
+    float startTime;
+    float lifeTime = 15f;
+
+    bool hasCollided;
+
     private void OnEnable()
     {
         if (m_Rigidbody == null)
@@ -30,7 +35,13 @@ public class Projectile : MonoBehaviour, IPoolable
             m_Rigidbody = GetComponent<Rigidbody>();
         }
 
+        hasCollided = false;
+
+        startTime = Time.time;
+
         m_Rigidbody.useGravity = m_EnableGravity;
+        m_Rigidbody.velocity = Vector3.zero;
+        m_Rigidbody.angularVelocity = Vector3.zero;
     }
 
     private void OnDisable()
@@ -39,17 +50,25 @@ public class Projectile : MonoBehaviour, IPoolable
         m_Rigidbody.angularVelocity = Vector3.zero;
     }
 
+    private void Update()
+    {
+        if (Time.time > startTime + lifeTime) ProjectileManager.Instance.ReturnToPool(gameObject);
+    }
+
     /// <summary>
     /// Launch projectile in given direction
     /// </summary>
     /// <param name="direction">direction to launch, direction is normalized before application</param>
     public void Launch(Vector3 direction)
     {
+        transform.LookAt(transform.position + direction);
         m_Rigidbody.AddForce(m_LaunchForce * direction.normalized);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (hasCollided) return;
+
         if (m_IsExplosive)
         {
             var hits = Physics.OverlapSphere(transform.position, m_ExplosionRadius);
@@ -62,7 +81,7 @@ public class Projectile : MonoBehaviour, IPoolable
                 }
             }
 
-            ProjectileManager.Instance.TakeFromPool(m_ExplosionPrefab);
+            ProjectileManager.Instance.TakeFromPool(m_ExplosionPrefab, transform.position);
         }
         else
         {
@@ -73,7 +92,11 @@ public class Projectile : MonoBehaviour, IPoolable
             }
         }
 
-        ProjectileManager.Instance.ReturnToPool(this.gameObject);
+        hasCollided = true;
+        m_Rigidbody.velocity = Vector3.zero;
+        m_Rigidbody.angularVelocity = Vector3.zero;
+        transform.position = Vector3.zero;
+        ProjectileManager.Instance.ReturnToPool(gameObject);
     }
 
 }

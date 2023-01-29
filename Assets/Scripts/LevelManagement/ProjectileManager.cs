@@ -11,7 +11,7 @@ public class ProjectileManager : Singleton<ProjectileManager>
         m_Pool = new Dictionary<GameObject, Queue<GameObject>>();
     }
 
-    public GameObject TakeFromPool(GameObject prefab)
+    public GameObject TakeFromPool(GameObject prefab, Vector3 startLocation)
     {
         if (!m_Pool.ContainsKey(prefab))
         {
@@ -21,12 +21,13 @@ public class ProjectileManager : Singleton<ProjectileManager>
         if (m_Pool[prefab].Count > 0)
         {
             GameObject obj = m_Pool[prefab].Dequeue();
+            obj.transform.position = startLocation;
             obj.SetActive(true);
             return obj;
         }
         else
         {
-            GameObject obj = Instantiate(prefab);
+            GameObject obj = Instantiate(prefab, startLocation, Quaternion.identity);
             IPoolable poolable = obj.GetComponent<IPoolable>();
             if (poolable == null)
             {
@@ -38,7 +39,7 @@ public class ProjectileManager : Singleton<ProjectileManager>
         }
     }
 
-    public GameObject TakeFromPool(GameObject prefab, out Projectile poolable)
+    public GameObject TakeFromPool(GameObject prefab, Vector3 startLocation, out Projectile poolable)
     {
         if (!m_Pool.ContainsKey(prefab))
         {
@@ -49,12 +50,13 @@ public class ProjectileManager : Singleton<ProjectileManager>
         {
             GameObject obj = m_Pool[prefab].Dequeue();
             poolable = obj.GetComponent<Projectile>();
+            obj.transform.position = startLocation;
             obj.SetActive(true);
             return obj;
         }
         else
         {
-            GameObject obj = Instantiate(prefab);
+            GameObject obj = Instantiate(prefab, startLocation, Quaternion.identity);
             poolable = obj.GetComponent<Projectile>();
             if (poolable == null)
             {
