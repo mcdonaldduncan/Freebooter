@@ -11,7 +11,7 @@ public class ProjectileManager : Singleton<ProjectileManager>
         m_Pool = new Dictionary<GameObject, Queue<GameObject>>();
     }
 
-    public GameObject GetObject(GameObject prefab)
+    public GameObject TakeFromPool(GameObject prefab)
     {
         if (!m_Pool.ContainsKey(prefab))
         {
@@ -27,20 +27,48 @@ public class ProjectileManager : Singleton<ProjectileManager>
         else
         {
             GameObject obj = Instantiate(prefab);
-            Projectile poolItem = obj.GetComponent<Projectile>();
-            if (poolItem == null)
+            IPoolable poolable = obj.GetComponent<IPoolable>();
+            if (poolable == null)
             {
-                Debug.LogError("Object " + obj.name + " was not created from the object pool and cannot be returned.");
+                Debug.LogError("Prefab " + prefab.name + " is not poolable and cannot be used.");
                 return null;
             }
-            //obj.AddComponent<Projectile>().prefab = prefab;
+            poolable.Prefab = prefab;
             return obj;
         }
     }
 
-    public void ReturnObject(GameObject obj)
+    public GameObject TakeFromPool(GameObject prefab, out Projectile poolable)
     {
-        Projectile poolItem = obj.GetComponent<Projectile>();
+        if (!m_Pool.ContainsKey(prefab))
+        {
+            m_Pool.Add(prefab, new Queue<GameObject>());
+        }
+
+        if (m_Pool[prefab].Count > 0)
+        {
+            GameObject obj = m_Pool[prefab].Dequeue();
+            poolable = obj.GetComponent<Projectile>();
+            obj.SetActive(true);
+            return obj;
+        }
+        else
+        {
+            GameObject obj = Instantiate(prefab);
+            poolable = obj.GetComponent<Projectile>();
+            if (poolable == null)
+            {
+                Debug.LogError("Prefab " + prefab.name + " is not poolable and cannot be used.");
+                return null;
+            }
+            poolable.Prefab = prefab;
+            return obj;
+        }
+    }
+
+    public void ReturnToPool(GameObject obj)
+    {
+        IPoolable poolItem = obj.GetComponent<IPoolable>();
         if (poolItem == null)
         {
             Debug.LogError("Object " + obj.name + " was not created from the object pool and cannot be returned.");
