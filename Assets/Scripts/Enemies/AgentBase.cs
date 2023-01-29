@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,27 +7,25 @@ using UnityEngine.AI;
 public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
 {
     [SerializeField] GameObject m_ProjectilePrefab;
-    [SerializeField] LayerMask m_WalkableLayers;
     [SerializeField] GameObject m_ShootFrom;
     [SerializeField] GameObject m_VisionPoint;
     [SerializeField] GameObject m_Body;
-    [SerializeField] GameObject m_Weapon;
-    [SerializeField] Transform m_Hand;
+    
+    [SerializeField] LayerMask m_WalkableLayers;
 
     [SerializeField] float m_StoppingDistance;
-
     [SerializeField] float m_RotationSpeed;
-    [SerializeField] float m_Range;
 
     [SerializeField] float m_WanderDelay;
     [SerializeField] float m_WanderDistance;
 
+    [SerializeField] float m_Range;
     [SerializeField] float m_TimeBetweenShots;
 
     [SerializeField] float m_MaxHealth;
     [SerializeField] float m_Health;
 
-    NavMeshAgent m_Agent;
+    [NonSerialized] public NavMeshAgent m_Agent;
     Transform m_Target;
 
     AgentState m_State;
@@ -47,7 +46,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
     bool shouldShoot => Time.time > m_TimeBetweenShots + lastShotTime;
     bool shouldWander => Time.time > m_WanderDelay + lastWanderTime && m_Agent.pathStatus == NavMeshPathStatus.PathComplete;
 
-    private void Start()
+    public virtual void HandleSetup()
     {
         m_Health = m_MaxHealth;
         m_StartingState = m_State;
@@ -58,7 +57,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         LevelManager.PlayerRespawn += OnPlayerRespawn;
     }
 
-    private void Update()
+    public virtual void HandleAgentState()
     {
         distanceToPlayer = Vector3.Distance(transform.position, m_Target.position);
 
@@ -125,7 +124,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
 
     Vector3 RandomPosInSphere(Vector3 origin, float distance, LayerMask layerMask)
     {
-        Vector3 randomDirection = Random.insideUnitSphere * distance;
+        Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * distance;
         NavMesh.SamplePosition(randomDirection + origin, out NavMeshHit navHit, distance, layerMask);
         return navHit.position;
     }
