@@ -21,9 +21,3 @@ public class Spawner : MonoBehaviour
     }
 }
 
-[Serializable]
-public struct SpawnPair
-{
-    public Transform spawnPoint;
-    public GameObject spawnObject;
-}
