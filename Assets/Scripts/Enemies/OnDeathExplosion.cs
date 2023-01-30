@@ -33,16 +33,16 @@ public class OnDeathExplosion : MonoBehaviour
     private void Update()
     {
         if (!dead) return;
-        blink();
+        Blink();
         FallOnDeath();
     }
 
-    public void OnDeathVariables()
+    public void StartDeathSequence()
     {
         dead = true;
     }  
     
-    void blink()
+    void Blink()
     {
         if (Time.time > blinkrate + m_LastBlinkTime && m_Renderer.material.color == Color.white)
         {

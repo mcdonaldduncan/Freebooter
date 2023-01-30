@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class NewSoldierTest : AgentBase
 {
-    [SerializeField] Animator m_Animator;
-    [SerializeField] GameObject m_Weapon;
+    [Header("Soldier Weapon/Hand Transforms")]
+    [SerializeField] Transform m_Weapon;
     [SerializeField] Transform m_Hand;
 
-    private void Awake()
+    Animator m_Animator;
+
+    private void Start()
     {
-        m_Weapon.transform.SetParent(m_Hand);
+        HandleSetup();
+        m_Animator = GetComponent<Animator>();
+        m_Weapon.SetParent(m_Hand);
     }
 
     private void Update()

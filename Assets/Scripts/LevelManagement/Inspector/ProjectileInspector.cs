@@ -44,6 +44,7 @@ public class ProjectileInspector : Editor
 
         EditorGUILayout.PropertyField(EnableGravity_prop);
         EditorGUILayout.PropertyField(IsExplosive_prop);
+        EditorGUILayout.PropertyField(IsTracking_prop);
         
         
         EditorGUILayout.PropertyField(Prefab_prop);
@@ -52,6 +53,11 @@ public class ProjectileInspector : Editor
         {
             EditorGUILayout.PropertyField(ExplosionPrefab_prop);
             EditorGUILayout.PropertyField(ExplosionRadius_prop);
+        }
+
+        if (projectile.IsTracking)
+        {
+            EditorGUILayout.PropertyField(TrackingForce_prop);
         }
 
         serializedObject.ApplyModifiedProperties();

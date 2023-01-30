@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
+using UnityEngine.UIElements;
 
 [RequireComponent(typeof(Collider), typeof(Rigidbody))]
 public class Projectile : MonoBehaviour, IPoolable
@@ -14,6 +16,13 @@ public class Projectile : MonoBehaviour, IPoolable
     [SerializeField] float m_TrackingForce;
     [SerializeField] float m_DamageAmount;
     [SerializeField] float m_ExplosionRadius;
+    [SerializeField] float m_LifeTime = 15f;
+
+    Transform m_Transform;
+    Transform m_Target;
+
+    Vector3 velocity;
+    Vector3 acceleration;
 
     public bool EnableGravity { get { return m_EnableGravity; } set { m_EnableGravity = value; } }
     public bool IsTracking { get { return m_IsTracking; } set { m_IsTracking = value; } }
@@ -24,7 +33,7 @@ public class Projectile : MonoBehaviour, IPoolable
     Rigidbody m_Rigidbody;
 
     float startTime;
-    float lifeTime = 15f;
+    
 
     bool hasCollided;
 
@@ -39,9 +48,14 @@ public class Projectile : MonoBehaviour, IPoolable
 
         startTime = Time.time;
 
+        m_Target = LevelManager.Instance.Player.transform;
+        m_Transform = transform;
         m_Rigidbody.useGravity = m_EnableGravity;
         m_Rigidbody.velocity = Vector3.zero;
         m_Rigidbody.angularVelocity = Vector3.zero;
+
+        velocity = Vector3.zero;
+        acceleration = Vector3.zero;
     }
 
     private void OnDisable()
@@ -52,7 +66,10 @@ public class Projectile : MonoBehaviour, IPoolable
 
     private void Update()
     {
-        if (Time.time > startTime + lifeTime) ProjectileManager.Instance.ReturnToPool(gameObject);
+        if (Time.time > startTime + m_LifeTime) ProjectileManager.Instance.ReturnToPool(gameObject);
+
+        if (m_IsTracking) TrackTarget();
+
     }
 
     /// <summary>
@@ -97,6 +114,24 @@ public class Projectile : MonoBehaviour, IPoolable
         m_Rigidbody.angularVelocity = Vector3.zero;
         transform.position = Vector3.zero;
         ProjectileManager.Instance.ReturnToPool(gameObject);
+    }
+
+    Vector3 CalculateSteering(Vector3 currentTarget)
+    {
+        Vector3 desired = currentTarget - m_Transform.position;
+        Vector3 steer = desired - velocity;
+        steer = steer.normalized;
+        steer *= m_TrackingForce;
+        return steer;
+    }
+
+    void TrackTarget()
+    {
+        acceleration += CalculateSteering(m_Target.position);
+        velocity += acceleration;
+        m_Transform.position += velocity * Time.deltaTime;
+        m_Transform.LookAt(m_Transform.position + velocity);
+        acceleration = Vector3.zero;
     }
 
 }

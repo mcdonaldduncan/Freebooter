@@ -177,7 +177,7 @@ public class Drone : MonoBehaviour, IDamageable, IEnemy
                 {
                         dead = true;
                         agent.ResetPath();
-                        body.GetComponent<OnDeathExplosion>().OnDeathVariables();
+                        body.GetComponent<OnDeathExplosion>().StartDeathSequence();
                 }
                 break;
                 // why do you have aim, shoot, chase and also retaliate aim, retaliate shoot, etc? dont they do the same thing?

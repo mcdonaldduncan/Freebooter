@@ -402,7 +402,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     {
         //when the player presses W and S or A and D
         currentInput = (context.ReadValue<Vector2>());
-        MoveInput = new Vector2(currentInput.x * walkSpeed * speedScale, currentInput.y * walkSpeed);
+        MoveInput = new Vector2(currentInput.x * walkSpeed * speedScale, currentInput.y * walkSpeed * speedScale);
 
     }
 

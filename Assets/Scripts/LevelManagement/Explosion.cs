@@ -24,6 +24,7 @@ public class Explosion : MonoBehaviour, IPoolable
 
     private void OnDisable()
     {
-        ProjectileManager.Instance.ReturnToPool(this.gameObject);
+        if (ProjectileManager.Instance == null) return;
+        ProjectileManager.Instance.ReturnToPool(gameObject);
     }
 }

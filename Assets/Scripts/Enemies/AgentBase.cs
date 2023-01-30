@@ -6,22 +6,26 @@ using UnityEngine.AI;
 
 public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
 {
+    [Header("Projectile Prefab and Projectile Spawn Point")]
     [SerializeField] GameObject m_ProjectilePrefab;
-    [SerializeField] GameObject m_ShootFrom;
-    [SerializeField] GameObject m_VisionPoint;
-    [SerializeField] GameObject m_Body;
-    
+    [SerializeField] Transform m_ShootFrom;
+
+    [Header("Walkable Layers")]
     [SerializeField] LayerMask m_WalkableLayers;
 
+    [Header("Movement Options")]
     [SerializeField] float m_StoppingDistance;
     [SerializeField] float m_RotationSpeed;
 
+    [Header("Wander Options")]
     [SerializeField] float m_WanderDelay;
     [SerializeField] float m_WanderDistance;
 
+    [Header("Shooting Options")]
     [SerializeField] float m_Range;
     [SerializeField] float m_TimeBetweenShots;
 
+    [Header("Health Options")]
     [SerializeField] float m_MaxHealth;
     [SerializeField] float m_Health;
 
@@ -41,10 +45,13 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
     float lastWanderTime;
     float distanceToPlayer;
 
+    [NonSerialized] public bool isDead;
+
     public float Health { get => m_Health; set => m_Health = value; }
     public Vector3 StartingPosition { get => m_StartingPosition; set => m_StartingPosition = value; }
     bool shouldShoot => Time.time > m_TimeBetweenShots + lastShotTime;
     bool shouldWander => Time.time > m_WanderDelay + lastWanderTime && m_Agent.pathStatus == NavMeshPathStatus.PathComplete;
+
 
     public virtual void HandleSetup()
     {
@@ -53,6 +60,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         m_StartingPosition = transform.position;
         m_StartingRotation = transform.rotation;
         m_Target = LevelManager.Instance.Player.transform;
+        m_Agent = GetComponent<NavMeshAgent>();
 
         LevelManager.PlayerRespawn += OnPlayerRespawn;
     }
@@ -65,7 +73,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         {
             case AgentState.GUARD:
                 Aim();
-                CheckLineOfSight();
+                if (CheckLineOfSight()) m_State = AgentState.CHASE;
                 break;
             case AgentState.WANDER:
                 Wander();
@@ -83,36 +91,42 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         }
     }
 
-    void Aim()
+    public void Aim()
     {
         float tempSpeed = m_RotationSpeed;
         if (distanceToPlayer < m_Range)
         {
-            m_TargetDirection = m_Target.position - m_ShootFrom.transform.position;
+            m_TargetDirection = m_Target.position - m_ShootFrom.position;
             m_DesiredRotation = Quaternion.LookRotation(m_TargetDirection.normalized);
             transform.rotation = Quaternion.RotateTowards(new Quaternion(0, transform.rotation.y, 0, 360), m_DesiredRotation, tempSpeed * Time.deltaTime * 180);
         }
     }
 
-    void CheckLineOfSight()
+    public bool CheckLineOfSight()
     {
-        Physics.Raycast(m_VisionPoint.transform.position, m_TargetDirection, out RaycastHit hit, m_Range);
+        Physics.Raycast(m_ShootFrom.position, m_TargetDirection, out RaycastHit hit, m_Range);
 
-        if (hit.collider == null) return;
+        if (hit.collider == null) return false;
 
-        if (!hit.collider.CompareTag("Player")) return;
+        if (!hit.collider.CompareTag("Player")) return false;
 
-        m_State = AgentState.CHASE;
+        return true;
     }
 
-    void Shoot()
+    public void Shoot()
     {
         if (!shouldShoot) return;
 
-        GameObject newObj = ProjectileManager.Instance.TakeFromPool(m_ProjectilePrefab, m_ShootFrom.transform.position, out Projectile projectile);
+        GameObject newObj = ProjectileManager.Instance.TakeFromPool(m_ProjectilePrefab, m_ShootFrom.position, out Projectile projectile);
         projectile.Launch(m_TargetDirection);
+        projectile.transform.LookAt(projectile.transform.position + m_TargetDirection);
 
         lastShotTime = Time.time;
+    }
+
+    public bool CheckRange()
+    {
+        return distanceToPlayer < m_Range;
     }
 
     void Wander()
@@ -141,7 +155,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
 
     void ReturnToOrigin()
     {
-        m_Agent.SetDestination(m_StartingPosition);
+        if (m_Agent != null) m_Agent.SetDestination(m_StartingPosition);
 
         if (Vector3.Distance(transform.position, m_StartingPosition) < 1f)
         {
@@ -150,10 +164,37 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         }
     }
 
+    void CycleAgent()
+    {
+        if (m_Agent == null) return;
+
+        if (!m_Agent.isOnNavMesh)
+        {
+            m_Agent.enabled = false;
+            m_Agent.enabled = true;
+        }
+        else
+        {
+            m_Agent.isStopped = true;
+            m_Agent.isStopped = false;
+        }
+        m_Agent.Warp(m_StartingPosition);
+    }
+
+    public void Resetvalues()
+    {
+        CycleAgent();
+        
+        m_Health = m_MaxHealth;
+        m_State = m_StartingState;
+        isDead = false;
+    }
+
     public void CheckForDeath()
     {
         if (m_Health <= 0)
         {
+            isDead = true;
             OnDeath();
         }
     }
@@ -169,19 +210,17 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         {
             LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * m_MaxHealth);
         }
-        m_Agent.Warp(m_StartingPosition);
         gameObject.SetActive(false);
         LevelManager.CheckPointReached += OnCheckPointReached;
     }
 
-    public void OnPlayerRespawn()
+    public virtual void OnPlayerRespawn()
     {
         if (!gameObject.activeSelf)
         {
             gameObject.SetActive(true);
         }
-        m_Agent.Warp(m_StartingPosition);
-        m_Health = m_MaxHealth;
+        Resetvalues();
     }
 
     public void TakeDamage(float damageTaken)
@@ -203,3 +242,4 @@ public enum AgentState
     RETURN
 
 }
+
