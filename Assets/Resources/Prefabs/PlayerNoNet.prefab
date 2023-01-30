@@ -694,7 +694,7 @@ MonoBehaviour:
   walkBobSpeed: 14
   walkBobAmount: 0.05
   dashDamage: 0
-  dashRaySource: {fileID: 0}
+  dashRaySource: {fileID: 297426594336726724}
   dashRayDistance: 0
   dashesAllowed: 2
   dashesRemaining: 0
@@ -1364,6 +1364,10 @@ PrefabInstance:
     - target: {fileID: 449391110, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 208.67215
+      objectReference: {fileID: 0}
+    - target: {fileID: 599653281, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 40.00003
       objectReference: {fileID: 0}
     - target: {fileID: 793336231, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
       propertyPath: m_SizeDelta.x
