@@ -124,6 +124,17 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         lastShotTime = Time.time;
     }
 
+    public void Shoot(Transform shootFrom)
+    {
+        if (!shouldShoot) return;
+
+        GameObject newObj = ProjectileManager.Instance.TakeFromPool(m_ProjectilePrefab, shootFrom.position, out Projectile projectile);
+        projectile.Launch(m_TargetDirection);
+        projectile.transform.LookAt(projectile.transform.position + m_TargetDirection);
+
+        lastShotTime = Time.time;
+    }
+
     public bool CheckRange()
     {
         return distanceToPlayer < m_Range;
