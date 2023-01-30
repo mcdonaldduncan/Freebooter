@@ -30,9 +30,3 @@ public class NewTurretTest : AgentBase
         }
     }
 }
-
-public enum TurretState
-{
-    GUARD,
-    ATTACK
-}

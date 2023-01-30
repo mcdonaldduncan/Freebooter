@@ -265,30 +265,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ProjectilePrefab: {fileID: 196044, guid: 938459aeb26fb124998973f4dfcfb24d, type: 3}
-  layerMask:
+  m_ShootFrom: {fileID: 9014040488091691166}
+  m_WalkableLayers:
     serializedVersion: 2
-    m_Bits: 1
-  minWaitTimeWander: 3
-  maxWaitTimeWander: 6
-  wonderDistanceRange: 15
-  st: 1
-  tip: {fileID: 9014040488091691167}
-  light: {fileID: 9014040488429798431}
-  visionPoint: {fileID: 9014040488091691167}
-  body: {fileID: 9014040488476938554}
-  SensorR: {fileID: 8772785927216014671}
-  SensorL: {fileID: 5847183793462315723}
-  rotationspeed: 15
-  range: 20
-  agent: {fileID: 1731908634}
-  wanderSpotOffset: 7.15
-  delayBeforeMove: 2
-  originalPosOFFSET: 4
-  ShootRate: 0.5
-  BulletTrail: {fileID: 6952378413150019911, guid: 24acd6d67a692a64298fcd8e875417a9, type: 3}
-  Damage: 1
-  health: 150
-  maxHealth: 75
+    m_Bits: 0
+  m_StoppingDistance: 5
+  m_RotationSpeed: 20
+  m_WanderDelay: 5
+  m_WanderDistance: 5
+  m_Range: 30
+  m_TimeBetweenShots: 0.5
+  m_MaxHealth: 0
+  m_Health: 0
+  m_Body: {fileID: 0}
 --- !u!136 &8143964890246340086
 CapsuleCollider:
   m_ObjectHideFlags: 0

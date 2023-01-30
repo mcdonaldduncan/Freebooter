@@ -1,8 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
+public class Soldier : AgentBase
+{
+    [Header("Soldier Weapon/Hand Transforms")]
+    [SerializeField] Transform m_Weapon;
+    [SerializeField] Transform m_Hand;
+
+    Animator m_Animator;
+
+    private void Start()
+    {
+        HandleSetup();
+        m_Animator = GetComponent<Animator>();
+        m_Weapon.SetParent(m_Hand);
+    }
+
+    private void Update()
+    {
+        m_Animator.SetFloat("Blend", m_Agent.velocity.magnitude);
+        HandleAgentState();
+    }
+}
+
+
+/*
 public class Soldier : MonoBehaviour, IDamageable, IEnemy
 {
     [SerializeField] GameObject m_ProjectilePrefab;
@@ -402,3 +423,4 @@ public class Soldier : MonoBehaviour, IDamageable, IEnemy
         LevelManager.PlayerRespawn -= OnPlayerRespawn;
     }
 }
+*/
