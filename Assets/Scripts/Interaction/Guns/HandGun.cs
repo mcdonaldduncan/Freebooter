@@ -26,6 +26,7 @@ public class HandGun : MonoBehaviour, IGun
     public TrailRenderer BulletTrail { get; set; }
     public AudioClip GunShotAudio { get; set; }
     public GameObject GunModel { get; set; }
+    public HandgunAnimationHandler GunAnimationHandler { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
 
     public bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading && CurrentAmmo > 0;
@@ -59,6 +60,7 @@ public class HandGun : MonoBehaviour, IGun
 
     public void Shoot()
     {
+        GunAnimationHandler.RecoilAnim.SetTrigger("RecoilTrigger");
         var timeShot = Time.time;
         RaycastHit hitInfo;
 
@@ -175,6 +177,8 @@ public class HandGun : MonoBehaviour, IGun
     {
         if (damageableTarget != null)
         {
+            bool breakableObject = hitInfo.transform.TryGetComponent<Fracture>(out Fracture component);
+
             //using a try catch to prevent destroyed enemies from throwing null reference exceptions
             try
             {
@@ -182,7 +186,7 @@ public class HandGun : MonoBehaviour, IGun
                 Vector3 targetPosition = hitInfo.transform.position;
 
                 //Play blood particle effects on the enemy, where they were hit
-                var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                var p = Instantiate(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
                 Destroy(p, 1);
 
                 //Get the distance between the enemy and the gun
@@ -219,7 +223,7 @@ public class HandGun : MonoBehaviour, IGun
             }
             catch
             {
-                var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                var p = Instantiate(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
                 Destroy(p, 1);
             }
         }
@@ -254,5 +258,6 @@ public class HandGun : MonoBehaviour, IGun
             GunManager.StopCoroutine(reloadCo);
             GunManager.Reloading = false;
         }
+        GunAnimationHandler.RecoilAnim.ResetTrigger("RecoilTrigger");
     }
 }

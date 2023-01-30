@@ -16,8 +16,8 @@ public sealed class LevelManager : MonoBehaviour
     public static LevelManager Instance { get; private set; }
 
     public delegate void PlayerRespawnDelegate();
-    public static PlayerRespawnDelegate PlayerRespawn;
-    public static PlayerRespawnDelegate CheckPointReached;
+    public static event PlayerRespawnDelegate PlayerRespawn;
+    public static event PlayerRespawnDelegate CheckPointReached;
 
     void Awake()
     {

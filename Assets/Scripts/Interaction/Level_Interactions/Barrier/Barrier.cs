@@ -5,57 +5,64 @@ using UnityEngine;
 
 public class Barrier : MonoBehaviour
 {
+    // State options
     [Header("State Options")]
-    [SerializeField] public BarrierState m_State;
-    [SerializeField] AccessType m_AccessType;
-    [SerializeField] bool m_ShouldClose;
-    [SerializeField] float m_CloseDelay;
-    
+    [SerializeField] public BarrierState m_State; // The current state of the barrier
+    [SerializeField] AccessType m_AccessType; // The type of access for the barrier (proximity, activate, locked)
+    [SerializeField] bool m_ShouldClose; // Determines if the barrier should close automatically
+    [SerializeField] float m_CloseDelay; // The delay before the barrier closes
+
+    // Segment Parameters
     [Header("Segment Parameters")]
-    [SerializeField] public float MoveSpeed;
+    [SerializeField] public float MoveSpeed; // The speed at which the barrier moves
 
+    // Prefabs
     [Header("Prefabs")]
-    [SerializeField] GameObject m_KeyPrefab;
-    [SerializeField] GameObject m_SegmentPrefab;
+    [SerializeField] GameObject m_KeyPrefab; // The prefab for the key
+    [SerializeField] GameObject m_SegmentPrefab; // The prefab for the barrier segment
 
+    // Activation Object
     [Header("Activation Object")]
-    [SerializeField] GameObject m_Activator;
+    [SerializeField] GameObject m_Activator; // The object that activates the barrier
 
     [Header("")]
-    [SerializeField] public List<Key> m_RequiredKeys;
+    [SerializeField] public List<Key> m_RequiredKeys; // The keys required to open the barrier
 
+    // Events
     public delegate void ActionDelegate();
-    public event ActionDelegate Activation;
-    public event ActionDelegate SetState;
+    public event ActionDelegate Activation; // Event for when the barrier is activated
+    public event ActionDelegate SetState; // Event for when the barrier's state is set
 
-    IActivator m_IActivator;
+    IActivator m_IActivator; // Interface for the activator object
 
+    // Determines if the player has all the required keys
     bool HasKeys => KeyManager.Instance.KeyInventory.Intersect(m_RequiredKeys).Count() == m_RequiredKeys.Count;
 
+    // Determines if the barrier should auto close
     bool AutoClose => m_AccessType == AccessType.ACTIVATE && m_ShouldClose && m_State == BarrierState.OPEN;
 
-    bool m_InTrigger;
+    bool m_InTrigger; // Determines if the player is in the trigger zone
 
 #if UNITY_EDITOR
-
+    // Draws a gizmo in the Unity editor for the barrier's position
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        
-
         Gizmos.DrawWireCube(transform.position, Vector3.one);
     }
-
 #endif
 
+    // Register events when the script is enabled
     private void OnEnable()
     {
         Activation += OnActivation;
 
+        // If no activator is set or the access type is not activate, return
         if (m_Activator == null || m_AccessType != AccessType.ACTIVATE) return;
 
         try
         {
+            // Get the IActivator component from the activator object
             m_IActivator = (IActivator)m_Activator.GetComponent(typeof(IActivator));
             m_IActivator.Activate += OnActivate;
             m_IActivator.Deactivate += OnDeactivate; 
@@ -68,15 +75,19 @@ public class Barrier : MonoBehaviour
 
     private void OnDisable()
     {
+        // unsubscribe from the Activation event
         Activation -= OnActivation;
 
+        // if the IActivator is null or the access type is not ACTIVATE, return
         if (m_IActivator == null || m_AccessType != AccessType.ACTIVATE) return;
+        // unsubscribe from the Activate and Deactivate events
         m_IActivator.Activate -= OnActivate;
         m_IActivator.Deactivate -= OnDeactivate;
     }
 
     void Start()
     {
+        // if the initial state of the barrier is open, invoke the SetState event
         if (m_State == BarrierState.OPEN)
         {
             SetState?.Invoke();
@@ -85,10 +96,13 @@ public class Barrier : MonoBehaviour
 
     private void OnActivate()
     {
+        // if the barrier shouldn't close and it is currently open, return
         if (!m_ShouldClose && m_State == BarrierState.OPEN) return;
 
+        // invoke the Activation event
         Activation?.Invoke();
 
+        // if AutoClose is enabled, invoke the OnActivate method after the specified delay
         if (AutoClose)
         {
             Invoke(nameof(OnActivate), m_CloseDelay);
@@ -97,6 +111,7 @@ public class Barrier : MonoBehaviour
 
     private void OnDeactivate()
     {
+        // if the barrier is open, invoke the Activation event
         if (m_State == BarrierState.OPEN)
         {
             Activation?.Invoke();
@@ -105,17 +120,20 @@ public class Barrier : MonoBehaviour
 
     void OnActivation()
     {
+        // switch the state of the barrier between open and closed
         m_State = m_State == BarrierState.OPEN ? BarrierState.CLOSED : BarrierState.OPEN;
     }
 
     public GameObject AddSegment()
     {
+        // instantiate a new barrier segment and return it
         GameObject segment = Instantiate(m_SegmentPrefab, transform, false);
         return segment;
     }
 
     public GameObject AddKey()
     {
+        // instantiate a new key and add it to the RequiredKeys list
         GameObject key = Instantiate(m_KeyPrefab, transform, false);
         m_RequiredKeys.Add(key.GetComponent<Key>());
         return key;
@@ -125,8 +143,6 @@ public class Barrier : MonoBehaviour
     {
         if (m_InTrigger) return;
         if (!other.gameObject.CompareTag("Player")) return;
-        //Debug.Log("Trigger Enter");
-        //Debug.Log(Time.time);
         m_InTrigger = true;
         if (!m_ShouldClose && m_State == BarrierState.OPEN) return;
 
@@ -140,7 +156,6 @@ public class Barrier : MonoBehaviour
                 break;
 
             case AccessType.LOCKED:
-
                 if (!HasKeys)
                 {
                     // send message to UI
@@ -156,14 +171,12 @@ public class Barrier : MonoBehaviour
             default:
                 break;
         }
-
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (!m_InTrigger) return;
         if (!other.gameObject.CompareTag("Player")) return;
-        //Debug.Log("Trigger Exit");
         m_InTrigger = false;
         if (m_State == BarrierState.CLOSED) return;
         OnActivate();

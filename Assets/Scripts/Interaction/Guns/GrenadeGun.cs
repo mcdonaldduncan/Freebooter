@@ -25,6 +25,8 @@ public class GrenadeGun : MonoBehaviour, IGun
     public AudioClip GunShotAudio { get; set; }
     public GameObject GunModel { get; set; }
     public GameObject Grenade { get; set; }
+    public float GrenadeLaunchForce { get; set; }
+    public Vector3 GrenadeLaunchArcVector { get; set; }
 
     public bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading && CurrentAmmo > 0;
 
@@ -62,11 +64,13 @@ public class GrenadeGun : MonoBehaviour, IGun
         //GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
         Ray ray = GunManager.FPSCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 
-        Vector3 grenadeLaunchForce = (ray.direction + new Vector3(0f, 0.25f, 0f)) * 800f;
+        Vector3 grenadeLaunchForce = (ray.direction + GrenadeLaunchArcVector) * GrenadeLaunchForce;
 
         GameObject grenade = Instantiate(Grenade, ShootFrom.position, Quaternion.identity);
         Rigidbody gRB = grenade.GetComponent<Rigidbody>();
         gRB.AddForce(grenadeLaunchForce);
+
+        lastShotTime = Time.time;
     }
 
     public void StartReload()

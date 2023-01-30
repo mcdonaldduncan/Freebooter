@@ -118,7 +118,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7936307943014886290}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.32, z: 0}
+  m_LocalPosition: {x: 0, y: 1.76, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -235,8 +235,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7936307943212430881}
   m_LocalRotation: {x: 0.5, y: 0.5, z: 0.5, w: 0.5}
-  m_LocalPosition: {x: 0, y: -0, z: 0.781}
-  m_LocalScale: {x: 0.089604, y: 0.27011123, z: 0.089604}
+  m_LocalPosition: {x: 0, y: -0, z: 0.658}
+  m_LocalScale: {x: 0.089604, y: 0.15641062, z: 0.089604}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7936307943014886291}
@@ -504,7 +504,6 @@ GameObject:
   - component: {fileID: 7936307944237820729}
   - component: {fileID: 7789221693854972693}
   - component: {fileID: 873283035421134823}
-  - component: {fileID: 4576846895115156391}
   m_Layer: 9
   m_Name: Turret
   m_TagString: Untagged
@@ -541,19 +540,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8eae2d91e7874444b8d0de5a39d0ad64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  body: {fileID: 7936307943390632097}
-  tip: {fileID: 7936307943014886290}
-  light: {fileID: 5774120490667646057}
-  rotationSpeed: 5
-  range: 50
-  state: 0
-  rotationType: 0
-  delayBeforeFirstShot: 1
-  ShootRate: 0.5
-  BulletTrail: {fileID: 6952378413150019911, guid: 24acd6d67a692a64298fcd8e875417a9, type: 3}
-  Damage: 1
-  health: 150
-  maxHealth: 75
+  m_ProjectilePrefab: {fileID: 196044, guid: 938459aeb26fb124998973f4dfcfb24d, type: 3}
+  m_ShootFrom: {fileID: 7936307943014886291}
+  m_WalkableLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_StoppingDistance: 0
+  m_RotationSpeed: 20
+  m_WanderDelay: 0
+  m_WanderDistance: 0
+  m_Range: 50
+  m_TimeBetweenShots: 0.3
+  m_MaxHealth: 75
+  m_Health: 75
 --- !u!65 &873283035421134823
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -567,16 +566,3 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1.4804261, z: 1}
   m_Center: {x: 0, y: -0.24021313, z: 0}
---- !u!135 &4576846895115156391
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7936307944237820728}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.30336356
-  m_Center: {x: -0.011698604, y: 0.013107777, z: 0.78462195}

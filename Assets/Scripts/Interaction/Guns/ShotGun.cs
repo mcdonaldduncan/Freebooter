@@ -28,6 +28,7 @@ public class ShotGun : MonoBehaviour, IGun
     public TrailRenderer BulletTrail { get; set; }
     public AudioClip GunShotAudio { get; set; }
     public GameObject GunModel { get; set; }
+    public ShotgunAnimationHandler GunAnimationHandler { get; set; }
 
     public bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading && CurrentAmmo > 0;
 
@@ -61,6 +62,7 @@ public class ShotGun : MonoBehaviour, IGun
     public void Shoot()
     {
         GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
+        GunAnimationHandler.RecoilAnim.SetTrigger("RecoilTrigger");
         for (int i = 0; i < ShotGunBulletAmount; i++)
         {
             Vector3 aimSpot = GunManager.FPSCam.transform.position;
@@ -172,6 +174,8 @@ public class ShotGun : MonoBehaviour, IGun
     {
         if (damageableTarget != null)
         {
+            bool breakableObject = hitInfo.transform.TryGetComponent<Fracture>(out Fracture component);
+
             //using a try catch to prevent destroyed enemies from throwing null reference exceptions
             try
             {
@@ -179,7 +183,7 @@ public class ShotGun : MonoBehaviour, IGun
                 Vector3 targetPosition = hitInfo.transform.position;
 
                 //Play blood particle effects on the enemy, where they were hit
-                var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                var p = Instantiate(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
                 Destroy(p, 1);
 
                 //Get the distance between the enemy and the gun
@@ -216,7 +220,7 @@ public class ShotGun : MonoBehaviour, IGun
             }
             catch
             {
-                var p = Instantiate(HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                var p = Instantiate(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
                 Destroy(p, 1);
             }
         }
@@ -267,5 +271,6 @@ public class ShotGun : MonoBehaviour, IGun
             GunManager.StopCoroutine(reloadCo);
             GunManager.Reloading = false;
         }
+        GunAnimationHandler.RecoilAnim.ResetTrigger("RecoilTrigger");
     }
 }

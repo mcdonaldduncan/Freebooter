@@ -67,11 +67,13 @@ public sealed class GunHandler : MonoBehaviour
     [SerializeField] private int handGunCurrentAmmo;
     [SerializeField] private int handGunMaxAmmo;
     [SerializeField] private float handGunReloadTime;
+    [Tooltip("Number of seconds between shots")]
     [SerializeField] private float handGunFireRate;
     [Tooltip("This will offset how the shot is centered from the tip of the gun")]
     [SerializeField] private float handGunAimOffset = 15f;
     [SerializeField] private CanvasGroup handGunReticle;
     [SerializeField] private AudioClip handGunShotAudio;
+    [SerializeField] private HandgunAnimationHandler handgunAnimationHandler;
 
     [Header("Shotgun Parameters")]
     [SerializeField] private GameObject shotGunModel;
@@ -92,11 +94,13 @@ public sealed class GunHandler : MonoBehaviour
     [SerializeField] private int shotGunCurrentAmmo;
     [SerializeField] private int shotGunMaxAmmo;
     [SerializeField] private float shotGunReloadTime;
+    [Tooltip("Number of seconds between shots")]
     [SerializeField] private float shotGunFireRate;
     [Tooltip("This will offset how the shot is centered from the tip of the gun")]
     [SerializeField] private float shotGunAimOffset = 15f;
     [SerializeField] private CanvasGroup shotGunReticle;
     [SerializeField] private AudioClip shotGunShotAudio;
+    [SerializeField] private ShotgunAnimationHandler shotgunAnimationHandler;
 
     [Header("Autogun Parameters")]
     [SerializeField] private GameObject autoGunModel;
@@ -114,12 +118,14 @@ public sealed class GunHandler : MonoBehaviour
     [SerializeField] private int autoGunCurrentAmmo;
     [SerializeField] private int autoGunMaxAmmo;
     [SerializeField] private float autoGunReloadTime;
+    [Tooltip("Number of seconds between shots")]
     [SerializeField] private float autoFireRate;
     [Tooltip("This will offset how the shot is centered from the tip of the gun")]
     [SerializeField] private float autoGunAimOffset = 15f;
     [SerializeField] private CanvasGroup autoGunReticle;
     [SerializeField] private AudioClip[] autoGunShotAudioList;
     [SerializeField] private AudioClip triggerReleasedAudio;
+    [SerializeField] private AutoGunAnimationHandler autoGunAnimationHandler;
 
     [Header("Grenade Launcher Parameters")]
     [SerializeField] private GameObject grenadeObject;
@@ -136,6 +142,8 @@ public sealed class GunHandler : MonoBehaviour
     [SerializeField] private float grenadeGunAimOffset = 15f;
     [SerializeField] private CanvasGroup grenadeGunReticle;
     [SerializeField] private AudioClip grenadeGunShotAudio;
+    [SerializeField] private float grenadeLaunchForce;
+    [SerializeField] private float grenadeLaunchArc;
 
     [SerializeField] private List<GameObject> gunInventory;
 
@@ -194,7 +202,6 @@ public sealed class GunHandler : MonoBehaviour
 
         if (gun is AutoGun)
         {
-            gun.FireRate = this.autoFireRate;
             gun.GunModel = this.autoGunModel;
             gun.ShootFrom = this.autoGunShootFrom;
             gun.MinDamage = this.autoGunMinDamage;
@@ -208,10 +215,11 @@ public sealed class GunHandler : MonoBehaviour
             autoGun.GunShotAudioList = this.autoGunShotAudioList;
             autoGun.TriggerReleasedAudio = this.triggerReleasedAudio;
             gun.ReloadWait = this.autoGunReloadWait;
+            autoGun.GunAnimationHandler = this.autoGunAnimationHandler;
+            gun.FireRate = this.autoFireRate;
         }
         if (gun is HandGun)
         {
-            gun.FireRate = this.handGunFireRate;
             gun.GunModel = this.handGunModel;
             gun.ShootFrom = this.handGunShootFrom;
             gun.MinDamage = this.handGunMinDamage;
@@ -224,6 +232,8 @@ public sealed class GunHandler : MonoBehaviour
             gun.GunReticle = this.handGunReticle;
             gun.GunShotAudio = this.handGunShotAudio;
             gun.ReloadWait = this.handGunReloadWait;
+            handGun.GunAnimationHandler = this.handgunAnimationHandler;
+            gun.FireRate = this.handGunFireRate;
         }
         if (gun is ShotGun)
         {
@@ -240,6 +250,8 @@ public sealed class GunHandler : MonoBehaviour
             gun.GunReticle = this.shotGunReticle;
             gun.GunShotAudio = this.shotGunShotAudio;
             gun.ReloadWait = this.shotGunReloadWait;
+            shotGun.GunAnimationHandler = this.shotgunAnimationHandler;
+            gun.FireRate = this.shotGunFireRate;
         }
         if (gun is GrenadeGun)
         {
@@ -254,6 +266,8 @@ public sealed class GunHandler : MonoBehaviour
             gun.GunShotAudio = this.grenadeGunShotAudio;
             grenadeGun.Grenade = this.grenadeObject;
             grenadeGun.GrenadeDamage = this.grenadeDamage;
+            grenadeGun.GrenadeLaunchForce = this.grenadeLaunchForce;
+            grenadeGun.GrenadeLaunchArcVector = new Vector3(0f, grenadeLaunchArc, 0f);
         }
     }
     private void Start()
@@ -288,6 +302,10 @@ public sealed class GunHandler : MonoBehaviour
         currentGun = gunDict[GunType.handGun];
         currentGun.GunReticle.alpha = 1;
         currentGun.GunModel.SetActive(true);
+
+        this.handgunAnimationHandler.RecoilAnim.SetFloat("RecoilSpeed", this.handgunAnimationHandler.RecoilAnimClip.length / this.handGunFireRate);
+        this.shotgunAnimationHandler.RecoilAnim.SetFloat("RecoilSpeed", this.shotgunAnimationHandler.RecoilAnimClip.length / this.shotGunFireRate);
+        this.autoGunAnimationHandler.RecoilAnim.SetFloat("RecoilSpeed", this.autoGunAnimationHandler.RecoilAnimClip.length / this.autoFireRate);
     }
 
     private void Update()
