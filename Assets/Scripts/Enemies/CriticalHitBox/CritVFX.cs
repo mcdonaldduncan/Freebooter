@@ -10,11 +10,6 @@ public class CritVFX : MonoBehaviour, IPoolable
 
     public GameObject Prefab { get => m_Prefab; set => m_Prefab = value; }
 
-    private void Start()
-    {
-        Prefab.SetActive(true);
-    }
-
     private void OnEnable()
     {
         if (m_ParticleSystem == null)
