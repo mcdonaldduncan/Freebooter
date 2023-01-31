@@ -2,19 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CriticalHitBox : MonoBehaviour, IDamageable
+public class CriticalHitBox : MonoBehaviour, IDamageable, IPoolable
 {
-    
     private IDamageable damageable;
 
-    [Header("SetUp")]
-    public GameObject ObjectWithIdamageble;
-    public ParticleSystem critParticle;
+    [Header("SetUp")] 
+    public GameObject m_Prefab;
+    public GameObject CritVFX;
+    public Transform CritTFXPosition;
 
     [Header("Crit Damage Variable")]
     public float CriticalDamageMultiplier = 2;
 
     public float Health { get => damageable.Health; set => damageable.Health = value; }
+
+    public GameObject Prefab { get => m_Prefab; set => m_Prefab = value; }
 
     public void CheckForDeath()
     {
@@ -23,19 +25,16 @@ public class CriticalHitBox : MonoBehaviour, IDamageable
     public void TakeDamage(float damageTaken)
     {
         playCriticalVFX();
-        Debug.Log("Crit");
-        Debug.Log("damage enhanced to " +damageTaken*CriticalDamageMultiplier);
         damageable.TakeDamage(damageTaken*CriticalDamageMultiplier);
     }
 
     public void playCriticalVFX()
     {
-        Debug.Log("Critical VFX");
-        critParticle.Play();
+        ProjectileManager.Instance.TakeFromPool(CritVFX, CritTFXPosition.transform.position);
     }
 
     void Start()
     {
-        damageable = ObjectWithIdamageble.GetComponent<IDamageable>();    
+        damageable = Prefab.GetComponent<IDamageable>();
     }
 }
