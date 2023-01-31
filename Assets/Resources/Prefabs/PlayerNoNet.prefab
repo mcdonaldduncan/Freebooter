@@ -420,7 +420,7 @@ MonoBehaviour:
   handGunCurrentAmmo: 0
   handGunMaxAmmo: 10
   handGunReloadTime: 1
-  handGunFireRate: 0.5
+  handGunFireRate: 0.25
   handGunAimOffset: 15
   handGunReticle: {fileID: 6976750457327859168}
   handGunShotAudio: {fileID: 8300000, guid: 0e54aeef289ca2a468f328b56436e7ed, type: 3}
@@ -698,7 +698,7 @@ MonoBehaviour:
   dashRayDistance: 0
   dashesAllowed: 2
   dashesRemaining: 0
-  dashSpeed: 8
+  dashSpeed: 6
   dashTime: 0.125
   dashCooldownTime: 3
   dashBetweenTime: 0.25
