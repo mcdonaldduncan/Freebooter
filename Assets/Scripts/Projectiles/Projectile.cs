@@ -130,7 +130,7 @@ public class Projectile : MonoBehaviour, IPoolable
         acceleration += CalculateSteering(m_Target.position);
         velocity += acceleration;
         m_Transform.position += velocity * Time.deltaTime;
-        m_Transform.LookAt(m_Transform.position + velocity);
+        m_Transform.LookAt(transform.position + velocity);
         acceleration = Vector3.zero;
     }
 

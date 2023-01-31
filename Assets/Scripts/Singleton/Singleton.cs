@@ -2,16 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Singleton<T> :
-        MonoBehaviour where T : Component
+public class Singleton<T> : MonoBehaviour where T : Component
 {
-
     private static T _instance;
+
+    private static bool applicationIsQuitting = false;
 
     public static T Instance
     {
         get
         {
+            if (applicationIsQuitting)
+            {
+                return null;
+            }
+
             if (_instance == null)
             {
                 _instance = FindObjectOfType<T>();
@@ -32,6 +37,10 @@ public class Singleton<T> :
         }
     }
 
+    private void OnDestroy()
+    {
+        applicationIsQuitting = true;
+    }
 
 
     public virtual void Awake()
@@ -39,7 +48,6 @@ public class Singleton<T> :
         if (_instance == null)
         {
             _instance = this as T;
-            //DontDestroyOnLoad(gameObject);
         }
         else
         {

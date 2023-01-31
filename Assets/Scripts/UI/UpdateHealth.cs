@@ -32,7 +32,6 @@ public class UpdateHealth : MonoBehaviour
             {
                 Player.PlayerAudioSource.PlayOneShot(Player.LowHealthAudio);
                 soundPlayed = true;
-                Debug.Log("Sound Played");
             }
 
         }

@@ -9697,8 +9697,8 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 34585bdbdcd7aef4597605fb8b3e711f, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.7
-  m_Pitch: 1.2
+  m_Volume: 0.4
+  m_Pitch: 0.6
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -14548,10 +14548,11 @@ MonoBehaviour:
   m_EnableGravity: 0
   m_IsTracking: 0
   m_IsExplosive: 0
-  m_LaunchForce: 500
+  m_LaunchForce: 900
   m_TrackingForce: 0
   m_DamageAmount: 10
   m_ExplosionRadius: 0
+  m_LifeTime: 15
 --- !u!54 &2903166396959590856
 Rigidbody:
   m_ObjectHideFlags: 0
