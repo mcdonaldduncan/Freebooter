@@ -9675,7 +9675,7 @@ Transform:
   m_GameObject: {fileID: 196044}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 428946}
@@ -9697,8 +9697,8 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 34585bdbdcd7aef4597605fb8b3e711f, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.7
-  m_Pitch: 1.2
+  m_Volume: 0.4
+  m_Pitch: 0.2
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -14575,13 +14575,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Prefab: {fileID: 196044}
   m_ExplosionPrefab: {fileID: 106912, guid: 4b9e43a944152244ca604be083c60547, type: 3}
+  m_DamageAll: 1
   m_EnableGravity: 0
   m_IsTracking: 0
   m_IsExplosive: 1
-  m_LaunchForce: 300
+  m_LaunchForce: 600
   m_TrackingForce: 0
   m_DamageAmount: 15
   m_ExplosionRadius: 1
+  m_LifeTime: 15
 --- !u!1 &198250
 GameObject:
   m_ObjectHideFlags: 0

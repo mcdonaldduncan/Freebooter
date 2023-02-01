@@ -15,6 +15,7 @@ public class OnDeathExplosion : MonoBehaviour
 
     Rigidbody rb;
     Renderer m_Renderer;
+    Collider m_Collider;
 
     bool dead = false;
     bool landed = false; 
@@ -28,6 +29,8 @@ public class OnDeathExplosion : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         m_Renderer = GetComponent<Renderer>();
+        
+        
     }
 
     private void Update()
@@ -40,8 +43,14 @@ public class OnDeathExplosion : MonoBehaviour
     public void StartDeathSequence()
     {
         dead = true;
-    }  
-    
+    }
+
+    private void OnEnable()
+    {
+        m_Collider = GetComponent<Collider>();
+        m_Collider.enabled = false;
+    }
+
     void Blink()
     {
         if (Time.time > blinkrate + m_LastBlinkTime && m_Renderer.material.color == Color.white)
@@ -61,6 +70,7 @@ public class OnDeathExplosion : MonoBehaviour
         if (deathFrames == 0)
         {
             rb = gameObject.AddComponent<Rigidbody>();
+            m_Collider.enabled = true;
             rb.useGravity = true;
             Vector3 explosiveForce = new Vector3(Random.Range(-5f, 5f), Random.Range(3f, 7f), Random.Range(-5f, 5f));
             rb.AddForce(explosiveForce, ForceMode.Impulse);
@@ -75,7 +85,6 @@ public class OnDeathExplosion : MonoBehaviour
         explosion = false;
         deathFrames = 0;
         Destroy(rb);
-        m_Renderer.material.color = Color.white;
         transform.position = transform.parent.position;
         transform.rotation = transform.parent.rotation;
     }

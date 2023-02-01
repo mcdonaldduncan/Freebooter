@@ -4776,7 +4776,7 @@ Transform:
   m_GameObject: {fileID: 145380}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7160958434333664193}
@@ -9536,7 +9536,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 3dfe34e3f915bfa4495a5e9c0b8d04e5, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.8
+  m_Volume: 0.4
   m_Pitch: 0.9
   Loop: 1
   Mute: 0
@@ -9632,7 +9632,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: abbc1f9d8ce79fe4ba110c6bce294c06, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.4
   m_Pitch: 1.1
   Loop: 0
   Mute: 0
@@ -9773,13 +9773,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Prefab: {fileID: 145380}
   m_ExplosionPrefab: {fileID: 181688, guid: f692b408398ac4f429430d854fe5be95, type: 3}
+  m_DamageAll: 1
   m_EnableGravity: 0
   m_IsTracking: 1
   m_IsExplosive: 1
-  m_LaunchForce: 100
-  m_TrackingForce: 0.05
+  m_LaunchForce: 50
+  m_TrackingForce: 0.5
   m_DamageAmount: 15
   m_ExplosionRadius: 3
+  m_VelocityLimit: 10
   m_LifeTime: 15
 --- !u!1 &148790
 GameObject:

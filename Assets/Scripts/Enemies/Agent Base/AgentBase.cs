@@ -30,9 +30,9 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
     [SerializeField] float m_Health;
 
     [NonSerialized] public NavMeshAgent m_Agent;
-    Transform m_Target;
+    [NonSerialized] public Transform m_Target;
 
-    AgentState m_State;
+    [NonSerialized] public AgentState m_State;
     AgentState m_StartingState;
 
     Vector3 m_TargetDirection;
@@ -41,11 +41,13 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
     Quaternion m_DesiredRotation;
     Quaternion m_StartingRotation;
 
+    [NonSerialized] public float distanceToPlayer;
     float lastShotTime;
     float lastWanderTime;
-    float distanceToPlayer;
+    
 
     [NonSerialized] public bool isDead;
+    [NonSerialized] public bool altShoootFrom;
 
     public float Health { get => m_Health; set => m_Health = value; }
     public Vector3 StartingPosition { get => m_StartingPosition; set => m_StartingPosition = value; }
@@ -72,14 +74,14 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         switch (m_State)
         {
             case AgentState.GUARD:
-                Aim();
+                AimRestricted();
                 if (CheckLineOfSight()) m_State = AgentState.CHASE;
                 break;
             case AgentState.WANDER:
                 Wander();
                 break;
             case AgentState.CHASE:
-                Aim();
+                AimRestricted();
                 Shoot();
                 ChasePlayer();
                 break;
@@ -93,12 +95,25 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
 
     public void Aim()
     {
-        float tempSpeed = m_RotationSpeed;
         if (distanceToPlayer < m_Range)
         {
+            transform.LookAt(m_Target.position);
+
             m_TargetDirection = m_Target.position - m_ShootFrom.position;
-            m_DesiredRotation = Quaternion.LookRotation(m_TargetDirection.normalized);
-            transform.rotation = Quaternion.RotateTowards(new Quaternion(0, transform.rotation.y, 0, 360), m_DesiredRotation, tempSpeed * Time.deltaTime * 180);
+            //m_DesiredRotation = Quaternion.LookRotation(m_TargetDirection.normalized);
+            //transform.rotation = Quaternion.RotateTowards(transform.rotation, m_DesiredRotation, m_RotationSpeed * Time.deltaTime * 180);
+        }
+    }
+
+    public void AimRestricted()
+    {
+        if (distanceToPlayer < m_Range)
+        {
+            transform.LookAt(new Vector3(m_Target.position.x, transform.position.y, m_Target.position.z));
+
+            m_TargetDirection = m_Target.position - m_ShootFrom.position;
+            //m_DesiredRotation = Quaternion.LookRotation(m_TargetDirection.normalized);
+            //transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(transform.rotation.x, m_DesiredRotation.y, transform.rotation.x), m_RotationSpeed * Time.deltaTime * 180);
         }
     }
 
@@ -121,6 +136,20 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         projectile.Launch(m_TargetDirection);
         projectile.transform.LookAt(projectile.transform.position + m_TargetDirection);
 
+        altShoootFrom = !altShoootFrom;
+        lastShotTime = Time.time;
+    }
+
+    public void Shoot(Transform shootFrom)
+    {
+        if (!shouldShoot) return;
+        Vector3 tempDirection = m_Target.position - shootFrom.position;
+
+        GameObject newObj = ProjectileManager.Instance.TakeFromPool(m_ProjectilePrefab, shootFrom.position, out Projectile projectile);
+        projectile.Launch(tempDirection);
+        projectile.transform.LookAt(projectile.transform.position + tempDirection);
+
+        altShoootFrom = !altShoootFrom;
         lastShotTime = Time.time;
     }
 
@@ -129,7 +158,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         return distanceToPlayer < m_Range;
     }
 
-    void Wander()
+    public void Wander()
     {
         if (!shouldWander) return;
 
@@ -143,7 +172,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         return navHit.position;
     }
 
-    void ChasePlayer()
+    public void ChasePlayer()
     {
         if (distanceToPlayer < m_Range && distanceToPlayer > m_Range / 2)
         {
@@ -153,7 +182,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         }
     }
 
-    void ReturnToOrigin()
+    public void ReturnToOrigin()
     {
         if (m_Agent != null) m_Agent.SetDestination(m_StartingPosition);
 
