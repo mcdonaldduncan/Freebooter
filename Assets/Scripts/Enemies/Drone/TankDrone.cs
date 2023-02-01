@@ -6,7 +6,6 @@ public class TankDrone : AgentBase
 {
     [Header("Drone Body")]
     [SerializeField] GameObject m_Body;
-    [SerializeField] Transform m_PrimaryShootFrom;
     [SerializeField] Transform m_SecondaryShootFrom;
 
     OnDeathExplosion m_DeathExplosion;
@@ -39,9 +38,31 @@ public class TankDrone : AgentBase
 
     public override void HandleAgentState()
     {
-        
+        distanceToPlayer = Vector3.Distance(transform.position, m_Target.position);
+
+        switch (m_State)
+        {
+            case AgentState.GUARD:
+                Aim();
+                if (CheckLineOfSight()) m_State = AgentState.CHASE;
+                break;
+            case AgentState.WANDER:
+                Wander();
+                break;
+            case AgentState.CHASE:
+                Aim();
+                if (altShoootFrom) Shoot(m_SecondaryShootFrom);
+                else Shoot();
+                ChasePlayer();
+                break;
+            case AgentState.RETURN:
+                ReturnToOrigin();
+                break;
+            default:
+                break;
+        }
     }
 
-    
+
 
 }

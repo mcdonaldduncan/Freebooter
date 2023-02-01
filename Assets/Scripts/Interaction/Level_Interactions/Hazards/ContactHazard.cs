@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ContactHazard : MonoBehaviour
 {
-    [SerializeField] bool m_IsLive;
+    [SerializeField] bool m_IsLive = true;
     [SerializeField] bool m_InstantKill;
     [SerializeField] bool m_IsTrigger;
     [SerializeField] float m_DamageAmount;
