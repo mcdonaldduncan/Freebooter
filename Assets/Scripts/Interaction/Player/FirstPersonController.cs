@@ -33,6 +33,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     public bool PlayerCanDash => PlayerHasDashes && NonZeroVelocity;
     public bool PlayerCanDashAgain => PlayerCanDash && playerDashing;
     public bool UpdateDashBar { get; set; }
+    public float DashTimeDifference { get { return ((dashCooldownStartTime + dashCooldownTime) - Time.time); } }
     public bool CanBeDamaged => !hasIFrames && !invincible;
 
     //Checks used to see if player is able to use mechanics.
@@ -136,8 +137,6 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     [SerializeField]
     private float dashDamage;
     [SerializeField]
-    private Transform dashRaySource;
-    [SerializeField]
     private float dashRayDistance;
     [SerializeField]
     private int dashesAllowed = 2;
@@ -201,6 +200,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     
     public delegate void PlayerDashDelegate();
     public static PlayerDashDelegate playerDashed;
+    public static PlayerDashDelegate dashCooldown;
 
     [NonSerialized] public Vector3 surfaceMotion;
 
@@ -273,11 +273,12 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
                 //    {
                 //        Dash();
                 //    }
+                ////}
+                //if (DashShouldCooldown)
+                //{
+                //    DashCooldown();
                 //}
-                if (DashShouldCooldown)
-                {
-                    DashCooldown();
-                }
+                DashCooldown();
                 CheckForWall();
                 StateHandler();
             }
@@ -431,7 +432,6 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         dashesRemaining--;
         playerDashed?.Invoke();
         float startTime = Time.time;
-        dashCooldownStartTime = startTime;
 
         moveDirection = (transform.TransformDirection(Vector3.right) * MoveInput.x) + (transform.TransformDirection(Vector3.forward) * MoveInput.y);
 
@@ -482,9 +482,13 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
     private void DashCooldown()
     {
-        if (dashCooldownStartTime + dashCooldownTime < Time.time && DashShouldCooldown)
+        if (dashCooldownStartTime + dashCooldownTime < Time.time)
         {
-            dashesRemaining++;
+            if (DashShouldCooldown)
+            {
+                dashesRemaining++;
+                dashCooldown?.Invoke();
+            }
             dashCooldownStartTime = Time.time;
         }
     }
