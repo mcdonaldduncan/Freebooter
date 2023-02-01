@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6167492751692961984}
-  - component: {fileID: 8359002331158355681}
   - component: {fileID: 9118849971536370741}
   m_Layer: 0
   m_Name: CriticalDamageHitboxPrefab
@@ -33,19 +32,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &8359002331158355681
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5275076217087910831}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &9118849971536370741
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61,4 +47,4 @@ MonoBehaviour:
   m_Prefab: {fileID: 0}
   CritVFX: {fileID: 5370587334564516452, guid: dc767005043a0854ba027fe93f20ed5b, type: 3}
   CritTFXPosition: {fileID: 6167492751692961984}
-  CriticalDamageMultiplier: 2
+  CriticalDamageMultiplier: 1.2
