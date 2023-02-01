@@ -443,7 +443,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         {
             UpdateDashBar = true;
             playerDashing = true;
-            characterController.Move(moveDirection * dashSpeed * speedScale * Time.deltaTime);
+            characterController.Move(moveDirection * dashSpeed * Time.deltaTime);
             moveDirection.y = 0;
 
             RaycastHit hitInfo;
@@ -482,7 +482,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
     private void DashCooldown()
     {
-        if (dashCooldownStartTime + dashCooldownTime < Time.time)
+        float adjustedCooldown = dashCooldownTime / speedScale;
+        if (dashCooldownStartTime + adjustedCooldown < Time.time)
         {
             if (DashShouldCooldown)
             {

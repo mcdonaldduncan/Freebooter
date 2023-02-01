@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -17,10 +18,16 @@ public class ProjectileInspector : Editor
         LaunchForce_prop,
         TrackingForce_prop,
         Damage_prop,
+        DamageAll_Prop,
+        VelocityLimit_Prop,
+        LifeTime_Prop,
         ExplosionRadius_prop;
 
     private void OnEnable()
     {
+        LifeTime_Prop = serializedObject.FindProperty("m_LifeTime");
+        VelocityLimit_Prop = serializedObject.FindProperty("m_VelocityLimit");
+        DamageAll_Prop = serializedObject.FindProperty("m_DamageAll");
         Prefab_prop = serializedObject.FindProperty("m_Prefab");
         ExplosionPrefab_prop = serializedObject.FindProperty("m_ExplosionPrefab");
         EnableGravity_prop = serializedObject.FindProperty("m_EnableGravity");
@@ -38,26 +45,37 @@ public class ProjectileInspector : Editor
 
         Projectile projectile = (Projectile)target;
 
+        EditorGUILayout.LabelField("Core Properties", EditorStyles.boldLabel);
         EditorGUILayout.PropertyField(Damage_prop);
         EditorGUILayout.PropertyField(LaunchForce_prop);
-        
+        EditorGUILayout.PropertyField(LifeTime_Prop);
+        EditorGUILayout.LabelField(Environment.NewLine);
 
+        EditorGUILayout.LabelField("Optional Properties", EditorStyles.boldLabel);
+        EditorGUILayout.PropertyField(DamageAll_Prop);
         EditorGUILayout.PropertyField(EnableGravity_prop);
         EditorGUILayout.PropertyField(IsExplosive_prop);
         EditorGUILayout.PropertyField(IsTracking_prop);
-        
-        
+        EditorGUILayout.LabelField(Environment.NewLine);
+
+        EditorGUILayout.LabelField("Prefab Self Reference", EditorStyles.boldLabel);
         EditorGUILayout.PropertyField(Prefab_prop);
+        EditorGUILayout.LabelField(Environment.NewLine);
 
         if (projectile.IsExplosive)
         {
+            EditorGUILayout.LabelField("Explosion Reference and Radius", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(ExplosionPrefab_prop);
             EditorGUILayout.PropertyField(ExplosionRadius_prop);
+            EditorGUILayout.LabelField(Environment.NewLine);
         }
 
         if (projectile.IsTracking)
         {
+            EditorGUILayout.LabelField("Tracking Force and Velocity Limit", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(TrackingForce_prop);
+            EditorGUILayout.PropertyField(VelocityLimit_Prop);
+            EditorGUILayout.LabelField(Environment.NewLine);
         }
 
         serializedObject.ApplyModifiedProperties();

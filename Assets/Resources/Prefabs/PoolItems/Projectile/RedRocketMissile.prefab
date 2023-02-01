@@ -9773,13 +9773,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Prefab: {fileID: 145380}
   m_ExplosionPrefab: {fileID: 181688, guid: f692b408398ac4f429430d854fe5be95, type: 3}
+  m_DamageAll: 1
   m_EnableGravity: 0
   m_IsTracking: 1
   m_IsExplosive: 1
-  m_LaunchForce: 100
-  m_TrackingForce: 0.02
+  m_LaunchForce: 50
+  m_TrackingForce: 0.5
   m_DamageAmount: 15
   m_ExplosionRadius: 3
+  m_VelocityLimit: 10
   m_LifeTime: 15
 --- !u!1 &148790
 GameObject:
