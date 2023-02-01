@@ -449,7 +449,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
             RaycastHit hitInfo;
 
             //Raycast infront of player to see if they hit an IDamagable, and should thus deal damage
-            if (Physics.Raycast(dashRaySource.position, dashRaySource.forward, out hitInfo, dashRayDistance))
+            if (Physics.Raycast(transform.position, moveDirection, out hitInfo, dashRayDistance))
             {
                 if (hitInfo.transform.name != "Player")
                 {
