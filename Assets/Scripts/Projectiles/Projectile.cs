@@ -99,9 +99,8 @@ public class Projectile : MonoBehaviour, IPoolable
         {
             TriggerExplosion();
         }
-        else
+        else if (m_DamageAll || collision.gameObject.CompareTag("Player"))
         {
-            if (!collision.gameObject.CompareTag("Player") && !m_DamageAll) return;
             IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
             if (damageable != null)
             {
@@ -110,6 +109,11 @@ public class Projectile : MonoBehaviour, IPoolable
         }
 
         hasCollided = true;
+        ResetProjectile();
+    }
+
+    void ResetProjectile()
+    {
         m_RigidBody.velocity = Vector3.zero;
         m_RigidBody.angularVelocity = Vector3.zero;
         transform.position = Vector3.zero;
