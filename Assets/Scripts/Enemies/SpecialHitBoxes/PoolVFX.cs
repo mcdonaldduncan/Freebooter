@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CritVFX : MonoBehaviour, IPoolable
+public class PoolVFX : MonoBehaviour, IPoolable
 {
     [SerializeField] GameObject m_Prefab;
 

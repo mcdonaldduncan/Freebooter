@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6167492751692961984}
   - component: {fileID: 9118849971536370741}
   m_Layer: 0
-  m_Name: CriticalDamageHitboxPrefab
+  m_Name: SpecialHitboxPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5275076217087910831}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 39.5, y: 2.217, z: 33.567}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.31780946, y: 0.31780943, z: 0.31780943}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -45,6 +45,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Prefab: {fileID: 0}
-  CritVFX: {fileID: 5370587334564516452, guid: dc767005043a0854ba027fe93f20ed5b, type: 3}
-  CritTFXPosition: {fileID: 6167492751692961984}
+  VFXTransform: {fileID: 6167492751692961984}
+  hitboxtype: 0
+  critVFX: {fileID: 5370587334564516452, guid: dc767005043a0854ba027fe93f20ed5b, type: 3}
+  armorVFX: {fileID: 6625540849553152293, guid: 392f1e838e7e43e45ba97de3a19451a0, type: 3}
+  shieldVFXBlue: {fileID: 336830904740376970, guid: 7800df8b90e98174aaaff6d2367201d9, type: 3}
+  shieldVFXYellow: {fileID: 336830904740376970, guid: a7171cbe862e39b45aebe9e322db9cdd, type: 3}
+  shieldVFXRed: {fileID: 336830904740376970, guid: bf35d47c76ad29345baa7174d7394b7e, type: 3}
   CriticalDamageMultiplier: 1.2
+  ArmorDamageReductionMultiplier: 0.5
+  ShieldGameObject: {fileID: 0}
