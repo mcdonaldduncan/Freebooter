@@ -58,6 +58,8 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
         }
         if (hitboxtype == HitBoxType.shield)
         {
+            if (ShieldGameObject != null)
+            {
             if (shieldDamageable.Health > shieldMaxHp / 2) // if it is greater then 1/2
             {
                 shieldDamageable.TakeDamage(damageTaken);
@@ -73,6 +75,7 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
                 shieldDamageable.TakeDamage(damageTaken);
                 playVFX(shieldVFXRed, VFXTransform.position);
             }
+            }
         } 
     }
 
@@ -84,9 +87,12 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
     void Start()
     {
         damageable = Prefab.GetComponent<IDamageable>();
-        shieldDamageable = ShieldGameObject.GetComponent<IDamageable>();
-        var shieldScript = ShieldGameObject.GetComponent<Shield>();
-        shieldMaxHp = shieldScript._maxhealth;
+        if (ShieldGameObject != null)
+        {
+            shieldDamageable = ShieldGameObject.GetComponent<IDamageable>();
+            var shieldScript = ShieldGameObject.GetComponent<Shield>();
+            shieldMaxHp = shieldScript._maxhealth;
+        }
     }
 }
 public enum HitBoxType
