@@ -48,38 +48,36 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
     {
         if (hitboxtype == HitBoxType.critical)
         {
-            playVFX(critVFX, VFXTransform.position);
+            PlayVFX(critVFX, VFXTransform.position);
             damageable.TakeDamage(damageTaken * CriticalDamageMultiplier);
         }
         if (hitboxtype == HitBoxType.armored)
         {
-            playVFX(armorVFX, VFXTransform.position);
+            PlayVFX(armorVFX, VFXTransform.position);
             damageable.TakeDamage(damageTaken * ArmorDamageReductionMultiplier);
         }
         if (hitboxtype == HitBoxType.shield)
         {
-            if (ShieldGameObject != null)
-            {
+            if (ShieldGameObject == null) return;
+
             if (shieldDamageable.Health > shieldMaxHp / 2) // if it is greater then 1/2
             {
-                shieldDamageable.TakeDamage(damageTaken);
-                playVFX(shieldVFXBlue, VFXTransform.position);
+                PlayVFX(shieldVFXBlue, VFXTransform.position);
             }
             if (shieldDamageable.Health < shieldMaxHp / 2 && shieldDamageable.Health > shieldMaxHp / 4) //if between 1/2 and 1/4
             {
-                shieldDamageable.TakeDamage(damageTaken);
-                playVFX(shieldVFXYellow, VFXTransform.position);
+                PlayVFX(shieldVFXYellow, VFXTransform.position);
             }
             if (shieldDamageable.Health < shieldMaxHp / 4) //if lower then 1/4
             {
-                shieldDamageable.TakeDamage(damageTaken);
-                playVFX(shieldVFXRed, VFXTransform.position);
+                PlayVFX(shieldVFXRed, VFXTransform.position);
             }
-            }
+
+            shieldDamageable.TakeDamage(damageTaken);
         } 
     }
 
-    public void playVFX(GameObject vfx, Vector3 position)
+    public void PlayVFX(GameObject vfx, Vector3 position)
     {
         ProjectileManager.Instance.TakeFromPool(vfx, position);
     }
