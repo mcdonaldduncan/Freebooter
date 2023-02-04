@@ -43,7 +43,8 @@ public sealed class GunHandler : MonoBehaviour
     [SerializeField] private Camera fpsCam;
     [SerializeField] private LayerMask playerLayer;
     [SerializeField] private TextMeshProUGUI ammoText;
-    [SerializeField] private TrailRenderer bulletTrail;
+    [Tooltip("Whatever object goes here must have a Trail Renderer component!")]
+    [SerializeField] private GameObject bulletTrail;
     [SerializeField] private bool reloading;
     [SerializeField] private bool infiniteAmmo;
     [SerializeField] private LayerMask ignoreLayers;
@@ -198,7 +199,7 @@ public sealed class GunHandler : MonoBehaviour
         gun.LayerToIgnore = ignoreLayers;
         gun.HitEnemy = this.hitEnemy;
         gun.HitNonEnemy = this.hitNONEnemy;
-        gun.BulletTrail = this.bulletTrail;
+        gun.Bullet = this.bulletTrail;
 
         if (gun is AutoGun)
         {

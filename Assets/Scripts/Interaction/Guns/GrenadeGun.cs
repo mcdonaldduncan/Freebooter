@@ -21,7 +21,8 @@ public class GrenadeGun : MonoBehaviour, IGun
     public int CurrentAmmo { get { return GunManager.GrenadeGunCurrentAmmo; } set { GunManager.GrenadeGunCurrentAmmo = value; } }
     public int CurrentMaxAmmo { get { return GunManager.GrenadeGunMaxAmmo; } }
     public CanvasGroup GunReticle { get; set; }
-    public TrailRenderer BulletTrail { get; set; }
+    public GameObject Bullet { get; set; }
+    public TrailRenderer BulletTrailRenderer { get; set; }
     public AudioClip GunShotAudio { get; set; }
     public GameObject GunModel { get; set; }
     public GameObject Grenade { get; set; }
@@ -61,7 +62,7 @@ public class GrenadeGun : MonoBehaviour, IGun
             CurrentAmmo--;
         }
 
-        //GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
+        GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
         Ray ray = GunManager.FPSCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 
         Vector3 grenadeLaunchForce = (ray.direction + GrenadeLaunchArcVector) * GrenadeLaunchForce;

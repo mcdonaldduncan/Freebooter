@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 132327007653628646}
   - component: {fileID: 3822495795310971056}
+  - component: {fileID: 2288806495430581840}
   m_Layer: 0
   m_Name: LaserTracer
   m_TagString: Untagged
@@ -140,3 +141,16 @@ TrailRenderer:
   m_MinVertexDistance: 0.1
   m_Autodestruct: 0
   m_Emitting: 1
+--- !u!114 &2288806495430581840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5432586187250278780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00e5f447748d6e74d9a39c3bd830a412, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Prefab: {fileID: 5432586187250278780}

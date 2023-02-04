@@ -7,6 +7,7 @@ public class PoolVFX : MonoBehaviour, IPoolable
     [SerializeField] GameObject m_Prefab;
 
     ParticleSystem m_ParticleSystem;
+    //TrailRenderer m_TrailRenderer;
 
     public GameObject Prefab { get => m_Prefab; set => m_Prefab = value; }
 
@@ -16,14 +17,21 @@ public class PoolVFX : MonoBehaviour, IPoolable
         {
             m_ParticleSystem = GetComponent<ParticleSystem>();
         }
+        //if (m_TrailRenderer == null)
+        //{
+        //    m_TrailRenderer = GetComponent<TrailRenderer>();
+        //}
 
-        var mainModule = m_ParticleSystem.main;
-        mainModule.stopAction = ParticleSystemStopAction.Disable;
+        if (m_ParticleSystem != null)
+        {
+            var mainModule = m_ParticleSystem.main;
+            mainModule.stopAction = ParticleSystemStopAction.Disable;
+        }
     }
 
     private void OnDisable()
     {
-        if (ProjectileManager.Instance == null) return;
+        if (ProjectileManager.Instance == null || gameObject == null) return;
         ProjectileManager.Instance.ReturnToPool(gameObject);
     }
 }

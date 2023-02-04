@@ -23,9 +23,10 @@ public class HandGun : MonoBehaviour, IGun
     public int CurrentAmmo { get { return GunManager.HandGunCurrentAmmo; } set { GunManager.HandGunCurrentAmmo = value; } }
     public int CurrentMaxAmmo { get { return GunManager.HandGunMaxAmmo; } }
     public CanvasGroup GunReticle { get; set; }
-    public TrailRenderer BulletTrail { get; set; }
+    public GameObject Bullet { get; set; }
     public AudioClip GunShotAudio { get; set; }
     public GameObject GunModel { get; set; }
+    public TrailRenderer BulletTrailRenderer { get; set; }
     public HandgunAnimationHandler GunAnimationHandler { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
 
@@ -35,6 +36,7 @@ public class HandGun : MonoBehaviour, IGun
     private float lastShotTime;
     private float reloadStartTime;
     private Coroutine reloadCo;
+    private GameObject bulletFromPool;
 
     //private void Update()
     //{
@@ -80,21 +82,23 @@ public class HandGun : MonoBehaviour, IGun
         if (Physics.Raycast(ray, out hitInfo, float.MaxValue, ~LayerToIgnore))
         {
 
-            //Instantiate a bullet trail
-            TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, ShootFrom.transform.localRotation);
-            trail.transform.parent = ShootFrom.transform;
+            //Instantiate a bulletFromPool trail
+            //TrailRenderer trail = Instantiate(Bullet, ShootFrom.transform.position, ShootFrom.transform.localRotation);
+            bulletFromPool = ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position);
+            BulletTrailRenderer = bulletFromPool.GetComponent<TrailRenderer>();
 
             if (hitInfo.transform.name != "Player")
             {
-                StartCoroutine(SpawnTrail(trail, hitInfo, HitEnemy));
+                StartCoroutine(SpawnTrail(BulletTrailRenderer, hitInfo, HitEnemy));
             }
         }
         //if the player hit nothing
         else
         {
-            //Spawn the bullet trail
-            TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, ShootFrom.transform.localRotation);
-            StartCoroutine(SpawnTrail(trail, ShootFrom.transform.position + ray.direction * 10));
+            //Spawn the bulletFromPool trail
+            bulletFromPool = ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position);
+            BulletTrailRenderer = bulletFromPool.GetComponent<TrailRenderer>();
+            StartCoroutine(SpawnTrail(BulletTrailRenderer, ShootFrom.transform.position + ray.direction * 10));
         }
 
         //if the player does not have infinite ammo, decrement the gun's ammo by one
@@ -129,7 +133,8 @@ public class HandGun : MonoBehaviour, IGun
 
         trail.transform.position = hitPoint;
 
-        Destroy(trail.gameObject, trail.time);
+        bulletFromPool.transform.localPosition = Vector3.zero;
+        ProjectileManager.Instance.ReturnToPool(bulletFromPool);
     }
 
     /// <summary>
@@ -155,7 +160,7 @@ public class HandGun : MonoBehaviour, IGun
 
         trail.transform.position = hitInfo.point;
 
-        Destroy(trail.gameObject, trail.time);
+        ProjectileManager.Instance.ReturnToPool(bulletFromPool);
 
         if (hitEffect != null)
         {

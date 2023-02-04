@@ -23,10 +23,11 @@ public interface IGun
     int CurrentAmmo { get; set; }
     int CurrentMaxAmmo { get; }
     CanvasGroup GunReticle { get; set; }
-    TrailRenderer BulletTrail { get; set; }
+    GameObject Bullet { get; set; }
     AudioClip GunShotAudio { get; set; }
     GameObject GunModel { get; set; }
     WaitForSeconds ReloadWait { get; set; }
+    TrailRenderer BulletTrailRenderer { get; set; }
     bool CanShoot { get; }
 
     void ShootTriggered(InputAction.CallbackContext context);

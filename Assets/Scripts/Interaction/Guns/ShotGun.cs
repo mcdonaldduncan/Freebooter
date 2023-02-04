@@ -25,9 +25,10 @@ public class ShotGun : MonoBehaviour, IGun
     public int CurrentAmmo { get { return GunManager.ShotGunCurrentAmmo; } set { GunManager.ShotGunCurrentAmmo = value; } }
     public int CurrentMaxAmmo { get { return GunManager.ShotGunMaxAmmo; } }
     public CanvasGroup GunReticle { get; set; }
-    public TrailRenderer BulletTrail { get; set; }
+    public GameObject Bullet { get; set; }
     public AudioClip GunShotAudio { get; set; }
     public GameObject GunModel { get; set; }
+    public TrailRenderer BulletTrailRenderer { get; set; }
     public ShotgunAnimationHandler GunAnimationHandler { get; set; }
 
     public bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading && CurrentAmmo > 0;
@@ -35,6 +36,9 @@ public class ShotGun : MonoBehaviour, IGun
     private float lastShotTime;
     private float reloadStartTime;
     private Coroutine reloadCo;
+    private GameObject bulletFromPool;
+    private List<GameObject> bulletPoolList;
+    private int trailCounter;
 
     //private void Update()
     //{
@@ -61,6 +65,7 @@ public class ShotGun : MonoBehaviour, IGun
     //Doesn't need to be static anymore since this script is added as a component now
     public void Shoot()
     {
+        bulletPoolList = new List<GameObject>();
         GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
         GunAnimationHandler.RecoilAnim.SetTrigger("RecoilTrigger");
         for (int i = 0; i < ShotGunBulletAmount; i++)
@@ -79,21 +84,25 @@ public class ShotGun : MonoBehaviour, IGun
 
             if (Physics.Raycast(GunManager.FPSCam.transform.position, direction, out hitInfo, float.MaxValue, ~LayerToIgnore))
             {
-                //Instantiate a bullet trail
-                TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, ShootFrom.transform.localRotation);
-                trail.transform.parent = ShootFrom.transform;
+                //Instantiate a bulletFromPool trail
+                //TrailRenderer trail = Instantiate(Bullet, ShootFrom.transform.position, ShootFrom.transform.localRotation);
+                GameObject bulletFromPoolTemp = ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position);
+                bulletPoolList.Add(bulletFromPoolTemp);
+                TrailRenderer rendererTemp = bulletFromPoolTemp.GetComponent<TrailRenderer>();
 
                 if (hitInfo.transform.name != "Player")
                 {
-                    StartCoroutine(SpawnTrail(trail, hitInfo, HitEnemy));
+                    StartCoroutine(SpawnTrail(bulletFromPoolTemp, rendererTemp, hitInfo, HitEnemy));
                 }
             }
             //if the player hit nothing
             else
             {
-                //Spawn the bullet trail
-                TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, ShootFrom.transform.localRotation);
-                StartCoroutine(SpawnTrail(trail, ShootFrom.transform.position + direction * 10));
+                //Spawn the bulletFromPool trail
+                GameObject bulletFromPoolTemp = ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position);
+                bulletPoolList.Add(bulletFromPoolTemp);
+                TrailRenderer rendererTemp = bulletFromPoolTemp.GetComponent<TrailRenderer>();
+                StartCoroutine(SpawnTrail(bulletFromPoolTemp, rendererTemp, ShootFrom.transform.position + direction * 10));
             }
         }
 
@@ -111,9 +120,8 @@ public class ShotGun : MonoBehaviour, IGun
     /// <param name="trail"></param>
     /// <param name="hitPoint"></param>
     /// <returns></returns>
-    private IEnumerator SpawnTrail(TrailRenderer trail, Vector3 hitPoint)
+    private IEnumerator SpawnTrail(GameObject bulletFromPoolTemp, TrailRenderer trail, Vector3 hitPoint)
     {
-
         float time = 0;
 
         Vector3 startPosition = ShootFrom.transform.position;
@@ -128,7 +136,12 @@ public class ShotGun : MonoBehaviour, IGun
 
         trail.transform.position = hitPoint;
 
-        Destroy(trail.gameObject, trail.time);
+        trailCounter++;
+
+        if (trailCounter >= ShotGunBulletAmount)
+        {
+            ReturnBulletsToPool();
+        }
     }
 
     /// <summary>
@@ -138,7 +151,7 @@ public class ShotGun : MonoBehaviour, IGun
     /// <param name="hitInfo"></param>
     /// <param name="hitEffect"></param>
     /// <returns></returns>
-    private IEnumerator SpawnTrail(TrailRenderer trail, RaycastHit hitInfo, GameObject hitEffect = null)
+    private IEnumerator SpawnTrail(GameObject bulletFromPoolTemp, TrailRenderer trail, RaycastHit hitInfo, GameObject hitEffect = null)
     {
         float time = 0;
 
@@ -154,7 +167,14 @@ public class ShotGun : MonoBehaviour, IGun
 
         trail.transform.position = hitInfo.point;
 
-        Destroy(trail.gameObject, trail.time);
+        trailCounter++;
+
+        Debug.Log($"Trail Counter: {trailCounter}");
+
+        if (trailCounter >= ShotGunBulletAmount)
+        {
+            ReturnBulletsToPool();
+        }
 
         if (hitEffect != null)
         {
@@ -168,6 +188,20 @@ public class ShotGun : MonoBehaviour, IGun
                 HitEnemyBehavior(hitInfo);
             }
         }
+    }
+
+    private void ReturnBulletsToPool()
+    {
+        int bulletCount = 0;
+        foreach (var bullet in bulletPoolList)
+        {
+            ProjectileManager.Instance.ReturnToPool(bullet);
+            bulletCount++;
+        }
+
+        bulletPoolList.Clear();
+
+        Debug.Log($"Bullets returned: {bulletCount}!");
     }
 
     private void HitEnemyBehavior(RaycastHit hitInfo, IDamageable damageableTarget = null)
