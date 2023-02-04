@@ -6,7 +6,7 @@ public class ProjectileManager : Singleton<ProjectileManager>
 {
     private Dictionary<GameObject, Queue<GameObject>> m_Pool;
 
-    void Start()
+    void OnEnable()
     {
         m_Pool = new Dictionary<GameObject, Queue<GameObject>>();
     }

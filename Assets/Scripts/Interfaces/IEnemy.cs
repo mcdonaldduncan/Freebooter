@@ -12,7 +12,7 @@ public interface IEnemy
 
     // void DeactivateAggression();
 
-    //
+    // void MoveToLocation();
 
     void OnDeath();
 
