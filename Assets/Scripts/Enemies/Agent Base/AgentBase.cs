@@ -7,8 +7,8 @@ using UnityEngine.AI;
 public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
 {
     [Header("Projectile Prefab and Projectile Spawn Point")]
-    [SerializeField] GameObject m_ProjectilePrefab;
-    [SerializeField] Transform m_ShootFrom;
+    [SerializeField] protected GameObject m_ProjectilePrefab;
+    [SerializeField] protected Transform m_ShootFrom;
 
     [Header("Walkable Layers")]
     [SerializeField] LayerMask m_WalkableLayers;
@@ -35,14 +35,14 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
     [NonSerialized] public AgentState m_State;
     AgentState m_StartingState;
 
-    Vector3 m_TargetDirection;
-    Vector3 m_StartingPosition;
+    protected Vector3 m_TargetDirection;
+    protected Vector3 m_StartingPosition;
 
     Quaternion m_DesiredRotation;
     Quaternion m_StartingRotation;
 
     [NonSerialized] public float distanceToPlayer;
-    float lastShotTime;
+    protected float lastShotTime;
     float lastWanderTime;
     
 
@@ -51,7 +51,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
 
     public float Health { get => m_Health; set => m_Health = value; }
     public Vector3 StartingPosition { get => m_StartingPosition; set => m_StartingPosition = value; }
-    bool shouldShoot => Time.time > m_TimeBetweenShots + lastShotTime;
+    protected bool shouldShoot => Time.time > m_TimeBetweenShots + lastShotTime;
     bool shouldWander => Time.time > m_WanderDelay + lastWanderTime && m_Agent.pathStatus == NavMeshPathStatus.PathComplete;
 
 
@@ -128,7 +128,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         return true;
     }
 
-    public void Shoot()
+    public virtual void Shoot()
     {
         if (!shouldShoot) return;
 
