@@ -19,6 +19,7 @@ public class GrenadeBehavior : MonoBehaviour
     private Renderer grenadeRenderer;
     private Rigidbody grenadeRB;
     private GrenadeGun grenadeGun;
+    private bool collided = false;
 
     // Start is called before the first frame update
     void Start()
@@ -41,23 +42,20 @@ public class GrenadeBehavior : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag != "Player")
+        if (collision.gameObject.tag != "Player" && !collided)
         {
             grenadeGun.remoteDetonationEvent += Explode;
             grenadeRB.constraints = RigidbodyConstraints.FreezeAll;
             startTime = Time.time;
             timerStarted = true;
+            collided = true;
         }
     }
 
     private void Explode()
     {
-        grenadeGun.remoteDetonationEvent -= Explode;
-        if (!explosionPlayed)
-        {
-            var explosion = ProjectileManager.Instance.TakeFromPool(grenadeVFX, transform.position);
-            explosionPlayed = true;
-        }
+        var explosion = ProjectileManager.Instance.TakeFromPool(grenadeVFX, transform.position);
+
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
         foreach (var hit in colliders)
         {
@@ -80,5 +78,10 @@ public class GrenadeBehavior : MonoBehaviour
 
         grenadeRenderer.enabled = false;
         Destroy(gameObject, 1f);
+    }
+
+    private void OnDestroy()
+    {
+        grenadeGun.remoteDetonationEvent -= Explode;
     }
 }

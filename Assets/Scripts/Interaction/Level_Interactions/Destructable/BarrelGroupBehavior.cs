@@ -5,7 +5,7 @@ using UnityEngine;
 public class BarrelGroupBehavior : MonoBehaviour
 {
     public delegate void BarrelGroupDelegate();
-    public BarrelGroupDelegate fractureChildren;
+    public event BarrelGroupDelegate fractureChildren;
     [HideInInspector]
     public bool activated = false;
 

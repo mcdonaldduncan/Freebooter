@@ -42,7 +42,7 @@ public class GrenadeGun : MonoBehaviour, IGun
     private Coroutine reloadCo;
 
     public delegate void GrenadeGunDelegate();
-    public GrenadeGunDelegate remoteDetonationEvent;
+    public event GrenadeGunDelegate remoteDetonationEvent;
 
     private void OnEnable()
     {
@@ -86,7 +86,6 @@ public class GrenadeGun : MonoBehaviour, IGun
     public void DetonateGrenades()
     {
         remoteDetonationEvent?.Invoke();
-        Debug.Log("Remote Detonate");
     }
 
     public void StartReload()

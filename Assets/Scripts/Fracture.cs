@@ -12,6 +12,7 @@ public class Fracture : MonoBehaviour, IDamageable
     private Transform groupParent;
     private BarrelGroupBehavior barrelGroupBehavior;
     private bool isInGroup = false;
+    private bool initialDamageTaken = false;
 
     public float Health { get { return health; } set { health = value; } }
 
@@ -41,7 +42,11 @@ public class Fracture : MonoBehaviour, IDamageable
     public void TakeDamage(float damageTaken)
     {
         Health -= damageTaken;
-        breakForceMulitplier *= damageTaken;
+        if (!initialDamageTaken)
+        {
+            breakForceMulitplier *= damageTaken;
+            initialDamageTaken = true;
+        }
         CheckForDeath();
     }
 
