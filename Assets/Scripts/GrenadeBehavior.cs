@@ -10,11 +10,12 @@ public class GrenadeBehavior : MonoBehaviour
     [SerializeField] private float explosionDamage;
     [SerializeField] private GameObject grenadeVFX;
 
-    private bool ShouldExplode => startTime + timeBeforeExplosion <= Time.time;
+    private bool ShouldExplode => timerStarted && startTime + timeBeforeExplosion <= Time.time;
 
     private float startTime;
     private AudioSource grenadeAudioSource;
     private bool explosionPlayed = false;
+    private bool timerStarted = false;
     private Renderer grenadeRenderer;
     private Rigidbody grenadeRB;
     private GrenadeGun grenadeGun;
@@ -30,12 +31,21 @@ public class GrenadeBehavior : MonoBehaviour
         grenadeRenderer = GetComponent<Renderer>();
     }
 
+    private void Update()
+    {
+        if (ShouldExplode)
+        {
+            Explode();
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag != "Player")
         {
             grenadeGun.remoteDetonationEvent += Explode;
             grenadeRB.constraints = RigidbodyConstraints.FreezeAll;
+            startTime = Time.time;
         }
     }
 
@@ -68,6 +78,6 @@ public class GrenadeBehavior : MonoBehaviour
         }
 
         grenadeRenderer.enabled = false;
-        //Destroy(gameObject, grenadeVFX.time);
+        Destroy(gameObject, 1f);
     }
 }
