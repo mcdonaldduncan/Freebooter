@@ -59,6 +59,10 @@ public class HandGun : MonoBehaviour, IGun
     {
         if (CanShoot && context.performed) Shoot();
     }
+    public void AlternateTriggered(InputAction.CallbackContext context)
+    {
+        return;
+    }
 
     public void Shoot()
     {

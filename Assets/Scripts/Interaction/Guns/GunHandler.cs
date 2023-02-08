@@ -387,6 +387,11 @@ public sealed class GunHandler : MonoBehaviour
         currentGun.ShootTriggered(context);
     }
 
+    public void AlternateShoot(InputAction.CallbackContext context)
+    {
+        currentGun.AlternateTriggered(context);
+    }
+
     public void Reload(InputAction.CallbackContext context)
     {
         if (currentGun.CurrentAmmo < currentGun.CurrentMaxAmmo)

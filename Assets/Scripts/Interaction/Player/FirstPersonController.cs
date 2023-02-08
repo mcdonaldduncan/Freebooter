@@ -329,6 +329,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         _input.Gun.Shoot.canceled += playerGun.Shoot;
         _input.Gun.SwitchWeapon.performed += playerGun.SwitchWeapon;
         _input.Gun.Reload.performed += playerGun.Reload;
+        _input.Gun.AlternateFire.performed += playerGun.AlternateShoot;
 
         //if (LevelManager.Instance.Player == null) LevelManager.Instance.Player = this;
     }
@@ -357,6 +358,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         _input.Gun.Shoot.canceled -= playerGun.Shoot;
         _input.Gun.SwitchWeapon.performed -= playerGun.SwitchWeapon;
         _input.Gun.Reload.performed -= playerGun.Reload;
+        _input.Gun.AlternateFire.performed -= playerGun.AlternateShoot;
     }
 
     private void StateHandler()

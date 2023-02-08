@@ -8,46 +8,44 @@ public class GrenadeBehavior : MonoBehaviour
     [SerializeField] private float timeBeforeExplosion;
     [SerializeField] private float explosionRadius;
     [SerializeField] private float explosionDamage;
-    [SerializeField] private AudioClip explosionSound;
+    [SerializeField] private GameObject grenadeVFX;
 
     private bool ShouldExplode => startTime + timeBeforeExplosion <= Time.time;
 
     private float startTime;
     private AudioSource grenadeAudioSource;
-    private bool soundPlayed = false;
+    private bool explosionPlayed = false;
     private Renderer grenadeRenderer;
+    private Rigidbody grenadeRB;
+    private GrenadeGun grenadeGun;
 
     // Start is called before the first frame update
     void Start()
     {
+        grenadeRB = GetComponent<Rigidbody>();
+        grenadeGun = transform.parent.GetComponent<GrenadeGun>();
+        transform.SetParent(null, true);
         startTime = Time.time;
         grenadeAudioSource = GetComponent<AudioSource>();
         grenadeRenderer = GetComponent<Renderer>();
     }
 
-    // Update is called once per frame
-    //void Update()
-    //{
-    //    if (ShouldExplode)
-    //    {
-    //        Explode();
-    //    }
-    //}
-
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag != "Player")
         {
-            Explode();
+            grenadeGun.remoteDetonationEvent += Explode;
+            grenadeRB.constraints = RigidbodyConstraints.FreezeAll;
         }
     }
 
     private void Explode()
     {
-        if (!soundPlayed)
+        grenadeGun.remoteDetonationEvent -= Explode;
+        if (!explosionPlayed)
         {
-            grenadeAudioSource.PlayOneShot(explosionSound);
-            soundPlayed = true;
+            var explosion = ProjectileManager.Instance.TakeFromPool(grenadeVFX, transform.position);
+            explosionPlayed = true;
         }
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
         foreach (var hit in colliders)
@@ -70,6 +68,6 @@ public class GrenadeBehavior : MonoBehaviour
         }
 
         grenadeRenderer.enabled = false;
-        Destroy(gameObject, 1f);
+        //Destroy(gameObject, grenadeVFX.time);
     }
 }

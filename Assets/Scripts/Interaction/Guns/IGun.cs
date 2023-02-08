@@ -31,6 +31,7 @@ public interface IGun
     bool CanShoot { get; }
 
     void ShootTriggered(InputAction.CallbackContext context);
+    void AlternateTriggered(InputAction.CallbackContext context);
     void StartReload();
     IEnumerator Reload(WaitForSeconds reloadWait);
 }

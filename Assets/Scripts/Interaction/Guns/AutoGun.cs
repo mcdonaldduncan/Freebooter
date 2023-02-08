@@ -79,6 +79,10 @@ public class AutoGun : MonoBehaviour, IGun
             this.holdingTrigger = true;
         }
     }
+    public void AlternateTriggered(InputAction.CallbackContext context)
+    {
+        return;
+    }
 
     private void Shoot()
     {

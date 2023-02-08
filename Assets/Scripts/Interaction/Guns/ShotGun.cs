@@ -62,6 +62,11 @@ public class ShotGun : MonoBehaviour, IGun
         if (CanShoot && context.performed) Shoot();
     }
 
+    public void AlternateTriggered(InputAction.CallbackContext context)
+    {
+        return;
+    }
+
     //Doesn't need to be static anymore since this script is added as a component now
     public void Shoot()
     {

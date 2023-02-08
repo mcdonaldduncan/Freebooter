@@ -41,6 +41,9 @@ public class GrenadeGun : MonoBehaviour, IGun
     private float reloadStartTime;
     private Coroutine reloadCo;
 
+    public delegate void GrenadeGunDelegate();
+    public GrenadeGunDelegate remoteDetonationEvent;
+
     private void OnEnable()
     {
         GunHandler.weaponSwitched += OnWeaponSwitch;
@@ -53,6 +56,11 @@ public class GrenadeGun : MonoBehaviour, IGun
     public void ShootTriggered(InputAction.CallbackContext context)
     {
         if (CanShoot && context.performed) Shoot();
+    }
+
+    public void AlternateTriggered(InputAction.CallbackContext context)
+    {
+        if (context.performed) DetonateGrenades();
     }
 
     public void Shoot()
@@ -68,10 +76,17 @@ public class GrenadeGun : MonoBehaviour, IGun
         Vector3 grenadeLaunchForce = (ray.direction + GrenadeLaunchArcVector) * GrenadeLaunchForce;
 
         GameObject grenade = Instantiate(Grenade, ShootFrom.position, Quaternion.identity);
+        grenade.transform.parent = transform;
         Rigidbody gRB = grenade.GetComponent<Rigidbody>();
         gRB.AddForce(grenadeLaunchForce);
 
         lastShotTime = Time.time;
+    }
+
+    public void DetonateGrenades()
+    {
+        remoteDetonationEvent?.Invoke();
+        Debug.Log("Remote Detonate");
     }
 
     public void StartReload()
