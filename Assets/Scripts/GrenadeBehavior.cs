@@ -46,6 +46,7 @@ public class GrenadeBehavior : MonoBehaviour
             grenadeGun.remoteDetonationEvent += Explode;
             grenadeRB.constraints = RigidbodyConstraints.FreezeAll;
             startTime = Time.time;
+            timerStarted = true;
         }
     }
 
