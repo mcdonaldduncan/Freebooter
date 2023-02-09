@@ -4,15 +4,23 @@ using UnityEngine;
 
 public interface IEnemy
 {
-    public Vector3 StartingPosition { get; set; }
+    float MovementSampleRadius { get; set; }
 
-    // public bool ShouldSleep { get; set; }
+    Vector3 StartingPosition { get; set; }
 
-    // void ActivateAggression();
+    bool ShouldSleep { get; set; }
 
-    // void DeactivateAggression();
+    IActivator Activator { get; set; }
 
-    // void MoveToLocation();
+    void ActivateAggro();
+
+    void DeactivateAggro();
+
+    void OnActivate();
+
+    void OnDeactivate();
+
+    void MoveToLocation(Transform location);
 
     void OnDeath();
 

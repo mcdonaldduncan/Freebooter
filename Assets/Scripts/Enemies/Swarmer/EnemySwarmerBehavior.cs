@@ -45,6 +45,11 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
     private bool isSwarm => Physics.OverlapSphereNonAlloc(transform.position, 15f, hits, enemies) >= hideThreshold;
 
     public Vector3 StartingPosition { get { return m_StartingPosition; } set { m_StartingPosition = value; } }
+
+    public float MovementSampleRadius { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public bool ShouldSleep { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public IActivator Activator { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+
     private Vector3 m_StartingPosition;
 
     private Collider[] hits = new Collider[5];
@@ -276,5 +281,28 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
         LevelManager.PlayerRespawn -= OnPlayerRespawn;
     }
 
-    
+    public void ActivateAggro()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void DeactivateAggro()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnActivate()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnDeactivate()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void MoveToLocation(Transform location)
+    {
+        throw new System.NotImplementedException();
+    }
 }

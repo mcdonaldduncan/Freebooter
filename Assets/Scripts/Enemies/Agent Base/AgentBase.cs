@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -16,6 +17,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
     [Header("Movement Options")]
     [SerializeField] float m_StoppingDistance;
     [SerializeField] float m_RotationSpeed;
+    [SerializeField] float m_SampleRadius;
 
     [Header("Wander Options")]
     [SerializeField] float m_WanderDelay;
@@ -29,10 +31,14 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
     [SerializeField] float m_MaxHealth;
     [SerializeField] float m_Health;
 
-    [NonSerialized] public NavMeshAgent m_Agent;
-    [NonSerialized] public Transform m_Target;
+    [Header("Activation Options")]
+    [SerializeField] bool m_ShouldSleep;
+    [SerializeField] GameObject m_Activator;
 
-    [NonSerialized] public AgentState m_State;
+    [NonSerialized] protected NavMeshAgent m_Agent;
+    [NonSerialized] protected Transform m_Target;
+
+    [NonSerialized] protected AgentState m_State;
     AgentState m_StartingState;
 
     protected Vector3 m_TargetDirection;
@@ -41,30 +47,49 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
     Quaternion m_DesiredRotation;
     Quaternion m_StartingRotation;
 
-    [NonSerialized] public float distanceToPlayer;
+    [NonSerialized] protected float distanceToPlayer;
     protected float lastShotTime;
     float lastWanderTime;
-    
 
-    [NonSerialized] public bool isDead;
-    [NonSerialized] public bool altShoootFrom;
+    [NonSerialized] protected bool isDead;
+    [NonSerialized] protected bool altShoootFrom;
 
     public float Health { get => m_Health; set => m_Health = value; }
-    public Vector3 StartingPosition { get => m_StartingPosition; set => m_StartingPosition = value; }
     protected bool shouldShoot => Time.time > m_TimeBetweenShots + lastShotTime;
     bool shouldWander => Time.time > m_WanderDelay + lastWanderTime && m_Agent.pathStatus == NavMeshPathStatus.PathComplete;
 
+    public Vector3 StartingPosition { get => m_StartingPosition; set => m_StartingPosition = value; }
+    public bool ShouldSleep { get => m_ShouldSleep; set => m_ShouldSleep = value; }
+    public IActivator Activator { get; set; }
+    public float MovementSampleRadius { get => m_SampleRadius; set => m_SampleRadius = value; }
 
     public virtual void HandleSetup()
     {
         m_Health = m_MaxHealth;
-        m_StartingState = m_State;
         m_StartingPosition = transform.position;
         m_StartingRotation = transform.rotation;
         m_Target = LevelManager.Instance.Player.transform;
         m_Agent = GetComponent<NavMeshAgent>();
 
+        m_State = m_ShouldSleep ? AgentState.SLEEP : AgentState.WANDER;
+        m_StartingState = m_State;
+
         LevelManager.PlayerRespawn += OnPlayerRespawn;
+
+        if (m_Activator == null) return;
+
+        try
+        {
+            // Get the IActivator component from the activator object
+            Activator = (IActivator)m_Activator.GetComponent(typeof(IActivator));
+            Activator.Activate += OnActivate;
+            Activator.Deactivate += OnDeactivate;
+        }
+        catch (Exception)
+        {
+            Debug.LogError("Valid IActivator Not Found");
+        }
+
     }
 
     public virtual void HandleAgentState()
@@ -73,6 +98,9 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
 
         switch (m_State)
         {
+            case AgentState.SLEEP:
+                Sleep();
+                break;
             case AgentState.GUARD:
                 AimRestricted();
                 if (CheckLineOfSight()) m_State = AgentState.CHASE;
@@ -176,7 +204,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
     {
         if (distanceToPlayer < m_Range && distanceToPlayer > m_Range / 2)
         {
-            Vector3 FromPlayerToAgent = transform.position - m_Target.position ;
+            Vector3 FromPlayerToAgent = transform.position - m_Target.position;
 
             m_Agent.SetDestination(m_Target.position + FromPlayerToAgent.normalized * m_StoppingDistance);
         }
@@ -213,7 +241,9 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
     public void Resetvalues()
     {
         CycleAgent();
-        
+
+        transform.rotation = m_StartingRotation;
+        transform.position = m_StartingPosition;
         m_Health = m_MaxHealth;
         m_State = m_StartingState;
         isDead = false;
@@ -261,14 +291,59 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         m_Health -= damageTaken;
         CheckForDeath();
     }
+
+    void Sleep()
+    {
+        if (m_Agent.isStopped) return;
+
+        m_Agent.ResetPath();
+        m_Agent.isStopped = true;
+    }
+
+    public void MoveToLocation(Transform location)
+    {
+        if (NavMesh.SamplePosition(location.position, out NavMeshHit hit, MovementSampleRadius, 0))
+        {
+            m_Agent.SetDestination(hit.position);
+        }
+        else
+        {
+            Debug.Log($"The agent attached to {gameObject.name} was directed to a location with no navmesh");
+        }
+
+    }
+
+    public void OnActivate()
+    {
+        ActivateAggro();
+    }
+
+    public void OnDeactivate()
+    {
+        DeactivateAggro();
+    }
+
+    public void ActivateAggro()
+    {
+        m_State = AgentState.CHASE;
+        m_Agent.isStopped = false;
+    }
+
+    public void DeactivateAggro()
+    {
+        m_State = AgentState.SLEEP;
+    }
+
 }
 
 public enum AgentState
 {
+    
     GUARD,
     WANDER,
     CHASE,
-    RETURN
+    RETURN,
+    SLEEP
 
 }
 

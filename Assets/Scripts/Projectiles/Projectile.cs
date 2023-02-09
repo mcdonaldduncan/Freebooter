@@ -47,6 +47,8 @@ public class Projectile : MonoBehaviour, IPoolable
             m_RigidBody = GetComponent<Rigidbody>();
         }
 
+        LevelManager.PlayerRespawn += ResetProjectile;
+
         hasCollided = false;
 
         startTime = Time.time;
@@ -63,6 +65,7 @@ public class Projectile : MonoBehaviour, IPoolable
 
     private void OnDisable()
     {
+        LevelManager.PlayerRespawn -= ResetProjectile;
         m_RigidBody.velocity = Vector3.zero;
         m_RigidBody.angularVelocity = Vector3.zero;
     }
@@ -76,7 +79,7 @@ public class Projectile : MonoBehaviour, IPoolable
         }
     }
 
-        private void FixedUpdate()
+    private void FixedUpdate()
     {
         if (m_IsTracking) TrackTarget();
     }
