@@ -34,7 +34,7 @@ public class Soldier : AgentBase
 
     public override void Shoot()
     {
-        if (!shouldShoot) return;
+        if (!shouldShoot || distanceToPlayer > m_Range) return;
 
         if (distanceToPlayer < 3 && kickOnce == true)
         {

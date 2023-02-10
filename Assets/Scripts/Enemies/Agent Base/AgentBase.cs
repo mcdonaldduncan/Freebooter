@@ -10,6 +10,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
     [Header("Projectile Prefab and Projectile Spawn Point")]
     [SerializeField] protected GameObject m_ProjectilePrefab;
     [SerializeField] protected Transform m_ShootFrom;
+    [SerializeField] protected Transform m_ShootFrom2;
 
     [Header("Walkable Layers")]
     [SerializeField] LayerMask m_WalkableLayers;
@@ -24,7 +25,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
     [SerializeField] float m_WanderDistance;
 
     [Header("Shooting Options")]
-    [SerializeField] float m_Range;
+    [SerializeField] protected float m_Range;
     [SerializeField] float m_TimeBetweenShots;
 
     [Header("Health Options")]
@@ -107,6 +108,8 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
                 break;
             case AgentState.WANDER:
                 Wander();
+                AimRestricted();
+                if (CheckLineOfSight()) m_State = AgentState.CHASE;
                 break;
             case AgentState.CHASE:
                 AimRestricted();
@@ -158,7 +161,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
 
     public virtual void Shoot()
     {
-        if (!shouldShoot) return;
+        if (!shouldShoot || distanceToPlayer > m_Range) return;
 
         GameObject newObj = ProjectileManager.Instance.TakeFromPool(m_ProjectilePrefab, m_ShootFrom.position, out Projectile projectile);
         projectile.Launch(m_TargetDirection);
@@ -221,7 +224,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         }
     }
 
-    void CycleAgent()
+    protected virtual void CycleAgent()
     {
         if (m_Agent == null) return;
 

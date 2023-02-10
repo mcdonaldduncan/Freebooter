@@ -5,7 +5,7 @@ using UnityEngine;
 public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
 {
     private IDamageable damageable;
-   
+    private ParticleSystem particleSystem;
 
     [Header("SetUp")] 
     public GameObject m_Prefab;
@@ -33,15 +33,19 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
 
     [Header("Shield Variable")]
     public GameObject ShieldGameObject;
-    private IDamageable shieldDamageable;
-    private float shieldMaxHp;
 
-    public float Health { get => damageable.Health; set => damageable.Health = value; }
+    public float _health;
+    public float maxHealth;
+    public float Health { get => _health; set => _health = value; }
 
     public GameObject Prefab { get => m_Prefab; set => m_Prefab = value; }
 
     public void CheckForDeath()
     {
+        if (_health < 0)
+        {
+            this.gameObject.SetActive(false);
+        }
     }
 
     public void TakeDamage(float damageTaken)
@@ -60,20 +64,21 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
         {
             if (ShieldGameObject == null) return;
 
-            if (shieldDamageable.Health > shieldMaxHp / 2) // if it is greater then 1/2
+            if (_health > maxHealth / 2) // if it is greater then 1/2
             {
                 PlayVFX(shieldVFXBlue, VFXTransform.position);
             }
-            if (shieldDamageable.Health < shieldMaxHp / 2 && shieldDamageable.Health > shieldMaxHp / 4) //if between 1/2 and 1/4
+            if (_health < maxHealth / 2 && _health > maxHealth / 4) //if between 1/2 and 1/4
             {
                 PlayVFX(shieldVFXYellow, VFXTransform.position);
             }
-            if (shieldDamageable.Health < shieldMaxHp / 4) //if lower then 1/4
+            if (_health < maxHealth / 4) //if lower then 1/4
             {
                 PlayVFX(shieldVFXRed, VFXTransform.position);
             }
 
-            shieldDamageable.TakeDamage(damageTaken);
+            _health -= damageTaken;
+            CheckForDeath();
         } 
     }
 
@@ -85,12 +90,15 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
     void Start()
     {
         damageable = Prefab.GetComponent<IDamageable>();
-        if (ShieldGameObject != null)
-        {
-            shieldDamageable = ShieldGameObject.GetComponent<IDamageable>();
-            var shieldScript = ShieldGameObject.GetComponent<Shield>();
-            shieldMaxHp = shieldScript._maxhealth;
-        }
+        _health = maxHealth;
+        particleSystem = GetComponentInChildren<ParticleSystem>();
+    }
+
+    private void Update()
+    {
+        shieldVFXBlue.transform.position = VFXTransform.position;
+        shieldVFXYellow.transform.position = VFXTransform.position;
+        shieldVFXRed.transform.position = VFXTransform.position;
     }
 }
 public enum HitBoxType
