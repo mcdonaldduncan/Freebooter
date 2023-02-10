@@ -136,19 +136,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ProjectilePrefab: {fileID: 196044, guid: 938459aeb26fb124998973f4dfcfb24d, type: 3}
   m_ShootFrom: {fileID: 5396123669801012357}
+  m_ShootFrom2: {fileID: 0}
   m_WalkableLayers:
     serializedVersion: 2
     m_Bits: 128
   m_StoppingDistance: 10
   m_RotationSpeed: 20
+  m_SampleRadius: 0
   m_WanderDelay: 5
   m_WanderDistance: 10
   m_Range: 30
   m_TimeBetweenShots: 0.2
   m_MaxHealth: 100
   m_Health: 100
+  m_ShouldSleep: 0
+  m_Activator: {fileID: 0}
   m_Weapon: {fileID: 6605047063876999966}
   m_Hand: {fileID: 6796709826595835232}
+  raycastSource: {fileID: 7322302033410086508}
+  KickDamage: 5
+  KickRange: 3
 --- !u!136 &4041115256718326706
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -192,7 +199,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5275076217087910831, guid: b38bc3fb91f2e6a44bc58f09c8494078, type: 3}
       propertyPath: m_Name
-      value: CriticalDamageHitboxPrefab
+      value: SpecialHitboxPrefab
       objectReference: {fileID: 0}
     - target: {fileID: 6167492751692961984, guid: b38bc3fb91f2e6a44bc58f09c8494078, type: 3}
       propertyPath: m_RootOrder
@@ -472,5 +479,10 @@ Transform:
 --- !u!4 &6796709826595835232 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3907742021168869116, guid: 08d94c7d0b1ecfa4fbde6d8d4e500abf, type: 3}
+  m_PrefabInstance: {fileID: 7523779096007271324}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7322302033410086508 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1006519189898442224, guid: 08d94c7d0b1ecfa4fbde6d8d4e500abf, type: 3}
   m_PrefabInstance: {fileID: 7523779096007271324}
   m_PrefabAsset: {fileID: 0}
