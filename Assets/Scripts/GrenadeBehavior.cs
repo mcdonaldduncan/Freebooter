@@ -10,7 +10,7 @@ public class GrenadeBehavior : MonoBehaviour
     [SerializeField] private float explosionDamage;
     [SerializeField] private GameObject grenadeVFX;
 
-    private bool ShouldExplode => timerStarted && startTime + timeBeforeExplosion <= Time.time;
+    private bool ShouldExplode => timerStarted && startTime + timeBeforeExplosion <= Time.time && !exploded;
 
     private float startTime;
     private AudioSource grenadeAudioSource;
@@ -20,6 +20,7 @@ public class GrenadeBehavior : MonoBehaviour
     private Rigidbody grenadeRB;
     private GrenadeGun grenadeGun;
     private bool collided = false;
+    private bool exploded = false;
 
     // Start is called before the first frame update
     void Start()
@@ -30,6 +31,9 @@ public class GrenadeBehavior : MonoBehaviour
         startTime = Time.time;
         grenadeAudioSource = GetComponent<AudioSource>();
         grenadeRenderer = GetComponent<Renderer>();
+        grenadeGun.remoteDetonationEvent += Explode;
+        startTime = Time.time;
+        timerStarted = true;
     }
 
     private void Update()
@@ -44,16 +48,14 @@ public class GrenadeBehavior : MonoBehaviour
     {
         if (collision.gameObject.tag != "Player" && !collided)
         {
-            grenadeGun.remoteDetonationEvent += Explode;
             grenadeRB.constraints = RigidbodyConstraints.FreezeAll;
-            startTime = Time.time;
-            timerStarted = true;
             collided = true;
         }
     }
 
     private void Explode()
     {
+        exploded = true;
         var explosion = ProjectileManager.Instance.TakeFromPool(grenadeVFX, transform.position);
 
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
