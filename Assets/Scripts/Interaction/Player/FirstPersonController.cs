@@ -162,7 +162,6 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     public bool basicMovement;
     public bool wallRunning;
 
-
     [Header("Audio")]
     [SerializeField] private AudioClip dashAudio;
     [SerializeField] private AudioClip lowHealthAudio;
@@ -178,6 +177,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     private Vector3 moveDirection;
     private Vector2 currentInput; //Whether player is moving vertically or horizontally along x and z planes
     private Vector2 dashInput;
+
     public Vector2 MoveInput { get; private set; }
 
     private float rotationX = 0f; //Camera rotation for clamping
