@@ -203,13 +203,14 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         return navHit.position;
     }
 
-    public void ChasePlayer()
+    public virtual void ChasePlayer()
     {
         if (distanceToPlayer < m_Range && distanceToPlayer > m_Range / 2)
         {
             Vector3 FromPlayerToAgent = transform.position - m_Target.position;
 
-            m_Agent.SetDestination(m_Target.position + FromPlayerToAgent.normalized * m_StoppingDistance);
+
+            MoveToLocation(m_Target.position + FromPlayerToAgent.normalized);
         }
     }
 
@@ -305,13 +306,29 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
 
     public void MoveToLocation(Transform location)
     {
-        if (NavMesh.SamplePosition(location.position, out NavMeshHit hit, MovementSampleRadius, 0))
+        if (NavMesh.SamplePosition(location.position, out NavMeshHit hit, MovementSampleRadius, NavMesh.AllAreas))
         {
             m_Agent.SetDestination(hit.position);
+
+            Debug.Log("Destination set to " + hit.position);
         }
         else
         {
-            Debug.Log($"The agent attached to {gameObject.name} was directed to a location with no navmesh");
+            //Debug.Log($"The agent attached to {gameObject.name} was directed to a location with no navmesh");
+        }
+
+    }
+
+    public void MoveToLocation(Vector3 location)
+    {
+        if (NavMesh.SamplePosition(location, out NavMeshHit hit, MovementSampleRadius, NavMesh.AllAreas))
+        {
+            m_Agent.SetDestination(hit.position);
+            //Debug.Log("Overload Destination set to " + hit.position);
+        }
+        else
+        {
+            //Debug.Log($"The agent attached to {gameObject.name} was directed to a location with no navmesh");
         }
 
     }
