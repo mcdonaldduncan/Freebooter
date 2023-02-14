@@ -345,6 +345,8 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
 
     public void ActivateAggro()
     {
+        if (!m_Agent.isActiveAndEnabled) return;
+
         m_State = AgentState.CHASE;
         m_Agent.isStopped = false;
     }

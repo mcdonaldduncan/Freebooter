@@ -91,7 +91,7 @@ public class ShotGun : MonoBehaviour, IGun
             {
                 //Instantiate a bulletFromPool trail
                 //TrailRenderer trail = Instantiate(Bullet, ShootFrom.transform.position, ShootFrom.transform.localRotation);
-                GameObject bulletFromPoolTemp = ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position, out BulletTrail trail);
+                ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position, out BulletTrail trail);
                 trail.Launch(hitInfo.point);
                 HitEnemyBehavior(hitInfo, hitInfo.transform.GetComponent<IDamageable>());
                 //bulletPoolList.Add(bulletFromPoolTemp);
@@ -106,7 +106,7 @@ public class ShotGun : MonoBehaviour, IGun
             else
             {
                 //Spawn the bulletFromPool trail
-                GameObject bulletFromPoolTemp = ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position, out BulletTrail trail);
+                ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position, out BulletTrail trail);
                 trail.Launch(ShootFrom.transform.position + direction * 100);
                 //bulletPoolList.Add(bulletFromPoolTemp);
                 //TrailRenderer rendererTemp = bulletFromPoolTemp.GetComponent<TrailRenderer>();

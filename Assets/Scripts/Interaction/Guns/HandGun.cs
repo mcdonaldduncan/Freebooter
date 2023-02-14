@@ -85,24 +85,29 @@ public class HandGun : MonoBehaviour, IGun
         //Shoot out a raycast
         if (Physics.Raycast(ray, out hitInfo, float.MaxValue, ~LayerToIgnore))
         {
-
+            ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position, out BulletTrail trail);
+            trail.Launch(hitInfo.point);
+            HitEnemyBehavior(hitInfo, hitInfo.transform.GetComponent<IDamageable>());
             //Instantiate a bulletFromPool trail
             //TrailRenderer trail = Instantiate(Bullet, ShootFrom.transform.position, ShootFrom.transform.localRotation);
-            bulletFromPool = ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position);
-            BulletTrailRenderer = bulletFromPool.GetComponent<TrailRenderer>();
+            //bulletFromPool = ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position);
+            //BulletTrailRenderer = bulletFromPool.GetComponent<TrailRenderer>();
 
-            if (hitInfo.transform.name != "Player")
-            {
-                StartCoroutine(SpawnTrail(BulletTrailRenderer, hitInfo, HitEnemy));
-            }
+            //if (hitInfo.transform.name != "Player")
+            //{
+            //    StartCoroutine(SpawnTrail(BulletTrailRenderer, hitInfo, HitEnemy));
+            //}
         }
         //if the player hit nothing
         else
         {
+            ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position, out BulletTrail trail);
+            trail.Launch(ShootFrom.transform.position + direction * 100);
+
             //Spawn the bulletFromPool trail
-            bulletFromPool = ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position);
-            BulletTrailRenderer = bulletFromPool.GetComponent<TrailRenderer>();
-            StartCoroutine(SpawnTrail(BulletTrailRenderer, ShootFrom.transform.position + ray.direction * 10));
+            //bulletFromPool = ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position);
+            //BulletTrailRenderer = bulletFromPool.GetComponent<TrailRenderer>();
+            //StartCoroutine(SpawnTrail(BulletTrailRenderer, ShootFrom.transform.position + ray.direction * 10));
         }
 
         //if the player does not have infinite ammo, decrement the gun's ammo by one
@@ -195,8 +200,10 @@ public class HandGun : MonoBehaviour, IGun
                 Vector3 targetPosition = hitInfo.transform.position;
 
                 //Play blood particle effects on the enemy, where they were hit
-                var p = Instantiate(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-                Destroy(p, 1);
+                //var p = Instantiate(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                //Destroy(p, 1);
+
+                ProjectileManager.Instance.TakeFromPool(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point);
 
                 //Get the distance between the enemy and the gun
                 float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);
@@ -232,14 +239,16 @@ public class HandGun : MonoBehaviour, IGun
             }
             catch
             {
-                var p = Instantiate(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-                Destroy(p, 1);
+                //var p = Instantiate(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                //Destroy(p, 1);
+                ProjectileManager.Instance.TakeFromPool(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point);
             }
         }
         else
         {
-            var p = Instantiate(HitNonEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-            Destroy(p, 1);
+            //var p = Instantiate(HitNonEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+            //Destroy(p, 1);
+            ProjectileManager.Instance.TakeFromPool(HitNonEnemy, hitInfo.point);
         }
 
     }
