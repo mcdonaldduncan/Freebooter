@@ -91,23 +91,26 @@ public class ShotGun : MonoBehaviour, IGun
             {
                 //Instantiate a bulletFromPool trail
                 //TrailRenderer trail = Instantiate(Bullet, ShootFrom.transform.position, ShootFrom.transform.localRotation);
-                GameObject bulletFromPoolTemp = ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position);
-                bulletPoolList.Add(bulletFromPoolTemp);
-                TrailRenderer rendererTemp = bulletFromPoolTemp.GetComponent<TrailRenderer>();
+                GameObject bulletFromPoolTemp = ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position, out BulletTrail trail);
+                trail.Launch(hitInfo.point);
+                HitEnemyBehavior(hitInfo, hitInfo.transform.GetComponent<IDamageable>());
+                //bulletPoolList.Add(bulletFromPoolTemp);
+                //TrailRenderer rendererTemp = bulletFromPoolTemp.GetComponent<TrailRenderer>();
 
-                if (hitInfo.transform.name != "Player")
-                {
-                    StartCoroutine(SpawnTrail(bulletFromPoolTemp, rendererTemp, hitInfo, HitEnemy));
-                }
+                //if (hitInfo.transform.name != "Player")
+                //{
+                //    StartCoroutine(SpawnTrail(bulletFromPoolTemp, rendererTemp, hitInfo, HitEnemy));
+                //}
             }
             //if the player hit nothing
             else
             {
                 //Spawn the bulletFromPool trail
-                GameObject bulletFromPoolTemp = ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position);
-                bulletPoolList.Add(bulletFromPoolTemp);
-                TrailRenderer rendererTemp = bulletFromPoolTemp.GetComponent<TrailRenderer>();
-                StartCoroutine(SpawnTrail(bulletFromPoolTemp, rendererTemp, ShootFrom.transform.position + direction * 10));
+                GameObject bulletFromPoolTemp = ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position, out BulletTrail trail);
+                trail.Launch(ShootFrom.transform.position + direction * 100);
+                //bulletPoolList.Add(bulletFromPoolTemp);
+                //TrailRenderer rendererTemp = bulletFromPoolTemp.GetComponent<TrailRenderer>();
+                //StartCoroutine(SpawnTrail(bulletFromPoolTemp, rendererTemp, ShootFrom.transform.position + direction * 10));
             }
         }
 
@@ -211,6 +214,7 @@ public class ShotGun : MonoBehaviour, IGun
 
     private void HitEnemyBehavior(RaycastHit hitInfo, IDamageable damageableTarget = null)
     {
+
         if (damageableTarget != null)
         {
             bool breakableObject = hitInfo.transform.TryGetComponent<Fracture>(out Fracture component);
@@ -222,8 +226,10 @@ public class ShotGun : MonoBehaviour, IGun
                 Vector3 targetPosition = hitInfo.transform.position;
 
                 //Play blood particle effects on the enemy, where they were hit
-                var p = Instantiate(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-                Destroy(p, 1);
+                //var p = Instantiate(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                //Destroy(p, 1);
+
+                ProjectileManager.Instance.TakeFromPool(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point);
 
                 //Get the distance between the enemy and the gun
                 float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);
@@ -242,7 +248,7 @@ public class ShotGun : MonoBehaviour, IGun
                 else
                 {
                     float clampedDistance = Mathf.Clamp(distance, DropStart, DropEnd) - DropStart;
-                    float distancePercent = 100 - clampedDistance * (100 / (DropEnd - DropStart)); //Listen idk why this needs to be subtracted from 100 to work but it does so yeah
+                    float distancePercent = 100 - clampedDistance * (100 / (DropEnd - DropStart)); //Listen idk why this needs to be subtracted from 100 to work but it does so yeah, because its a percent out of 100!
                     realDamage = Mathf.Abs(MinDamage + (MaxDamage - MinDamage) * (distancePercent / 100));
                     if (realDamage <= MinDamage)
                     {
@@ -259,14 +265,12 @@ public class ShotGun : MonoBehaviour, IGun
             }
             catch
             {
-                var p = Instantiate(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-                Destroy(p, 1);
+                ProjectileManager.Instance.TakeFromPool(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point);
             }
         }
         else
         {
-            var p = Instantiate(HitNonEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-            Destroy(p, 1);
+            ProjectileManager.Instance.TakeFromPool(HitNonEnemy, hitInfo.point);
         }
     }
 
