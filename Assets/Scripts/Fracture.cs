@@ -19,9 +19,9 @@ public class Fracture : MonoBehaviour, IDamageable
     private void Start()
     {
         colliderToDisable = GetComponent<Collider>();
-        if (transform.parent != null)
+        if (transform.parent != null && transform.parent.TryGetComponent<BarrelGroupBehavior>(out barrelGroupBehavior))
         {
-            barrelGroupBehavior = transform.parent.GetComponent<BarrelGroupBehavior>();
+            //barrelGroupBehavior = transform.parent.GetComponent<BarrelGroupBehavior>();
             isInGroup = true;
             barrelGroupBehavior.fractureChildren += Breakage;
         }
