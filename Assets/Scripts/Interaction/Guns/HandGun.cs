@@ -21,7 +21,7 @@ public class HandGun : MonoBehaviour, IGun
     public GameObject HitNonEnemy { get; set; }
     public WaitForSeconds ReloadWait { get; set; }
     public int CurrentAmmo { get { return GunManager.HandGunCurrentAmmo; } set { GunManager.HandGunCurrentAmmo = value; } }
-    public int CurrentMaxAmmo { get { return GunManager.HandGunMaxAmmo; } }
+    public int MaxAmmo { get { return GunManager.HandGunMaxAmmo; } }
     public CanvasGroup GunReticle { get; set; }
     public GameObject Bullet { get; set; }
     public AudioClip GunShotAudio { get; set; }
@@ -30,7 +30,7 @@ public class HandGun : MonoBehaviour, IGun
     public HandgunAnimationHandler GunAnimationHandler { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
 
-    public bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading && CurrentAmmo > 0;
+    public bool CanShoot => lastShotTime + FireRate < Time.time && CurrentAmmo > 0;
 
     //private bool ReloadNow => reloadStartTime + ReloadTime < Time.time && GunManager.Reloading;
     private float lastShotTime;
@@ -111,10 +111,10 @@ public class HandGun : MonoBehaviour, IGun
         }
 
         //if the player does not have infinite ammo, decrement the gun's ammo by one
-        if (!GunManager.InfiniteAmmo)
-        {
-            CurrentAmmo--;
-        }
+        //if (!GunManager.InfiniteAmmo)
+        //{
+        //    CurrentAmmo--;
+        //}
 
         //Get the time of the last shot, as this is needed for fire rate timer
         lastShotTime = Time.time;
@@ -253,29 +253,29 @@ public class HandGun : MonoBehaviour, IGun
 
     }
 
-    public void StartReload()
-    {
-        reloadCo = GunManager.StartCoroutine(this.Reload(ReloadWait));
-    }
+    //public void StartReload()
+    //{
+    //    reloadCo = GunManager.StartCoroutine(this.Reload(ReloadWait));
+    //}
 
-    public IEnumerator Reload(WaitForSeconds reloadWait)
-    {
-        GunManager.Reloading = true;
-        yield return reloadWait;
-        if (GunManager.Reloading)
-        {
-            GunManager.Reloading = false;
-            GunManager.HandGunCurrentAmmo = GunManager.HandGunMaxAmmo;
-        }
-    }
+    //public IEnumerator Reload(WaitForSeconds reloadWait)
+    //{
+    //    GunManager.Reloading = true;
+    //    yield return reloadWait;
+    //    if (GunManager.Reloading)
+    //    {
+    //        GunManager.Reloading = false;
+    //        GunManager.HandGunCurrentAmmo = GunManager.HandGunMaxAmmo;
+    //    }
+    //}
 
     private void OnWeaponSwitch()
     {
-        if (reloadCo != null)
-        {
-            GunManager.StopCoroutine(reloadCo);
-            GunManager.Reloading = false;
-        }
+        //if (reloadCo != null)
+        //{
+        //    GunManager.StopCoroutine(reloadCo);
+        //    GunManager.Reloading = false;
+        //}
         GunAnimationHandler.RecoilAnim.ResetTrigger("RecoilTrigger");
     }
 }

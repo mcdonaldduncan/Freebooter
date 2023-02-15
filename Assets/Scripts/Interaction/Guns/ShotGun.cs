@@ -23,7 +23,7 @@ public class ShotGun : MonoBehaviour, IGun
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
     private float ShotGunBulletAmount { get { return GunManager.ShotGunBulletAmount; } }
     public int CurrentAmmo { get { return GunManager.ShotGunCurrentAmmo; } set { GunManager.ShotGunCurrentAmmo = value; } }
-    public int CurrentMaxAmmo { get { return GunManager.ShotGunMaxAmmo; } }
+    public int MaxAmmo { get { return GunManager.ShotGunMaxAmmo; } }
     public CanvasGroup GunReticle { get; set; }
     public GameObject Bullet { get; set; }
     public AudioClip GunShotAudio { get; set; }
@@ -31,7 +31,7 @@ public class ShotGun : MonoBehaviour, IGun
     public TrailRenderer BulletTrailRenderer { get; set; }
     public ShotgunAnimationHandler GunAnimationHandler { get; set; }
 
-    public bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading && CurrentAmmo > 0;
+    public bool CanShoot => lastShotTime + FireRate < Time.time && CurrentAmmo > 0;
 
     private float lastShotTime;
     private float reloadStartTime;
@@ -276,31 +276,16 @@ public class ShotGun : MonoBehaviour, IGun
 
     //public void StartReload()
     //{
-    //    GunManager.Reloading = true;
-    //    reloadStartTime = Time.time;
+    //    reloadCo = GunManager.StartCoroutine(this.Reload(ReloadWait));
     //}
 
-    //private void Reload()
+    //public IEnumerator Reload(WaitForSeconds reloadWait)
     //{
-    //    if (reloadStartTime + ReloadTime < Time.time)
-    //    {
-    //        GunManager.ShotGunCurrentAmmo = GunManager.ShotGunMaxAmmo;
-    //        GunManager.Reloading = false;
-    //    }
+    //    GunManager.Reloading = true;
+    //    yield return reloadWait;
+    //    GunManager.Reloading = false;
+    //    GunManager.ShotGunCurrentAmmo = GunManager.ShotGunMaxAmmo;
     //}
-
-    public void StartReload()
-    {
-        reloadCo = GunManager.StartCoroutine(this.Reload(ReloadWait));
-    }
-
-    public IEnumerator Reload(WaitForSeconds reloadWait)
-    {
-        GunManager.Reloading = true;
-        yield return reloadWait;
-        GunManager.Reloading = false;
-        GunManager.ShotGunCurrentAmmo = GunManager.ShotGunMaxAmmo;
-    }
 
     private void OnWeaponSwitch()
     {
@@ -309,11 +294,11 @@ public class ShotGun : MonoBehaviour, IGun
         //    GunManager.Reloading = false;
         //}
 
-        if (reloadCo != null)
-        {
-            GunManager.StopCoroutine(reloadCo);
-            GunManager.Reloading = false;
-        }
+        //if (reloadCo != null)
+        //{
+        //    GunManager.StopCoroutine(reloadCo);
+        //    GunManager.Reloading = false;
+        //}
         GunAnimationHandler.RecoilAnim.ResetTrigger("RecoilTrigger");
     }
 }

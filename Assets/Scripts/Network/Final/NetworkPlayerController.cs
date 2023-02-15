@@ -286,7 +286,7 @@ public class NetworkPlayerController : NetworkBehaviour, IDamageable
         //_input.Gun.Shoot.performed += playerGun.ShootOther;
         //_input.Gun.Shoot.canceled += playerGun.ShootOther;
         _input.Gun.SwitchWeapon.performed += playerGun.SwitchWeapon;
-        _input.Gun.Reload.performed += playerGun.Reload;
+        //_input.Gun.Reload.performed += playerGun.Reload;
     }
 
     private void OnDisable()
@@ -313,7 +313,7 @@ public class NetworkPlayerController : NetworkBehaviour, IDamageable
         //_input.Gun.Shoot.performed -= playerGun.ShootOther;
         //_input.Gun.Shoot.canceled -= playerGun.ShootOther;
         _input.Gun.SwitchWeapon.performed -= playerGun.SwitchWeapon;
-        _input.Gun.Reload.performed -= playerGun.Reload;
+        //_input.Gun.Reload.performed -= playerGun.Reload;
     }
 
     private void StateHandler()

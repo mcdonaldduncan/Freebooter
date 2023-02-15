@@ -11,6 +11,8 @@ using Random = UnityEngine.Random;
 public sealed class GunHandler : MonoBehaviour
 {
     public IGun CurrentGun { get { return currentGun; } }
+    public Dictionary<GunType, IGun> GunDict { get { return gunDict; } }
+    public List<GunType> GunTypeList { get { return guns; } }
     public Camera FPSCam { get { return fpsCam; } }
     public AudioSource GunShotAudioSource { get { return gunShotAudioSource; } }
     
@@ -24,11 +26,11 @@ public sealed class GunHandler : MonoBehaviour
     public int GrenadeGunCurrentAmmo { get { return grenadeGunCurrentAmmo; } set { grenadeGunCurrentAmmo = value; } }
     public int GrenadeGunMaxAmmo { get { return grenadeGunMaxAmmo; } }
 
-    public bool Reloading { get { return reloading; } set { reloading = value; } }
+    //public bool Reloading { get { return reloading; } set { reloading = value; } }
     public bool InfiniteAmmo { get { return infiniteAmmo; } }
 
     public delegate void GunSwitchDelegate();
-    public static GunSwitchDelegate weaponSwitched;
+    public static event GunSwitchDelegate weaponSwitched;
 
     public enum GunType
     {
@@ -215,7 +217,7 @@ public sealed class GunHandler : MonoBehaviour
             gun.GunReticle = this.autoGunReticle;
             autoGun.GunShotAudioList = this.autoGunShotAudioList;
             autoGun.TriggerReleasedAudio = this.triggerReleasedAudio;
-            gun.ReloadWait = this.autoGunReloadWait;
+            //gun.ReloadWait = this.autoGunReloadWait;
             autoGun.GunAnimationHandler = this.autoGunAnimationHandler;
             gun.FireRate = this.autoFireRate;
         }
@@ -232,7 +234,7 @@ public sealed class GunHandler : MonoBehaviour
             gun.AimOffset = this.handGunAimOffset;
             gun.GunReticle = this.handGunReticle;
             gun.GunShotAudio = this.handGunShotAudio;
-            gun.ReloadWait = this.handGunReloadWait;
+            //gun.ReloadWait = this.handGunReloadWait;
             handGun.GunAnimationHandler = this.handgunAnimationHandler;
             gun.FireRate = this.handGunFireRate;
         }
@@ -250,7 +252,7 @@ public sealed class GunHandler : MonoBehaviour
             gun.AimOffset = this.shotGunAimOffset;
             gun.GunReticle = this.shotGunReticle;
             gun.GunShotAudio = this.shotGunShotAudio;
-            gun.ReloadWait = this.shotGunReloadWait;
+            //gun.ReloadWait = this.shotGunReloadWait;
             shotGun.GunAnimationHandler = this.shotgunAnimationHandler;
             gun.FireRate = this.shotGunFireRate;
         }
@@ -262,7 +264,7 @@ public sealed class GunHandler : MonoBehaviour
             gun.VerticalSpread = this.grenadeGunVerticalSpread;
             gun.HorizontalSpread = this.grenadeGunHorizontalSpread;
             gun.AimOffset = this.grenadeGunAimOffset;
-            gun.ReloadWait = this.grenadeGunReloadWait;
+            //gun.ReloadWait = this.grenadeGunReloadWait;
             gun.GunReticle = this.grenadeGunReticle;
             gun.GunShotAudio = this.grenadeGunShotAudio;
             grenadeGun.Grenade = this.grenadeObject;
@@ -314,7 +316,8 @@ public sealed class GunHandler : MonoBehaviour
         //currentGunAmmo = currentGun.CurrentAmmo;
 
         // change this to either an event or check that only updates when necessary, lots of garbage collection from this
-        ammoText.text = $"Ammo: {currentGun.CurrentAmmo}/{currentGun.CurrentMaxAmmo}";
+        bool isHandGun = currentGun is HandGun;
+        ammoText.text = $"{(isHandGun ? ":)" : currentGun.CurrentAmmo)}";
     }
 
     public void SwitchWeapon(InputAction.CallbackContext context)
@@ -378,12 +381,23 @@ public sealed class GunHandler : MonoBehaviour
         currentGun.GunModel.SetActive(true);
     }
 
+    public void OnAmmoPickup(GunType gunType, int ammoToAdd)
+    {
+        IGun gunToRecieveAmmo = gunDict[gunType];
+        gunToRecieveAmmo.CurrentAmmo += ammoToAdd;
+
+        if (gunToRecieveAmmo.CurrentAmmo >= gunToRecieveAmmo.MaxAmmo)
+        {
+            gunToRecieveAmmo.CurrentAmmo = gunToRecieveAmmo.MaxAmmo;
+        }
+    }
+
     public void Shoot(InputAction.CallbackContext context)
     {
-        if (currentGun.CurrentAmmo <= 0)
-        {
-            currentGun.StartReload();
-        }
+        //if (currentGun.CurrentAmmo <= 0)
+        //{
+        //    currentGun.StartReload();
+        //}
         currentGun.ShootTriggered(context);
     }
 
@@ -392,11 +406,11 @@ public sealed class GunHandler : MonoBehaviour
         currentGun.AlternateTriggered(context);
     }
 
-    public void Reload(InputAction.CallbackContext context)
-    {
-        if (currentGun.CurrentAmmo < currentGun.CurrentMaxAmmo)
-        {
-            currentGun.StartReload();
-        }
-    }
+    //public void Reload(InputAction.CallbackContext context)
+    //{
+    //    if (currentGun.CurrentAmmo < currentGun.MaxAmmo)
+    //    {
+    //        currentGun.StartReload();
+    //    }
+    //}
 }

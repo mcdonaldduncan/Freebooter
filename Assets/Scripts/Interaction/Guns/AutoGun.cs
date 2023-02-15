@@ -20,7 +20,7 @@ public class AutoGun : MonoBehaviour, IGun
     public GameObject HitNonEnemy { get; set; }
     public WaitForSeconds ReloadWait { get; set; }
     public int CurrentAmmo { get { return GunManager.AutoGunCurrentAmmo; } set { GunManager.AutoGunCurrentAmmo = value; } }
-    public int CurrentMaxAmmo { get { return GunManager.AutoGunMaxAmmo; } }
+    public int MaxAmmo { get { return GunManager.AutoGunMaxAmmo; } }
     public CanvasGroup GunReticle { get; set; }
     public GameObject Bullet { get; set; }
     public AudioClip GunShotAudio { get; set; }
@@ -67,7 +67,7 @@ public class AutoGun : MonoBehaviour, IGun
     {
         if (context.canceled)
         {
-            if (this.holdingTrigger && GunManager.AutoGunCurrentAmmo > 0 && !GunManager.Reloading)
+            if (this.holdingTrigger && GunManager.AutoGunCurrentAmmo > 0)
             {
                 GunManager.GunShotAudioSource.PlayOneShot(TriggerReleasedAudio);
             }
@@ -86,7 +86,7 @@ public class AutoGun : MonoBehaviour, IGun
 
     private void Shoot()
     {
-        if (!GunManager.Reloading && GunManager.AutoGunCurrentAmmo > 0)
+        if (GunManager.AutoGunCurrentAmmo > 0)
         {
             if (!GunManager.InfiniteAmmo)
             {
@@ -104,7 +104,7 @@ public class AutoGun : MonoBehaviour, IGun
 
             RaycastHit hitInfo;
 
-            int gunShotIndex = Random.RandomRange(0, GunShotAudioList.Length - 1);
+            int gunShotIndex = Random.Range(0, GunShotAudioList.Length - 1);
             GunShotAudio = GunShotAudioList[gunShotIndex];
             GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
 
@@ -272,36 +272,21 @@ public class AutoGun : MonoBehaviour, IGun
         }
     }
 
-    //public void StartReload()
-    //{
-    //    GunManager.Reloading = true;
-    //    reloadStartTime = Time.time;
-    //}
-
-    //private void Reload()
-    //{
-    //    if (reloadStartTime + ReloadTime < Time.time)
-    //    {
-    //        GunManager.AutoGunCurrentAmmo = GunManager.AutoGunMaxAmmo;
-    //        GunManager.Reloading = false;
-    //    }
-    //}
-
 
     //fix bug that doesn't restart canceled reload    
-    public void StartReload()
-    {
-        reloadCo = GunManager.StartCoroutine(this.Reload(ReloadWait));
-    }
+    //public void StartReload()
+    //{
+    //    reloadCo = GunManager.StartCoroutine(this.Reload(ReloadWait));
+    //}
 
     private void OnWeaponSwitch()
     {
         this.holdingTrigger = false;
-        if (reloadCo != null)
-        {
-            GunManager.StopCoroutine(reloadCo);
-            GunManager.Reloading = false;
-        }
+        //if (reloadCo != null)
+        //{
+        //    GunManager.StopCoroutine(reloadCo);
+        //    GunManager.Reloading = false;
+        //}
         GunAnimationHandler.RecoilAnim.ResetTrigger("RecoilTrigger");
 
         //if (GunManager.Reloading)
@@ -310,14 +295,14 @@ public class AutoGun : MonoBehaviour, IGun
         //}
     }
 
-    public IEnumerator Reload(WaitForSeconds reloadWait)
-    {
-        GunManager.Reloading = true;
-        yield return reloadWait;
-        if (GunManager.Reloading)
-        {
-            GunManager.Reloading = false;
-            GunManager.AutoGunCurrentAmmo = GunManager.AutoGunMaxAmmo;
-        }
-    }
+    //public IEnumerator Reload(WaitForSeconds reloadWait)
+    //{
+    //    GunManager.Reloading = true;
+    //    yield return reloadWait;
+    //    if (GunManager.Reloading)
+    //    {
+    //        GunManager.Reloading = false;
+    //        GunManager.AutoGunCurrentAmmo = GunManager.AutoGunMaxAmmo;
+    //    }
+    //}
 }
