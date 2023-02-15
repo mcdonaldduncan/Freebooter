@@ -5,6 +5,10 @@ using static UnityEngine.GraphicsBuffer;
 using UnityEngine.UIElements;
 using System.Linq;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 [RequireComponent(typeof(Collider), typeof(Rigidbody))]
 public class Projectile : MonoBehaviour, IPoolable
 {

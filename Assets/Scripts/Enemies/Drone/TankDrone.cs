@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 public class TankDrone : AgentBase
 {
     [Header("Drone Body")]

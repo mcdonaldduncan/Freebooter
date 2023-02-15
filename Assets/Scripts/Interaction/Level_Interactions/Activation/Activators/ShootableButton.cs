@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 public class ShootableButton : MonoBehaviour, IDamageable, IActivator
 {
     [SerializeField] float m_Health;

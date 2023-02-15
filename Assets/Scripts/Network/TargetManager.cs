@@ -4,6 +4,10 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Windows;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 public class TargetManager : Singleton<TargetManager>
 {
     public NetworkPlayerController[] targets;

@@ -5,6 +5,10 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 public class Inquisitor : MonoBehaviour, IDamageable
 {
     [SerializeField] Animator m_Animator;

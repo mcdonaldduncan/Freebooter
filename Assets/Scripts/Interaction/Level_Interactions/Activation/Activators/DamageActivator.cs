@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 public class DamageActivator : MonoBehaviour, IDamageable, IActivator
 {
     [SerializeField] float m_Health;

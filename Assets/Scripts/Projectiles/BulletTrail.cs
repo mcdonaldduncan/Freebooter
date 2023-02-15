@@ -3,6 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 public class BulletTrail : MonoBehaviour, IPoolable
 {
     [SerializeField] GameObject m_Prefab;

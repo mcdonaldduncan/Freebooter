@@ -4,7 +4,10 @@ using UnityEngine;
 using UnityEngine.Events;
 using static UnityEngine.UI.ScrollRect;
 
-
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 public class InvokeEvent : MonoBehaviour
 {
     [SerializeField] GameObject m_Activator;

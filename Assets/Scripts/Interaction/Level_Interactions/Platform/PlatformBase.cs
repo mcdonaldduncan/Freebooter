@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UtilityFunctions;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 public class PlatformBase : MonoBehaviour
 {
     [SerializeField] public TranslationType m_TranslationType;

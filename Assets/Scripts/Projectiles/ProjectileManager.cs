@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Manager for projectile and all projectile related gameobjects
+/// Custom pooling to cut down memory consumption
+/// </summary>
+/// Author: Duncan McDonald
 public class ProjectileManager : Singleton<ProjectileManager>
 {
     private Dictionary<GameObject, Queue<GameObject>> m_Pool;

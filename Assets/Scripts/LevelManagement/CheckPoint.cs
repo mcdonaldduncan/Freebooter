@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.UI.ScrollRect;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 public class CheckPoint : MonoBehaviour
 {
     [SerializeField] GameObject m_Activator;

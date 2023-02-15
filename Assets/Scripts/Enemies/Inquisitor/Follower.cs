@@ -5,6 +5,10 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 public class Follower : MonoBehaviour
 {
     [SerializeField] float damage;

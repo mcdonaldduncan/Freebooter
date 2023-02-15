@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 #if UNITY_EDITOR
 
 [CustomEditor(typeof(Projectile))]

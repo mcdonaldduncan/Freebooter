@@ -2,6 +2,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 public sealed class LevelManager : MonoBehaviour
 {
     [SerializeField] public FirstPersonController Player;

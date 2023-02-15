@@ -20,6 +20,10 @@ using Unity.Services.Lobbies.Models;
 using ParrelSync;
 #endif
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 public class LobbyManager : MonoBehaviour
 {
     //[SerializeField] GameObject _buttons;

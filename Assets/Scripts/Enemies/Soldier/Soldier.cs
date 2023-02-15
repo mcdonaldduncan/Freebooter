@@ -47,7 +47,7 @@ public class Soldier : AgentBase
         else if (kickBeforeShooting == true)
         {
             base.Shoot();
-            // Do you not understand what inheritance is!!!!!!!!!
+            // ^ inheritance dood
             
             //GameObject newObj = ProjectileManager.Instance.TakeFromPool(m_ProjectilePrefab, m_ShootFrom.position, out Projectile projectile);
             //projectile.Launch(m_TargetDirection);

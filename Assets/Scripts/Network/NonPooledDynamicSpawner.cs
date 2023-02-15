@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 public class NonPooledDynamicSpawner : NetworkBehaviour
 {
     public GameObject PrefabToSpawn;

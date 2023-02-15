@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-// AudioManager is a singleton class that manages audio playback in the game.
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 public class AudioManager : Singleton<AudioManager>
 {
-    // AudioSource component that plays the audio clips
-    [SerializeField] AudioSource m_AudioSource;
-    // Image component that displays a navigation icon
-    [SerializeField] Image m_NavImage;
+    [SerializeField] AudioSource m_AudioSource;// AudioSource component that plays the audio clips
+    [SerializeField] Image m_NavImage; // Image component that displays a navigation icon
 
-    // A queue that stores audio clips to be played
-    Queue<AudioClip> m_ClipQueue;
+    Queue<AudioClip> m_ClipQueue; // A queue that stores audio clips to be played
 
     // On start, the AudioSource component is assigned to the Player game object's AudioSource component
     private void Start()

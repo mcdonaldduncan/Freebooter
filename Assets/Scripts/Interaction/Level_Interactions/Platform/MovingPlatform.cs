@@ -6,6 +6,10 @@ using UnityEngine;
 using UnityEngine.PlayerLoop;
 using static UtilityFunctions;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 public class MovingPlatform : MonoBehaviour
 {
     [Header("Movement Properties")]
