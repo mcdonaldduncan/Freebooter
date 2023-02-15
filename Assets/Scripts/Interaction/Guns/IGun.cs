@@ -21,17 +21,17 @@ public interface IGun
     GameObject HitEnemy { get; set; }
     GameObject HitNonEnemy { get; set; }
     int CurrentAmmo { get; set; }
-    int CurrentMaxAmmo { get; }
+    int MaxAmmo { get; }
     CanvasGroup GunReticle { get; set; }
     GameObject Bullet { get; set; }
     AudioClip GunShotAudio { get; set; }
     GameObject GunModel { get; set; }
-    WaitForSeconds ReloadWait { get; set; }
+    //WaitForSeconds ReloadWait { get; set; }
     TrailRenderer BulletTrailRenderer { get; set; }
     bool CanShoot { get; }
 
     void ShootTriggered(InputAction.CallbackContext context);
     void AlternateTriggered(InputAction.CallbackContext context);
-    void StartReload();
-    IEnumerator Reload(WaitForSeconds reloadWait);
+    //void StartReload();
+    //IEnumerator Reload(WaitForSeconds reloadWait);
 }
