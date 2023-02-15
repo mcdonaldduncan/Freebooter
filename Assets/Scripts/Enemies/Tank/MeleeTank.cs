@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TankScript : AgentBase
+public class MeleeTank : AgentBase
 {
     [Header("Shield GameObject")]
     public GameObject Shield; //for cycle

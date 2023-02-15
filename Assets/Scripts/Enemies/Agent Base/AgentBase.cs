@@ -8,9 +8,8 @@ using UnityEngine.AI;
 public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
 {
     [Header("Projectile Prefab and Projectile Spawn Point")]
-    [SerializeField] protected GameObject m_ProjectilePrefab;
+    [SerializeField] GameObject m_ProjectilePrefab;
     [SerializeField] protected Transform m_ShootFrom;
-    [SerializeField] protected Transform m_ShootFrom2;
 
     [Header("Walkable Layers")]
     [SerializeField] LayerMask m_WalkableLayers;
@@ -36,10 +35,10 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
     [SerializeField] bool m_ShouldSleep;
     [SerializeField] GameObject m_Activator;
 
-    [NonSerialized] protected NavMeshAgent m_Agent;
-    [NonSerialized] protected Transform m_Target;
+    protected NavMeshAgent m_Agent;
+    protected Transform m_Target;
 
-    [NonSerialized] protected AgentState m_State;
+    protected AgentState m_State;
     AgentState m_StartingState;
 
     protected Vector3 m_TargetDirection;
@@ -62,7 +61,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
     public Vector3 StartingPosition { get => m_StartingPosition; set => m_StartingPosition = value; }
     public bool ShouldSleep { get => m_ShouldSleep; set => m_ShouldSleep = value; }
     public IActivator Activator { get; set; }
-    public float MovementSampleRadius { get => m_SampleRadius; set => m_SampleRadius = value; }
+    public float MovementSampleRadius { get => m_SampleRadius; }
 
     public virtual void HandleSetup()
     {
@@ -194,6 +193,8 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         if (!shouldWander) return;
 
         m_Agent.SetDestination(RandomPosInSphere(transform.position, m_WanderDistance, m_WalkableLayers));
+
+        lastWanderTime = Time.time;
     }
 
     Vector3 RandomPosInSphere(Vector3 origin, float distance, LayerMask layerMask)
@@ -210,7 +211,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
             Vector3 FromPlayerToAgent = transform.position - m_Target.position;
 
 
-            MoveToLocation(m_Target.position + FromPlayerToAgent.normalized);
+            MoveToLocation(m_Target.position + FromPlayerToAgent.normalized * m_StoppingDistance);
         }
     }
 

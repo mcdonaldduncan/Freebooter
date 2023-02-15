@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IEnemy
 {
-    float MovementSampleRadius { get; set; }
+    float MovementSampleRadius { get; }
 
     Vector3 StartingPosition { get; set; }
 

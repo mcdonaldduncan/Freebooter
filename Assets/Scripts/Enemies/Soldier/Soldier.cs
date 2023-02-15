@@ -32,6 +32,7 @@ public class Soldier : AgentBase
         HandleAgentState();
     }
 
+
     public override void Shoot()
     {
         if (!shouldShoot || distanceToPlayer > m_Range) return;
@@ -45,12 +46,15 @@ public class Soldier : AgentBase
         }
         else if (kickBeforeShooting == true)
         {
-            GameObject newObj = ProjectileManager.Instance.TakeFromPool(m_ProjectilePrefab, m_ShootFrom.position, out Projectile projectile);
-            projectile.Launch(m_TargetDirection);
-            projectile.transform.LookAt(projectile.transform.position + m_TargetDirection);
+            base.Shoot();
+            // Do you not understand what inheritance is!!!!!!!!!
+            
+            //GameObject newObj = ProjectileManager.Instance.TakeFromPool(m_ProjectilePrefab, m_ShootFrom.position, out Projectile projectile);
+            //projectile.Launch(m_TargetDirection);
+            //projectile.transform.LookAt(projectile.transform.position + m_TargetDirection);
 
-            altShoootFrom = !altShoootFrom;
-            lastShotTime = Time.time;
+            //altShoootFrom = !altShoootFrom;
+            //lastShotTime = Time.time;
         }
     }
     
