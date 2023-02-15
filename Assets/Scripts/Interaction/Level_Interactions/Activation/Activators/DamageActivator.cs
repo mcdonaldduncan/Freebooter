@@ -26,7 +26,7 @@ public class DamageActivator : MonoBehaviour, IDamageable, IActivator
 
     public void CheckForDeath()
     {
-        if (m_Health <= 0)
+        if (Health <= 0)
         {
             
             FireActivation();
@@ -69,7 +69,7 @@ public class DamageActivator : MonoBehaviour, IDamageable, IActivator
     {
         if (m_DeathParticles == null) return;
 
-        Instantiate(m_DeathParticles, this.transform.position, Quaternion.identity);
+        Instantiate(m_DeathParticles, transform.position, Quaternion.identity);
     }
 
     void SetUsable()

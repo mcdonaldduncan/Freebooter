@@ -47,7 +47,6 @@ public class NewAgentBase : MonoBehaviour, IDamageable, INavigation, ITracking, 
     Vector3 m_StartingPosition;
     Quaternion m_StartingRotation;
     
-    
 
     public float Health { get; set; }
     

@@ -250,7 +250,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         transform.rotation = m_StartingRotation;
         transform.position = m_StartingPosition;
         m_Health = m_MaxHealth;
-        m_State = m_StartingState;
+        m_State = m_ShouldSleep ? AgentState.SLEEP : m_StartingState;
         isDead = false;
     }
 
