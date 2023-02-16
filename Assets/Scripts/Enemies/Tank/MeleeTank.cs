@@ -29,9 +29,12 @@ public class MeleeTank : AgentBase
     RaycastHit hitInfo;
 
     [Header("Charge parameters")]
+    [SerializeField] float m_chargeRange;
     [SerializeField] float m_TimeBetweenCharges;
     [SerializeField] float m_ChargeDamage;
-    [SerializeField] float m_ChargeDistance;
+    [SerializeField] float m_VelocityLimit;
+    [SerializeField] float m_ChargeLifeTime = 5f;
+    [SerializeField] float m_TrackingForce;
 
     //possibly add a force variable for push back in the future
 
@@ -41,15 +44,23 @@ public class MeleeTank : AgentBase
     float lastChargeTime;
     float lastMeleeTime; 
     bool shouldMelee => Time.time > m_TimeBetweenMeleeHits + lastMeleeTime && distanceToPlayer < m_meleeRange;//timer for the melee
-    bool shouldCharge => Time.time > m_TimeBetweenCharges + lastChargeTime;//timer for the charge
+    bool shouldCharge => Time.time > m_TimeBetweenCharges + lastChargeTime && distanceToPlayer < m_chargeRange;//timer for the charge
     bool charging; //Im using this to prevent melee atacking while charging
 
     float m_attackAnimationTimer = 4;
     bool m_attackAnimationBoolSwitch;
 
+    Rigidbody m_RigidBody;
+    Vector3 velocity;
+    Vector3 acceleration;
+
+    bool resetChargeParam = false;
+    float originalchargetimer;
 
     private void Start()
     {
+        originalchargetimer = m_ChargeLifeTime;
+        m_RigidBody = gameObject.GetComponent<Rigidbody>();
         HandleSetup();
     }
 
@@ -107,12 +118,12 @@ public class MeleeTank : AgentBase
                 if (CheckLineOfSight()) m_State = AgentState.CHASE;
                 break;
             case AgentState.CHASE:
-                AimRestricted();
+                if (!charging) { AimRestricted(); ChasePlayer(); }
                 //Shoot();
                 //ShootExplosiveGun(); // added explosive gun to the state
                 if (shouldMelee) { MeleeHandler(); }
-                ChargeAttack();
-                ChasePlayer();
+                if (shouldCharge) { ChargeAttack(); }
+               
                 break;
             case AgentState.RETURN:
                 ReturnToOrigin();
@@ -138,12 +149,14 @@ public class MeleeTank : AgentBase
 
     private void MeleeHandler()
     {
+        Debug.Log("called");
         if (Shield.gameObject.active == false) { return; }
         if (charging) { return; }
         if (bashOnce != true)
         {
             bashOnce = true;
             m_Animator.SetTrigger("ShieldBash");
+            Debug.Log("shieldbash");
             Invoke("RestShieldParam", m_TimeBetweenMeleeHits);
         }
     }
@@ -172,8 +185,39 @@ public class MeleeTank : AgentBase
     private void ChargeAttack()
     {
         if (!shouldCharge) { return; }
+        Debug.Log("Charge atk");
+        charging = true;
+        m_Agent.ResetPath();
 
-        //do charge atk
+        if (m_RigidBody.velocity.magnitude > m_VelocityLimit) m_RigidBody.AddForce(-m_RigidBody.velocity.normalized * (m_RigidBody.velocity.magnitude - m_VelocityLimit), ForceMode.Impulse);
+        m_RigidBody.AddForce((m_Target.position - transform.position) * m_TrackingForce, ForceMode.Impulse);
+        transform.LookAt(transform.position + m_RigidBody.velocity);
+
+        //acceleration += CalculateSteering(LevelManager.Instance.Player.transform.position);
+        //velocity += acceleration;
+        //transform.position += velocity * Time.deltaTime;
+        //transform.LookAt(transform.position + velocity);
+        //acceleration = Vector3.zero;
+        m_ChargeLifeTime -= Time.deltaTime;
+        if (resetChargeParam == false && m_ChargeLifeTime < 0) { ChangeChargingToFalse(); }
+        resetChargeParam = false;
+    }
+
+    //Vector3 CalculateSteering(Vector3 currentTarget)
+    //{
+    //    Vector3 desired = currentTarget - m_Target.position;
+    //    Vector3 steer = desired - velocity;
+    //    steer = steer.normalized;
+    //    steer *= m_TrackingForce;
+    //    steer.y = 0;
+    //    return steer;
+    //}
+
+    void ChangeChargingToFalse()
+    {
+        resetChargeParam = true;
+        charging = !charging;
         lastChargeTime = Time.time;
+        m_ChargeLifeTime = originalchargetimer;
     }
 }
