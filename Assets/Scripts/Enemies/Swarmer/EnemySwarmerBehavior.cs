@@ -284,6 +284,11 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
         LevelManager.PlayerRespawn -= OnPlayerRespawn;
     }
 
+    public void ChangeIgnorePlayer(bool shouldIgnorePlayer)
+    {
+        ignorePlayer = shouldIgnorePlayer;
+    }
+
     public void ActivateAggro()
     {
         throw new System.NotImplementedException();
