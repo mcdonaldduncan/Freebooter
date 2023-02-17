@@ -22,7 +22,7 @@ public class ParticleTravelToPlayer : MonoBehaviour
         Vector3 attractorPosition = Player.transform.position;
         for (int i = 0; i < length; i++)
         {
-            _particles[i].position = _particles[i].position + (attractorPosition - _particles[i].position) / (_particles[i].lifetime) * Time.deltaTime;
+            _particles[i].position = _particles[i].position + (attractorPosition - _particles[i].position) / (_particles[i].remainingLifetime) * Time.deltaTime;
         }
         _particleSystem.SetParticles(_particles, length);
 
