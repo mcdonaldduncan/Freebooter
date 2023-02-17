@@ -33,7 +33,7 @@ public class Fracture : MonoBehaviour, IDamageable
         foreach (Rigidbody rb in gameObject.GetComponentsInChildren<Rigidbody>())
         {
             rb.isKinematic = false;
-            Vector3 force = (rb.transform.forward * breakForceMulitplier * 100);
+            Vector3 force = (rb.transform.forward * breakForceMulitplier);
             rb.AddForce(force);
             rb.transform.SetParent(null);
         }
