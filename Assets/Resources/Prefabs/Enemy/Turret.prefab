@@ -547,12 +547,16 @@ MonoBehaviour:
     m_Bits: 0
   m_StoppingDistance: 0
   m_RotationSpeed: 20
+  m_SampleRadius: 0
   m_WanderDelay: 0
   m_WanderDistance: 0
   m_Range: 50
   m_TimeBetweenShots: 0.3
   m_MaxHealth: 75
   m_Health: 75
+  m_OnKillHealFVX: {fileID: 2748225569481887560, guid: de88dfbe0c34dad418728faa198b70e0, type: 3}
+  m_ShouldSleep: 0
+  m_Activator: {fileID: 0}
 --- !u!65 &873283035421134823
 BoxCollider:
   m_ObjectHideFlags: 0

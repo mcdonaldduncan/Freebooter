@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.AI;
 using UnityEngine;
 
 public class MeleeTank : AgentBase
@@ -30,11 +31,12 @@ public class MeleeTank : AgentBase
 
     [Header("Charge parameters")]
     [SerializeField] float m_chargeRange;
+    [SerializeField] float m_chargeHitRange;
     [SerializeField] float m_TimeBetweenCharges;
+    [SerializeField] float m_TimeBetweenChargeHits;
     [SerializeField] float m_ChargeDamage;
     [SerializeField] float m_VelocityLimit;
     [SerializeField] float m_ChargeLifeTime = 5f;
-    [SerializeField] float m_TrackingForce;
 
     //possibly add a force variable for push back in the future
 
@@ -42,25 +44,26 @@ public class MeleeTank : AgentBase
     //protected bool shouldShootExplosive => Time.time > m_TimeBetweenShotsExplosive + lastShotTimeExplosive;
 
     float lastChargeTime;
-    float lastMeleeTime; 
+    float lastMeleeTime;
+    float lastChargeHitTime;
     bool shouldMelee => Time.time > m_TimeBetweenMeleeHits + lastMeleeTime && distanceToPlayer < m_meleeRange;//timer for the melee
     bool shouldCharge => Time.time > m_TimeBetweenCharges + lastChargeTime && distanceToPlayer < m_chargeRange;//timer for the charge
+    bool shouldDealDamageInCharge => Time.time > m_TimeBetweenChargeHits + lastChargeHitTime;
     bool charging; //Im using this to prevent melee atacking while charging
-
-    float m_attackAnimationTimer = 4;
-    bool m_attackAnimationBoolSwitch;
-
-    Rigidbody m_RigidBody;
-    Vector3 velocity;
-    Vector3 acceleration;
 
     bool resetChargeParam = false;
     float originalchargetimer;
+    float originalSpeed;
+    float originalAccel;
 
     private void Start()
     {
+        m_Agent = gameObject.GetComponent<NavMeshAgent>();
         originalchargetimer = m_ChargeLifeTime;
-        m_RigidBody = gameObject.GetComponent<Rigidbody>();
+        originalAccel = m_Agent.acceleration;
+        originalSpeed = m_Agent.speed;
+
+
         HandleSetup();
     }
 
@@ -149,14 +152,12 @@ public class MeleeTank : AgentBase
 
     private void MeleeHandler()
     {
-        Debug.Log("called");
         if (Shield.gameObject.active == false) { return; }
         if (charging) { return; }
         if (bashOnce != true)
         {
             bashOnce = true;
             m_Animator.SetTrigger("ShieldBash");
-            Debug.Log("shieldbash");
             Invoke("RestShieldParam", m_TimeBetweenMeleeHits);
         }
     }
@@ -185,39 +186,44 @@ public class MeleeTank : AgentBase
     private void ChargeAttack()
     {
         if (!shouldCharge) { return; }
-        Debug.Log("Charge atk");
         charging = true;
-        m_Agent.ResetPath();
+        m_Agent.speed = m_VelocityLimit / 2;
+        m_Agent.acceleration = m_VelocityLimit;
+        m_Agent.stoppingDistance = 0.1f;
 
-        if (m_RigidBody.velocity.magnitude > m_VelocityLimit) m_RigidBody.AddForce(-m_RigidBody.velocity.normalized * (m_RigidBody.velocity.magnitude - m_VelocityLimit), ForceMode.Impulse);
-        m_RigidBody.AddForce((m_Target.position - transform.position) * m_TrackingForce, ForceMode.Impulse);
-        transform.LookAt(transform.position + m_RigidBody.velocity);
+        m_Agent.SetDestination(m_Target.transform.position);
+        
+            //if (m_RigidBody.velocity.magnitude > m_VelocityLimit) m_RigidBody.AddForce(-m_RigidBody.velocity.normalized * (m_RigidBody.velocity.magnitude - m_VelocityLimit), ForceMode.Impulse);
+            //m_RigidBody.AddForce((m_Target.position - transform.position) * m_TrackingForce, ForceMode.Impulse);
+            //transform.LookAt(m_Target.transform.position);
 
-        //acceleration += CalculateSteering(LevelManager.Instance.Player.transform.position);
-        //velocity += acceleration;
-        //transform.position += velocity * Time.deltaTime;
-        //transform.LookAt(transform.position + velocity);
-        //acceleration = Vector3.zero;
         m_ChargeLifeTime -= Time.deltaTime;
         if (resetChargeParam == false && m_ChargeLifeTime < 0) { ChangeChargingToFalse(); }
         resetChargeParam = false;
     }
 
-    //Vector3 CalculateSteering(Vector3 currentTarget)
-    //{
-    //    Vector3 desired = currentTarget - m_Target.position;
-    //    Vector3 steer = desired - velocity;
-    //    steer = steer.normalized;
-    //    steer *= m_TrackingForce;
-    //    steer.y = 0;
-    //    return steer;
-    //}
+    private void OnCollisionStay(Collision collision)
+    {
+        if (!charging) return;
+        if (!shouldDealDamageInCharge) { return; }
+        if (collision.transform.CompareTag("Player"))
+        {
+            GiveDamage(m_ChargeDamage);
+            lastChargeHitTime = Time.time;
+        }
+    }
 
     void ChangeChargingToFalse()
     {
         resetChargeParam = true;
         charging = !charging;
         lastChargeTime = Time.time;
+        m_Agent.speed = originalSpeed;
+        m_Agent.acceleration = originalAccel;
         m_ChargeLifeTime = originalchargetimer;
+        var rb = GetComponent<Rigidbody>();
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        m_Agent.ResetPath();
     }
 }

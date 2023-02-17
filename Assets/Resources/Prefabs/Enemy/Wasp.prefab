@@ -605,7 +605,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ProjectilePrefab: {fileID: 942786027204400064, guid: 5e459f1952d5c5c42b3e6df63c73881b, type: 3}
   m_ShootFrom: {fileID: 2851899924388004780}
-  m_ShootFrom2: {fileID: 0}
   m_WalkableLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -618,6 +617,7 @@ MonoBehaviour:
   m_TimeBetweenShots: 0.75
   m_MaxHealth: 75
   m_Health: 30
+  m_OnKillHealFVX: {fileID: 2748225569481887560, guid: de88dfbe0c34dad418728faa198b70e0, type: 3}
   m_ShouldSleep: 0
   m_Activator: {fileID: 0}
   m_Body: {fileID: 2851899924537539080}

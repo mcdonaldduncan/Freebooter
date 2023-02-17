@@ -30,6 +30,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
     [Header("Health Options")]
     [SerializeField] float m_MaxHealth;
     [SerializeField] float m_Health;
+    [SerializeField] private GameObject m_OnKillHealFVX;
 
     [Header("Activation Options")]
     [SerializeField] bool m_ShouldSleep;
@@ -272,6 +273,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
     {
         if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
         {
+            ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);
             LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * m_MaxHealth);
         }
         gameObject.SetActive(false);

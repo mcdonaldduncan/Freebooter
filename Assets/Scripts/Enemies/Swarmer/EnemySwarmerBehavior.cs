@@ -7,6 +7,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
 
     [SerializeField] private bool ignorePlayer;
 
+
     [Header("Hide Properties")]
     [Tooltip("The swarmer will hide if not accompanied by this many other enemies (0 = never hide)")]
     [SerializeField] private float hideThreshold;
@@ -26,6 +27,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
     [SerializeField] private Transform raycastSource;
     [Tooltip("The layer of colliders that will be considered when counting nearby enemies")]
     [SerializeField] private LayerMask enemies;
+    [SerializeField] private GameObject m_OnKillHealFVX;
 
     //private FirstPersonController playerController;
     //private GameObject player;
@@ -236,6 +238,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
     {
         if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
         {
+            ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);
             LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
         }
         navMeshAgent.Warp(m_StartingPosition);
