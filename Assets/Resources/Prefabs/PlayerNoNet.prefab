@@ -709,8 +709,8 @@ MonoBehaviour:
   orientation: {fileID: 297426594678655179}
   walkBobSpeed: 14
   walkBobAmount: 0.05
-  dashDamage: 0
-  dashRayDistance: 0
+  dashDamage: 7
+  dashRayDistance: 1
   dashesAllowed: 2
   dashesRemaining: 0
   dashSpeed: 6
@@ -891,7 +891,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2501433434025430474}
   - component: {fileID: 7842825240392664977}
-  - component: {fileID: 6679519427676544134}
   m_Layer: 0
   m_Name: GunCamera
   m_TagString: Untagged
@@ -957,14 +956,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &6679519427676544134
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3975387541455319729}
-  m_Enabled: 1
 --- !u!1 &4497290981483346649
 GameObject:
   m_ObjectHideFlags: 0
