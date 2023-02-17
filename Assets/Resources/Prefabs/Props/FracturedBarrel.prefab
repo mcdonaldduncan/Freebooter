@@ -87,10 +87,11 @@ GameObject:
   - component: {fileID: 3868161162816476378}
   - component: {fileID: 3320038294237941900}
   - component: {fileID: 3868161162816476380}
-  - component: {fileID: 3868161162816476379}
-  m_Layer: 0
+  - component: {fileID: 884705165}
+  - component: {fileID: 884705163}
+  m_Layer: 14
   m_Name: barrel_cell.003
-  m_TagString: Untagged
+  m_TagString: BreakablePiece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -168,7 +169,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1067388001702974898}
   serializedVersion: 2
-  m_Mass: 0.0002
+  m_Mass: 0.01
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -176,7 +177,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &3868161162816476379
+--- !u!64 &884705165
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -190,6 +191,19 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -1861713001571619272, guid: 87e05321bcd47ea488e571cc017c9cc4, type: 3}
+--- !u!114 &884705163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1067388001702974898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 375a0db74fe16744ab785df59aec489d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isBroken: 0
 --- !u!1 &1608381872948942762
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,10 +216,11 @@ GameObject:
   - component: {fileID: 7819534713978277653}
   - component: {fileID: 2490165556082560421}
   - component: {fileID: 3910535465929405708}
-  - component: {fileID: 3910535465929405707}
-  m_Layer: 0
+  - component: {fileID: 938396177}
+  - component: {fileID: 938396175}
+  m_Layer: 14
   m_Name: barrel_cell.010
-  m_TagString: Untagged
+  m_TagString: BreakablePiece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -283,7 +298,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1608381872948942762}
   serializedVersion: 2
-  m_Mass: 0.0002
+  m_Mass: 0.01
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -291,7 +306,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &3910535465929405707
+--- !u!64 &938396177
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -305,6 +320,19 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -2686664155978440352, guid: 87e05321bcd47ea488e571cc017c9cc4, type: 3}
+--- !u!114 &938396175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1608381872948942762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 375a0db74fe16744ab785df59aec489d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isBroken: 0
 --- !u!1 &1789156350413687551
 GameObject:
   m_ObjectHideFlags: 0
@@ -317,10 +345,11 @@ GameObject:
   - component: {fileID: 4529396454761669249}
   - component: {fileID: 1434215415789038466}
   - component: {fileID: 4529396454761669251}
-  - component: {fileID: 4529396454761669250}
-  m_Layer: 0
+  - component: {fileID: 275853215}
+  - component: {fileID: 275853213}
+  m_Layer: 14
   m_Name: barrel_cell.008
-  m_TagString: Untagged
+  m_TagString: BreakablePiece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -398,7 +427,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1789156350413687551}
   serializedVersion: 2
-  m_Mass: 0.0002
+  m_Mass: 0.01
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -406,7 +435,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &4529396454761669250
+--- !u!64 &275853215
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -420,6 +449,19 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 6211394126762122122, guid: 87e05321bcd47ea488e571cc017c9cc4, type: 3}
+--- !u!114 &275853213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1789156350413687551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 375a0db74fe16744ab785df59aec489d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isBroken: 0
 --- !u!1 &2244907948569070920
 GameObject:
   m_ObjectHideFlags: 0
@@ -432,10 +474,11 @@ GameObject:
   - component: {fileID: 8689897687314750803}
   - component: {fileID: 9162659146618878593}
   - component: {fileID: 2840127908133571730}
-  - component: {fileID: 2840127908133571729}
-  m_Layer: 0
+  - component: {fileID: 1085843739}
+  - component: {fileID: 1085843737}
+  m_Layer: 14
   m_Name: barrel_cell.005
-  m_TagString: Untagged
+  m_TagString: BreakablePiece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -513,7 +556,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2244907948569070920}
   serializedVersion: 2
-  m_Mass: 0.0002
+  m_Mass: 0.01
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -521,7 +564,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &2840127908133571729
+--- !u!64 &1085843739
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -535,6 +578,19 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 3072150167419622839, guid: 87e05321bcd47ea488e571cc017c9cc4, type: 3}
+--- !u!114 &1085843737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2244907948569070920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 375a0db74fe16744ab785df59aec489d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isBroken: 0
 --- !u!1 &2650979449137997348
 GameObject:
   m_ObjectHideFlags: 0
@@ -547,10 +603,11 @@ GameObject:
   - component: {fileID: 9023500470086330501}
   - component: {fileID: 4979515641513803850}
   - component: {fileID: 3841655657205112409}
-  - component: {fileID: 3841655657205112408}
-  m_Layer: 0
+  - component: {fileID: 413854113}
+  - component: {fileID: 413854111}
+  m_Layer: 14
   m_Name: barrel_cell.014
-  m_TagString: Untagged
+  m_TagString: BreakablePiece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -628,7 +685,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2650979449137997348}
   serializedVersion: 2
-  m_Mass: 0.0002
+  m_Mass: 0.01
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -636,7 +693,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &3841655657205112408
+--- !u!64 &413854113
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -650,6 +707,19 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -5182755016468520060, guid: 87e05321bcd47ea488e571cc017c9cc4, type: 3}
+--- !u!114 &413854111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2650979449137997348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 375a0db74fe16744ab785df59aec489d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isBroken: 0
 --- !u!1 &3662361826489515669
 GameObject:
   m_ObjectHideFlags: 0
@@ -662,10 +732,11 @@ GameObject:
   - component: {fileID: 1205283862333805350}
   - component: {fileID: 3612016499312675224}
   - component: {fileID: 3612016499312675226}
-  - component: {fileID: 3612016499312675225}
-  m_Layer: 0
+  - component: {fileID: 1504459532}
+  - component: {fileID: 1504459530}
+  m_Layer: 14
   m_Name: barrel_cell.004
-  m_TagString: Untagged
+  m_TagString: BreakablePiece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -743,7 +814,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3662361826489515669}
   serializedVersion: 2
-  m_Mass: 0.0002
+  m_Mass: 0.01
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -751,7 +822,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &3612016499312675225
+--- !u!64 &1504459532
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -765,6 +836,19 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -9184547058163780828, guid: 87e05321bcd47ea488e571cc017c9cc4, type: 3}
+--- !u!114 &1504459530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3662361826489515669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 375a0db74fe16744ab785df59aec489d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isBroken: 0
 --- !u!1 &4720071574946198702
 GameObject:
   m_ObjectHideFlags: 0
@@ -777,10 +861,11 @@ GameObject:
   - component: {fileID: 6845676052391405266}
   - component: {fileID: 3195576272959240623}
   - component: {fileID: 3195576272959240609}
-  - component: {fileID: 3195576272959240608}
-  m_Layer: 0
+  - component: {fileID: 211369520}
+  - component: {fileID: 211369518}
+  m_Layer: 14
   m_Name: barrel_cell.001
-  m_TagString: Untagged
+  m_TagString: BreakablePiece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -858,7 +943,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4720071574946198702}
   serializedVersion: 2
-  m_Mass: 0.00002
+  m_Mass: 0.01
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -866,7 +951,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &3195576272959240608
+--- !u!64 &211369520
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -880,6 +965,19 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -7851367076368085627, guid: 87e05321bcd47ea488e571cc017c9cc4, type: 3}
+--- !u!114 &211369518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4720071574946198702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 375a0db74fe16744ab785df59aec489d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isBroken: 0
 --- !u!1 &5321403562063203744
 GameObject:
   m_ObjectHideFlags: 0
@@ -892,10 +990,11 @@ GameObject:
   - component: {fileID: 323877148611598662}
   - component: {fileID: 3405595347778578135}
   - component: {fileID: 3405595347778578121}
-  - component: {fileID: 3405595347778578120}
-  m_Layer: 0
+  - component: {fileID: 29853096}
+  - component: {fileID: 29853094}
+  m_Layer: 14
   m_Name: barrel_cell.006
-  m_TagString: Untagged
+  m_TagString: BreakablePiece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -973,7 +1072,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5321403562063203744}
   serializedVersion: 2
-  m_Mass: 0.0002
+  m_Mass: 0.01
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -981,7 +1080,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &3405595347778578120
+--- !u!64 &29853096
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -995,6 +1094,19 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -3083915523793908397, guid: 87e05321bcd47ea488e571cc017c9cc4, type: 3}
+--- !u!114 &29853094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5321403562063203744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 375a0db74fe16744ab785df59aec489d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isBroken: 0
 --- !u!1 &5618968166226098892
 GameObject:
   m_ObjectHideFlags: 0
@@ -1007,10 +1119,11 @@ GameObject:
   - component: {fileID: 5939682331157964071}
   - component: {fileID: 5651655622644190151}
   - component: {fileID: 168368051676992781}
-  - component: {fileID: 168368051676992780}
-  m_Layer: 0
+  - component: {fileID: 2017923777}
+  - component: {fileID: 2017923775}
+  m_Layer: 14
   m_Name: barrel_cell.011
-  m_TagString: Untagged
+  m_TagString: BreakablePiece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1088,7 +1201,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5618968166226098892}
   serializedVersion: 2
-  m_Mass: 0.0002
+  m_Mass: 0.01
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -1096,7 +1209,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &168368051676992780
+--- !u!64 &2017923777
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1110,6 +1223,19 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -3669897746794371724, guid: 87e05321bcd47ea488e571cc017c9cc4, type: 3}
+--- !u!114 &2017923775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5618968166226098892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 375a0db74fe16744ab785df59aec489d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isBroken: 0
 --- !u!1 &7053936220878238838
 GameObject:
   m_ObjectHideFlags: 0
@@ -1122,10 +1248,11 @@ GameObject:
   - component: {fileID: 5424279670140029514}
   - component: {fileID: 7324507413100348480}
   - component: {fileID: 7324507413100348482}
-  - component: {fileID: 7324507413100348481}
-  m_Layer: 0
+  - component: {fileID: 803277616}
+  - component: {fileID: 803277614}
+  m_Layer: 14
   m_Name: barrel_cell.013
-  m_TagString: Untagged
+  m_TagString: BreakablePiece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1203,7 +1330,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7053936220878238838}
   serializedVersion: 2
-  m_Mass: 0.0002
+  m_Mass: 0.01
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -1211,7 +1338,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &7324507413100348481
+--- !u!64 &803277616
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1225,6 +1352,19 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 8475992623171152455, guid: 87e05321bcd47ea488e571cc017c9cc4, type: 3}
+--- !u!114 &803277614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7053936220878238838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 375a0db74fe16744ab785df59aec489d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isBroken: 0
 --- !u!1 &7204046656191300496
 GameObject:
   m_ObjectHideFlags: 0
@@ -1237,10 +1377,11 @@ GameObject:
   - component: {fileID: 9077680189062352070}
   - component: {fileID: 4593651389699640662}
   - component: {fileID: 4593651389699640648}
-  - component: {fileID: 4593651389699640663}
-  m_Layer: 0
+  - component: {fileID: 341353909}
+  - component: {fileID: 341353907}
+  m_Layer: 14
   m_Name: barrel_cell.012
-  m_TagString: Untagged
+  m_TagString: BreakablePiece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1318,7 +1459,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7204046656191300496}
   serializedVersion: 2
-  m_Mass: 0.0002
+  m_Mass: 0.01
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -1326,7 +1467,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &4593651389699640663
+--- !u!64 &341353909
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1340,6 +1481,19 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -1609191083921053851, guid: 87e05321bcd47ea488e571cc017c9cc4, type: 3}
+--- !u!114 &341353907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7204046656191300496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 375a0db74fe16744ab785df59aec489d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isBroken: 0
 --- !u!1 &7369581178161710889
 GameObject:
   m_ObjectHideFlags: 0
@@ -1352,10 +1506,11 @@ GameObject:
   - component: {fileID: 2589281622323932006}
   - component: {fileID: 5754524089940060649}
   - component: {fileID: 2589281622323931288}
-  - component: {fileID: 2589281622323932007}
-  m_Layer: 0
+  - component: {fileID: 1104512513}
+  - component: {fileID: 1104512511}
+  m_Layer: 14
   m_Name: barrel_cell.007
-  m_TagString: Untagged
+  m_TagString: BreakablePiece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1433,7 +1588,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7369581178161710889}
   serializedVersion: 2
-  m_Mass: 0.0002
+  m_Mass: 0.01
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -1441,7 +1596,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &2589281622323932007
+--- !u!64 &1104512513
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1455,6 +1610,19 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 3674449671241908928, guid: 87e05321bcd47ea488e571cc017c9cc4, type: 3}
+--- !u!114 &1104512511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7369581178161710889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 375a0db74fe16744ab785df59aec489d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isBroken: 0
 --- !u!1 &8217049697923661937
 GameObject:
   m_ObjectHideFlags: 0
@@ -1467,10 +1635,11 @@ GameObject:
   - component: {fileID: 5010767384281002287}
   - component: {fileID: 6652148661561099080}
   - component: {fileID: 8372171003972461538}
-  - component: {fileID: 8372171003972461537}
-  m_Layer: 0
+  - component: {fileID: 166526527}
+  - component: {fileID: 166526525}
+  m_Layer: 14
   m_Name: barrel_cell.002
-  m_TagString: Untagged
+  m_TagString: BreakablePiece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1548,7 +1717,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8217049697923661937}
   serializedVersion: 2
-  m_Mass: 0.0002
+  m_Mass: 0.01
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -1556,7 +1725,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &8372171003972461537
+--- !u!64 &166526527
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1570,6 +1739,19 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -2081280801630265999, guid: 87e05321bcd47ea488e571cc017c9cc4, type: 3}
+--- !u!114 &166526525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8217049697923661937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 375a0db74fe16744ab785df59aec489d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isBroken: 0
 --- !u!1 &8912938507885891724
 GameObject:
   m_ObjectHideFlags: 0
@@ -1582,10 +1764,11 @@ GameObject:
   - component: {fileID: 8058014098311311017}
   - component: {fileID: 6476433988885087351}
   - component: {fileID: 281825501853944844}
-  - component: {fileID: 281825501853944843}
-  m_Layer: 0
+  - component: {fileID: 1082494689}
+  - component: {fileID: 1082494687}
+  m_Layer: 14
   m_Name: barrel_cell.015
-  m_TagString: Untagged
+  m_TagString: BreakablePiece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1663,7 +1846,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8912938507885891724}
   serializedVersion: 2
-  m_Mass: 0.0002
+  m_Mass: 0.01
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -1671,7 +1854,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &281825501853944843
+--- !u!64 &1082494689
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1685,3 +1868,16 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -78049373900056913, guid: 87e05321bcd47ea488e571cc017c9cc4, type: 3}
+--- !u!114 &1082494687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8912938507885891724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 375a0db74fe16744ab785df59aec489d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isBroken: 0

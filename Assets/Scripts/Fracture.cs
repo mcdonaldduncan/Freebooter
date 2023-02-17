@@ -33,10 +33,11 @@ public class Fracture : MonoBehaviour, IDamageable
         foreach (Rigidbody rb in gameObject.GetComponentsInChildren<Rigidbody>())
         {
             rb.isKinematic = false;
-            Vector3 force = (rb.transform.forward * breakForceMulitplier);
+            Vector3 force = (rb.transform.forward * breakForceMulitplier * 100);
             rb.AddForce(force);
-            //gameObject.GetComponent<Collider>().isTrigger = true;
+            rb.transform.SetParent(null);
         }
+        gameObject.SetActive(false);
     }
 
     public void TakeDamage(float damageTaken)
