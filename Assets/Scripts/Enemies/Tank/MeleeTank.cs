@@ -37,6 +37,7 @@ public class MeleeTank : AgentBase
     [SerializeField] float m_ChargeDamage;
     [SerializeField] float m_VelocityLimit;
     [SerializeField] float m_ChargeLifeTime = 5f;
+    [SerializeField] float m_ChargeStoppingDistance = 1f;
 
     //possibly add a force variable for push back in the future
 
@@ -189,26 +190,35 @@ public class MeleeTank : AgentBase
         charging = true;
         m_Agent.speed = m_VelocityLimit / 2;
         m_Agent.acceleration = m_VelocityLimit;
-        m_Agent.stoppingDistance = 0.1f;
+        m_Agent.stoppingDistance = m_ChargeStoppingDistance;
 
-        m_Agent.SetDestination(m_Target.transform.position);
-        
-            //if (m_RigidBody.velocity.magnitude > m_VelocityLimit) m_RigidBody.AddForce(-m_RigidBody.velocity.normalized * (m_RigidBody.velocity.magnitude - m_VelocityLimit), ForceMode.Impulse);
-            //m_RigidBody.AddForce((m_Target.position - transform.position) * m_TrackingForce, ForceMode.Impulse);
-            //transform.LookAt(m_Target.transform.position);
+        //m_Agent.SetDestination(m_Target.transform.position);
+        Vector3 FromPlayerToAgent = transform.position - LevelManager.Instance.Player.transform.position;
+        m_Agent.SetDestination(LevelManager.Instance.Player.transform.position + FromPlayerToAgent.normalized * m_Agent.stoppingDistance);
+
+
+        //if (m_RigidBody.velocity.magnitude > m_VelocityLimit) m_RigidBody.AddForce(-m_RigidBody.velocity.normalized * (m_RigidBody.velocity.magnitude - m_VelocityLimit), ForceMode.Impulse);
+        //m_RigidBody.AddForce((m_Target.position - transform.position) * m_TrackingForce, ForceMode.Impulse);
+        //transform.LookAt(m_Target.transform.position);
+
+        ChargingRayCast();
 
         m_ChargeLifeTime -= Time.deltaTime;
         if (resetChargeParam == false && m_ChargeLifeTime < 0) { ChangeChargingToFalse(); }
         resetChargeParam = false;
     }
 
-    private void OnCollisionStay(Collision collision)
+    void ChargingRayCast()
     {
-        if (!charging) return;
-        if (!shouldDealDamageInCharge) { return; }
-        if (collision.transform.CompareTag("Player"))
+        if (shouldDealDamageInCharge)
         {
-            GiveDamage(m_ChargeDamage);
+            if (Physics.Raycast(m_raycastSource.position, gameObject.transform.forward, out hitInfo, m_chargeHitRange))
+            {
+                if (hitInfo.transform.CompareTag("Player"))
+                {
+                    GiveDamage(m_ChargeDamage);
+                }
+            }
             lastChargeHitTime = Time.time;
         }
     }
