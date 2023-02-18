@@ -35,8 +35,9 @@ public class Fracture : MonoBehaviour, IDamageable
             rb.isKinematic = false;
             Vector3 force = (rb.transform.forward * breakForceMulitplier);
             rb.AddForce(force);
-            //gameObject.GetComponent<Collider>().isTrigger = true;
+            rb.transform.SetParent(null);
         }
+        gameObject.SetActive(false);
     }
 
     public void TakeDamage(float damageTaken)
