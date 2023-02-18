@@ -29,7 +29,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
 
     [Header("Health Options")]
     [SerializeField] float m_MaxHealth;
-    [SerializeField] float m_Health;
+    [SerializeField] protected float m_Health;
     [SerializeField] private GameObject m_OnKillHealFVX;
 
     [Header("Activation Options")]
@@ -289,7 +289,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         Resetvalues();
     }
 
-    public void TakeDamage(float damageTaken)
+    public virtual void TakeDamage(float damageTaken)
     {
         if (m_State != AgentState.CHASE)
         {
