@@ -24,8 +24,6 @@ public interface IEnemy
 
     void OnDeactivate();
 
-    void MoveToLocation(Transform location);
-
     void OnDeath();
 
     void OnPlayerRespawn();

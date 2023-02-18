@@ -23,6 +23,4 @@ public interface IRespawn
 
     void OnPlayerRespawn();
 
-    
-
 }

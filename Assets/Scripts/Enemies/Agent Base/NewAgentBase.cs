@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class NewAgentBase : MonoBehaviour, IDamageable, INavigation, ITracking, IShooting
+public class NewAgentBase : MonoBehaviour, IDamageable, INavigation, ITracking, IShooting, IEnemy, IRespawn
 {
     [Header("Projectile Prefab and Projectile Spawn Point")]
     [SerializeField] protected GameObject m_ProjectilePrefab;
@@ -46,7 +46,6 @@ public class NewAgentBase : MonoBehaviour, IDamageable, INavigation, ITracking, 
 
     Vector3 m_StartingPosition;
     Quaternion m_StartingRotation;
-    
 
     public float Health { get; set; }
     
@@ -85,6 +84,10 @@ public class NewAgentBase : MonoBehaviour, IDamageable, INavigation, ITracking, 
     public float TimeBetweenShots => m_TimeBetweenShots;
 
     public float LastShotTime { get; set; }
+    public Vector3 StartingPosition { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public bool ShouldSleep { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public IActivator Activator { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public IRespawn Respawn { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
     void AwakeSetup()
     {
@@ -168,5 +171,40 @@ public class NewAgentBase : MonoBehaviour, IDamageable, INavigation, ITracking, 
 
         transform.rotation = m_StartingRotation;
         Health = m_MaxHealth;
+    }
+
+    public void ActivateAggro()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void DeactivateAggro()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnActivate()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnDeactivate()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    void IEnemy.OnDeath()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnPlayerRespawn()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnCheckPointReached()
+    {
+        throw new System.NotImplementedException();
     }
 }

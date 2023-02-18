@@ -5,7 +5,6 @@ public interface ITracking
     Transform TrackingTransform { get; }
 
     Vector3 RayPoint { get; }
-
     LayerMask TargetLayer { get; }
 
     float Range { get; }
