@@ -50,6 +50,7 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
 
     public void TakeDamage(float damageTaken)
     {
+        Debug.Log("called");
         if (hitboxtype == HitBoxType.critical)
         {
             PlayVFX(critVFX, VFXTransform.position);
@@ -57,6 +58,8 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
         }
         if (hitboxtype == HitBoxType.armored)
         {
+
+            Debug.Log("armor");
             PlayVFX(armorVFX, VFXTransform.position);
             damageable.TakeDamage(damageTaken * ArmorDamageReductionMultiplier);
         }

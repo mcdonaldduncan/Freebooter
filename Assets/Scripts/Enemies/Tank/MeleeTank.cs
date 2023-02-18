@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.AI;
 using UnityEngine;
 
-public class MeleeTank : AgentBase
+public class MeleeTank : AgentBase, IDamageable
 {
     [Header("Shield GameObject")]
     public GameObject Shield; //for cycle
@@ -37,6 +37,7 @@ public class MeleeTank : AgentBase
     [SerializeField] float m_ChargeDamage;
     [SerializeField] float m_VelocityLimit;
     [SerializeField] float m_ChargeLifeTime = 5f;
+    [SerializeField] float m_ChargeStoppingDistance = 1f;
 
     //possibly add a force variable for push back in the future
 
@@ -62,7 +63,6 @@ public class MeleeTank : AgentBase
         originalchargetimer = m_ChargeLifeTime;
         originalAccel = m_Agent.acceleration;
         originalSpeed = m_Agent.speed;
-
 
         HandleSetup();
     }
@@ -102,6 +102,7 @@ public class MeleeTank : AgentBase
 
     private void Update()
     {
+        m_Animator.SetFloat("Blend", m_Agent.velocity.magnitude);
         HandleAgentState();
     }
 
@@ -139,9 +140,12 @@ public class MeleeTank : AgentBase
     protected override void CycleAgent() //added shield to the cycle
     {
         base.CycleAgent();
-        var shieldScript = Shield.GetComponent<SpecialHitBoxScript>();
-        shieldScript._health = shieldScript.maxHealth;
-        Shield.SetActive(true);
+        if (Shield != null)
+        {
+            var shieldScript = Shield.GetComponent<SpecialHitBoxScript>();
+            shieldScript._health = shieldScript.maxHealth;
+            Shield.SetActive(true);
+        }
     }
 
     public override void ChasePlayer()
@@ -152,17 +156,20 @@ public class MeleeTank : AgentBase
 
     private void MeleeHandler()
     {
-        if (Shield.gameObject.active == false) { return; }
+        if (Shield != null)
+        {
+            if (Shield.gameObject.active == false) { return; }
+        }
         if (charging) { return; }
         if (bashOnce != true)
         {
             bashOnce = true;
-            m_Animator.SetTrigger("ShieldBash");
-            Invoke("RestShieldParam", m_TimeBetweenMeleeHits);
+            m_Animator.SetTrigger("Bash");
+            Invoke("RestBashParam", m_TimeBetweenMeleeHits);
         }
     }
 
-    void RestShieldParam() { bashOnce = false; }
+    void RestBashParam() { bashOnce = false; }
 
     public void MeleeAttack()
     {
@@ -189,28 +196,42 @@ public class MeleeTank : AgentBase
         charging = true;
         m_Agent.speed = m_VelocityLimit / 2;
         m_Agent.acceleration = m_VelocityLimit;
-        m_Agent.stoppingDistance = 0.1f;
+        m_Agent.stoppingDistance = m_ChargeStoppingDistance;
 
-        m_Agent.SetDestination(m_Target.transform.position);
-        
-            //if (m_RigidBody.velocity.magnitude > m_VelocityLimit) m_RigidBody.AddForce(-m_RigidBody.velocity.normalized * (m_RigidBody.velocity.magnitude - m_VelocityLimit), ForceMode.Impulse);
-            //m_RigidBody.AddForce((m_Target.position - transform.position) * m_TrackingForce, ForceMode.Impulse);
-            //transform.LookAt(m_Target.transform.position);
+        //m_Agent.SetDestination(m_Target.transform.position);
+        Vector3 FromPlayerToAgent = transform.position - LevelManager.Instance.Player.transform.position;
+        m_Agent.SetDestination(LevelManager.Instance.Player.transform.position + FromPlayerToAgent.normalized * m_Agent.stoppingDistance);
+        m_Animator.SetBool("Charge", true);
+
+        //if (m_RigidBody.velocity.magnitude > m_VelocityLimit) m_RigidBody.AddForce(-m_RigidBody.velocity.normalized * (m_RigidBody.velocity.magnitude - m_VelocityLimit), ForceMode.Impulse);
+        //m_RigidBody.AddForce((m_Target.position - transform.position) * m_TrackingForce, ForceMode.Impulse);
+        //transform.LookAt(m_Target.transform.position);
+
+        ChargingRayCast();
 
         m_ChargeLifeTime -= Time.deltaTime;
         if (resetChargeParam == false && m_ChargeLifeTime < 0) { ChangeChargingToFalse(); }
         resetChargeParam = false;
     }
 
-    private void OnCollisionStay(Collision collision)
+    void ChargingRayCast()
     {
-        if (!charging) return;
-        if (!shouldDealDamageInCharge) { return; }
-        if (collision.transform.CompareTag("Player"))
+        if (shouldDealDamageInCharge)
         {
-            GiveDamage(m_ChargeDamage);
+            if (Physics.Raycast(m_raycastSource.position, gameObject.transform.forward, out hitInfo, m_chargeHitRange))
+            {
+                if (hitInfo.transform.CompareTag("Player"))
+                {
+                    GiveDamage(m_ChargeDamage);
+                }
+            }
             lastChargeHitTime = Time.time;
         }
+    }
+
+    public override void TakeDamage(float damageTaken)
+    {
+        base.TakeDamage(damageTaken);
     }
 
     void ChangeChargingToFalse()
@@ -221,9 +242,7 @@ public class MeleeTank : AgentBase
         m_Agent.speed = originalSpeed;
         m_Agent.acceleration = originalAccel;
         m_ChargeLifeTime = originalchargetimer;
-        var rb = GetComponent<Rigidbody>();
-        rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
         m_Agent.ResetPath();
+        m_Animator.SetBool("Charge", false);
     }
 }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8385242052075323531}
   - component: {fileID: 8385242052076126379}
   - component: {fileID: 8385242052077224555}
-  - component: {fileID: 8385242052075035818}
+  - component: {fileID: 341554955442394639}
   m_Layer: 0
   m_Name: Potion_Blue
   m_TagString: Untagged
@@ -85,8 +85,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &8385242052075035818
-MeshCollider:
+--- !u!136 &341554955442394639
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -95,7 +95,7 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: e873cbc7c65c12b409ffa8b357ef3039, type: 3}
+  m_Radius: 0.06797274
+  m_Height: 0.24754113
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.12377061, z: -0.000000007450581}

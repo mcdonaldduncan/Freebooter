@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8169520561329429757}
   - component: {fileID: 8169520561332821213}
   - component: {fileID: 8169520561331854877}
-  - component: {fileID: 8169520561329651930}
+  - component: {fileID: 8502973787867672405}
   m_Layer: 0
   m_Name: Book_Big_Brown
   m_TagString: Untagged
@@ -85,8 +85,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &8169520561329651930
-MeshCollider:
+--- !u!65 &8502973787867672405
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -95,7 +95,6 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 54c2100317f765442a1f247c7d09ccf5, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 0.16443227, y: 0.4494853, z: 0.3880594}
+  m_Center: {x: 0.00000023841864, y: 0.22474298, z: 0.020670084}
