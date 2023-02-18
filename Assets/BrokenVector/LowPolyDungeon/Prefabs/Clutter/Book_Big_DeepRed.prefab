@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5254175624772607685}
   - component: {fileID: 5254175624773377765}
   - component: {fileID: 5254175624774507557}
-  - component: {fileID: 5254175624772305642}
+  - component: {fileID: 869857161121707962}
   m_Layer: 0
   m_Name: Book_Big_DeepRed
   m_TagString: Untagged
@@ -85,8 +85,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &5254175624772305642
-MeshCollider:
+--- !u!65 &869857161121707962
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -95,7 +95,6 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 32184c617bf8b624d8d54af843ec427c, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 0.16443232, y: 0.4494856, z: 0.38805953}
+  m_Center: {x: 0.00000046136745, y: 0.2247431, z: 0.020677695}

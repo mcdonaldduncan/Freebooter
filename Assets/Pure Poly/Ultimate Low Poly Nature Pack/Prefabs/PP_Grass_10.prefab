@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 8667493290326095881}
   - component: {fileID: 5757505420427589548}
   - component: {fileID: 7494609788721431398}
-  - component: {fileID: 8287414504183538352}
   m_Layer: 0
   m_Name: PP_Grass_10
   m_TagString: Untagged
@@ -84,17 +83,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &8287414504183538352
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8287414504183538355}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -5411863130446438695, guid: b161c3f1f05b08e44ab9652202250cd8, type: 3}
