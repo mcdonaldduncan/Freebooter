@@ -11,8 +11,10 @@ public class ProjectileManager : Singleton<ProjectileManager>
 {
     private Dictionary<GameObject, Queue<GameObject>> m_Pool;
 
+
     void OnEnable()
     {
+        //if (m_Pool != null) m_Pool.Clear();
         m_Pool = new Dictionary<GameObject, Queue<GameObject>>();
     }
 

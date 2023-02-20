@@ -101,6 +101,7 @@ public class Projectile : MonoBehaviour, IPoolable
     private void OnCollisionEnter(Collision collision)
     {
         if (hasCollided) return;
+        //if (collision.gameObject == null) return;
 
         if (m_IsExplosive)
         {
@@ -108,11 +109,13 @@ public class Projectile : MonoBehaviour, IPoolable
         }
         else if (m_DamageAll || collision.gameObject.CompareTag("Player"))
         {
-            IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
-            if (damageable != null)
-            {
-                damageable.TakeDamage(m_DamageAmount);
-            }
+            if (collision.gameObject.TryGetComponent(out IDamageable temp)) temp.TakeDamage(m_DamageAmount);
+
+            //IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
+            //if (damageable != null)
+            //{
+            //    damageable.TakeDamage(m_DamageAmount);
+            //}
         }
 
         hasCollided = true;
@@ -137,7 +140,7 @@ public class Projectile : MonoBehaviour, IPoolable
             List<GameObject> found = new List<GameObject>();
             for (int i = 0; i < hits.Length; i++)
             {
-                if (!found.Contains(hits[i].gameObject)) found.Add(gameObject);
+                if (!found.Contains(hits[i].gameObject)) found.Add(hits[i].gameObject);
                 else hits[i] = null;
             }
         }

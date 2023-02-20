@@ -20,7 +20,7 @@ public class GunPickup : MonoBehaviour
         {
             gunHandler.OnWeaponPickup(gunTypeToPickup);
             player.PlayerAudioSource.PlayOneShot(player.GunPickupAudio);
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }

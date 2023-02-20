@@ -44,6 +44,7 @@ public class Singleton<T> : MonoBehaviour where T : Component
     private void OnDestroy()
     {
         applicationIsQuitting = true;
+        _instance = null;
     }
 
 
@@ -57,6 +58,7 @@ public class Singleton<T> : MonoBehaviour where T : Component
         {
             Destroy(gameObject);
         }
+        applicationIsQuitting = false;
     }
 
 }
