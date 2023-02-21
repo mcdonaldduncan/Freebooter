@@ -103,6 +103,34 @@ public class ProjectileManager : Singleton<ProjectileManager>
             return obj;
         }
     }
+    public GameObject TakeFromPool(GameObject prefab, Vector3 startLocation, out GrenadeBehavior poolable)
+    {
+        if (!m_Pool.ContainsKey(prefab))
+        {
+            m_Pool.Add(prefab, new Queue<GameObject>());
+        }
+
+        if (m_Pool[prefab].Count > 0)
+        {
+            GameObject obj = m_Pool[prefab].Dequeue();
+            poolable = obj.GetComponent<GrenadeBehavior>();
+            obj.transform.position = startLocation;
+            obj.SetActive(true);
+            return obj;
+        }
+        else
+        {
+            GameObject obj = Instantiate(prefab, startLocation, Quaternion.identity);
+            poolable = obj.GetComponent<GrenadeBehavior>();
+            if (poolable == null)
+            {
+                Debug.LogError("Prefab " + prefab.name + " is not poolable and cannot be used.");
+                return null;
+            }
+            poolable.Prefab = prefab;
+            return obj;
+        }
+    }
 
     public void ReturnToPool(GameObject obj)
     {

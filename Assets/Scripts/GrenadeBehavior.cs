@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class GrenadeBehavior : MonoBehaviour
+public class GrenadeBehavior : MonoBehaviour, IPoolable
 {
     [SerializeField] private float timeBeforeExplosion;
     [SerializeField] private float explosionRadius;
     [SerializeField] private float explosionDamage;
     [SerializeField] private GameObject grenadeVFX;
+    [SerializeField] private GameObject m_Prefab;
 
     private bool ShouldExplode => timerStarted && startTime + timeBeforeExplosion <= Time.time && !exploded;
+
+    public GameObject Prefab { get => m_Prefab; set => m_Prefab = value; }
 
     private float startTime;
     private AudioSource grenadeAudioSource;
@@ -23,10 +26,14 @@ public class GrenadeBehavior : MonoBehaviour
     private bool exploded = false;
 
     // Start is called before the first frame update
-    void Start()
+    //void Start()
+    //{
+    //    grenadeRB = GetComponent<Rigidbody>();
+    //}
+
+    private void OnEnable()
     {
-        grenadeRB = GetComponent<Rigidbody>();
-        grenadeGun = transform.parent.GetComponent<GrenadeGun>();
+        grenadeGun = LevelManager.Instance.Player.GetComponentInChildren<GrenadeGun>();
         transform.SetParent(null, true);
         startTime = Time.time;
         grenadeAudioSource = GetComponent<AudioSource>();
@@ -34,13 +41,14 @@ public class GrenadeBehavior : MonoBehaviour
         grenadeGun.remoteDetonationEvent += Explode;
         startTime = Time.time;
         timerStarted = true;
+        collided = false;
     }
 
     private void Update()
     {
         if (ShouldExplode)
         {
-            Explode();
+            //Explode();
         }
     }
 
@@ -51,6 +59,13 @@ public class GrenadeBehavior : MonoBehaviour
             grenadeRB.constraints = RigidbodyConstraints.FreezeAll;
             collided = true;
         }
+    }
+
+    public void Launch(Vector3 direction)
+    {
+        grenadeRB = GetComponent<Rigidbody>();
+        grenadeRB.constraints = RigidbodyConstraints.None;
+        grenadeRB.AddForce(direction);
     }
 
     private void Explode()
@@ -77,13 +92,12 @@ public class GrenadeBehavior : MonoBehaviour
                 }
             }
         }
-
-        grenadeRenderer.enabled = false;
-        Destroy(gameObject, 1f);
+        grenadeGun.remoteDetonationEvent -= Explode;
+        ProjectileManager.Instance.ReturnToPool(gameObject);
     }
 
     private void OnDestroy()
     {
-        grenadeGun.remoteDetonationEvent -= Explode;
+        //grenadeGun.remoteDetonationEvent -= Explode;
     }
 }

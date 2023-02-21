@@ -75,10 +75,11 @@ public class GrenadeGun : MonoBehaviour, IGun
 
         Vector3 grenadeLaunchForce = (ray.direction + GrenadeLaunchArcVector) * GrenadeLaunchForce;
 
-        GameObject grenade = Instantiate(Grenade, ShootFrom.position, Quaternion.identity);
-        grenade.transform.parent = transform;
-        Rigidbody gRB = grenade.GetComponent<Rigidbody>();
-        gRB.AddForce(grenadeLaunchForce);
+        GameObject newGrenade = ProjectileManager.Instance.TakeFromPool(Grenade, ShootFrom.position, out GrenadeBehavior grenade); //Instantiate(Grenade, ShootFrom.position, Quaternion.identity);
+        //newGrenade.transform.parent = transform;
+        grenade.Launch(grenadeLaunchForce);
+        //Rigidbody gRB = newGrenade.GetComponent<Rigidbody>();
+        //gRB.AddForce(grenadeLaunchForce);
 
         lastShotTime = Time.time;
     }
