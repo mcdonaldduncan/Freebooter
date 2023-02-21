@@ -325,7 +325,7 @@ Transform:
   m_GameObject: {fileID: 6774125380982462031}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -17.11, y: 1.63, z: -10.47}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3.1947737, y: 3.1969965, z: 3.1947732}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6774125382261123652}
@@ -374,9 +374,9 @@ MonoBehaviour:
   m_WalkableLayers:
     serializedVersion: 2
     m_Bits: 128
-  m_StoppingDistance: 6
+  m_StoppingDistance: 1
   m_RotationSpeed: 20
-  m_SampleRadius: 0
+  m_SampleRadius: 10
   m_WanderDelay: 5
   m_WanderDistance: 15
   m_Range: 30
