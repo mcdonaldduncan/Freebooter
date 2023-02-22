@@ -198,9 +198,10 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
     private MovementState state;
     
-    public delegate void PlayerDashDelegate();
-    public static PlayerDashDelegate playerDashed;
-    public static PlayerDashDelegate dashCooldown;
+    public delegate void PlayerDelegate();
+    public static PlayerDelegate playerDashed;
+    public static PlayerDelegate dashCooldown;
+    public event PlayerDelegate PlayerHealthChanged;
 
     [NonSerialized] public Vector3 surfaceMotion;
 
@@ -693,6 +694,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         if (CanBeDamaged)
         {
             Health -= damageTaken;
+            PlayerHealthChanged?.Invoke();
             playerAudioSource.PlayOneShot(playerHitAudio);
             //Debug.Log($"Player Health: { health }");
             CheckForDeath();
@@ -710,6 +712,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         health += heal;
 
         if (health > MaxHealth) health = MaxHealth;
+        PlayerHealthChanged?.Invoke();
         //Debug.Log($"Player healed. Current health is {health}");
     }
 
@@ -735,6 +738,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         transform.rotation = LevelManager.Instance.CurrentCheckPoint?.transform.rotation ?? Quaternion.identity;
 
         health = maxHealth;
+        PlayerHealthChanged?.Invoke();
 
         LevelManager.Instance.FirePlayerRespawn();
     }

@@ -239,7 +239,8 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
         if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
         {
             ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);
-            LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
+            //LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
+            LevelManager.Instance.Player.HealthRegen(LevelManager.Instance.Player.PercentToHeal * maxHealth);
         }
         navMeshAgent.Warp(m_StartingPosition);
         CycleAgent();

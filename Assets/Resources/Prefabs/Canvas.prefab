@@ -1619,8 +1619,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f30d01a58d0cb254895ac44299f75527, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HealthCriticalOverlay: {fileID: 8696723290798254936}
-  CurrentHealth: 100
+  HealthCriticalOverlayObject: {fileID: 8401338908992720612}
+  HealthCriticalOverlay1: {fileID: 21300000, guid: 5bc85301e2830cd48997eebbc5441231, type: 3}
+  HealthCriticalOverlay2: {fileID: 21300000, guid: 4c8e32dd039c53344a42f486486d7bb6, type: 3}
+  HealthCriticalOverlay3: {fileID: 21300000, guid: c6a50be50c9342e47970a7abfdb87511, type: 3}
+  overlay1Health: 45
+  overlay2Health: 30
+  overlay3Health: 15
 --- !u!1 &3724845368549195453
 GameObject:
   m_ObjectHideFlags: 0
@@ -2832,7 +2837,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7fe884d68a4688e40b936ea611e27811, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5bc85301e2830cd48997eebbc5441231, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
