@@ -28,6 +28,7 @@ public class ProjectileManager : Singleton<ProjectileManager>
         if (m_Pool[prefab].Count > 0)
         {
             GameObject obj = m_Pool[prefab].Dequeue();
+            if (obj == null) return TakeFromPool(prefab, startLocation);
             obj.transform.position = startLocation;
             obj.SetActive(true);
             return obj;
@@ -56,6 +57,7 @@ public class ProjectileManager : Singleton<ProjectileManager>
         if (m_Pool[prefab].Count > 0)
         {
             GameObject obj = m_Pool[prefab].Dequeue();
+            if (obj == null) return TakeFromPool(prefab, startLocation, out poolable);
             poolable = obj.GetComponent<Projectile>();
             obj.transform.position = startLocation;
             obj.SetActive(true);
@@ -85,6 +87,7 @@ public class ProjectileManager : Singleton<ProjectileManager>
         if (m_Pool[prefab].Count > 0)
         {
             GameObject obj = m_Pool[prefab].Dequeue();
+            if (obj == null) return TakeFromPool(prefab, startLocation, out poolable);
             poolable = obj.GetComponent<BulletTrail>();
             obj.transform.position = startLocation;
             obj.SetActive(true);
@@ -113,6 +116,7 @@ public class ProjectileManager : Singleton<ProjectileManager>
         if (m_Pool[prefab].Count > 0)
         {
             GameObject obj = m_Pool[prefab].Dequeue();
+            if (obj == null) return TakeFromPool(prefab, startLocation, out poolable);
             poolable = obj.GetComponent<GrenadeBehavior>();
             obj.transform.position = startLocation;
             obj.SetActive(true);
