@@ -22,12 +22,12 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     public float DashTime { get { return dashTime; } }
     public float DashesAllowed { get { return dashesAllowed; } }
     public float DashesRemaining { get { return dashesRemaining; } }
-    public float DashCooldownTime { get { return dashCooldownTime; } }
+    public float DashCooldownTime { get { return adjustedCooldown; } }
     public float FinalJumpForce { get { return finalJumpForce; } set { finalJumpForce = value; } }
     public bool PlayerCanMove { get; private set; } = true;
     public bool PlayerIsDashing { get; private set; }
     private bool CanDoNextDash => lastDashEnd + timeBetweenDashes < Time.time;
-    private bool DashShouldCooldown => dashesRemaining < dashesAllowed;
+    public bool DashShouldCooldown => dashesRemaining < dashesAllowed;
     private bool NonZeroVelocity => characterController.velocity.z != 0 || characterController.velocity.x != 0;
     private bool PlayerHasDashes => dashesRemaining > dashesAllowed - dashesAllowed;
     public bool PlayerCanDash => PlayerHasDashes && NonZeroVelocity;
@@ -186,6 +186,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     private bool playerDashing;
     private bool dashOnCooldown;
     private bool playerShouldDash;
+    private float adjustedCooldown;
 
     private Coroutine dashRoutine;
 
@@ -199,8 +200,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     private MovementState state;
     
     public delegate void PlayerDelegate();
-    public static PlayerDelegate playerDashed;
-    public static PlayerDelegate dashCooldown;
+    public event PlayerDelegate OnPlayerDashed;
+    public event PlayerDelegate OnDashCooldown;
     public event PlayerDelegate PlayerHealthChanged;
 
     [NonSerialized] public Vector3 surfaceMotion;
@@ -248,6 +249,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         dashesRemaining = dashesAllowed;
 
         playerAudioSource = GetComponent<AudioSource>();
+        adjustedCooldown = dashCooldownTime;
     }
 
     private void Start()
@@ -291,7 +293,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
                     }
                 }
 
-                DashCooldown();
+                adjustedCooldown = dashCooldownTime / speedScale;
                 CheckForWall();
                 StateHandler();
             }
@@ -345,6 +347,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         _input.Gun.AlternateFire.performed += playerGun.AlternateShoot;
 
         //if (LevelManager.Instance.Player == null) LevelManager.Instance.Player = this;
+        UpdateDash.DashCooldownCompleted += DashCooldown;
     }
 
     private void OnDisable()
@@ -372,6 +375,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         _input.Gun.SwitchWeapon.performed -= playerGun.SwitchWeapon;
         //_input.Gun.Reload.performed -= playerGun.Reload;
         _input.Gun.AlternateFire.performed -= playerGun.AlternateShoot;
+
+        UpdateDash.DashCooldownCompleted -= DashCooldown;
     }
 
     private void StateHandler()
@@ -445,7 +450,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     private IEnumerator Dash()
     {
         dashesRemaining--;
-        playerDashed?.Invoke();
+        OnPlayerDashed?.Invoke();
         float startTime = Time.time;
 
         moveDirection = (transform.TransformDirection(Vector3.right) * MoveInput.x) + (transform.TransformDirection(Vector3.forward) * MoveInput.y);
@@ -497,15 +502,18 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
     private void DashCooldown()
     {
-        float adjustedCooldown = dashCooldownTime / speedScale;
-        if (dashCooldownStartTime + adjustedCooldown < Time.time)
+        //if (dashCooldownStartTime + adjustedCooldown < Time.time)
+        //{
+        //    if (DashShouldCooldown)
+        //    {
+        //        dashesRemaining++;
+        //        OnDashCooldown?.Invoke();
+        //    }
+        //    dashCooldownStartTime = Time.time;
+        //}
+        if (DashShouldCooldown)
         {
-            if (DashShouldCooldown)
-            {
-                dashesRemaining++;
-                dashCooldown?.Invoke();
-            }
-            dashCooldownStartTime = Time.time;
+            dashesRemaining++;
         }
     }
 

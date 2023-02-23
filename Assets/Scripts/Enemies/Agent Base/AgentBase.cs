@@ -272,7 +272,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         LevelManager.PlayerRespawn -= OnPlayerRespawn;
     }
 
-    public void OnDeath()
+    public virtual void OnDeath()
     {
         if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
         {
