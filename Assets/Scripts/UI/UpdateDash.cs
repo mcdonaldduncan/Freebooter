@@ -5,39 +5,80 @@ using UnityEngine.UI;
 
 public class UpdateDash : MonoBehaviour
 {
-    private Image Dashbar;
-    public float DashAmount = 100;
-    FirstPersonController Player;
+    [SerializeField] private DashGearBehavior[] dashGears;
+    private FirstPersonController Player;
+    private bool subscribedToDash = false;
+    public delegate void UpdateDashDelegate();
+    public static UpdateDashDelegate DashCooldownCompleted;
+
 
     private void Start()
     {
-        Dashbar = GetComponent<Image>();
-        Player = FindObjectOfType<FirstPersonController>();
-        Dashbar.fillAmount = 0;
+        Player = LevelManager.Instance.Player;
+        Player.OnPlayerDashed += OnPlayerDash;
+        //Player.OnDashCooldown += OnDashCooldown;
+        subscribedToDash = true;
     }
 
-    private void Update()
+    private void OnPlayerDash()
     {
-        Dashbar.fillAmount = Player.DashesRemaining / Player.DashesAllowed;
+        foreach (DashGearBehavior dashGear in dashGears)
+        {
+            if (dashGear.IsSpinning) continue;
+
+            dashGear.SpinGear();
+            break;
+
+        }
+    }
+
+    //private void OnDashCooldown()
+    //{
+    //    foreach (DashGearBehavior dashGear in dashGears)
+    //    {
+    //        if (!dashGear.IsSpinning) continue;
+
+    //        dashGear.StopGear();
+    //        break;
+    //    }
+    //}
+
+    private void OnEnable()
+    {
+        if (Player != null && !subscribedToDash)
+        {
+            Player.OnPlayerDashed += OnPlayerDash;
+            //Player.OnDashCooldown += OnDashCooldown;
+            subscribedToDash = true;
+        }
+    }
+    private void OnDisable()
+    {
+        if (Player != null && subscribedToDash)
+        {
+            Player.OnPlayerDashed -= OnPlayerDash;
+            //Player.OnDashCooldown -= OnDashCooldown;
+            subscribedToDash = false;
+        }
     }
 
     //private void OnEnable()
     //{
-    //    FirstPersonController.playerDashed += PlayerDashed;
-    //    FirstPersonController.dashCooldown += DashCooldown;
+    //    FirstPersonController.OnPlayerDashed += OnPlayerDashed;
+    //    FirstPersonController.OnDashCooldown += OnDashCooldown;
     //}
     //private void OnDisable()
     //{
-    //    FirstPersonController.playerDashed -= PlayerDashed;
-    //    FirstPersonController.dashCooldown -= DashCooldown;
+    //    FirstPersonController.OnPlayerDashed -= OnPlayerDashed;
+    //    FirstPersonController.OnDashCooldown -= OnDashCooldown;
     //}
 
-    //private void PlayerDashed()
+    //private void OnPlayerDashed()
     //{
     //    Dashbar.fillAmount -= Player.DashTimeDifference;
     //}
 
-    //private void DashCooldown()
+    //private void OnDashCooldown()
     //{
     //    if (Player.DashesRemaining > 0)
     //    {
