@@ -212,6 +212,9 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
     float speedScale => 1 + ((maxSpeedScale - 1) * (1 - (health / maxHealth)));
 
+    float originalSpeed, boostSpeedDuration, boostStartedTime;
+    bool boostedSpeedEnabled;
+
     public enum MovementState
     {
         basic,
@@ -279,6 +282,15 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
                 //{
                 //    DashCooldown();
                 //}
+
+                if (boostedSpeedEnabled == true)
+                {
+                    if (boostStartedTime + boostSpeedDuration < Time.time)
+                    {
+                        BoostDashEnd();
+                    }
+                }
+
                 DashCooldown();
                 CheckForWall();
                 StateHandler();
@@ -406,7 +418,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     {
         //when the player presses W and S or A and D
         currentInput = (context.ReadValue<Vector2>());
-        MoveInput = new Vector2(currentInput.x * walkSpeed * speedScale, currentInput.y * walkSpeed * speedScale);
+        MoveInput = new Vector2(currentInput.x, currentInput.y);
 
     }
 
@@ -540,6 +552,27 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         }
     }
 
+    public void BoostJump(float jumpForceMultiplier)
+    {
+        moveDirection = transform.TransformDirection(Vector3.up) * jumpForceMultiplier;
+    }
+
+    public void BoostDash(float DashMultiplier, float duration)
+    {
+        if (boostedSpeedEnabled) { return; }
+        boostStartedTime = Time.time;
+        boostSpeedDuration = duration;
+        originalSpeed = walkSpeed;
+        walkSpeed *= DashMultiplier;
+        boostedSpeedEnabled = true;
+    }
+
+    void BoostDashEnd()
+    {
+        walkSpeed = originalSpeed;
+        boostedSpeedEnabled = false;
+    }
+
     private void HandleHeadbob()
     {
         if (!characterController.isGrounded && state == MovementState.basic)
@@ -570,7 +603,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
         //The direction in which the player moves based on input
         float moveDirectionY = moveDirection.y;
-        moveDirection = (transform.TransformDirection(Vector3.right) * MoveInput.x) + (transform.TransformDirection(Vector3.forward) * MoveInput.y);
+        moveDirection = (transform.TransformDirection(Vector3.right) * (MoveInput.x * walkSpeed * speedScale)) + (transform.TransformDirection(Vector3.forward) * (MoveInput.y * walkSpeed * speedScale));
         moveDirection.y = moveDirectionY;
 
         if (OnSteepSlope()) SteepSlopeMovement();
