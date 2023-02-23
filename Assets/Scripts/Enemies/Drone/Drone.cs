@@ -21,16 +21,27 @@ public class Drone : AgentBase
 
     private void Update()
     {
-        if (isDead)
-        {
+        if (isDead) return;
+        
+        HandleAgentState();
+    }
+
+    public override void OnDeath()
+    {
+        base.OnDeath();
+        gameObject.SetActive(true);
+        m_DeathExplosion.StartDeathSequence();
+    }
+}
+
+/*
+ * {
             m_DeathExplosion.StartDeathSequence();
 
 
             return;
         }
-        HandleAgentState();
-    }
-}
+ */
 
 /*
 public class Drone : MonoBehaviour, IDamageable, IEnemy

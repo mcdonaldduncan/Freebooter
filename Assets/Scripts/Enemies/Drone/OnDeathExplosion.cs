@@ -85,6 +85,7 @@ public class OnDeathExplosion : MonoBehaviour
         explosion = false;
         deathFrames = 0;
         Destroy(rb);
+        m_Renderer.material.color = Color.white;
         transform.position = transform.parent.position;
         transform.rotation = transform.parent.rotation;
     }
