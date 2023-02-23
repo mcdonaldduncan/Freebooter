@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
 {
@@ -38,6 +39,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
 
     protected NavMeshAgent m_Agent;
     protected Transform m_Target;
+    protected Transform m_Transform;
 
     protected AgentState m_State;
     AgentState m_StartingState;
@@ -66,6 +68,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
 
     public virtual void HandleSetup()
     {
+        m_Transform = transform;
         m_Health = m_MaxHealth;
         m_StartingPosition = transform.position;
         m_StartingRotation = transform.rotation;
@@ -128,7 +131,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
     {
         if (distanceToPlayer < m_Range)
         {
-            transform.LookAt(m_Target.position);
+            m_Transform.LookAt(m_Target.position);
 
             m_TargetDirection = m_Target.position - m_ShootFrom.position;
             //m_DesiredRotation = Quaternion.LookRotation(m_TargetDirection.normalized);
@@ -140,7 +143,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
     {
         if (distanceToPlayer < m_Range)
         {
-            transform.LookAt(new Vector3(m_Target.position.x, transform.position.y, m_Target.position.z));
+            m_Transform.LookAt(new Vector3(m_Target.position.x, transform.position.y, m_Target.position.z));
 
             m_TargetDirection = m_Target.position - m_ShootFrom.position;
             //m_DesiredRotation = Quaternion.LookRotation(m_TargetDirection.normalized);

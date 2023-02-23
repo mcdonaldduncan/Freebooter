@@ -1,10 +1,16 @@
+using Unity.VisualScripting;
+using UnityEngine;
+
 public class Turret : AgentBase
 {
+    [SerializeField] Transform m_Body;
+
     TurretState m_TurretState;
 
     void Start()
     {
         HandleSetup();
+        m_Transform = m_Body;
     }
 
     void Update()
