@@ -66,6 +66,7 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
         grenadeRB = GetComponent<Rigidbody>();
         grenadeRB.constraints = RigidbodyConstraints.None;
         grenadeRB.AddForce(direction);
+        grenadeRB.AddTorque(direction * Random.Range(0, 10));
     }
 
     private void Explode()
