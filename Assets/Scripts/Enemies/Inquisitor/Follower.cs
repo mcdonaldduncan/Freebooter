@@ -97,6 +97,7 @@ public class Follower : MonoBehaviour
         if (other.gameObject.CompareTag("ContactlessProjectile")) return;
         if (other.gameObject.CompareTag("Player")) return;
         if (other.gameObject.CompareTag("Ground")) return;
+        //if (other.gameObject.CompareTag("Enemy")) return;
 
         try
         {
