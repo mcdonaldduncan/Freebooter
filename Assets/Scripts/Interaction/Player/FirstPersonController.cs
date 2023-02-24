@@ -15,8 +15,9 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     public AudioSource PlayerAudioSource { get { return playerAudioSource; } }
     public AudioClip LowHealthAudio { get { return lowHealthAudio; } }
     public AudioClip GunPickupAudio { get { return gunPickupAudio; } }
+    public AudioClip KeyPickupAudio { get { return keyPickupAudio; } }
     public float MaxHealth { get { return maxHealth; } set { maxHealth = value; } }
-    public float Health { get { return health; } set { health = value; PlayerHealthChanged?.Invoke(); } }
+    public float Health { get { return health; } set { health = value; } }
     public float DistanceToHeal { get { return distanceToHeal; } }
     public float PercentToHeal { get { return percentToHeal / 100; } }
     public float DashTime { get { return dashTime; } }
@@ -167,6 +168,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     [SerializeField] private AudioClip lowHealthAudio;
     [SerializeField] private AudioClip playerHitAudio;
     [SerializeField] private AudioClip gunPickupAudio;
+    [SerializeField] private AudioClip keyPickupAudio;
     private AudioSource playerAudioSource;
 
     private Camera playerCamera;
@@ -265,7 +267,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
         if (Health > MaxHealth)
         {
-            Health = MaxHealth;
+            Health = MaxHealth; 
+            PlayerHealthChanged?.Invoke();
         }
 
         if (!playerOnSpecialMovement)
@@ -739,7 +742,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         if (CanBeDamaged)
         {
             Health -= damageTaken;
-            //PlayerHealthChanged?.Invoke();
+            PlayerHealthChanged?.Invoke();
             playerAudioSource.PlayOneShot(playerHitAudio);
             //Debug.Log($"Player Health: { health }");
             CheckForDeath();
@@ -767,10 +770,11 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     {
         if (Health <= 0)
         {
+            PlayerHealthChanged?.Invoke();
             //Debug.Log("Player died!");
             //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
-            
+
             OnDeath();
             
         }

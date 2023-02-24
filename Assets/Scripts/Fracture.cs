@@ -8,6 +8,8 @@ public class Fracture : MonoBehaviour, IDamageable
 {
     [SerializeField] private float health;
     [SerializeField] private float breakForceMulitplier;
+    [SerializeField] private AudioClip breakSound;
+    private AudioSource breakSoundSource;
     private Collider colliderToDisable;
     private Transform groupParent;
     private BarrelGroupBehavior barrelGroupBehavior;
@@ -18,6 +20,7 @@ public class Fracture : MonoBehaviour, IDamageable
 
     private void Start()
     {
+        breakSoundSource = GetComponent<AudioSource>();
         colliderToDisable = GetComponent<Collider>();
         if (transform.parent != null && transform.parent.TryGetComponent<BarrelGroupBehavior>(out barrelGroupBehavior))
         {
@@ -37,7 +40,7 @@ public class Fracture : MonoBehaviour, IDamageable
             rb.AddForce(force);
             rb.transform.SetParent(null);
         }
-        gameObject.SetActive(false);
+        breakSoundSource.PlayOneShot(breakSound);
     }
 
     public void TakeDamage(float damageTaken)

@@ -6,6 +6,7 @@ public class AmmoPickup : MonoBehaviour
 {
     [SerializeField] private GunHandler.GunType ammoTypeToGive;
     [SerializeField] private int ammoAmount;
+    [SerializeField] private AudioClip ammoPickupSound;
     private GunHandler gunHandler;
     private FirstPersonController player; //keeping this for when we add audio
     private IGun gunToRecieveAmmo;
@@ -31,6 +32,7 @@ public class AmmoPickup : MonoBehaviour
         if (other.CompareTag("Player") && gunToRecieveAmmo.CurrentAmmo < gunToRecieveAmmo.MaxAmmo)
         {
             gunHandler.OnAmmoPickup(ammoTypeToGive, ammoAmount);
+            player.PlayerAudioSource.PlayOneShot(ammoPickupSound);
             gameObject.SetActive(false);
         }
     }

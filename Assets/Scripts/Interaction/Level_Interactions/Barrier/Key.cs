@@ -13,12 +13,14 @@ public class Key : MonoBehaviour
     [SerializeField] float rotationz;
 
     Transform m_Transform;
+    private FirstPersonController player;
 
     bool shouldRotate => (rotationx + rotationy + rotationz) > 0;
 
 
     void Start()
     {
+        player = LevelManager.Instance.Player;
         m_Transform = transform;
         gameObject.SetActive(true);
     }
@@ -34,6 +36,7 @@ public class Key : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             KeyManager.Instance.KeyInventory.Add(this);
+            player.PlayerAudioSource.PlayOneShot(player.KeyPickupAudio);
             gameObject.SetActive(false);
         }
     }
