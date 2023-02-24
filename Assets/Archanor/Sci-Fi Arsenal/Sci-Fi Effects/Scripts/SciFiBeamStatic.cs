@@ -10,6 +10,8 @@ public class SciFiBeamStatic : MonoBehaviour
     public GameObject beamStartPrefab; //This is a prefab that is put at the start of the beam.
     public GameObject beamEndPrefab; //Prefab put at end of beam.
 
+    [SerializeField] LayerMask layerMask;
+
     private GameObject beamStart;
     private GameObject beamEnd;
     private GameObject beam;
@@ -48,7 +50,7 @@ public class SciFiBeamStatic : MonoBehaviour
 
             Vector3 end;
             RaycastHit hit;
-            if (beamCollides && Physics.Raycast(transform.position, transform.forward, out hit)) //Checks for collision
+            if (beamCollides && Physics.Raycast(transform.position, transform.forward, out hit, 100000, layerMask)) //Checks for collision
                 end = hit.point - (transform.forward * beamEndOffset);
             else
                 end = transform.position + (transform.forward * beamLength);
