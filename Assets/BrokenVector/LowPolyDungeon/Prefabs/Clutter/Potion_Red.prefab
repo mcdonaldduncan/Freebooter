@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7200927917086425554}
   - component: {fileID: 7200927917087392530}
   - component: {fileID: 4684243971215029711}
+  - component: {fileID: 6545130130447191623}
   m_Layer: 0
   m_Name: Potion_Red
   m_TagString: Untagged
@@ -99,3 +100,19 @@ CapsuleCollider:
   m_Height: 0.24418372
   m_Direction: 1
   m_Center: {x: 0, y: 0.122091904, z: 0}
+--- !u!54 &6545130130447191623
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7200927917085466066}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
