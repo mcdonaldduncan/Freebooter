@@ -433,6 +433,10 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         {
             playerShouldDash = false;
             playerDashing = false;
+            if (dashRoutine != null)
+            {
+                StopCoroutine(dashRoutine);
+            }
         }
         if (context.started)
         {
