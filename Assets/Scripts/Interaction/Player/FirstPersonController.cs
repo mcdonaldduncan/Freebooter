@@ -16,7 +16,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     public AudioClip LowHealthAudio { get { return lowHealthAudio; } }
     public AudioClip GunPickupAudio { get { return gunPickupAudio; } }
     public float MaxHealth { get { return maxHealth; } set { maxHealth = value; } }
-    public float Health { get { return health; } set { health = value; } }
+    public float Health { get { return health; } set { health = value; PlayerHealthChanged?.Invoke(); } }
     public float DistanceToHeal { get { return distanceToHeal; } }
     public float PercentToHeal { get { return percentToHeal / 100; } }
     public float DashTime { get { return dashTime; } }
@@ -739,7 +739,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         if (CanBeDamaged)
         {
             Health -= damageTaken;
-            PlayerHealthChanged?.Invoke();
+            //PlayerHealthChanged?.Invoke();
             playerAudioSource.PlayOneShot(playerHitAudio);
             //Debug.Log($"Player Health: { health }");
             CheckForDeath();
