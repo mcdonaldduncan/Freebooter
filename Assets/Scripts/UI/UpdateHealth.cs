@@ -30,24 +30,29 @@ public class UpdateHealth : MonoBehaviour
         this.MaxHealth = Player.MaxHealth;
         CurrentHealth = Player.Health;
         HealthCriticalOverlayImage.enabled = false;
-        Player.PlayerHealthChanged += CheckHealth;
-        subscribedToDamageEvent = true;
+        //Player.PlayerHealthChanged += CheckHealth;
+        //subscribedToDamageEvent = true;
     }
 
-    private void OnEnable()
+    //private void OnEnable()
+    //{
+    //    if (Player != null && !subscribedToDamageEvent)
+    //    {
+    //        Player.PlayerHealthChanged += CheckHealth;
+    //    }
+    //}
+    //private void OnDisable()
+    //{
+    //    if (Player != null && subscribedToDamageEvent)
+    //    {
+    //        Player.PlayerHealthChanged -= CheckHealth;
+    //        subscribedToDamageEvent = false;
+    //    }
+    //}
+
+    private void Update()
     {
-        if (Player != null && !subscribedToDamageEvent)
-        {
-            Player.PlayerHealthChanged += CheckHealth;
-        }
-    }
-    private void OnDisable()
-    {
-        if (Player != null && subscribedToDamageEvent)
-        {
-            Player.PlayerHealthChanged -= CheckHealth;
-            subscribedToDamageEvent = false;
-        }
+        CheckHealth();
     }
 
     private void CheckHealth()
