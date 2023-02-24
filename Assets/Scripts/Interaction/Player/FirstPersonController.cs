@@ -752,9 +752,11 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     /// <param name="heal"></param>
     public void HealthRegen(float heal)
     {
-        if (health == maxHealth) return;
+        if (health >= maxHealth) return;
 
         health += heal;
+
+        if (health >= maxHealth) health = maxHealth;
 
         if (health > MaxHealth) health = MaxHealth;
         PlayerHealthChanged?.Invoke();
