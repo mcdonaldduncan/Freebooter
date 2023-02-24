@@ -436,6 +436,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         {
             playerShouldDash = false;
             playerDashing = false;
+            hasIFrames = false;
             if (dashRoutine != null)
             {
                 StopCoroutine(dashRoutine);
