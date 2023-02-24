@@ -10,6 +10,8 @@ public class LaserHazard : MonoBehaviour, IRecipient
 
     [SerializeField] Transform m_LaserTarget;
 
+    [SerializeField] LayerMask m_LayerMask;
+
     [SerializeField] float m_DamagePerTick;
     [SerializeField] float m_TimeActive;
 
@@ -57,7 +59,7 @@ public class LaserHazard : MonoBehaviour, IRecipient
 
         Vector3 direction = m_LaserTarget.position - m_LaserTransform.position;
         m_LaserTransform.LookAt(m_LaserTarget);
-        if (Physics.Raycast(m_LaserTransform.position, direction, out RaycastHit hit))
+        if (Physics.Raycast(m_LaserTransform.position, direction, out RaycastHit hit, 100000, m_LayerMask))
         {
             if (hit.collider.gameObject.TryGetComponent(out IDamageable damageable))
             {
