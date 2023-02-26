@@ -991,17 +991,17 @@ MonoBehaviour:
   handgunAnimationHandler: {fileID: 190441036}
   shotGunModel: {fileID: 640006171249398621}
   shotGunShootFrom: {fileID: 1701467581}
-  shotGunDamageDropStart: 3
+  shotGunDamageDropStart: 5
   shotGunDamageDropEnd: 10
   shotGunMaxDamage: 15
   shotGunMinDamage: 2
-  shotGunBulletAmount: 12
-  shotGunVerticalSpread: 10
-  shotGunHorizontalSpread: 10
+  shotGunBulletAmount: 8
+  shotGunVerticalSpread: 5
+  shotGunHorizontalSpread: 5
   shotGunCurrentAmmo: 0
-  shotGunMaxAmmo: 12
+  shotGunMaxAmmo: 16
   shotGunReloadTime: 3.5
-  shotGunFireRate: 0.75
+  shotGunFireRate: 0.5
   shotGunAimOffset: 15
   shotGunReticle: {fileID: 2291208426676616775}
   shotGunShotAudio: {fileID: 8300000, guid: c15d23ec2ec14b949aa86c30705b3da5, type: 3}
