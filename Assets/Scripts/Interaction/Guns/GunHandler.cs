@@ -158,11 +158,6 @@ public sealed class GunHandler : MonoBehaviour
 
     private List<GunType> guns;
 
-    private WaitForSeconds handGunReloadWait;
-    private WaitForSeconds shotGunReloadWait;
-    private WaitForSeconds autoGunReloadWait;
-    private WaitForSeconds grenadeGunReloadWait;
-
     private Dictionary<GunType, IGun> gunDict;
     private Dictionary<GunType, int> gunTypeDict;
     private Dictionary<GunType, WaitForSeconds> gunReloadWaitDict;
@@ -173,18 +168,13 @@ public sealed class GunHandler : MonoBehaviour
 
     private void Awake()
     {
-        handGunReloadWait = new WaitForSeconds(handGunReloadTime);
-        shotGunReloadWait = new WaitForSeconds(shotGunReloadTime);
-        autoGunReloadWait = new WaitForSeconds(autoGunReloadTime);
-        grenadeGunReloadWait = new WaitForSeconds(grenadeGunReloadTime);
-
         autoGun = gameObject.AddComponent<AutoGun>();
         handGun = gameObject.AddComponent<HandGun>();
         shotGun = gameObject.AddComponent<ShotGun>();
         grenadeGun = gameObject.AddComponent<GrenadeGun>();
 
         PopulateGunProperties(autoGun);
-        PopulateGunProperties(handGun);
+        //PopulateGunProperties(handGun);
         PopulateGunProperties(shotGun);
         PopulateGunProperties(grenadeGun);
 
@@ -221,23 +211,23 @@ public sealed class GunHandler : MonoBehaviour
             autoGun.GunAnimationHandler = this.autoGunAnimationHandler;
             gun.FireRate = this.autoFireRate;
         }
-        if (gun is HandGun)
-        {
-            gun.GunModel = this.handGunModel;
-            gun.ShootFrom = this.handGunShootFrom;
-            gun.MinDamage = this.handGunMinDamage;
-            gun.MaxDamage = this.handGunMaxDamage;
-            gun.DropEnd = this.handGunDamageDropEnd;
-            gun.DropStart = this.handGunDamageDropStart;
-            gun.VerticalSpread = this.handGunVerticalSpread;
-            gun.HorizontalSpread = this.handGunHorizontalSpread;
-            gun.AimOffset = this.handGunAimOffset;
-            gun.GunReticle = this.handGunReticle;
-            gun.GunShotAudio = this.handGunShotAudio;
-            //gun.ReloadWait = this.handGunReloadWait;
-            handGun.GunAnimationHandler = this.handgunAnimationHandler;
-            gun.FireRate = this.handGunFireRate;
-        }
+        //if (gun is HandGun)
+        //{
+        //    gun.GunModel = this.handGunModel;
+        //    gun.ShootFrom = this.handGunShootFrom;
+        //    gun.MinDamage = this.handGunMinDamage;
+        //    gun.MaxDamage = this.handGunMaxDamage;
+        //    gun.DropEnd = this.handGunDamageDropEnd;
+        //    gun.DropStart = this.handGunDamageDropStart;
+        //    gun.VerticalSpread = this.handGunVerticalSpread;
+        //    gun.HorizontalSpread = this.handGunHorizontalSpread;
+        //    gun.AimOffset = this.handGunAimOffset;
+        //    gun.GunReticle = this.handGunReticle;
+        //    gun.GunShotAudio = this.handGunShotAudio;
+        //    //gun.ReloadWait = this.handGunReloadWait;
+        //    handGun.GunAnimationHandler = this.handgunAnimationHandler;
+        //    gun.FireRate = this.handGunFireRate;
+        //}
         if (gun is ShotGun)
         {
             gun.FireRate = this.shotGunFireRate; //TODO get rid of coroutine reloads
@@ -275,7 +265,7 @@ public sealed class GunHandler : MonoBehaviour
     }
     private void Start()
     {
-        guns = new List<GunType>() { GunType.handGun };
+        guns = new List<GunType>() { GunType.shotGun };
 
         handGunReticle.alpha = 0;
         shotGunReticle.alpha = 0;
@@ -292,21 +282,21 @@ public sealed class GunHandler : MonoBehaviour
         autoGunCurrentAmmo = autoGunMaxAmmo;
         grenadeGunCurrentAmmo = grenadeGunMaxAmmo;
 
-        gunDict.Add(GunType.handGun, handGun);
+        //gunDict.Add(GunType.handGun, handGun);
         gunDict.Add(GunType.shotGun, shotGun);
         gunDict.Add(GunType.autoGun, autoGun);
         gunDict.Add(GunType.grenadeGun, grenadeGun);
 
-        gunTypeDict.Add(GunType.handGun, 0);
-        gunTypeDict.Add(GunType.shotGun, 1);
-        gunTypeDict.Add(GunType.autoGun, 2);
-        gunTypeDict.Add(GunType.grenadeGun, 3);
+        //gunTypeDict.Add(GunType.handGun, 0);
+        gunTypeDict.Add(GunType.shotGun, 0);
+        gunTypeDict.Add(GunType.autoGun, 1);
+        gunTypeDict.Add(GunType.grenadeGun, 2);
 
-        currentGun = gunDict[GunType.handGun];
+        currentGun = gunDict[GunType.shotGun];
         currentGun.GunReticle.alpha = 1;
         currentGun.GunModel.SetActive(true);
 
-        this.handgunAnimationHandler.RecoilAnim.SetFloat("RecoilSpeed", this.handgunAnimationHandler.RecoilAnimClip.length / this.handGunFireRate);
+        //this.handgunAnimationHandler.RecoilAnim.SetFloat("RecoilSpeed", this.handgunAnimationHandler.RecoilAnimClip.length / this.handGunFireRate);
         this.shotgunAnimationHandler.RecoilAnim.SetFloat("RecoilSpeed", this.shotgunAnimationHandler.RecoilAnimClip.length / this.shotGunFireRate);
         this.autoGunAnimationHandler.RecoilAnim.SetFloat("RecoilSpeed", this.autoGunAnimationHandler.RecoilAnimClip.length / this.autoFireRate);
     }
@@ -316,8 +306,8 @@ public sealed class GunHandler : MonoBehaviour
         //currentGunAmmo = currentGun.CurrentAmmo;
 
         // change this to either an event or check that only updates when necessary, lots of garbage collection from this
-        bool isHandGun = currentGun is HandGun;
-        ammoText.text = $"{(isHandGun ? ":)" : currentGun.CurrentAmmo)}";
+        bool isUnlimitedGun = currentGun is ShotGun;
+        ammoText.text = $"{(isUnlimitedGun ? "\u221E" : currentGun.CurrentAmmo)}";
     }
 
     public void SwitchWeapon(InputAction.CallbackContext context)
@@ -357,8 +347,10 @@ public sealed class GunHandler : MonoBehaviour
         weaponSwitched?.Invoke();
     }
 
-    public void OnWeaponPickup(GunType gunType)
+    public bool OnWeaponPickup(GunType gunType)
     {
+        bool pickedUp = false;
+
         if (!guns.Contains(gunType))
         {
             if (gunTypeDict[gunType] > guns.Count - 1)
@@ -369,6 +361,8 @@ public sealed class GunHandler : MonoBehaviour
             {
                 guns.Insert(gunTypeDict[gunType], gunType);
             }
+
+            pickedUp = true;
         }
 
         currentGun.GunReticle.alpha = 0;
@@ -379,6 +373,8 @@ public sealed class GunHandler : MonoBehaviour
 
         currentGun.GunReticle.alpha = 1;
         currentGun.GunModel.SetActive(true);
+
+        return pickedUp;
     }
 
     public void OnAmmoPickup(GunType gunType, int ammoToAdd)

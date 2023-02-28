@@ -18,9 +18,11 @@ public class GunPickup : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            gunHandler.OnWeaponPickup(gunTypeToPickup);
-            player.PlayerAudioSource.PlayOneShot(player.GunPickupAudio);
-            gameObject.SetActive(false);
+            if (gunHandler.OnWeaponPickup(gunTypeToPickup))
+            {
+                player.PlayerAudioSource.PlayOneShot(player.GunPickupAudio);
+                gameObject.SetActive(false);
+            }
         }
     }
 }

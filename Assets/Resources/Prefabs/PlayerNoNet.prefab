@@ -1044,7 +1044,7 @@ MonoBehaviour:
   grenadeFireRate: 1
   grenadeGunAimOffset: 15
   grenadeGunReticle: {fileID: 6976750457327859168}
-  grenadeGunShotAudio: {fileID: 8300000, guid: 25017504ee9ed224c9955372d28cbf5a, type: 3}
+  grenadeGunShotAudio: {fileID: 8300000, guid: d177a80e9988723409484f33238db40c, type: 3}
   grenadeLaunchForce: 800
   grenadeLaunchArc: 0.25
   gunInventory: []
@@ -1695,7 +1695,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 51cc745f9454b0b439c246d9459b796e, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2486619295868869724, guid: 51cc745f9454b0b439c246d9459b796e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -1991,7 +1991,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ff57e9e12e757c34a9c403af84527951, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1153332566939663401, guid: ff57e9e12e757c34a9c403af84527951, type: 3}
       propertyPath: m_LocalScale.x

@@ -114,10 +114,10 @@ public class ShotGun : MonoBehaviour, IGun
             }
         }
 
-        if (!GunManager.InfiniteAmmo)
-        {
-            CurrentAmmo--;
-        }
+        //if (!GunManager.InfiniteAmmo)
+        //{
+        //    CurrentAmmo--;
+        //}
 
         lastShotTime = Time.time;
     }
@@ -229,6 +229,10 @@ public class ShotGun : MonoBehaviour, IGun
                 //var p = Instantiate(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
                 //Destroy(p, 1);
 
+                //if (hitInfo.transform.GetComponent<MeshRenderer>().)
+                //{
+
+                //}
                 ProjectileManager.Instance.TakeFromPool(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point);
 
                 //Get the distance between the enemy and the gun
