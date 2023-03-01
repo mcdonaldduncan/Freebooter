@@ -14,6 +14,10 @@ public sealed class LevelManager : MonoBehaviour
     List<CheckPoint> m_CheckPoints;
 
     CheckPoint m_CurrentCheckPoint;
+
+    private static float stopTimeDuration;
+    private static float stopTimeStart;
+    private static bool timeStopped;
     
     public CheckPoint CurrentCheckPoint { get { return m_CurrentCheckPoint; } set { m_CurrentCheckPoint = value; } }
 
@@ -41,10 +45,33 @@ public sealed class LevelManager : MonoBehaviour
         {
             Player = GameObject.FindGameObjectWithTag("Player").GetComponent<FirstPersonController>();
         }
+        timeStopped = false;
+    }
+
+    private void Update()
+    {
+        if (timeStopped)
+        {
+            if (stopTimeStart + stopTimeDuration < Time.unscaledTime)
+            {
+                Time.timeScale = 1.0f;
+                timeStopped = false;
+            }
+        }
+    }
+
+    public static void TimeStop(float duration)
+    {
+        Time.timeScale = 0.0f;
+        stopTimeStart = Time.unscaledTime;
+        stopTimeDuration = duration;
+        timeStopped = true;
     }
 
     public void FirePlayerRespawn()
     {
+        timeStopped = false;
+        Time.timeScale = 1.0f;
         PlayerRespawn?.Invoke();
     }
 
@@ -71,6 +98,8 @@ public sealed class LevelManager : MonoBehaviour
 
     public void ReturnToMainMenu()
     {
+        timeStopped = false;
+        Time.timeScale = 1.0f;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         SceneManager.LoadScene(0);

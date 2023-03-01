@@ -20,14 +20,15 @@ public class HandGun : MonoBehaviour, IGun
     public GameObject HitEnemy { get; set; }
     public GameObject HitNonEnemy { get; set; }
     public WaitForSeconds ReloadWait { get; set; }
-    public int CurrentAmmo { get { return GunManager.HandGunCurrentAmmo; } set { GunManager.HandGunCurrentAmmo = value; } }
-    public int MaxAmmo { get { return GunManager.HandGunMaxAmmo; } }
+    public int CurrentAmmo { get; set; }
+    public int MaxAmmo { get; }
     public CanvasGroup GunReticle { get; set; }
     public GameObject Bullet { get; set; }
     public AudioClip GunShotAudio { get; set; }
     public GameObject GunModel { get; set; }
     public TrailRenderer BulletTrailRenderer { get; set; }
     public HandgunAnimationHandler GunAnimationHandler { get; set; }
+    public float HitStopDuration { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
 
     public bool CanShoot => lastShotTime + FireRate < Time.time && CurrentAmmo > 0;
@@ -175,15 +176,6 @@ public class HandGun : MonoBehaviour, IGun
         {
             var damageableTarget = hitInfo.transform.GetComponent<IDamageable>();
             HitEnemyBehavior(hitInfo, damageableTarget);
-            //if (damageableTarget != null)
-            //{
-            //    HitEnemyBehavior(hitInfo, damageableTarget);
-            //}
-            //else
-            //{
-            //    HitEnemyBehavior(hitInfo);
-            //}
-            
         }
     }
 
@@ -204,6 +196,7 @@ public class HandGun : MonoBehaviour, IGun
                 //Destroy(p, 1);
 
                 ProjectileManager.Instance.TakeFromPool(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point);
+                LevelManager.TimeStop(HitStopDuration);
 
                 //Get the distance between the enemy and the gun
                 float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);
@@ -276,6 +269,6 @@ public class HandGun : MonoBehaviour, IGun
         //    GunManager.StopCoroutine(reloadCo);
         //    GunManager.Reloading = false;
         //}
-        GunAnimationHandler.RecoilAnim.ResetTrigger("RecoilTrigger");
+        //GunAnimationHandler.RecoilAnim.ResetTrigger("RecoilTrigger");
     }
 }

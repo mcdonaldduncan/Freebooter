@@ -973,22 +973,6 @@ MonoBehaviour:
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 2304
-  handGunModel: {fileID: 2386251926779397436}
-  handGunShootFrom: {fileID: 4623061418634302742}
-  handGunDamageDropStart: 10
-  handGunDamageDropEnd: 20
-  handGunMaxDamage: 33
-  handGunMinDamage: 7
-  handGunVerticalSpread: 0
-  handGunHorizontalSpread: 0
-  handGunCurrentAmmo: 0
-  handGunMaxAmmo: 10
-  handGunReloadTime: 1
-  handGunFireRate: 0.23
-  handGunAimOffset: 15
-  handGunReticle: {fileID: 6976750457327859168}
-  handGunShotAudio: {fileID: 8300000, guid: 0e54aeef289ca2a468f328b56436e7ed, type: 3}
-  handgunAnimationHandler: {fileID: 190441036}
   shotGunModel: {fileID: 640006171249398621}
   shotGunShootFrom: {fileID: 1701467581}
   shotGunDamageDropStart: 7
@@ -1000,8 +984,8 @@ MonoBehaviour:
   shotGunHorizontalSpread: 3
   shotGunCurrentAmmo: 0
   shotGunMaxAmmo: 16
-  shotGunReloadTime: 3.5
   shotGunFireRate: 0.5
+  shotGunHitStopDuration: 0.075
   shotGunAimOffset: 15
   shotGunReticle: {fileID: 2291208426676616775}
   shotGunShotAudio: {fileID: 8300000, guid: c15d23ec2ec14b949aa86c30705b3da5, type: 3}
@@ -1016,8 +1000,8 @@ MonoBehaviour:
   autoGunVerticalSpread: 0
   autoGunCurrentAmmo: 0
   autoGunMaxAmmo: 50
-  autoGunReloadTime: 2.3
   autoFireRate: 0.2
+  autoHitStopDuration: 0.05
   autoGunAimOffset: 15
   autoGunReticle: {fileID: 2291571642965968571}
   autoGunShotAudioList:
@@ -1040,8 +1024,8 @@ MonoBehaviour:
   grenadeGunVerticalSpread: 0
   grenadeGunCurrentAmmo: 0
   grenadeGunMaxAmmo: 5
-  grenadeGunReloadTime: 2
   grenadeFireRate: 1
+  grenadeGunHitStopDuration: 0
   grenadeGunAimOffset: 15
   grenadeGunReticle: {fileID: 6976750457327859168}
   grenadeGunShotAudio: {fileID: 8300000, guid: d177a80e9988723409484f33238db40c, type: 3}

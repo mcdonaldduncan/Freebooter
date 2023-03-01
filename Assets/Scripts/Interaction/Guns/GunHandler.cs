@@ -16,8 +16,8 @@ public sealed class GunHandler : MonoBehaviour
     public Camera FPSCam { get { return fpsCam; } }
     public AudioSource GunShotAudioSource { get { return gunShotAudioSource; } }
     
-    public int HandGunCurrentAmmo { get { return handGunCurrentAmmo; } set { handGunCurrentAmmo = value; } }
-    public int HandGunMaxAmmo { get { return handGunMaxAmmo; } }
+    //public int HandGunCurrentAmmo { get { return handGunCurrentAmmo; } set { handGunCurrentAmmo = value; } }
+    //public int HandGunMaxAmmo { get { return handGunMaxAmmo; } }
     public int ShotGunCurrentAmmo { get { return shotGunCurrentAmmo; } set { shotGunCurrentAmmo = value; } }
     public int ShotGunMaxAmmo { get { return shotGunMaxAmmo; } }
     public int ShotGunBulletAmount { get { return shotGunBulletAmount; } }
@@ -54,29 +54,29 @@ public sealed class GunHandler : MonoBehaviour
     private AudioSource gunShotAudioSource;
 
 
-    [Header("Handgun Parameters")]
-    [SerializeField] private GameObject handGunModel;
-    [SerializeField] private Transform handGunShootFrom;
-    [Tooltip("At which distance should damage start to fall?")]
-    [SerializeField] private float handGunDamageDropStart;
-    [Tooltip("At which point should damage always be minimum?")]
-    [SerializeField] private float handGunDamageDropEnd;
-    [Tooltip("The maxmimum amount of damage the gun can do. This will always be the total damage if the enemy is closer than Damage Drop Start")]
-    [SerializeField] private float handGunMaxDamage;
-    [Tooltip("The minimum amount of damage the gun can do when the enemy is far away. This will always be the total if enemy is further than Damage Drop End")]
-    [SerializeField] private float handGunMinDamage;
-    [SerializeField] private float handGunVerticalSpread;
-    [SerializeField] private float handGunHorizontalSpread;
-    [SerializeField] private int handGunCurrentAmmo;
-    [SerializeField] private int handGunMaxAmmo;
-    [SerializeField] private float handGunReloadTime;
-    [Tooltip("Number of seconds between shots")]
-    [SerializeField] private float handGunFireRate;
-    [Tooltip("This will offset how the shot is centered from the tip of the gun")]
-    [SerializeField] private float handGunAimOffset = 15f;
-    [SerializeField] private CanvasGroup handGunReticle;
-    [SerializeField] private AudioClip handGunShotAudio;
-    [SerializeField] private HandgunAnimationHandler handgunAnimationHandler;
+    //[Header("Handgun Parameters")]
+    //[SerializeField] private GameObject handGunModel;
+    //[SerializeField] private Transform handGunShootFrom;
+    //[Tooltip("At which distance should damage start to fall?")]
+    //[SerializeField] private float handGunDamageDropStart;
+    //[Tooltip("At which point should damage always be minimum?")]
+    //[SerializeField] private float handGunDamageDropEnd;
+    //[Tooltip("The maxmimum amount of damage the gun can do. This will always be the total damage if the enemy is closer than Damage Drop Start")]
+    //[SerializeField] private float handGunMaxDamage;
+    //[Tooltip("The minimum amount of damage the gun can do when the enemy is far away. This will always be the total if enemy is further than Damage Drop End")]
+    //[SerializeField] private float handGunMinDamage;
+    //[SerializeField] private float handGunVerticalSpread;
+    //[SerializeField] private float handGunHorizontalSpread;
+    //[SerializeField] private int handGunCurrentAmmo;
+    //[SerializeField] private int handGunMaxAmmo;
+    //[SerializeField] private float handGunReloadTime;
+    //[Tooltip("Number of seconds between shots")]
+    //[SerializeField] private float handGunFireRate;
+    //[Tooltip("This will offset how the shot is centered from the tip of the gun")]
+    //[SerializeField] private float handGunAimOffset = 15f;
+    //[SerializeField] private CanvasGroup handGunReticle;
+    //[SerializeField] private AudioClip handGunShotAudio;
+    //[SerializeField] private HandgunAnimationHandler handgunAnimationHandler;
 
     [Header("Shotgun Parameters")]
     [SerializeField] private GameObject shotGunModel;
@@ -96,9 +96,9 @@ public sealed class GunHandler : MonoBehaviour
     [SerializeField] private float shotGunHorizontalSpread;
     [SerializeField] private int shotGunCurrentAmmo;
     [SerializeField] private int shotGunMaxAmmo;
-    [SerializeField] private float shotGunReloadTime;
     [Tooltip("Number of seconds between shots")]
     [SerializeField] private float shotGunFireRate;
+    [SerializeField] private float shotGunHitStopDuration;
     [Tooltip("This will offset how the shot is centered from the tip of the gun")]
     [SerializeField] private float shotGunAimOffset = 15f;
     [SerializeField] private CanvasGroup shotGunReticle;
@@ -120,9 +120,9 @@ public sealed class GunHandler : MonoBehaviour
     [SerializeField] private float autoGunVerticalSpread;
     [SerializeField] private int autoGunCurrentAmmo;
     [SerializeField] private int autoGunMaxAmmo;
-    [SerializeField] private float autoGunReloadTime;
     [Tooltip("Number of seconds between shots")]
     [SerializeField] private float autoFireRate;
+    [SerializeField] private float autoHitStopDuration;
     [Tooltip("This will offset how the shot is centered from the tip of the gun")]
     [SerializeField] private float autoGunAimOffset = 15f;
     [SerializeField] private CanvasGroup autoGunReticle;
@@ -139,8 +139,8 @@ public sealed class GunHandler : MonoBehaviour
     [SerializeField] private float grenadeGunVerticalSpread;
     [SerializeField] private int grenadeGunCurrentAmmo;
     [SerializeField] private int grenadeGunMaxAmmo;
-    [SerializeField] private float grenadeGunReloadTime;
     [SerializeField] private float grenadeFireRate;
+    [SerializeField] private float grenadeGunHitStopDuration;
     [Tooltip("This will offset how the shot is centered from the tip of the gun")]
     [SerializeField] private float grenadeGunAimOffset = 15f;
     [SerializeField] private CanvasGroup grenadeGunReticle;
@@ -210,6 +210,7 @@ public sealed class GunHandler : MonoBehaviour
             //gun.ReloadWait = this.autoGunReloadWait;
             autoGun.GunAnimationHandler = this.autoGunAnimationHandler;
             gun.FireRate = this.autoFireRate;
+            gun.HitStopDuration = this.autoHitStopDuration;
         }
         //if (gun is HandGun)
         //{
@@ -245,6 +246,7 @@ public sealed class GunHandler : MonoBehaviour
             //gun.ReloadWait = this.shotGunReloadWait;
             shotGun.GunAnimationHandler = this.shotgunAnimationHandler;
             gun.FireRate = this.shotGunFireRate;
+            gun.HitStopDuration = this.shotGunHitStopDuration;
         }
         if (gun is GrenadeGun)
         {
@@ -254,9 +256,9 @@ public sealed class GunHandler : MonoBehaviour
             gun.VerticalSpread = this.grenadeGunVerticalSpread;
             gun.HorizontalSpread = this.grenadeGunHorizontalSpread;
             gun.AimOffset = this.grenadeGunAimOffset;
-            //gun.ReloadWait = this.grenadeGunReloadWait;
             gun.GunReticle = this.grenadeGunReticle;
             gun.GunShotAudio = this.grenadeGunShotAudio;
+            gun.HitStopDuration = this.grenadeGunHitStopDuration;
             grenadeGun.Grenade = this.grenadeObject;
             grenadeGun.GrenadeDamage = this.grenadeDamage;
             grenadeGun.GrenadeLaunchForce = this.grenadeLaunchForce;
@@ -267,17 +269,17 @@ public sealed class GunHandler : MonoBehaviour
     {
         guns = new List<GunType>() { GunType.shotGun };
 
-        handGunReticle.alpha = 0;
+        //handGunReticle.alpha = 0;
         shotGunReticle.alpha = 0;
         autoGunReticle.alpha = 0;
         grenadeGunReticle.alpha = 0;
 
-        handGunModel.SetActive(false);
+        //handGunModel.SetActive(false);
         shotGunModel.SetActive(false);
         autoGunModel.SetActive(false);
         grenadeGunModel.SetActive(false);
 
-        handGunCurrentAmmo = handGunMaxAmmo;
+        //handGunCurrentAmmo = handGunMaxAmmo;
         shotGunCurrentAmmo = shotGunMaxAmmo;
         autoGunCurrentAmmo = autoGunMaxAmmo;
         grenadeGunCurrentAmmo = grenadeGunMaxAmmo;

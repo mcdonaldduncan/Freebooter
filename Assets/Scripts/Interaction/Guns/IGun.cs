@@ -26,7 +26,8 @@ public interface IGun
     GameObject Bullet { get; set; }
     AudioClip GunShotAudio { get; set; }
     GameObject GunModel { get; set; }
-    //WaitForSeconds ReloadWait { get; set; }
+    float HitStopDuration { get; set; }
+
     TrailRenderer BulletTrailRenderer { get; set; }
     bool CanShoot { get; }
 

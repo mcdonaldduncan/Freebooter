@@ -29,6 +29,7 @@ public class AutoGun : MonoBehaviour, IGun
     public TrailRenderer BulletTrailRenderer { get; set; }
     public GameObject GunModel { get; set; }
     public AutoGunAnimationHandler GunAnimationHandler { get; set; }
+    public float HitStopDuration { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
 
     public bool CanShoot => lastShotTime + FireRate < Time.time && CurrentAmmo > 0 && GunManager.CurrentGun is AutoGun;
@@ -222,6 +223,7 @@ public class AutoGun : MonoBehaviour, IGun
                 //Destroy(p, 1);
 
                 ProjectileManager.Instance.TakeFromPool(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point);
+                LevelManager.TimeStop(HitStopDuration);
 
                 //Get the distance between the enemy and the gun
                 float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);
@@ -272,37 +274,9 @@ public class AutoGun : MonoBehaviour, IGun
         }
     }
 
-
-    //fix bug that doesn't restart canceled reload    
-    //public void StartReload()
-    //{
-    //    reloadCo = GunManager.StartCoroutine(this.Reload(ReloadWait));
-    //}
-
     private void OnWeaponSwitch()
     {
         this.holdingTrigger = false;
-        //if (reloadCo != null)
-        //{
-        //    GunManager.StopCoroutine(reloadCo);
-        //    GunManager.Reloading = false;
-        //}
         GunAnimationHandler.RecoilAnim.ResetTrigger("RecoilTrigger");
-
-        //if (GunManager.Reloading)
-        //{
-        //    GunManager.Reloading = false;
-        //}
     }
-
-    //public IEnumerator Reload(WaitForSeconds reloadWait)
-    //{
-    //    GunManager.Reloading = true;
-    //    yield return reloadWait;
-    //    if (GunManager.Reloading)
-    //    {
-    //        GunManager.Reloading = false;
-    //        GunManager.AutoGunCurrentAmmo = GunManager.AutoGunMaxAmmo;
-    //    }
-    //}
 }

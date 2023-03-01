@@ -30,6 +30,7 @@ public class ShotGun : MonoBehaviour, IGun
     public GameObject GunModel { get; set; }
     public TrailRenderer BulletTrailRenderer { get; set; }
     public ShotgunAnimationHandler GunAnimationHandler { get; set; }
+    public float HitStopDuration { get; set; }
 
     public bool CanShoot => lastShotTime + FireRate < Time.time && CurrentAmmo > 0;
 
@@ -39,14 +40,6 @@ public class ShotGun : MonoBehaviour, IGun
     private GameObject bulletFromPool;
     private List<GameObject> bulletPoolList;
     private int trailCounter;
-
-    //private void Update()
-    //{
-    //    if (GunManager.Reloading)
-    //    {
-    //        Reload();
-    //    }
-    //}
 
     private void OnEnable()
     {
@@ -67,7 +60,6 @@ public class ShotGun : MonoBehaviour, IGun
         return;
     }
 
-    //Doesn't need to be static anymore since this script is added as a component now
     public void Shoot()
     {
         bulletPoolList = new List<GameObject>();
@@ -90,17 +82,9 @@ public class ShotGun : MonoBehaviour, IGun
             if (Physics.Raycast(GunManager.FPSCam.transform.position, direction, out hitInfo, float.MaxValue, ~LayerToIgnore))
             {
                 //Instantiate a bulletFromPool trail
-                //TrailRenderer trail = Instantiate(Bullet, ShootFrom.transform.position, ShootFrom.transform.localRotation);
                 ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position, out BulletTrail trail);
                 trail.Launch(hitInfo.point);
                 HitEnemyBehavior(hitInfo, hitInfo.transform.GetComponent<IDamageable>());
-                //bulletPoolList.Add(bulletFromPoolTemp);
-                //TrailRenderer rendererTemp = bulletFromPoolTemp.GetComponent<TrailRenderer>();
-
-                //if (hitInfo.transform.name != "Player")
-                //{
-                //    StartCoroutine(SpawnTrail(bulletFromPoolTemp, rendererTemp, hitInfo, HitEnemy));
-                //}
             }
             //if the player hit nothing
             else
@@ -108,9 +92,6 @@ public class ShotGun : MonoBehaviour, IGun
                 //Spawn the bulletFromPool trail
                 ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position, out BulletTrail trail);
                 trail.Launch(ShootFrom.transform.position + direction * 100);
-                //bulletPoolList.Add(bulletFromPoolTemp);
-                //TrailRenderer rendererTemp = bulletFromPoolTemp.GetComponent<TrailRenderer>();
-                //StartCoroutine(SpawnTrail(bulletFromPoolTemp, rendererTemp, ShootFrom.transform.position + direction * 10));
             }
         }
 
@@ -224,16 +205,8 @@ public class ShotGun : MonoBehaviour, IGun
             {
                 //Get the position of the hit enemy
                 Vector3 targetPosition = hitInfo.transform.position;
-
-                //Play blood particle effects on the enemy, where they were hit
-                //var p = Instantiate(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-                //Destroy(p, 1);
-
-                //if (hitInfo.transform.GetComponent<MeshRenderer>().)
-                //{
-
-                //}
                 ProjectileManager.Instance.TakeFromPool(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point);
+                LevelManager.TimeStop(HitStopDuration);
 
                 //Get the distance between the enemy and the gun
                 float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);
@@ -278,31 +251,8 @@ public class ShotGun : MonoBehaviour, IGun
         }
     }
 
-    //public void StartReload()
-    //{
-    //    reloadCo = GunManager.StartCoroutine(this.Reload(ReloadWait));
-    //}
-
-    //public IEnumerator Reload(WaitForSeconds reloadWait)
-    //{
-    //    GunManager.Reloading = true;
-    //    yield return reloadWait;
-    //    GunManager.Reloading = false;
-    //    GunManager.ShotGunCurrentAmmo = GunManager.ShotGunMaxAmmo;
-    //}
-
     private void OnWeaponSwitch()
     {
-        //if (GunManager.Reloading)
-        //{
-        //    GunManager.Reloading = false;
-        //}
-
-        //if (reloadCo != null)
-        //{
-        //    GunManager.StopCoroutine(reloadCo);
-        //    GunManager.Reloading = false;
-        //}
         GunAnimationHandler.RecoilAnim.ResetTrigger("RecoilTrigger");
     }
 }
