@@ -111,14 +111,14 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     private bool holdingJump;
     private float holdJumpTimer;
 
-    [Header("Wallrunning Parameters")]
-    [SerializeField] private LayerMask whatIsWall;
-    [SerializeField] private LayerMask whatIsGround;
-    [SerializeField] private float wallRunGravity;
-    [SerializeField] private float maxWallRunTime;
-    [SerializeField] private float wallCheckDistance;
-    [SerializeField] private float minJumpHeight;
-    [SerializeField] private Transform orientation;
+    //[Header("Wallrunning Parameters")]
+    //[SerializeField] private LayerMask whatIsWall;
+    //[SerializeField] private LayerMask whatIsGround;
+    //[SerializeField] private float wallRunGravity;
+    //[SerializeField] private float maxWallRunTime;
+    //[SerializeField] private float wallCheckDistance;
+    //[SerializeField] private float minJumpHeight;
+    //[SerializeField] private Transform orientation;
     private RaycastHit leftWallHit;
     private RaycastHit rightWallHit;
     private bool wallLeft;
@@ -220,8 +220,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
     public enum MovementState
     {
-        basic,
-        wallrunning
+        basic
+        //wallrunning
     }
     
     void Awake()
@@ -275,19 +275,6 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         {
             if (PlayerCanMove)
             {
-                //if (playerShouldDash && PlayerHasDashes)
-                //{
-                //    BeginDash();
-                //    if (playerDashing)
-                //    {
-                //        Dash();
-                //    }
-                ////}
-                //if (DashShouldCooldown)
-                //{
-                //    DashCooldown();
-                //}
-
                 if (boostedSpeedEnabled == true)
                 {
                     if (boostStartedTime + boostSpeedDuration < Time.time)
@@ -297,7 +284,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
                 }
 
                 adjustedCooldown = dashCooldownTime / speedScale;
-                CheckForWall();
+                //CheckForWall();
                 StateHandler();
             }
         }
@@ -338,9 +325,9 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         _input.HumanoidLand.Restart.performed += ReloadScene;
 
         //HumanoidWall
-        _input.HumanoidWall.Forward.performed += HandleWallrunInput;
-        _input.HumanoidWall.Forward.canceled += HandleWallrunInput;
-        _input.HumanoidWall.Jump.performed += HandleJump;
+        //_input.HumanoidWall.Forward.performed += HandleWallrunInput;
+        //_input.HumanoidWall.Forward.canceled += HandleWallrunInput;
+        //_input.HumanoidWall.Jump.performed += HandleJump;
 
         //GunHandler
         _input.Gun.Shoot.performed += playerGun.Shoot;
@@ -368,9 +355,9 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         _input.HumanoidLand.Restart.performed -= ReloadScene;
 
         //HumanoidWall
-        _input.HumanoidWall.Forward.performed -= HandleWallrunInput;
-        _input.HumanoidWall.Forward.canceled -= HandleWallrunInput;
-        _input.HumanoidWall.Jump.performed -= HandleJump;
+        //_input.HumanoidWall.Forward.performed -= HandleWallrunInput;
+        //_input.HumanoidWall.Forward.canceled -= HandleWallrunInput;
+        //_input.HumanoidWall.Jump.performed -= HandleJump;
 
         //GunHandler
         _input.Gun.Shoot.performed -= playerGun.Shoot;
@@ -394,13 +381,13 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         }
 
         // Mode - Wallrunning
-        if (state == MovementState.wallrunning)
-        {
-            //state = MovementState.wallrunning;
-            _input.HumanoidLand.Disable();
-            _input.HumanoidWall.Enable();
-            ApplyFinalWallrunMovements();
-        }
+        //if (state == MovementState.wallrunning)
+        //{
+        //    //state = MovementState.wallrunning;
+        //    _input.HumanoidLand.Disable();
+        //    _input.HumanoidWall.Enable();
+        //    ApplyFinalWallrunMovements();
+        //}
     }
 
     private void ReloadScene(InputAction.CallbackContext context)
@@ -444,7 +431,6 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         }
         if (context.started)
         {
-            //InitiateDash();
             playerShouldDash = true;
 
             if (PlayerCanDash)
@@ -454,7 +440,6 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         }
     }
 
-    //TODO: Doesn't need to be a coroutine
     private IEnumerator Dash()
     {
         dashesRemaining--;
@@ -494,7 +479,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
             yield return null;
         }
         UpdateDashBar = false;
-        hasIFrames = false; //turn of iframes now that dash is finished
+        hasIFrames = false; //turn off iframes now that dash is finished
 
         if (PlayerCanDashAgain)
         {
@@ -510,15 +495,6 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
     private void DashCooldown()
     {
-        //if (dashCooldownStartTime + adjustedCooldown < Time.time)
-        //{
-        //    if (DashShouldCooldown)
-        //    {
-        //        dashesRemaining++;
-        //        OnDashCooldown?.Invoke();
-        //    }
-        //    dashCooldownStartTime = Time.time;
-        //}
         if (DashShouldCooldown)
         {
             dashesRemaining++;
@@ -664,79 +640,79 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     }
 
     //TODO: Consider using OverlapSpheres instead of raycasts as this might help with stutter
-    private void CheckForWall()
-    {
-        //Parameters in order: start point, direction, store hit info, distance, layermask
-        wallRight = Physics.Raycast(transform.position, orientation.right, out rightWallHit, wallCheckDistance, whatIsWall);
-        wallLeft = Physics.Raycast(transform.position, -orientation.right, out leftWallHit, wallCheckDistance, whatIsWall);
+    //private void CheckForWall()
+    //{
+    //    //Parameters in order: start point, direction, store hit info, distance, layermask
+    //    wallRight = Physics.Raycast(transform.position, orientation.right, out rightWallHit, wallCheckDistance, whatIsWall);
+    //    wallLeft = Physics.Raycast(transform.position, -orientation.right, out leftWallHit, wallCheckDistance, whatIsWall);
 
-        verticalInput = Input.GetAxisRaw("Vertical");
+    //    verticalInput = Input.GetAxisRaw("Vertical");
 
-        //If the raycast has detected a wall and the player is not touching the ground
-        if ((wallLeft || wallRight) && verticalInput > 0 && !characterController.isGrounded)
-        {
-            if (!holdingJump)
-            {
-                //Reset the jumps as if the player has touched the ground
-                jumpedOnce = false;
-                jumpsRemaining = jumpsAllowed;
-            }
+    //    //If the raycast has detected a wall and the player is not touching the ground
+    //    if ((wallLeft || wallRight) && verticalInput > 0 && !characterController.isGrounded)
+    //    {
+    //        if (!holdingJump)
+    //        {
+    //            //Reset the jumps as if the player has touched the ground
+    //            jumpedOnce = false;
+    //            jumpsRemaining = jumpsAllowed;
+    //        }
 
-            //If the player is not currently in the wallRunning state
-            if (state != MovementState.wallrunning)
-            {
-                //Make sure the player can't climb the wall
-                moveDirection.y = 0;
-                //Set the state to wallRunning
-                state = MovementState.wallrunning;
-            }
-        }
-        else
-        {
-            //If a wall is not detected and if the player is currently in the wallrunning state
-            if (state == MovementState.wallrunning)
-            {
-                //Set the state back to the basic movement state
-                state = MovementState.basic;
-            }
-        }
-    }
+    //        //If the player is not currently in the wallRunning state
+    //        if (state != MovementState.wallrunning)
+    //        {
+    //            //Make sure the player can't climb the wall
+    //            moveDirection.y = 0;
+    //            //Set the state to wallRunning
+    //            state = MovementState.wallrunning;
+    //        }
+    //    }
+    //    else
+    //    {
+    //        //If a wall is not detected and if the player is currently in the wallrunning state
+    //        if (state == MovementState.wallrunning)
+    //        {
+    //            //Set the state back to the basic movement state
+    //            state = MovementState.basic;
+    //        }
+    //    }
+    //}
 
-    private void HandleWallrunInput(InputAction.CallbackContext context)
-    {
-        currentInput = (context.ReadValue<Vector2>());
-        MoveInput = new Vector2(0, currentInput.y * wallRunSpeed); //Make sure the player can't move up the wall
-    }
+    //private void HandleWallrunInput(InputAction.CallbackContext context)
+    //{
+    //    currentInput = (context.ReadValue<Vector2>());
+    //    MoveInput = new Vector2(0, currentInput.y * wallRunSpeed); //Make sure the player can't move up the wall
+    //}
 
-    private void ApplyFinalWallrunMovements()
-    {
-        HandleHeadbob();
-        AdaptFOV();
+    //private void ApplyFinalWallrunMovements()
+    //{
+    //    HandleHeadbob();
+    //    AdaptFOV();
 
-        //Get of the normal of the surface ray hit on the right or left wall
-        Vector3 wallNormal = wallRight ? rightWallHit.normal : leftWallHit.normal;
+    //    //Get of the normal of the surface ray hit on the right or left wall
+    //    Vector3 wallNormal = wallRight ? rightWallHit.normal : leftWallHit.normal;
 
-        //Get the cross product of the wallNormal and the up direction of the player transform
-        Vector3 wallForward = Vector3.Cross(wallNormal, transform.up);
+    //    //Get the cross product of the wallNormal and the up direction of the player transform
+    //    Vector3 wallForward = Vector3.Cross(wallNormal, transform.up);
 
-        //apply gravity
-        moveDirection.y -= wallRunGravity * Time.deltaTime;
+    //    //apply gravity
+    //    moveDirection.y -= wallRunGravity * Time.deltaTime;
 
-        //The direction in which the player moves based on input
-        float moveDirectionY = moveDirection.y;
-        moveDirection = (transform.TransformDirection(wallForward) * MoveInput.x) + (transform.TransformDirection(Vector3.forward) * MoveInput.y);
-        moveDirection.y = -Mathf.Abs(moveDirectionY);
+    //    //The direction in which the player moves based on input
+    //    float moveDirectionY = moveDirection.y;
+    //    moveDirection = (transform.TransformDirection(wallForward) * MoveInput.x) + (transform.TransformDirection(Vector3.forward) * MoveInput.y);
+    //    moveDirection.y = -Mathf.Abs(moveDirectionY);
 
-        //move the player based on the parameters gathered in the "Handle-" functions
-        characterController.Move(moveDirection * Time.deltaTime);
+    //    //move the player based on the parameters gathered in the "Handle-" functions
+    //    characterController.Move(moveDirection * Time.deltaTime);
 
-        //if the player is on the ground, and they have less than max jumps, reset the remaining jumps to the maximum (for double jumping)
-        if (characterController.isGrounded && jumpsRemaining < jumpsAllowed && !holdingJump)
-        {
-            jumpedOnce = false;
-            jumpsRemaining = jumpsAllowed;
-        }
-    }
+    //    //if the player is on the ground, and they have less than max jumps, reset the remaining jumps to the maximum (for double jumping)
+    //    if (characterController.isGrounded && jumpsRemaining < jumpsAllowed && !holdingJump)
+    //    {
+    //        jumpedOnce = false;
+    //        jumpsRemaining = jumpsAllowed;
+    //    }
+    //}
 
     public void TakeDamage(float damageTaken)
     {
