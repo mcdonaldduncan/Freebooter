@@ -15,6 +15,14 @@ public class DamageActivator : MonoBehaviour, IDamageable, IActivator
 
     public float Health { get; set; }
 
+    public GameObject DamagePopUpPrefab => throw new System.NotImplementedException();
+
+    public Transform PopupFromHere => throw new System.NotImplementedException();
+
+    public float fontSize => throw new System.NotImplementedException();
+
+    public bool showDamageNumbers => throw new System.NotImplementedException();
+
     public event IActivator.ActivateDelegate Activate;
     public event IActivator.ActivateDelegate Deactivate;
 

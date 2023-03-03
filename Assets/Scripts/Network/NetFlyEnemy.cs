@@ -30,6 +30,15 @@ public class NetFlyEnemy : NetworkBehaviour, IDamageable
     [SerializeField] private float Damage;
 
     public float Health { get { return health; } set { health = value; } }
+
+    public GameObject DamagePopUpPrefab => throw new System.NotImplementedException();
+
+    public Transform PopupFromHere => throw new System.NotImplementedException();
+
+    public float fontSize => throw new System.NotImplementedException();
+
+    public bool showDamageNumbers => throw new System.NotImplementedException();
+
     [SerializeField] private float health;
     public void TakeDamage(float damageTaken, HitBoxType? hitType = null)
     {

@@ -11,6 +11,11 @@ public class Crate_MainMenu : MonoBehaviour, IDamageable
 
     public float Health { get { return health; } set { health = value; } }
 
+    public GameObject DamagePopUpPrefab { get; set; }
+    public Transform PopupFromHere { get; set; }
+    public float fontSize { get; set; }
+    public bool showDamageNumbers { get; set; }
+
     public UnityEvent TriggerEventOnDisable;
 
     //[SerializeField]

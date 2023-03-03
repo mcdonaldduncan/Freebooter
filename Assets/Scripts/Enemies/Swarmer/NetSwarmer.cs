@@ -9,6 +9,14 @@ public class NetSwarmer : NetworkBehaviour, IDamageable
 {
     public float Health { get { return health; } set { health = value; } }
 
+    public GameObject DamagePopUpPrefab => throw new System.NotImplementedException();
+
+    public Transform PopupFromHere => throw new System.NotImplementedException();
+
+    public float fontSize => throw new System.NotImplementedException();
+
+    public bool showDamageNumbers => throw new System.NotImplementedException();
+
     [SerializeField] private bool ignorePlayer;
 
     [SerializeField] private float health;
@@ -137,7 +145,13 @@ public class NetSwarmer : NetworkBehaviour, IDamageable
         }
     }
 
+    public void TakeDamage(float damageTaken)
+    {
+        throw new System.NotImplementedException();
+    }
 
-    
-
+    public void GenerateDamageInfo(float damageTaken, HitBoxType hitType)
+    {
+        throw new System.NotImplementedException();
+    }
 }

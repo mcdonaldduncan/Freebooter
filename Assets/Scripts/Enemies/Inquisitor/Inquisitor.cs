@@ -52,6 +52,17 @@ public class Inquisitor : MonoBehaviour, IDamageable
 
     WaitForSeconds resetDelay = new WaitForSeconds(.25f);
 
+    [Header("DamagePopUp")]
+    [SerializeField] GameObject m_DamagePopUpPrefab;
+    [SerializeField] Transform m_PopupFromHere;
+    [SerializeField] bool m_showDamageNumbers;
+    float m_fontSize = 5;
+
+    public GameObject DamagePopUpPrefab { get => m_DamagePopUpPrefab; set => m_DamagePopUpPrefab = value; }
+    public Transform PopupFromHere { get => m_PopupFromHere; set => m_PopupFromHere = value; }
+    public float fontSize { get => m_fontSize; set => m_fontSize = value; }
+    public bool showDamageNumbers { get => m_showDamageNumbers; set => m_showDamageNumbers = value; }
+
     private void OnEnable()
     {
         //potentialTargets = FindObjectsOfType<FirstPersonController>().Select(item => item.transform).ToList();

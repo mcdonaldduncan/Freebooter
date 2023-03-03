@@ -168,6 +168,14 @@ public class NetworkPlayerController : NetworkBehaviour, IDamageable
     private Vector2 dashInput;
     public Vector2 MoveInput { get; private set; }
 
+    public GameObject DamagePopUpPrefab => throw new System.NotImplementedException();
+
+    public Transform PopupFromHere => throw new System.NotImplementedException();
+
+    public float fontSize => throw new System.NotImplementedException();
+
+    public bool showDamageNumbers => throw new System.NotImplementedException();
+
     private float rotationX = 0f; //Camera rotation for clamping
     private float rotationY = 0f;
 

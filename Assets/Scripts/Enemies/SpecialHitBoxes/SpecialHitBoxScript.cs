@@ -38,6 +38,11 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
     public float maxHealth;
     public float Health { get => _health; set => _health = value; }
 
+    public GameObject DamagePopUpPrefab { get => damageable.DamagePopUpPrefab; }
+    public Transform PopupFromHere { get => damageable.PopupFromHere; }
+    public float fontSize { get => damageable.fontSize; } 
+    public bool showDamageNumbers { get => damageable.showDamageNumbers; }
+
     public GameObject Prefab { get => m_Prefab; set => m_Prefab = value; }
 
     public void CheckForDeath()
@@ -48,17 +53,17 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
         }
     }
 
-    public void TakeDamage(float damageTaken, HitBoxType? hitType = null)
+    public void TakeDamage(float damageTaken)
     {
         if (hitboxtype == HitBoxType.critical)
         {
             PlayVFX(critVFX, VFXTransform.position);
-            damageable.TakeDamage(damageTaken * CriticalDamageMultiplier, hitboxtype);
+            damageable.GenerateDamageInfo(damageTaken * CriticalDamageMultiplier, hitboxtype);
         }
         if (hitboxtype == HitBoxType.armored)
         {
             PlayVFX(armorVFX, VFXTransform.position);
-            damageable.TakeDamage(damageTaken * ArmorDamageReductionMultiplier, hitboxtype);
+            damageable.GenerateDamageInfo(damageTaken * ArmorDamageReductionMultiplier, hitboxtype);
         }
         if (hitboxtype == HitBoxType.shield)
         {
@@ -99,12 +104,11 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
         shieldVFXYellow.transform.position = VFXTransform.position;
         shieldVFXRed.transform.position = VFXTransform.position;
     }
-
-    
 }
 public enum HitBoxType
 {
     critical,
     armored,
-    shield
+    shield,
+    normal
 }

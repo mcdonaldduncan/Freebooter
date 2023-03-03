@@ -8,6 +8,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
 
     [SerializeField] private bool ignorePlayer;
 
+    IDamageable m_IDamageable;
 
     [Header("Hide Properties")]
     [Tooltip("The swarmer will hide if not accompanied by this many other enemies (0 = never hide)")]
@@ -27,6 +28,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
     [Header("DamagePopUp")]
     [SerializeField] GameObject m_DamagePopUpPrefab;
     [SerializeField] Transform m_PopupFromHere;
+    [SerializeField] bool m_showDamageNumbers;
     float m_fontSize = 5;
 
     [Header("Misc")]
@@ -62,11 +64,17 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
 
     private Collider[] hits = new Collider[5];
 
+    public GameObject DamagePopUpPrefab => m_DamagePopUpPrefab;
+    public Transform PopupFromHere => m_PopupFromHere;
+    public float fontSize => m_fontSize;
+    public bool showDamageNumbers => m_showDamageNumbers;
+
     private void Awake()
     {
         hideBehavior = GetComponent<HideBehavior>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
+        m_IDamageable = this;
     }
 
     private void Start()
@@ -227,71 +235,6 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
         mostRecentHit = Time.time;
     }
 
-    public void TakeDamage(float damageTaken, HitBoxType? hitType = null)
-    {
-        health -= damageTaken;
-        DamageNumbers(damageTaken);
-        CheckForDeath();
-    }
-
-    //public void TakeDamage(float damageTaken, HitBoxType hitType)
-    //{
-    //    health -= damageTaken;
-    //    DamageNumbers(damageTaken, hitType);
-    //    CheckForDeath();
-    //}
-
-    public void DamageNumbers(float DamageNumber)
-    { //if not a special hitbox use this one
-        var txtpro = m_DamagePopUpPrefab.GetComponent<TextMeshPro>();
-        ResetDamageNumberValuers();
-        txtpro.color = Color.gray;
-        txtpro.text = DamageNumber.ToString("0");
-        InstantiateDamageNumber();
-    }
-
-    public void DamageNumbers(float DamageNumber, HitBoxType hitType)
-    {//if special hitbox use this one
-        var txtpro = m_DamagePopUpPrefab.GetComponent<TextMeshPro>();
-        ResetDamageNumberValuers();
-        if (hitType != null)
-        {
-            switch (hitType)
-            {
-                case HitBoxType.critical:
-                    txtpro.color = Color.red;
-                    txtpro.fontSize = m_fontSize * 2;
-                    break;
-                case HitBoxType.armored:
-                    txtpro.color = Color.blue;
-                    break;
-                case HitBoxType.shield:
-                    //for now we dont have any shielded enemies.
-                    //TODO : make the shields also show damage numbers
-                    txtpro.color = Color.blue;
-                    break;
-            }
-        }
-        else if (hitType == null)
-        {
-            txtpro.color = Color.gray;
-        }
-        txtpro.text = DamageNumber.ToString("0");
-        InstantiateDamageNumber();
-    }
-
-    void InstantiateDamageNumber()
-    {
-        ProjectileManager.Instance.TakeFromPool(m_DamagePopUpPrefab, new Vector3(m_PopupFromHere.transform.position.x + UnityEngine.Random.Range(-1f, 1f), m_PopupFromHere.transform.position.y, m_PopupFromHere.transform.position.z + UnityEngine.Random.Range(-1f, 1f)));
-    }
-
-    void ResetDamageNumberValuers()
-    {
-        var txtpro = m_DamagePopUpPrefab.GetComponent<TextMeshPro>();
-        txtpro.color = Color.gray;
-        txtpro.fontSize = m_fontSize;
-    }
-
     public void CheckForDeath()
     {
         if (Health <= 0)
@@ -380,5 +323,12 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
     public void MoveToLocation(Transform location)
     {
         throw new System.NotImplementedException();
+    }
+
+    public void TakeDamage(float damageTaken)
+    {
+        health -= damageTaken;
+        CheckForDeath();
+        m_IDamageable.GenerateDamageInfo(damageTaken, HitBoxType.normal);
     }
 }
