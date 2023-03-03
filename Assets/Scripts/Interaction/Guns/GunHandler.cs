@@ -349,24 +349,30 @@ public sealed class GunHandler : MonoBehaviour
         weaponSwitched?.Invoke();
     }
 
+    //Behavior for picking up the weapon and adding it to the inventory
     public bool OnWeaponPickup(GunType gunType)
     {
         bool pickedUp = false;
 
+        //if the gun is not already in the inventory
         if (!guns.Contains(gunType))
         {
+            //Check to make sure that the predetermined position is not greater than the size of the inventory list
+            //If it is, then simply add to the end of the list
             if (gunTypeDict[gunType] > guns.Count - 1)
             {
                 guns.Add(gunType);
             }
             else
             {
+                //Add the gun to the inventory at the proper position in the inventory
                 guns.Insert(gunTypeDict[gunType], gunType);
             }
 
             pickedUp = true;
         }
 
+        //Behavior for equipping newly picked up gun
         currentGun.GunReticle.alpha = 0;
         currentGun.GunModel.SetActive(false);
 

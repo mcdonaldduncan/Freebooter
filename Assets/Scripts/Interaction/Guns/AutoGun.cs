@@ -224,6 +224,7 @@ public class AutoGun : MonoBehaviour, IGun
 
                 ProjectileManager.Instance.TakeFromPool(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point);
                 LevelManager.TimeStop(HitStopDuration);
+                CameraShake.ShakeCamera();
 
                 //Get the distance between the enemy and the gun
                 float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);

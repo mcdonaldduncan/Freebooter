@@ -605,6 +605,7 @@ GameObject:
   - component: {fileID: 297426593068676927}
   - component: {fileID: 297426593068676926}
   - component: {fileID: 1911838376}
+  - component: {fileID: 5237971037550926142}
   m_Layer: 8
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -776,6 +777,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5237971037550926142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 297426593068676925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ad9ceb5af1d7964b8808bd614743d53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shakeMagnitude: 0.1
+  dampingSpeed: 1
 --- !u!1 &297426593622482813
 GameObject:
   m_ObjectHideFlags: 0
@@ -1242,17 +1257,6 @@ MonoBehaviour:
   jumpForce: 10
   secondJumpForce: 14
   gravity: 36
-  whatIsWall:
-    serializedVersion: 2
-    m_Bits: 64
-  whatIsGround:
-    serializedVersion: 2
-    m_Bits: 128
-  wallRunGravity: -0.2
-  maxWallRunTime: 0
-  wallCheckDistance: 1
-  minJumpHeight: 2
-  orientation: {fileID: 297426594678655179}
   walkBobSpeed: 11.25
   walkBobAmount: 0.2
   dashDamage: 5

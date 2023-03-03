@@ -207,6 +207,7 @@ public class ShotGun : MonoBehaviour, IGun
                 Vector3 targetPosition = hitInfo.transform.position;
                 ProjectileManager.Instance.TakeFromPool(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point);
                 LevelManager.TimeStop(HitStopDuration);
+                CameraShake.ShakeCamera();
 
                 //Get the distance between the enemy and the gun
                 float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);

@@ -66,27 +66,34 @@ public class GrenadeGun : MonoBehaviour, IGun
 
     public void Shoot()
     {
+        //Subtract from ammo
         if (!GunManager.InfiniteAmmo)
         {
             CurrentAmmo--;
         }
 
+        //Play the launch sound
         GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
+
+        //Get the direction that the player is aiming
         Ray ray = GunManager.FPSCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 
+        //calculate the force of launching the grenade
         Vector3 grenadeLaunchForce = (ray.direction + GrenadeLaunchArcVector) * GrenadeLaunchForce;
 
-        GameObject newGrenade = ProjectileManager.Instance.TakeFromPool(Grenade, ShootFrom.position, out GrenadeBehavior grenade); //Instantiate(Grenade, ShootFrom.position, Quaternion.identity);
-        //newGrenade.transform.parent = transform;
-        grenade.Launch(grenadeLaunchForce);
-        //Rigidbody gRB = newGrenade.GetComponent<Rigidbody>();
-        //gRB.AddForce(grenadeLaunchForce);
+        //Take a grenade from the grenade object pool
+        GameObject newGrenade = ProjectileManager.Instance.TakeFromPool(Grenade, ShootFrom.position, out GrenadeBehavior grenade);
 
+        //Launch this grenade with the calculated force
+        grenade.Launch(grenadeLaunchForce);
+
+        //Time of shot, relevant for fire rate
         lastShotTime = Time.time;
     }
 
     public void DetonateGrenades()
     {
+        //Tell all subscribed grenade objects that the detonation has been invoked.
         remoteDetonationEvent?.Invoke();
     }
 

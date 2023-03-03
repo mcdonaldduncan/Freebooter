@@ -16,6 +16,7 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
     public GameObject Prefab { get => m_Prefab; set => m_Prefab = value; }
 
     private float startTime;
+    private float hitStopDuration;
     private AudioSource grenadeAudioSource;
     private bool explosionPlayed = false;
     private bool timerStarted = false;
@@ -34,6 +35,7 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
     private void OnEnable()
     {
         grenadeGun = LevelManager.Instance.Player.GetComponentInChildren<GrenadeGun>();
+        hitStopDuration = grenadeGun.HitStopDuration;
         transform.SetParent(null, true);
         startTime = Time.time;
         grenadeAudioSource = GetComponent<AudioSource>();
@@ -63,9 +65,16 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
 
     public void Launch(Vector3 direction)
     {
+        //get the rigidbody of the grenade
         grenadeRB = GetComponent<Rigidbody>();
+
+        //reset the constraints of the grenade, so that it doesn't freeze after being respawned from object pool
         grenadeRB.constraints = RigidbodyConstraints.None;
+
+        //Add force to the launched grenade
         grenadeRB.AddForce(direction);
+
+        //Add torque for a little stylish spinning :)
         grenadeRB.AddTorque(direction * Random.Range(0, 10));
     }
 
@@ -74,7 +83,16 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
         exploded = true;
         var explosion = ProjectileManager.Instance.TakeFromPool(grenadeVFX, transform.position);
 
+        //Get all colliders within the radius of the grenade explosion
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
+        if (colliders.Length > 0)
+        {
+            //little bit of time stop and camera shake for VFX
+            LevelManager.TimeStop(hitStopDuration);
+            CameraShake.ShakeCamera();
+        }
+
+        //Damage each object that is an IDamageable
         foreach (var hit in colliders)
         {
             if (hit != null)
@@ -93,7 +111,11 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
                 }
             }
         }
+
+        //Unsubscribe from the detonation event (subscribed in OnEnable)
         grenadeGun.remoteDetonationEvent -= Explode;
+
+        //Return the grenade to the object pool
         ProjectileManager.Instance.ReturnToPool(gameObject);
     }
 
