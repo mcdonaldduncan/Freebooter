@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 7516147023266049344}
   - component: {fileID: 7516147023267016576}
   - component: {fileID: 7861687667535149505}
-  - component: {fileID: 5127434959185995524}
   m_Layer: 0
   m_Name: Potion_Green
   m_TagString: Untagged
@@ -100,19 +99,3 @@ CapsuleCollider:
   m_Height: 0.2457084
   m_Direction: 1
   m_Center: {x: 0, y: 0.12285425, z: 0}
---- !u!54 &5127434959185995524
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7516147023265018176}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
