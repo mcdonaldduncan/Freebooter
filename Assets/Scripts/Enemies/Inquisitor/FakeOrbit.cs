@@ -24,6 +24,14 @@ public class FakeOrbit : MonoBehaviour, IDamageable
 
     public float Health { get; set; }
 
+    public GameObject DamagePopUpPrefab => throw new System.NotImplementedException();
+
+    public Transform PopupFromHere => throw new System.NotImplementedException();
+
+    public float fontSize => throw new System.NotImplementedException();
+
+    public bool showDamageNumbers => throw new System.NotImplementedException();
+
     // Set starting angle and radius
     void Start()
     {
@@ -55,7 +63,7 @@ public class FakeOrbit : MonoBehaviour, IDamageable
         _Transform.position = target.position + polarVector;
     }
 
-    public void TakeDamage(float damageTaken, HitBoxType? hitType = null)
+    public void TakeDamage(float damageTaken)
     {
         Health -= damageTaken;
         //Debug.Log("Orbit Damaged");

@@ -215,6 +215,14 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
     float speedScale => 1 + ((maxSpeedScale - 1) * (1 - (health / maxHealth)));
 
+    public GameObject DamagePopUpPrefab => throw new NotImplementedException();
+
+    public Transform PopupFromHere => throw new NotImplementedException();
+
+    public float fontSize => throw new NotImplementedException();
+
+    public bool showDamageNumbers => throw new NotImplementedException();
+
     float originalSpeed, boostSpeedDuration, boostStartedTime;
     bool boostedSpeedEnabled;
 

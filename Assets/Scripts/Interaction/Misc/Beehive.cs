@@ -9,6 +9,14 @@ public class Beehive : MonoBehaviour, IDamageable
 
     public float Health { get { return health; } set { health = value; } }
 
+    public GameObject DamagePopUpPrefab => throw new System.NotImplementedException();
+
+    public Transform PopupFromHere => throw new System.NotImplementedException();
+
+    public float fontSize => throw new System.NotImplementedException();
+
+    public bool showDamageNumbers => throw new System.NotImplementedException();
+
     [SerializeField]
     List<GameObject> bees;
 

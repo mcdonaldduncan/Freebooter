@@ -17,6 +17,10 @@ public class ShootableButton : MonoBehaviour, IDamageable, IActivator
     bool isUsable;
 
     public float Health {get; set; }
+    public GameObject DamagePopUpPrefab { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public Transform PopupFromHere { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public float fontSize { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public bool showDamageNumbers { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
     public event IActivator.ActivateDelegate Activate;
     public event IActivator.ActivateDelegate Deactivate;
@@ -46,7 +50,7 @@ public class ShootableButton : MonoBehaviour, IDamageable, IActivator
         Deactivate?.Invoke();
     }
 
-    public void TakeDamage(float damageTaken, HitBoxType? hitType = null)
+    public void TakeDamage(float damageTaken)
     {
         if (Health < 0) return;
         Health -= damageTaken;

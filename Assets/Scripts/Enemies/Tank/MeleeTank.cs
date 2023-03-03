@@ -229,11 +229,6 @@ public class MeleeTank : AgentBase, IDamageable
         }
     }
 
-    public override void TakeDamage(float damageTaken, HitBoxType? hitType = null)
-    {
-        base.TakeDamage(damageTaken);
-    }
-
     void ChangeChargingToFalse()
     {
         resetChargeParam = true;
