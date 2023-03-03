@@ -280,6 +280,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
 
     public virtual void OnDeath()
     {
+        CameraShake.ShakeCamera();
         if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
         {
             ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);

@@ -65,6 +65,8 @@ public class ShotGun : MonoBehaviour, IGun
         bulletPoolList = new List<GameObject>();
         GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
         GunAnimationHandler.RecoilAnim.SetTrigger("RecoilTrigger");
+        var muzzleFlash = ProjectileManager.Instance.TakeFromPool(GunManager.MuzzleFlash, ShootFrom.transform.position, Quaternion.LookRotation(GunManager.FPSCam.transform.forward * -1));
+        muzzleFlash.transform.SetParent(ShootFrom);
         for (int i = 0; i < ShotGunBulletAmount; i++)
         {
             Vector3 aimSpot = GunManager.FPSCam.transform.position;
@@ -91,6 +93,7 @@ public class ShotGun : MonoBehaviour, IGun
             {
                 //Spawn the bulletFromPool trail
                 ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position, out BulletTrail trail);
+                ProjectileManager.Instance.TakeFromPool(GunManager.MuzzleFlash, ShootFrom.transform.position);
                 trail.Launch(ShootFrom.transform.position + direction * 100);
             }
         }
@@ -207,7 +210,7 @@ public class ShotGun : MonoBehaviour, IGun
                 Vector3 targetPosition = hitInfo.transform.position;
                 ProjectileManager.Instance.TakeFromPool(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point);
                 LevelManager.TimeStop(HitStopDuration);
-                CameraShake.ShakeCamera();
+                //CameraShake.ShakeCamera();
 
                 //Get the distance between the enemy and the gun
                 float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);

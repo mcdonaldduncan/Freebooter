@@ -83,6 +83,8 @@ public class GrenadeGun : MonoBehaviour, IGun
 
         //Take a grenade from the grenade object pool
         GameObject newGrenade = ProjectileManager.Instance.TakeFromPool(Grenade, ShootFrom.position, out GrenadeBehavior grenade);
+        var muzzleFlash = ProjectileManager.Instance.TakeFromPool(GunManager.MuzzleFlash, ShootFrom.transform.position, Quaternion.LookRotation(GunManager.FPSCam.transform.forward * -1));
+        muzzleFlash.transform.SetParent(ShootFrom);
 
         //Launch this grenade with the calculated force
         grenade.Launch(grenadeLaunchForce);

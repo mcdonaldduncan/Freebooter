@@ -47,6 +47,37 @@ public class ProjectileManager : Singleton<ProjectileManager>
         }
     }
 
+    //Override that allows for manual startRotation
+    public GameObject TakeFromPool(GameObject prefab, Vector3 startLocation, Quaternion startRotation)
+    {
+        if (!m_Pool.ContainsKey(prefab))
+        {
+            m_Pool.Add(prefab, new Queue<GameObject>());
+        }
+
+        if (m_Pool[prefab].Count > 0)
+        {
+            GameObject obj = m_Pool[prefab].Dequeue();
+            if (obj == null) return TakeFromPool(prefab, startLocation, startRotation);
+            obj.transform.position = startLocation;
+            obj.transform.rotation = startRotation;
+            obj.SetActive(true);
+            return obj;
+        }
+        else
+        {
+            GameObject obj = Instantiate(prefab, startLocation, startRotation);
+            IPoolable poolable = obj.GetComponent<IPoolable>();
+            if (poolable == null)
+            {
+                Debug.LogError("Prefab " + prefab.name + " is not poolable and cannot be used.");
+                return null;
+            }
+            poolable.Prefab = prefab;
+            return obj;
+        }
+    }
+
     public GameObject TakeFromPool(GameObject prefab, Vector3 startLocation, out Projectile poolable)
     {
         if (!m_Pool.ContainsKey(prefab))

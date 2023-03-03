@@ -112,6 +112,9 @@ public class AutoGun : MonoBehaviour, IGun
             if (Physics.Raycast(ray, out hitInfo, float.MaxValue, ~LayerToIgnore))
             {
                 ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position, out BulletTrail trail);
+                var muzzleFlash = ProjectileManager.Instance.TakeFromPool(GunManager.MuzzleFlash, ShootFrom.transform.position, Quaternion.LookRotation(GunManager.FPSCam.transform.forward * -1));
+                muzzleFlash.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+                muzzleFlash.transform.SetParent(ShootFrom);
                 trail.Launch(hitInfo.point);
                 HitEnemyBehavior(hitInfo, hitInfo.transform.GetComponent<IDamageable>());
 
@@ -130,6 +133,8 @@ public class AutoGun : MonoBehaviour, IGun
             else
             {
                 ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position, out BulletTrail trail);
+                var muzzleFlash = ProjectileManager.Instance.TakeFromPool(GunManager.MuzzleFlash, ShootFrom.transform.position, Quaternion.LookRotation(GunManager.FPSCam.transform.forward * -1));
+                muzzleFlash.transform.SetParent(ShootFrom);
                 trail.Launch(ShootFrom.transform.position + ray.direction * 100);
 
                 //Spawn the bulletFromPool trail
@@ -224,7 +229,7 @@ public class AutoGun : MonoBehaviour, IGun
 
                 ProjectileManager.Instance.TakeFromPool(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point);
                 LevelManager.TimeStop(HitStopDuration);
-                CameraShake.ShakeCamera();
+                //CameraShake.ShakeCamera();
 
                 //Get the distance between the enemy and the gun
                 float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);

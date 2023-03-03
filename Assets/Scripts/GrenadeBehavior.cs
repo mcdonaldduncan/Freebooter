@@ -59,6 +59,7 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
         if (collision.gameObject.tag != "Player" && !collided)
         {
             grenadeRB.constraints = RigidbodyConstraints.FreezeAll;
+            transform.SetParent(collision.transform);
             collided = true;
         }
     }
@@ -114,6 +115,7 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
 
         //Unsubscribe from the detonation event (subscribed in OnEnable)
         grenadeGun.remoteDetonationEvent -= Explode;
+        transform.SetParent(null, true);
 
         //Return the grenade to the object pool
         ProjectileManager.Instance.ReturnToPool(gameObject);
