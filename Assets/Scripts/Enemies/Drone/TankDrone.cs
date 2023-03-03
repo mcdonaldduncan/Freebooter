@@ -30,13 +30,8 @@ public class TankDrone : AgentBase
 
     private void Update()
     {
-        if (isDead)
-        {
-            m_DeathExplosion.StartDeathSequence();
-
-
-            return;
-        }
+        if (isDead) return;
+        
         HandleAgentState();
     }
 
@@ -67,6 +62,11 @@ public class TankDrone : AgentBase
         }
     }
 
-
+    public override void OnDeath()
+    {
+        base.OnDeath();
+        gameObject.SetActive(true);
+        m_DeathExplosion.StartDeathSequence();
+    }
 
 }

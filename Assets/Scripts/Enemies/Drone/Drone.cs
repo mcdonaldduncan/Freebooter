@@ -1,15 +1,25 @@
 using UnityEngine;
 
-public class Drone : AgentBase
+public class Drone : NewAgentBase
 {
     [Header("Drone Body")]
     [SerializeField] GameObject m_Body;
 
     OnDeathExplosion m_DeathExplosion;
 
+    private void Awake()
+    {
+        AwakeSetup();
+    }
+
+    private void OnEnable()
+    {
+        EnableSetup();
+    }
+
     private void Start()
     {
-        HandleSetup();
+        StartSetup();
         m_DeathExplosion = m_Body.GetComponent<OnDeathExplosion>();
     }
 
@@ -21,7 +31,7 @@ public class Drone : AgentBase
 
     private void Update()
     {
-        if (isDead) return;
+        if (IsDead) return;
         
         HandleAgentState();
     }

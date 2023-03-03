@@ -12,7 +12,6 @@ public interface INavigation
     float StoppingDistance { get; }
     float RotationSpeed { get; }
     float MovementSampleRadius { get; }
-    float WanderSampleRadius { get; }
 
     float WanderDelay { get; }
     float WanderDistance { get; }
@@ -23,8 +22,11 @@ public interface INavigation
     void ChaseTarget()
     {
         Vector3 FromPlayerToAgent = Agent.transform.position - LevelManager.Instance.Player.transform.position;
-
-        MoveToLocation(LevelManager.Instance.Player.transform.position + FromPlayerToAgent.normalized * StoppingDistance);
+        if (StoppingDistance <= FromPlayerToAgent.magnitude)
+        {
+            MoveToLocation(LevelManager.Instance.Player.transform.position + FromPlayerToAgent.normalized * StoppingDistance);
+        }
+        
     }
 
     void MoveToLocation(Transform location)

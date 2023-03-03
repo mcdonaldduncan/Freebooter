@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IRespawn
 {
-    IRespawn Respawn { get; set; }
+    //IRespawn Respawn { get; set; }
 
     public void SubscribeToRespawn()
     {

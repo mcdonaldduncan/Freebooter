@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class NewAgentBase : MonoBehaviour, IDamageable, INavigation, ITracking, IShooting, IEnemy, IRespawn
+public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, ITracking, IShooting, IRespawn
 {
     [Header("Projectile Prefab and Projectile Spawn Point")]
-    [SerializeField] protected GameObject m_ProjectilePrefab;
-    [SerializeField] protected Transform m_ShootFrom;
+    [SerializeField] GameObject m_ProjectilePrefab;
+    [SerializeField] Transform m_ShootFrom;
+    [SerializeField] GameObject m_OnKillHealFVX;
 
     [Header("Layer mask Options")]
     [SerializeField] LayerMask m_WalkableLayers;
@@ -21,10 +22,9 @@ public class NewAgentBase : MonoBehaviour, IDamageable, INavigation, ITracking, 
     [Header("Wander Options")]
     [SerializeField] float m_WanderDelay;
     [SerializeField] float m_WanderDistance;
-    [SerializeField] float m_WanderSampleRadius;
 
     [Header("Shooting Options")]
-    [SerializeField] protected float m_Range;
+    [SerializeField] float m_Range;
     [SerializeField] float m_TimeBetweenShots;
 
     [Header("Tracking Options")]
@@ -43,9 +43,12 @@ public class NewAgentBase : MonoBehaviour, IDamageable, INavigation, ITracking, 
     INavigation m_Navigation;
     ITracking m_Tracking;
     IShooting m_Shooting;
+    IRespawn m_Respawn;
 
     Vector3 m_StartingPosition;
     Quaternion m_StartingRotation;
+
+    protected bool IsDead;
 
     public float Health { get; set; }
     
@@ -58,8 +61,6 @@ public class NewAgentBase : MonoBehaviour, IDamageable, INavigation, ITracking, 
     public float RotationSpeed => m_RotationSpeed;
 
     public float MovementSampleRadius => m_MovementSampleRadius;
-
-    public float WanderSampleRadius => m_WanderSampleRadius;
 
     public float WanderDelay => m_WanderDelay;
 
@@ -84,21 +85,21 @@ public class NewAgentBase : MonoBehaviour, IDamageable, INavigation, ITracking, 
     public float TimeBetweenShots => m_TimeBetweenShots;
 
     public float LastShotTime { get; set; }
-    public Vector3 StartingPosition { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-    public bool ShouldSleep { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-    public IActivator Activator { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-    public IRespawn Respawn { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public Vector3 StartingPosition { get; set; }
+    public bool ShouldSleep { get; set; }
+    public IActivator Activator { get; set; }
 
-    void AwakeSetup()
+    protected void AwakeSetup()
     {
         Agent = GetComponent<NavMeshAgent>();
 
         m_Navigation = this;
         m_Tracking = this;
         m_Shooting = this;
+        m_Respawn = this;
     }
 
-    void EnableSetup()
+    protected void EnableSetup()
     {
         Health = m_MaxHealth;
         m_StartingPosition = transform.position;
@@ -108,7 +109,12 @@ public class NewAgentBase : MonoBehaviour, IDamageable, INavigation, ITracking, 
         m_StartingState = m_State;
     }
 
-    void HandleAgentState()
+    protected void StartSetup()
+    {
+        m_Respawn.SubscribeToRespawn();
+    }
+
+    public void HandleAgentState()
     {
         switch (m_State)
         {
@@ -121,9 +127,9 @@ public class NewAgentBase : MonoBehaviour, IDamageable, INavigation, ITracking, 
                 if (m_Tracking.CheckFieldOfView()) m_State = AgentState.CHASE;
                 break;
             case AgentState.CHASE:
-                m_Tracking.TrackTarget2D();
-                m_Shooting.Shoot();
                 m_Navigation.ChaseTarget();
+                m_Tracking.TrackTarget2D();
+                if (m_Tracking.CheckLineOfSight()) m_Shooting.Shoot();
                 if (!m_Tracking.InRange) m_State = AgentState.RETURN;
                 break;
             case AgentState.RETURN:
@@ -143,7 +149,7 @@ public class NewAgentBase : MonoBehaviour, IDamageable, INavigation, ITracking, 
     {
         if (Health <= 0)
         {
-            //isDead = true;
+            IsDead = true;
             OnDeath();
         }
     }
@@ -155,56 +161,34 @@ public class NewAgentBase : MonoBehaviour, IDamageable, INavigation, ITracking, 
         CheckForDeath();
     }
 
-    void OnDeath()
+
+
+    public virtual void OnDeath()
     {
         if (m_Tracking.DistanceToTarget <= LevelManager.Instance.Player.DistanceToHeal)
         {
+            ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);
             LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * m_MaxHealth);
         }
         gameObject.SetActive(false);
-        //LevelManager.CheckPointReached += OnCheckPointReached;
+        m_Respawn.SubscribeToCheckpointReached();
     }
 
     void ResetValues()
     {
         m_Navigation.CycleAgent(m_StartingPosition);
-
+        IsDead = false;
         transform.rotation = m_StartingRotation;
         Health = m_MaxHealth;
     }
 
-    public void ActivateAggro()
+    public virtual void OnPlayerRespawn()
     {
-        throw new System.NotImplementedException();
+        if (!gameObject.activeSelf)
+        {
+            gameObject.SetActive(true);
+        }
+        ResetValues();
     }
 
-    public void DeactivateAggro()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnActivate()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnDeactivate()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    void IEnemy.OnDeath()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnPlayerRespawn()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnCheckPointReached()
-    {
-        throw new System.NotImplementedException();
-    }
 }

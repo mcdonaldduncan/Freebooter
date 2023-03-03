@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1101,6 +1101,8 @@ MonoBehaviour:
   m_OnKillHealFVX: {fileID: 0}
   m_ShouldSleep: 1
   m_Activator: {fileID: 0}
+  m_DamagePopUpPrefab: {fileID: 0}
+  m_PopupFromHere: {fileID: 0}
   m_Body: {fileID: 0}
 --- !u!4 &182225312
 Transform:
@@ -1658,6 +1660,8 @@ MonoBehaviour:
   m_OnKillHealFVX: {fileID: 0}
   m_ShouldSleep: 1
   m_Activator: {fileID: 0}
+  m_DamagePopUpPrefab: {fileID: 0}
+  m_PopupFromHere: {fileID: 0}
   m_Body: {fileID: 0}
 --- !u!4 &317754493
 Transform:
@@ -1768,6 +1772,8 @@ MonoBehaviour:
   m_OnKillHealFVX: {fileID: 0}
   m_ShouldSleep: 1
   m_Activator: {fileID: 0}
+  m_DamagePopUpPrefab: {fileID: 0}
+  m_PopupFromHere: {fileID: 0}
   m_Body: {fileID: 0}
 --- !u!4 &384843332
 Transform:
@@ -1833,19 +1839,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ProjectilePrefab: {fileID: 6659351617849234464, guid: 5a1d33e698bee0145986b91cf9e4452c, type: 3}
   m_ShootFrom: {fileID: 990457321}
+  m_OnKillHealFVX: {fileID: 0}
   m_WalkableLayers:
     serializedVersion: 2
     m_Bits: 128
+  m_PlayerLayer:
+    serializedVersion: 2
+    m_Bits: 0
   m_StoppingDistance: 5
   m_RotationSpeed: 20
-  m_SampleRadius: 0
+  m_MovementSampleRadius: 0
   m_WanderDelay: 5
   m_WanderDistance: 15
   m_Range: 40
   m_TimeBetweenShots: 0.2
+  m_FieldOfView: 0
   m_MaxHealth: 75
-  m_Health: 75
-  m_OnKillHealFVX: {fileID: 0}
   m_ShouldSleep: 1
   m_Activator: {fileID: 0}
   m_Body: {fileID: 1283688545}
@@ -2480,6 +2489,8 @@ MonoBehaviour:
   m_OnKillHealFVX: {fileID: 0}
   m_ShouldSleep: 1
   m_Activator: {fileID: 0}
+  m_DamagePopUpPrefab: {fileID: 0}
+  m_PopupFromHere: {fileID: 0}
   m_Body: {fileID: 0}
 --- !u!4 &580385603
 Transform:
@@ -2547,7 +2558,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!136 &599502274
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2576,20 +2587,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ProjectilePrefab: {fileID: 6659351617849234464, guid: 5a1d33e698bee0145986b91cf9e4452c, type: 3}
   m_ShootFrom: {fileID: 674442367}
+  m_OnKillHealFVX: {fileID: 2748225569481887560, guid: de88dfbe0c34dad418728faa198b70e0, type: 3}
   m_WalkableLayers:
     serializedVersion: 2
     m_Bits: 128
+  m_PlayerLayer:
+    serializedVersion: 2
+    m_Bits: 256
   m_StoppingDistance: 5
   m_RotationSpeed: 20
-  m_SampleRadius: 0
+  m_MovementSampleRadius: 10
   m_WanderDelay: 5
   m_WanderDistance: 15
   m_Range: 40
   m_TimeBetweenShots: 0.2
+  m_FieldOfView: 180
   m_MaxHealth: 75
-  m_Health: 75
-  m_OnKillHealFVX: {fileID: 0}
-  m_ShouldSleep: 1
+  m_ShouldSleep: 0
   m_Activator: {fileID: 0}
   m_Body: {fileID: 237661947}
 --- !u!195 &599502276
@@ -3912,6 +3926,8 @@ MonoBehaviour:
   m_OnKillHealFVX: {fileID: 0}
   m_ShouldSleep: 1
   m_Activator: {fileID: 0}
+  m_DamagePopUpPrefab: {fileID: 0}
+  m_PopupFromHere: {fileID: 0}
   m_Body: {fileID: 0}
 --- !u!4 &960497678
 Transform:
@@ -6306,19 +6322,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ProjectilePrefab: {fileID: 196044, guid: 938459aeb26fb124998973f4dfcfb24d, type: 3}
   m_ShootFrom: {fileID: 9014040487591779391}
+  m_OnKillHealFVX: {fileID: 0}
   m_WalkableLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_PlayerLayer:
     serializedVersion: 2
     m_Bits: 0
   m_StoppingDistance: 5
   m_RotationSpeed: 20
-  m_SampleRadius: 0
+  m_MovementSampleRadius: 0
   m_WanderDelay: 5
   m_WanderDistance: 15
   m_Range: 40
   m_TimeBetweenShots: 0.2
+  m_FieldOfView: 0
   m_MaxHealth: 75
-  m_Health: 75
-  m_OnKillHealFVX: {fileID: 0}
   m_ShouldSleep: 1
   m_Activator: {fileID: 0}
   m_Body: {fileID: 9014040487979132315}
@@ -6381,6 +6400,8 @@ MonoBehaviour:
   m_OnKillHealFVX: {fileID: 0}
   m_ShouldSleep: 1
   m_Activator: {fileID: 0}
+  m_DamagePopUpPrefab: {fileID: 0}
+  m_PopupFromHere: {fileID: 0}
   m_Weapon: {fileID: 7523779096283273143}
   m_Hand: {fileID: 892714397}
   raycastSource: {fileID: 0}
@@ -7135,6 +7156,8 @@ MonoBehaviour:
   m_OnKillHealFVX: {fileID: 0}
   m_ShouldSleep: 1
   m_Activator: {fileID: 0}
+  m_DamagePopUpPrefab: {fileID: 0}
+  m_PopupFromHere: {fileID: 0}
   m_Body: {fileID: 0}
 --- !u!1 &7936307942558921138
 GameObject:
@@ -8002,6 +8025,8 @@ MonoBehaviour:
   m_OnKillHealFVX: {fileID: 0}
   m_ShouldSleep: 0
   m_Activator: {fileID: 0}
+  m_DamagePopUpPrefab: {fileID: 0}
+  m_PopupFromHere: {fileID: 0}
 --- !u!1 &7936307944695623960
 GameObject:
   m_ObjectHideFlags: 0
