@@ -15,6 +15,7 @@ public sealed class GunHandler : MonoBehaviour
     public List<GunType> GunTypeList { get { return guns; } }
     public Camera FPSCam { get { return fpsCam; } }
     public AudioSource GunShotAudioSource { get { return gunShotAudioSource; } }
+    public GameObject MuzzleFlash { get { return muzzleFlash; } }
     
     //public int HandGunCurrentAmmo { get { return handGunCurrentAmmo; } set { handGunCurrentAmmo = value; } }
     //public int HandGunMaxAmmo { get { return handGunMaxAmmo; } }
@@ -47,6 +48,7 @@ public sealed class GunHandler : MonoBehaviour
     [SerializeField] private TextMeshProUGUI ammoText;
     [Tooltip("Whatever object goes here must have a Trail Renderer component!")]
     [SerializeField] private GameObject bulletTrail;
+    [SerializeField] private GameObject muzzleFlash;
     [SerializeField] private bool reloading;
     [SerializeField] private bool infiniteAmmo;
     [SerializeField] private LayerMask ignoreLayers;
