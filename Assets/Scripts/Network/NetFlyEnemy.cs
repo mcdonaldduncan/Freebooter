@@ -31,13 +31,11 @@ public class NetFlyEnemy : NetworkBehaviour, IDamageable
 
     public float Health { get { return health; } set { health = value; } }
     [SerializeField] private float health;
-    public void TakeDamage(float damageTaken)
+    public void TakeDamage(float damageTaken, HitBoxType? hitType = null)
     {
         Health -= damageTaken;
         CheckForDeath();
     }
-
-    public void TakeDamage(float damageTaken, HitBoxType hitType) { }
 
     public void CheckForDeath()
     {

@@ -107,12 +107,11 @@ public class NetSwarmer : NetworkBehaviour, IDamageable
         mostRecentHit = Time.time;
     }
 
-    public void TakeDamage(float damageTaken)
+    public void TakeDamage(float damageTaken, HitBoxType? hitType = null)
     {
         Health -= damageTaken;
         CheckForDeath();
     }
-    public void TakeDamage(float damageTaken, HitBoxType hitType) { }
 
 
     public void CheckForDeath()

@@ -227,19 +227,19 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
         mostRecentHit = Time.time;
     }
 
-    public void TakeDamage(float damageTaken)
+    public void TakeDamage(float damageTaken, HitBoxType? hitType = null)
     {
         health -= damageTaken;
         DamageNumbers(damageTaken);
         CheckForDeath();
     }
 
-    public void TakeDamage(float damageTaken, HitBoxType hitType)
-    {
-        health -= damageTaken;
-        DamageNumbers(damageTaken, hitType);
-        CheckForDeath();
-    }
+    //public void TakeDamage(float damageTaken, HitBoxType hitType)
+    //{
+    //    health -= damageTaken;
+    //    DamageNumbers(damageTaken, hitType);
+    //    CheckForDeath();
+    //}
 
     public void DamageNumbers(float DamageNumber)
     { //if not a special hitbox use this one

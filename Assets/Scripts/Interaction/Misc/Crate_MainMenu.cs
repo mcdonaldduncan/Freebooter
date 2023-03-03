@@ -44,13 +44,11 @@ public class Crate_MainMenu : MonoBehaviour, IDamageable
         }
     }
 
-    public void TakeDamage(float damageTaken)
+    public void TakeDamage(float damageTaken, HitBoxType? hitType = null)
     {
         Health -= damageTaken;
         CheckForDeath();
     }
-
-    public void TakeDamage(float damageTaken, HitBoxType hitType) { }
 
     private void DisableAllComponents()
     {

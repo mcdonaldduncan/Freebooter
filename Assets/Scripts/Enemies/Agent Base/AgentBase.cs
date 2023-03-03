@@ -298,18 +298,18 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         Resetvalues();
     }
 
-    public virtual void TakeDamage(float damageTaken)
-    {
-        if (m_State != AgentState.CHASE)
-        {
-            m_State = AgentState.CHASE;
-        }
-        m_Health -= damageTaken;
-        DamageNumbers(damageTaken);
-        CheckForDeath();
-    }
+    //public virtual void TakeDamage(float damageTaken)
+    //{
+    //    if (m_State != AgentState.CHASE)
+    //    {
+    //        m_State = AgentState.CHASE;
+    //    }
+    //    m_Health -= damageTaken;
+    //    DamageNumbers(damageTaken);
+    //    CheckForDeath();
+    //}
 
-    public virtual void TakeDamage(float damageTaken, HitBoxType hitType)
+    public virtual void TakeDamage(float damageTaken, HitBoxType? hitType = null)
     {
         if (m_State != AgentState.CHASE)
         {
@@ -329,7 +329,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         InstantiateDamageNumber();
     }
 
-    public virtual void DamageNumbers(float DamageNumber, HitBoxType hitType)
+    public virtual void DamageNumbers(float DamageNumber, HitBoxType? hitType)
     {//if special hitbox use this one
         var txtpro = m_DamagePopUpPrefab.GetComponent<TextMeshPro>();
         ResetDamageNumberValuers();

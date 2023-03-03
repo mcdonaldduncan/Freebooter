@@ -48,7 +48,7 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
         }
     }
 
-    public void TakeDamage(float damageTaken)
+    public void TakeDamage(float damageTaken, HitBoxType? hitType = null)
     {
         if (hitboxtype == HitBoxType.critical)
         {
@@ -80,7 +80,6 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
             CheckForDeath();
         } 
     }
-    public void TakeDamage(float damageTaken, HitBoxType hitType) { }
 
     public void PlayVFX(GameObject vfx, Vector3 position)
     {

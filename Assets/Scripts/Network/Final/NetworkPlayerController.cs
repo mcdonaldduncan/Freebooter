@@ -593,14 +593,12 @@ public class NetworkPlayerController : NetworkBehaviour, IDamageable
         characterController.Move(moveDirection * Time.deltaTime);
     }
 
-    public void TakeDamage(float damageTaken)
+    public void TakeDamage(float damageTaken, HitBoxType? hitType = null)
     {
         Health -= damageTaken;
         //Debug.Log($"Player Health: {health}");
         CheckForDeath();
     }
-
-    public void TakeDamage(float damageTaken, HitBoxType hitType) { }
 
     public void HealthRegen(float heal)
     {

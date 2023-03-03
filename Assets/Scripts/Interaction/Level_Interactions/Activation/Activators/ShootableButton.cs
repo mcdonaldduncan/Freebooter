@@ -46,14 +46,12 @@ public class ShootableButton : MonoBehaviour, IDamageable, IActivator
         Deactivate?.Invoke();
     }
 
-    public void TakeDamage(float damageTaken)
+    public void TakeDamage(float damageTaken, HitBoxType? hitType = null)
     {
         if (Health < 0) return;
         Health -= damageTaken;
         CheckForDeath();
     }
-
-    public void TakeDamage(float damageTaken, HitBoxType hitType) { }
 
     void SetUsable()
     {

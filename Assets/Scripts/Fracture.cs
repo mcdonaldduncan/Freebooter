@@ -43,7 +43,7 @@ public class Fracture : MonoBehaviour, IDamageable
         breakSoundSource.PlayOneShot(breakSound);
     }
 
-    public void TakeDamage(float damageTaken)
+    public void TakeDamage(float damageTaken, HitBoxType? hitType = null)
     {
         Health -= damageTaken;
         if (!initialDamageTaken)
@@ -53,7 +53,6 @@ public class Fracture : MonoBehaviour, IDamageable
         }
         CheckForDeath();
     }
-    public void TakeDamage(float damageTaken, HitBoxType hitType) { }
 
 
     public void CheckForDeath()

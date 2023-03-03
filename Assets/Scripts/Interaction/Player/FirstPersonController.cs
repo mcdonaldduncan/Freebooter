@@ -714,7 +714,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     //    }
     //}
 
-    public void TakeDamage(float damageTaken)
+    public void TakeDamage(float damageTaken, HitBoxType? hitType = null)
     {
         if (CanBeDamaged)
         {
@@ -725,7 +725,6 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
             CheckForDeath();
         }
     }
-    public void TakeDamage(float damageTaken, HitBoxType hitType) { }
 
 
     /// <summary>

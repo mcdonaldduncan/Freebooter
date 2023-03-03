@@ -68,13 +68,11 @@ public class Inquisitor : MonoBehaviour, IDamageable
         Health = m_StartingHealth;
     }
 
-    public void TakeDamage(float damageTaken)
+    public void TakeDamage(float damageTaken, HitBoxType? hitType = null)
     {
         Health -= damageTaken;
         CheckForDeath();
     }
-
-    public void TakeDamage(float damageTaken, HitBoxType hitType) { }
 
     public void CheckOrbits()
     {

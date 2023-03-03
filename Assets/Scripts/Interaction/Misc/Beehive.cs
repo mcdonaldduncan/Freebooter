@@ -36,13 +36,12 @@ public class Beehive : MonoBehaviour, IDamageable
         }
     }
 
-    public void TakeDamage(float damageTaken)
+    public void TakeDamage(float damageTaken, HitBoxType? hitType = null)
     {
         Health -= damageTaken;
         ActivateBees();
         CheckForDeath();
     }
-    public void TakeDamage(float damageTaken, HitBoxType hitType) { }
 
 
     private void ActivateBees()

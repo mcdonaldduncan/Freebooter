@@ -148,14 +148,12 @@ public class NewAgentBase : MonoBehaviour, IDamageable, INavigation, ITracking, 
         }
     }
 
-    public void TakeDamage(float damageTaken)
+    public void TakeDamage(float damageTaken, HitBoxType? hitType = null)
     {
         m_State = AgentState.CHASE;
         Health -= damageTaken;
         CheckForDeath();
     }
-
-    public void TakeDamage(float damageTaken, HitBoxType hitType) { }
 
     void OnDeath()
     {
