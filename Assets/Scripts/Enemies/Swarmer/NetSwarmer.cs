@@ -112,6 +112,8 @@ public class NetSwarmer : NetworkBehaviour, IDamageable
         Health -= damageTaken;
         CheckForDeath();
     }
+    public void TakeDamage(float damageTaken, HitBoxType hitType) { }
+
 
     public void CheckForDeath()
     {

@@ -94,6 +94,37 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!1 &6873197295026157399
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7349209687543015189}
+  m_Layer: 9
+  m_Name: DamagePopUpFromHere
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7349209687543015189
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6873197295026157399}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.546, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7936307944237820729}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7936307943014886290
 GameObject:
   m_ObjectHideFlags: 0
@@ -525,6 +556,7 @@ Transform:
   m_Children:
   - {fileID: 7936307943029315750}
   - {fileID: 7936307943233775800}
+  - {fileID: 7349209687543015189}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -557,6 +589,8 @@ MonoBehaviour:
   m_OnKillHealFVX: {fileID: 2748225569481887560, guid: de88dfbe0c34dad418728faa198b70e0, type: 3}
   m_ShouldSleep: 0
   m_Activator: {fileID: 0}
+  m_DamagePopUpPrefab: {fileID: 3377893959702237216, guid: b26933fac4913a747a2bc7b367e9b00b, type: 3}
+  m_PopupFromHere: {fileID: 7349209687543015189}
   m_Body: {fileID: 7936307943233775800}
 --- !u!65 &873283035421134823
 BoxCollider:

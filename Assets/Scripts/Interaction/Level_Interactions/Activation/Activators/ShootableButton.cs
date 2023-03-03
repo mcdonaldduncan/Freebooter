@@ -53,6 +53,8 @@ public class ShootableButton : MonoBehaviour, IDamageable, IActivator
         CheckForDeath();
     }
 
+    public void TakeDamage(float damageTaken, HitBoxType hitType) { }
+
     void SetUsable()
     {
         Health = m_Health;

@@ -5,6 +5,7 @@ using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UIElements;
+using TMPro;
 
 public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
 {
@@ -36,6 +37,11 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
     [Header("Activation Options")]
     [SerializeField] bool m_ShouldSleep;
     [SerializeField] GameObject m_Activator;
+
+    [Header("DamagePopUp")]
+    [SerializeField] GameObject m_DamagePopUpPrefab;
+    [SerializeField] Transform m_PopupFromHere;
+    float m_fontSize = 5;
 
     protected NavMeshAgent m_Agent;
     protected Transform m_Target;
@@ -299,13 +305,76 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
             m_State = AgentState.CHASE;
         }
         m_Health -= damageTaken;
+        DamageNumbers(damageTaken);
         CheckForDeath();
     }
+
+    public virtual void TakeDamage(float damageTaken, HitBoxType hitType)
+    {
+        if (m_State != AgentState.CHASE)
+        {
+            m_State = AgentState.CHASE;
+        }
+        m_Health -= damageTaken;
+        DamageNumbers(damageTaken, hitType);
+        CheckForDeath();
+    }
+
+    public virtual void DamageNumbers(float DamageNumber)
+    { //if not a special hitbox use this one
+        var txtpro = m_DamagePopUpPrefab.GetComponent<TextMeshPro>();
+        ResetDamageNumberValuers();
+        txtpro.color = Color.gray;
+        txtpro.text = DamageNumber.ToString("0");
+        InstantiateDamageNumber();
+    }
+
+    public virtual void DamageNumbers(float DamageNumber, HitBoxType hitType)
+    {//if special hitbox use this one
+        var txtpro = m_DamagePopUpPrefab.GetComponent<TextMeshPro>();
+        ResetDamageNumberValuers();
+        if (hitType != null)
+        {
+            switch (hitType)
+            {
+                case HitBoxType.critical:
+                    txtpro.color = Color.red;
+                    txtpro.fontSize = m_fontSize*2;
+                    break;
+                case HitBoxType.armored:
+                    txtpro.color = Color.blue;
+                    break;
+                case HitBoxType.shield:
+                    //for now we dont have any shielded enemies.
+                    //TODO : make the shields also show damage numbers
+                    txtpro.color = Color.blue;
+                    break;
+            }
+        }
+        else if (hitType == null)
+        {
+            txtpro.color = Color.gray;
+        }
+        txtpro.text = DamageNumber.ToString("0");
+        InstantiateDamageNumber();
+    }
+
+    void InstantiateDamageNumber()
+    {
+       ProjectileManager.Instance.TakeFromPool(m_DamagePopUpPrefab, new Vector3(m_PopupFromHere.transform.position.x + UnityEngine.Random.Range(-1f,1f), m_PopupFromHere.transform.position.y, m_PopupFromHere.transform.position.z + UnityEngine.Random.Range(-1f,1f)));
+    }
+
+    void ResetDamageNumberValuers() 
+    {
+        var txtpro = m_DamagePopUpPrefab.GetComponent<TextMeshPro>();
+        txtpro.color = Color.gray;
+        txtpro.fontSize = m_fontSize;
+    }
+
 
     void Sleep()
     {
         if (m_Agent.isStopped) return;
-
         m_Agent.ResetPath();
         m_Agent.isStopped = true;
     }

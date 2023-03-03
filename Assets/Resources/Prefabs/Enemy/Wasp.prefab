@@ -31,6 +31,37 @@ Transform:
   m_Father: {fileID: 2851899925944741662}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1999769267498631911
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3907655064562151518}
+  m_Layer: 9
+  m_Name: DamagePopUpFromHere
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3907655064562151518
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1999769267498631911}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.505, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2851899925944741662}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2536801602152189565
 GameObject:
   m_ObjectHideFlags: 0
@@ -566,6 +597,7 @@ Transform:
   - {fileID: 2851899924537539087}
   - {fileID: 710385357902888510}
   - {fileID: 8972891587486594756}
+  - {fileID: 3907655064562151518}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 270, z: 0}
@@ -620,6 +652,8 @@ MonoBehaviour:
   m_OnKillHealFVX: {fileID: 2748225569481887560, guid: de88dfbe0c34dad418728faa198b70e0, type: 3}
   m_ShouldSleep: 0
   m_Activator: {fileID: 0}
+  m_DamagePopUpPrefab: {fileID: 3377893959702237216, guid: b26933fac4913a747a2bc7b367e9b00b, type: 3}
+  m_PopupFromHere: {fileID: 3907655064562151518}
   m_Body: {fileID: 2851899924537539080}
 --- !u!136 &3138614372399527620
 CapsuleCollider:

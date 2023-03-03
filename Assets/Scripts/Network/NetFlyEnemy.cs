@@ -37,6 +37,8 @@ public class NetFlyEnemy : NetworkBehaviour, IDamageable
         CheckForDeath();
     }
 
+    public void TakeDamage(float damageTaken, HitBoxType hitType) { }
+
     public void CheckForDeath()
     {
         if (Health <= 0)

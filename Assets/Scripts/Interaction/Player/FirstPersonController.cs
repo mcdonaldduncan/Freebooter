@@ -725,6 +725,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
             CheckForDeath();
         }
     }
+    public void TakeDamage(float damageTaken, HitBoxType hitType) { }
+
 
     /// <summary>
     /// For pick up system which is currently not in use

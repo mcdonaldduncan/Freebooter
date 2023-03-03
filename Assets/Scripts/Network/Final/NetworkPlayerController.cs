@@ -599,6 +599,9 @@ public class NetworkPlayerController : NetworkBehaviour, IDamageable
         //Debug.Log($"Player Health: {health}");
         CheckForDeath();
     }
+
+    public void TakeDamage(float damageTaken, HitBoxType hitType) { }
+
     public void HealthRegen(float heal)
     {
         health += heal;
@@ -619,6 +622,8 @@ public class NetworkPlayerController : NetworkBehaviour, IDamageable
     }
 
     
+
+
 
     //KEEPING THIS INCASE WE WANT TO ADD CROUCHING
     //Coroutine that handles crouching/standing

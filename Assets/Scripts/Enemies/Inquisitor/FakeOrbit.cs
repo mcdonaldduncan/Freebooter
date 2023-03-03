@@ -62,6 +62,8 @@ public class FakeOrbit : MonoBehaviour, IDamageable
         CheckForDeath();
     }
 
+    public void TakeDamage(float damageTaken, HitBoxType hitType) { }
+
     public void CheckForDeath()
     {
         if (Health <= 0)

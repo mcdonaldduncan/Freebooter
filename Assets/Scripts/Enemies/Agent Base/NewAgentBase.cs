@@ -155,6 +155,8 @@ public class NewAgentBase : MonoBehaviour, IDamageable, INavigation, ITracking, 
         CheckForDeath();
     }
 
+    public void TakeDamage(float damageTaken, HitBoxType hitType) { }
+
     void OnDeath()
     {
         if (m_Tracking.DistanceToTarget <= LevelManager.Instance.Player.DistanceToHeal)

@@ -74,6 +74,8 @@ public class Inquisitor : MonoBehaviour, IDamageable
         CheckForDeath();
     }
 
+    public void TakeDamage(float damageTaken, HitBoxType hitType) { }
+
     public void CheckOrbits()
     {
         if (m_Orbits.Where(x => x.gameObject.activeSelf).Any())

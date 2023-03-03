@@ -53,7 +53,9 @@ public class DamageActivator : MonoBehaviour, IDamageable, IActivator
         Health -= damageTaken;
         CheckForDeath();
     }
-    
+    public void TakeDamage(float damageTaken, HitBoxType hitType) { }
+
+
     void SetInactive()
     {
         gameObject.SetActive(false);

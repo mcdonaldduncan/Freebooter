@@ -53,6 +53,8 @@ public class Fracture : MonoBehaviour, IDamageable
         }
         CheckForDeath();
     }
+    public void TakeDamage(float damageTaken, HitBoxType hitType) { }
+
 
     public void CheckForDeath()
     {

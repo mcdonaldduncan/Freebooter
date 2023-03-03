@@ -872,6 +872,7 @@ Transform:
   - {fileID: 4498281120624154}
   - {fileID: 4689245717580706}
   - {fileID: 1505903110566047894}
+  - {fileID: 670094020429777923}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -924,6 +925,8 @@ MonoBehaviour:
   m_OnKillHealFVX: {fileID: 2748225569481887560, guid: de88dfbe0c34dad418728faa198b70e0, type: 3}
   m_ShouldSleep: 0
   m_Activator: {fileID: 0}
+  m_DamagePopUpPrefab: {fileID: 3377893959702237216, guid: b26933fac4913a747a2bc7b367e9b00b, type: 3}
+  m_PopupFromHere: {fileID: 670094020429777923}
   Shield: {fileID: 0}
   m_Animator: {fileID: 95980759410839360}
   m_raycastSource: {fileID: 1505903110566047894}
@@ -1798,6 +1801,37 @@ Transform:
   - {fileID: 4912544546913920}
   m_Father: {fileID: 4353366169529738}
   m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3523341961437852800
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 670094020429777923}
+  m_Layer: 0
+  m_Name: DamagePopUpFromHere
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &670094020429777923
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3523341961437852800}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4673369876368086}
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7666149669828606570
 GameObject:

@@ -53,12 +53,12 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
         if (hitboxtype == HitBoxType.critical)
         {
             PlayVFX(critVFX, VFXTransform.position);
-            damageable.TakeDamage(damageTaken * CriticalDamageMultiplier);
+            damageable.TakeDamage(damageTaken * CriticalDamageMultiplier, hitboxtype);
         }
         if (hitboxtype == HitBoxType.armored)
         {
             PlayVFX(armorVFX, VFXTransform.position);
-            damageable.TakeDamage(damageTaken * ArmorDamageReductionMultiplier);
+            damageable.TakeDamage(damageTaken * ArmorDamageReductionMultiplier, hitboxtype);
         }
         if (hitboxtype == HitBoxType.shield)
         {
@@ -76,11 +76,11 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
             {
                 PlayVFX(shieldVFXRed, VFXTransform.position);
             }
-
             _health -= damageTaken;
             CheckForDeath();
         } 
     }
+    public void TakeDamage(float damageTaken, HitBoxType hitType) { }
 
     public void PlayVFX(GameObject vfx, Vector3 position)
     {
@@ -100,6 +100,8 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
         shieldVFXYellow.transform.position = VFXTransform.position;
         shieldVFXRed.transform.position = VFXTransform.position;
     }
+
+    
 }
 public enum HitBoxType
 {

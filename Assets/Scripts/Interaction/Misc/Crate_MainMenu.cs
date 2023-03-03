@@ -50,6 +50,8 @@ public class Crate_MainMenu : MonoBehaviour, IDamageable
         CheckForDeath();
     }
 
+    public void TakeDamage(float damageTaken, HitBoxType hitType) { }
+
     private void DisableAllComponents()
     {
         this.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
