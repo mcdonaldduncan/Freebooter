@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -15,13 +16,15 @@ public class DamageActivator : MonoBehaviour, IDamageable, IActivator
 
     public float Health { get; set; }
 
-    public GameObject DamagePopUpPrefab => throw new System.NotImplementedException();
+    public GameObject DamageTextPrefab => throw new System.NotImplementedException();
 
-    public Transform PopupFromHere => throw new System.NotImplementedException();
+    public Transform TextSpawnLocation => throw new System.NotImplementedException();
 
-    public float fontSize => throw new System.NotImplementedException();
+    public float FontSize => throw new System.NotImplementedException();
 
-    public bool showDamageNumbers => throw new System.NotImplementedException();
+    public bool ShowDamageNumbers => throw new System.NotImplementedException();
+
+    public TextMeshPro Text { get; set; }
 
     public event IActivator.ActivateDelegate Activate;
     public event IActivator.ActivateDelegate Deactivate;
@@ -55,7 +58,7 @@ public class DamageActivator : MonoBehaviour, IDamageable, IActivator
         Deactivate?.Invoke();
     }
 
-    public void TakeDamage(float damageTaken, HitBoxType? hitType = null)
+    public void TakeDamage(float damageTaken)
     {
         if (Health < 0) return;
         Health -= damageTaken;

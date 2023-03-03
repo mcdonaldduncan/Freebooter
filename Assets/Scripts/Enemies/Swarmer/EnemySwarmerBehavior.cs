@@ -64,10 +64,12 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
 
     private Collider[] hits = new Collider[5];
 
-    public GameObject DamagePopUpPrefab => m_DamagePopUpPrefab;
-    public Transform PopupFromHere => m_PopupFromHere;
-    public float fontSize => m_fontSize;
-    public bool showDamageNumbers => m_showDamageNumbers;
+    public GameObject DamageTextPrefab => m_DamagePopUpPrefab;
+    public Transform TextSpawnLocation => m_PopupFromHere;
+    public float FontSize => m_fontSize;
+    public bool ShowDamageNumbers => m_showDamageNumbers;
+
+    public TextMeshPro Text { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
     private void Awake()
     {

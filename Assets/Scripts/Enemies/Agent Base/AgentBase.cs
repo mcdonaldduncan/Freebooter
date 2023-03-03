@@ -73,10 +73,13 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
     [SerializeField] bool m_showDamageNumbers;
     float m_fontSize = 5;
 
-    public GameObject DamagePopUpPrefab => m_DamagePopUpPrefab; 
-    public Transform PopupFromHere => m_PopupFromHere; 
-    public float fontSize => m_fontSize;
-    public bool showDamageNumbers => m_showDamageNumbers;
+    public GameObject DamageTextPrefab => m_DamagePopUpPrefab; 
+    public Transform TextSpawnLocation => m_PopupFromHere; 
+    public float FontSize => m_fontSize;
+    public bool ShowDamageNumbers => m_showDamageNumbers;
+
+    public TextMeshPro Text { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
     IDamageable m_IDamageable;
 
     private void Awake()

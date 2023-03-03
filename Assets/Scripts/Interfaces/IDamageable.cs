@@ -10,66 +10,65 @@ using TMPro;
 public interface IDamageable
 {
     public float Health { get; set; }
-    public GameObject DamagePopUpPrefab { get; }
-    public Transform PopupFromHere { get; }
-    public float fontSize { get; }
 
-    bool showDamageNumbers { get; }
+    public GameObject DamageTextPrefab { get; }
+    public Transform TextSpawnLocation { get; }
+    public TextMeshPro Text { get; set; }
 
-    void TakeDamage(float damageTaken){}
+    public float FontSize { get; }
+
+    void TakeDamage(float damageTaken);
+
+    public void SetupDamageText()
+    {
+        Text = DamageTextPrefab.GetComponent<TextMeshPro>();
+    }
 
     public void GenerateDamageInfo(float damageTaken, HitBoxType hitType)
     {
-        if (showDamageNumbers == false) { return; }
         DamageNumbers(damageTaken, hitType);
     }
+
     public void DamageNumbers(float DamageNumber, HitBoxType hitType)
-    {//if special hitbox use this one
-        var txtpro = DamagePopUpPrefab.GetComponent<TextMeshPro>();
+    {
         ResetDamageNumberValuers();
-        if (hitType != null)
+        switch (hitType)
         {
-            switch (hitType)
-            {
-                case HitBoxType.critical:
-                    txtpro.color = Color.red;
-                    txtpro.fontSize = fontSize * 2;
-                    txtpro.text = DamageNumber.ToString("0") + "!";
-                    break;
-                case HitBoxType.armored:
-                    txtpro.color = Color.blue;
-                    txtpro.text = DamageNumber.ToString("0");
-                    break;
-                case HitBoxType.shield:
-                    //for now we dont have any shielded enemies.
-                    //TODO : make the shields also show damage numbers
-                    txtpro.color = Color.blue;
-                    txtpro.text = DamageNumber.ToString("0");
-                    break;
-                case HitBoxType.normal:
-                    txtpro.color = Color.white;
-                    txtpro.text = DamageNumber.ToString("0");
-                    break;
-            }
-        }
-        else if (hitType == null)
-        {
-            txtpro.color = Color.gray;
+            case HitBoxType.critical:
+                Text.color = Color.red;
+                Text.fontSize = FontSize * 2;
+                Text.text = DamageNumber.ToString("0") + "!";
+                break;
+            case HitBoxType.armored:
+                Text.color = Color.blue;
+                Text.text = DamageNumber.ToString("0");
+                break;
+            case HitBoxType.shield:
+                //for now we dont have any shielded enemies.
+                //TODO : make the shields also show damage numbers
+                Text.color = Color.blue;
+                Text.text = DamageNumber.ToString("0");
+                break;
+            case HitBoxType.normal:
+                Text.color = Color.white;
+                Text.text = DamageNumber.ToString("0");
+                break;
         }
         InstantiateDamageNumber();
     }
 
     public void InstantiateDamageNumber()
     {
-        ProjectileManager.Instance.TakeFromPool(DamagePopUpPrefab, new Vector3(PopupFromHere.transform.position.x + UnityEngine.Random.Range(-1f, 1f), PopupFromHere.transform.position.y, PopupFromHere.transform.position.z + UnityEngine.Random.Range(-1f, 1f)));
+        ProjectileManager.Instance.TakeFromPool(DamageTextPrefab, new Vector3(TextSpawnLocation.transform.position.x + Random.Range(-1f, 1f), TextSpawnLocation.transform.position.y, TextSpawnLocation.transform.position.z + Random.Range(-1f, 1f)));
     }
 
     public void ResetDamageNumberValuers()
     {
-        var txtpro = DamagePopUpPrefab.GetComponent<TextMeshPro>();
-        txtpro.color = Color.gray;
-        txtpro.fontSize = fontSize;
+        //var txtpro = DamageTextPrefab.GetComponent<TextMeshPro>();
+        Text.color = Color.gray;
+        Text.fontSize = FontSize;
     }
+
     public void CheckForDeath();
     
 }

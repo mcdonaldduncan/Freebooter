@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -215,13 +216,15 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
     float speedScale => 1 + ((maxSpeedScale - 1) * (1 - (health / maxHealth)));
 
-    public GameObject DamagePopUpPrefab => throw new NotImplementedException();
+    public GameObject DamageTextPrefab => throw new NotImplementedException();
 
-    public Transform PopupFromHere => throw new NotImplementedException();
+    public Transform TextSpawnLocation => throw new NotImplementedException();
 
-    public float fontSize => throw new NotImplementedException();
+    public float FontSize => throw new NotImplementedException();
 
-    public bool showDamageNumbers => throw new NotImplementedException();
+    public bool ShowDamageNumbers => throw new NotImplementedException();
+
+    public TextMeshPro Text { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
     float originalSpeed, boostSpeedDuration, boostStartedTime;
     bool boostedSpeedEnabled;
@@ -722,7 +725,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     //    }
     //}
 
-    public void TakeDamage(float damageTaken, HitBoxType? hitType = null)
+    public void TakeDamage(float damageTaken)
     {
         if (CanBeDamaged)
         {

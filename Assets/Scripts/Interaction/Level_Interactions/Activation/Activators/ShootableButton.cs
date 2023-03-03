@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 /// <summary>
@@ -17,10 +18,11 @@ public class ShootableButton : MonoBehaviour, IDamageable, IActivator
     bool isUsable;
 
     public float Health {get; set; }
-    public GameObject DamagePopUpPrefab { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-    public Transform PopupFromHere { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-    public float fontSize { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-    public bool showDamageNumbers { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public GameObject DamageTextPrefab { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public Transform TextSpawnLocation { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public float FontSize { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public bool ShowDamageNumbers { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public TextMeshPro Text { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
     public event IActivator.ActivateDelegate Activate;
     public event IActivator.ActivateDelegate Deactivate;

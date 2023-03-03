@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Beehive : MonoBehaviour, IDamageable
@@ -9,13 +10,15 @@ public class Beehive : MonoBehaviour, IDamageable
 
     public float Health { get { return health; } set { health = value; } }
 
-    public GameObject DamagePopUpPrefab => throw new System.NotImplementedException();
+    public GameObject DamageTextPrefab => throw new System.NotImplementedException();
 
-    public Transform PopupFromHere => throw new System.NotImplementedException();
+    public Transform TextSpawnLocation => throw new System.NotImplementedException();
 
-    public float fontSize => throw new System.NotImplementedException();
+    public float FontSize => throw new System.NotImplementedException();
 
-    public bool showDamageNumbers => throw new System.NotImplementedException();
+    public bool ShowDamageNumbers => throw new System.NotImplementedException();
+
+    public TextMeshPro Text { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
     [SerializeField]
     List<GameObject> bees;
@@ -44,7 +47,7 @@ public class Beehive : MonoBehaviour, IDamageable
         }
     }
 
-    public void TakeDamage(float damageTaken, HitBoxType? hitType = null)
+    public void TakeDamage(float damageTaken)
     {
         Health -= damageTaken;
         ActivateBees();

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,6 +10,12 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
     [SerializeField] GameObject m_ProjectilePrefab;
     [SerializeField] Transform m_ShootFrom;
     [SerializeField] GameObject m_OnKillHealFVX;
+
+    [Header("Damage Display Options")]
+    [SerializeField] GameObject m_DamageTextPrefab;
+    [SerializeField] Transform m_TextSpawnLocation;
+    [SerializeField] float m_FontSize;
+    [SerializeField] bool m_ShowDamageNumbers;
 
     [Header("Layer mask Options")]
     [SerializeField] LayerMask m_WalkableLayers;
@@ -44,6 +51,7 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
     ITracking m_Tracking;
     IShooting m_Shooting;
     IRespawn m_Respawn;
+    IDamageable m_Damageable;
 
     Vector3 m_StartingPosition;
     Quaternion m_StartingRotation;
@@ -89,6 +97,16 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
     public bool ShouldSleep { get; set; }
     public IActivator Activator { get; set; }
 
+    public GameObject DamageTextPrefab => m_DamageTextPrefab;
+
+    public Transform TextSpawnLocation => m_TextSpawnLocation;
+
+    public TextMeshPro Text { get; set; }
+
+    public float FontSize => m_FontSize;
+
+    public bool ShowDamageNumbers => m_ShowDamageNumbers;
+
     protected void AwakeSetup()
     {
         Agent = GetComponent<NavMeshAgent>();
@@ -97,6 +115,7 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
         m_Tracking = this;
         m_Shooting = this;
         m_Respawn = this;
+        m_Damageable = this;
     }
 
     protected void EnableSetup()
@@ -154,14 +173,13 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
         }
     }
 
-    public void TakeDamage(float damageTaken, HitBoxType? hitType = null)
+    public void TakeDamage(float damageTaken)
     {
         m_State = AgentState.CHASE;
         Health -= damageTaken;
+        m_Damageable.DamageNumbers(damageTaken, HitBoxType.normal);
         CheckForDeath();
     }
-
-
 
     public virtual void OnDeath()
     {

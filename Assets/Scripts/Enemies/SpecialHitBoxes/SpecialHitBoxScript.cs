@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
@@ -38,12 +39,12 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
     public float maxHealth;
     public float Health { get => _health; set => _health = value; }
 
-    public GameObject DamagePopUpPrefab { get => damageable.DamagePopUpPrefab; }
-    public Transform PopupFromHere { get => damageable.PopupFromHere; }
-    public float fontSize { get => damageable.fontSize; } 
-    public bool showDamageNumbers { get => damageable.showDamageNumbers; }
+    public GameObject DamageTextPrefab { get => damageable.DamageTextPrefab; }
+    public Transform TextSpawnLocation { get => damageable.TextSpawnLocation; }
+    public float FontSize { get => damageable.FontSize; } 
 
     public GameObject Prefab { get => m_Prefab; set => m_Prefab = value; }
+    public TextMeshPro Text { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
     public void CheckForDeath()
     {

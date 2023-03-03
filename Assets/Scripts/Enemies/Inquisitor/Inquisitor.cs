@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -58,10 +59,11 @@ public class Inquisitor : MonoBehaviour, IDamageable
     [SerializeField] bool m_showDamageNumbers;
     float m_fontSize = 5;
 
-    public GameObject DamagePopUpPrefab { get => m_DamagePopUpPrefab; set => m_DamagePopUpPrefab = value; }
-    public Transform PopupFromHere { get => m_PopupFromHere; set => m_PopupFromHere = value; }
-    public float fontSize { get => m_fontSize; set => m_fontSize = value; }
-    public bool showDamageNumbers { get => m_showDamageNumbers; set => m_showDamageNumbers = value; }
+    public GameObject DamageTextPrefab { get => m_DamagePopUpPrefab; set => m_DamagePopUpPrefab = value; }
+    public Transform TextSpawnLocation { get => m_PopupFromHere; set => m_PopupFromHere = value; }
+    public float FontSize { get => m_fontSize; set => m_fontSize = value; }
+    public bool ShowDamageNumbers { get => m_showDamageNumbers; set => m_showDamageNumbers = value; }
+    public TextMeshPro Text { get; set; }
 
     private void OnEnable()
     {
@@ -79,7 +81,7 @@ public class Inquisitor : MonoBehaviour, IDamageable
         Health = m_StartingHealth;
     }
 
-    public void TakeDamage(float damageTaken, HitBoxType? hitType = null)
+    public void TakeDamage(float damageTaken)
     {
         Health -= damageTaken;
         CheckForDeath();
