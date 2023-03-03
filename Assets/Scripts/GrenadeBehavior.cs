@@ -58,6 +58,11 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
     {
         if (collision.gameObject.tag != "Player" && !collided)
         {
+            if (collision.gameObject.TryGetComponent(out IEnemy enemy))
+            {
+                Explode();
+                return;
+            }
             grenadeRB.constraints = RigidbodyConstraints.FreezeAll;
             transform.SetParent(collision.transform);
             collided = true;
