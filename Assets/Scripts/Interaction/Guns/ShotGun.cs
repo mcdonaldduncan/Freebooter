@@ -65,8 +65,6 @@ public class ShotGun : MonoBehaviour, IGun
         bulletPoolList = new List<GameObject>();
         GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
         GunAnimationHandler.RecoilAnim.SetTrigger("RecoilTrigger");
-        var muzzleFlash = ProjectileManager.Instance.TakeFromPool(GunManager.MuzzleFlash, ShootFrom.transform.position, Quaternion.LookRotation(GunManager.FPSCam.transform.forward * -1));
-        muzzleFlash.transform.SetParent(ShootFrom);
         for (int i = 0; i < ShotGunBulletAmount; i++)
         {
             Vector3 aimSpot = GunManager.FPSCam.transform.position;
@@ -97,6 +95,10 @@ public class ShotGun : MonoBehaviour, IGun
                 trail.Launch(ShootFrom.transform.position + direction * 100);
             }
         }
+
+        Quaternion muzzleLook = Quaternion.LookRotation(-GunManager.FPSCam.transform.forward);
+        var muzzleFlash = ProjectileManager.Instance.TakeFromPool(GunManager.MuzzleFlash, ShootFrom.transform.position, muzzleLook);
+        muzzleFlash.transform.SetParent(ShootFrom);
 
         //if (!GunManager.InfiniteAmmo)
         //{

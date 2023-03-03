@@ -112,9 +112,12 @@ public class AutoGun : MonoBehaviour, IGun
             if (Physics.Raycast(ray, out hitInfo, float.MaxValue, ~LayerToIgnore))
             {
                 ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position, out BulletTrail trail);
-                var muzzleFlash = ProjectileManager.Instance.TakeFromPool(GunManager.MuzzleFlash, ShootFrom.transform.position, Quaternion.LookRotation(GunManager.FPSCam.transform.forward * -1));
+
+                Quaternion muzzleLook = Quaternion.LookRotation(-GunManager.FPSCam.transform.forward);
+                var muzzleFlash = ProjectileManager.Instance.TakeFromPool(GunManager.MuzzleFlash, ShootFrom.transform.position, muzzleLook);
                 muzzleFlash.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
                 muzzleFlash.transform.SetParent(ShootFrom);
+
                 trail.Launch(hitInfo.point);
                 HitEnemyBehavior(hitInfo, hitInfo.transform.GetComponent<IDamageable>());
 
@@ -133,7 +136,7 @@ public class AutoGun : MonoBehaviour, IGun
             else
             {
                 ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position, out BulletTrail trail);
-                var muzzleFlash = ProjectileManager.Instance.TakeFromPool(GunManager.MuzzleFlash, ShootFrom.transform.position, Quaternion.LookRotation(GunManager.FPSCam.transform.forward * -1));
+                var muzzleFlash = ProjectileManager.Instance.TakeFromPool(GunManager.MuzzleFlash, ShootFrom.transform.position, Quaternion.LookRotation(-GunManager.FPSCam.transform.forward));
                 muzzleFlash.transform.SetParent(ShootFrom);
                 trail.Launch(ShootFrom.transform.position + ray.direction * 100);
 
