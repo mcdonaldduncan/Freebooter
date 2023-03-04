@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+//using System.Diagnostics;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
@@ -126,6 +127,8 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
 
         m_State = m_ShouldSleep ? AgentState.SLEEP : AgentState.WANDER;
         m_StartingState = m_State;
+
+        m_Damageable.SetupDamageText();
     }
 
     protected void StartSetup()
@@ -166,6 +169,7 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
 
     public void CheckForDeath()
     {
+        
         if (Health <= 0)
         {
             IsDead = true;
@@ -175,10 +179,12 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
 
     public void TakeDamage(float damageTaken)
     {
+        Debug.Log($"{gameObject.name} took damage");
         m_State = AgentState.CHASE;
         Health -= damageTaken;
-        m_Damageable.DamageNumbers(damageTaken, HitBoxType.normal);
+        m_Damageable.GenerateDamageInfo(damageTaken, HitBoxType.normal);
         CheckForDeath();
+        Debug.Log(Health);
     }
 
     public virtual void OnDeath()

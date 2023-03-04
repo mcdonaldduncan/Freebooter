@@ -38,6 +38,7 @@ public class Drone : NewAgentBase
 
     public override void OnDeath()
     {
+        Debug.Log("Drone on death called");
         base.OnDeath();
         gameObject.SetActive(true);
         m_DeathExplosion.StartDeathSequence();
