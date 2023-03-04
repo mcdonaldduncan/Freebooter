@@ -999,14 +999,14 @@ MonoBehaviour:
   shotGunCurrentAmmo: 0
   shotGunMaxAmmo: 16
   shotGunFireRate: 0.5
-  shotGunHitStopDuration: 0.075
+  shotGunHitStopDuration: 0.0075
   shotGunAimOffset: 15
   shotGunReticle: {fileID: 2291208426676616775}
   shotGunShotAudio: {fileID: 8300000, guid: c15d23ec2ec14b949aa86c30705b3da5, type: 3}
   shotgunAnimationHandler: {fileID: 211301444}
-  shotShakeDuration: 0.5
-  shotShakeMagnitude: 0.1
-  shotShakeDampen: 1
+  shotShakeDuration: 0.27
+  shotShakeMagnitude: 0.28
+  shotShakeDampen: 0.9
   autoGunModel: {fileID: 2327159229049862326}
   autoGunShootFrom: {fileID: 2896727943042922130}
   autoGunDamageDropStart: 20
