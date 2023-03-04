@@ -789,8 +789,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ad9ceb5af1d7964b8808bd614743d53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shakeMagnitude: 0.1
-  dampingSpeed: 1
 --- !u!1 &297426593622482813
 GameObject:
   m_ObjectHideFlags: 0
@@ -1006,6 +1004,9 @@ MonoBehaviour:
   shotGunReticle: {fileID: 2291208426676616775}
   shotGunShotAudio: {fileID: 8300000, guid: c15d23ec2ec14b949aa86c30705b3da5, type: 3}
   shotgunAnimationHandler: {fileID: 211301444}
+  shotShakeDuration: 0.5
+  shotShakeMagnitude: 0.1
+  shotShakeDampen: 1
   autoGunModel: {fileID: 2327159229049862326}
   autoGunShootFrom: {fileID: 2896727943042922130}
   autoGunDamageDropStart: 20
@@ -1032,6 +1033,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 690bae71bb6865348898b7fdf76b0dad, type: 3}
   triggerReleasedAudio: {fileID: 8300000, guid: 857e550ef93099249bcb04313653764a, type: 3}
   autoGunAnimationHandler: {fileID: 2423536598832608778}
+  autoShakeDuration: 0.5
+  autoShakeMagnitude: 0.1
+  autoShakeDampen: 1
   grenadeObject: {fileID: 2469417936984378629, guid: 8178c7fb6a6b5ce46ad893fc448533fe, type: 3}
   grenadeGunModel: {fileID: 297426593897619845}
   grenadeGunShootFrom: {fileID: 297426594248173848}
@@ -1047,6 +1051,9 @@ MonoBehaviour:
   grenadeGunShotAudio: {fileID: 8300000, guid: d177a80e9988723409484f33238db40c, type: 3}
   grenadeLaunchForce: 800
   grenadeLaunchArc: 0.25
+  grenadeGunShakeDuration: 0.5
+  grenadeGunShakeMagnitude: 0.1
+  grenadeGunShakeDampen: 1
   gunInventory: []
   hitEnemy: {fileID: 8781331233716584084, guid: e48bb5898f7e7a347aa4ffb1f06b9b11, type: 3}
   hitNONEnemy: {fileID: 122632, guid: 47a6eaf00da4f324a9167c487dff2f4c, type: 3}

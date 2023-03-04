@@ -30,6 +30,9 @@ public interface IGun
 
     TrailRenderer BulletTrailRenderer { get; set; }
     bool CanShoot { get; }
+    float ShakeDuration { get; set; }
+    float ShakeMagnitude { get; set; }
+    float ShakeDampen { get; set; }
 
     void ShootTriggered(InputAction.CallbackContext context);
     void AlternateTriggered(InputAction.CallbackContext context);

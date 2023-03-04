@@ -25,6 +25,9 @@ public class GrenadeGun : MonoBehaviour, IGun
     public TrailRenderer BulletTrailRenderer { get; set; }
     public AudioClip GunShotAudio { get; set; }
     public float HitStopDuration { get; set; }
+    public float ShakeDuration { get; set; }
+    public float ShakeMagnitude { get; set; }
+    public float ShakeDampen { get; set; }
     public GameObject GunModel { get; set; }
     public GameObject Grenade { get; set; }
     public float GrenadeLaunchForce { get; set; }
@@ -88,6 +91,7 @@ public class GrenadeGun : MonoBehaviour, IGun
 
         //Launch this grenade with the calculated force
         grenade.Launch(grenadeLaunchForce);
+        CameraShake.ShakeCamera(ShakeDuration, ShakeMagnitude, ShakeDampen);
 
         //Time of shot, relevant for fire rate
         lastShotTime = Time.time;

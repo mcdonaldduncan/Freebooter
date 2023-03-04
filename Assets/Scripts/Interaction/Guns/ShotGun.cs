@@ -31,6 +31,9 @@ public class ShotGun : MonoBehaviour, IGun
     public TrailRenderer BulletTrailRenderer { get; set; }
     public ShotgunAnimationHandler GunAnimationHandler { get; set; }
     public float HitStopDuration { get; set; }
+    public float ShakeDuration { get; set; }
+    public float ShakeMagnitude { get; set; }
+    public float ShakeDampen { get; set; }
 
     public bool CanShoot => lastShotTime + FireRate < Time.time && CurrentAmmo > 0;
 
@@ -40,6 +43,7 @@ public class ShotGun : MonoBehaviour, IGun
     private GameObject bulletFromPool;
     private List<GameObject> bulletPoolList;
     private int trailCounter;
+    private bool hitOnce = false;
 
     private void OnEnable()
     {
@@ -65,6 +69,7 @@ public class ShotGun : MonoBehaviour, IGun
         bulletPoolList = new List<GameObject>();
         GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
         GunAnimationHandler.RecoilAnim.SetTrigger("RecoilTrigger");
+        CameraShake.ShakeCamera(ShakeDuration, ShakeMagnitude, ShakeDampen);
         for (int i = 0; i < ShotGunBulletAmount; i++)
         {
             Vector3 aimSpot = GunManager.FPSCam.transform.position;
@@ -106,6 +111,7 @@ public class ShotGun : MonoBehaviour, IGun
         //}
 
         lastShotTime = Time.time;
+        hitOnce = false;
     }
 
     /// <summary>
@@ -211,8 +217,11 @@ public class ShotGun : MonoBehaviour, IGun
                 //Get the position of the hit enemy
                 Vector3 targetPosition = hitInfo.transform.position;
                 ProjectileManager.Instance.TakeFromPool(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point);
-                LevelManager.TimeStop(HitStopDuration);
-                //CameraShake.ShakeCamera();
+                if (!hitOnce)
+                {
+                    LevelManager.TimeStop(HitStopDuration);
+                    hitOnce = true;
+                }
 
                 //Get the distance between the enemy and the gun
                 float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);

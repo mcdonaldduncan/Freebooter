@@ -10,6 +10,9 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
     [SerializeField] private float explosionDamage;
     [SerializeField] private GameObject grenadeVFX;
     [SerializeField] private GameObject m_Prefab;
+    [SerializeField] private float explosionShakeDuration;
+    [SerializeField] private float explosionShakeMagnitude;
+    [SerializeField] private float explosionShakeDampen;
 
     private bool ShouldExplode => timerStarted && startTime + timeBeforeExplosion <= Time.time && !exploded;
 
@@ -95,7 +98,7 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
         {
             //little bit of time stop and camera shake for VFX
             LevelManager.TimeStop(hitStopDuration);
-            CameraShake.ShakeCamera();
+            CameraShake.ShakeCamera(explosionShakeDuration, explosionShakeMagnitude, explosionShakeDampen);
         }
 
         //Damage each object that is an IDamageable

@@ -29,6 +29,9 @@ public class HandGun : MonoBehaviour, IGun
     public TrailRenderer BulletTrailRenderer { get; set; }
     public HandgunAnimationHandler GunAnimationHandler { get; set; }
     public float HitStopDuration { get; set; }
+    public float ShakeDuration { get; set; }
+    public float ShakeMagnitude { get; set; }
+    public float ShakeDampen { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
 
     public bool CanShoot => lastShotTime + FireRate < Time.time && CurrentAmmo > 0;

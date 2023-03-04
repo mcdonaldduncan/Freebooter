@@ -133,6 +133,9 @@ MonoBehaviour:
   explosionDamage: 75
   grenadeVFX: {fileID: 167312, guid: 7d87ad307f50a0748bd2994056bc7918, type: 3}
   m_Prefab: {fileID: 2469417936984378629}
+  explosionShakeDuration: 0.5
+  explosionShakeMagnitude: 0.1
+  explosionShakeDampen: 1
 --- !u!82 &3844833987329690482
 AudioSource:
   m_ObjectHideFlags: 0

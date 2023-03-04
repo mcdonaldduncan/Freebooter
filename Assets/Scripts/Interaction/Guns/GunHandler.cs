@@ -106,6 +106,9 @@ public sealed class GunHandler : MonoBehaviour
     [SerializeField] private CanvasGroup shotGunReticle;
     [SerializeField] private AudioClip shotGunShotAudio;
     [SerializeField] private ShotgunAnimationHandler shotgunAnimationHandler;
+    [SerializeField] private float shotShakeDuration;
+    [SerializeField] private float shotShakeMagnitude;
+    [SerializeField] private float shotShakeDampen;
 
     [Header("Autogun Parameters")]
     [SerializeField] private GameObject autoGunModel;
@@ -131,6 +134,9 @@ public sealed class GunHandler : MonoBehaviour
     [SerializeField] private AudioClip[] autoGunShotAudioList;
     [SerializeField] private AudioClip triggerReleasedAudio;
     [SerializeField] private AutoGunAnimationHandler autoGunAnimationHandler;
+    [SerializeField] private float autoShakeDuration;
+    [SerializeField] private float autoShakeMagnitude;
+    [SerializeField] private float autoShakeDampen;
 
     [Header("Grenade Launcher Parameters")]
     [SerializeField] private GameObject grenadeObject;
@@ -149,6 +155,9 @@ public sealed class GunHandler : MonoBehaviour
     [SerializeField] private AudioClip grenadeGunShotAudio;
     [SerializeField] private float grenadeLaunchForce;
     [SerializeField] private float grenadeLaunchArc;
+    [SerializeField] private float grenadeGunShakeDuration;
+    [SerializeField] private float grenadeGunShakeMagnitude;
+    [SerializeField] private float grenadeGunShakeDampen;
 
     [SerializeField] private List<GameObject> gunInventory;
 
@@ -213,6 +222,9 @@ public sealed class GunHandler : MonoBehaviour
             autoGun.GunAnimationHandler = this.autoGunAnimationHandler;
             gun.FireRate = this.autoFireRate;
             gun.HitStopDuration = this.autoHitStopDuration;
+            gun.ShakeDuration = this.autoShakeDuration;
+            gun.ShakeMagnitude = this.autoShakeMagnitude;
+            gun.ShakeDampen = this.autoShakeDampen;
         }
         //if (gun is HandGun)
         //{
@@ -249,6 +261,9 @@ public sealed class GunHandler : MonoBehaviour
             shotGun.GunAnimationHandler = this.shotgunAnimationHandler;
             gun.FireRate = this.shotGunFireRate;
             gun.HitStopDuration = this.shotGunHitStopDuration;
+            gun.ShakeDuration = this.shotShakeDuration;
+            gun.ShakeMagnitude = this.shotShakeMagnitude;
+            gun.ShakeDampen = this.shotShakeDampen;
         }
         if (gun is GrenadeGun)
         {
@@ -261,6 +276,9 @@ public sealed class GunHandler : MonoBehaviour
             gun.GunReticle = this.grenadeGunReticle;
             gun.GunShotAudio = this.grenadeGunShotAudio;
             gun.HitStopDuration = this.grenadeGunHitStopDuration;
+            gun.ShakeDuration = this.grenadeGunShakeDuration;
+            gun.ShakeMagnitude = this.grenadeGunShakeMagnitude;
+            gun.ShakeDampen = this.grenadeGunShakeDampen;
             grenadeGun.Grenade = this.grenadeObject;
             grenadeGun.GrenadeDamage = this.grenadeDamage;
             grenadeGun.GrenadeLaunchForce = this.grenadeLaunchForce;

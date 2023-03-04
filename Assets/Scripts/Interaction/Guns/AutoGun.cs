@@ -30,6 +30,9 @@ public class AutoGun : MonoBehaviour, IGun
     public GameObject GunModel { get; set; }
     public AutoGunAnimationHandler GunAnimationHandler { get; set; }
     public float HitStopDuration { get; set; }
+    public float ShakeDuration { get; set; }
+    public float ShakeMagnitude { get; set; }
+    public float ShakeDampen { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
 
     public bool CanShoot => lastShotTime + FireRate < Time.time && CurrentAmmo > 0 && GunManager.CurrentGun is AutoGun;
@@ -108,6 +111,7 @@ public class AutoGun : MonoBehaviour, IGun
             int gunShotIndex = Random.Range(0, GunShotAudioList.Length - 1);
             GunShotAudio = GunShotAudioList[gunShotIndex];
             GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
+            CameraShake.ShakeCamera(ShakeDuration, ShakeMagnitude, ShakeDampen);
 
             if (Physics.Raycast(ray, out hitInfo, float.MaxValue, ~LayerToIgnore))
             {
@@ -120,6 +124,7 @@ public class AutoGun : MonoBehaviour, IGun
 
                 trail.Launch(hitInfo.point);
                 HitEnemyBehavior(hitInfo, hitInfo.transform.GetComponent<IDamageable>());
+        CameraShake.ShakeCamera(ShakeDuration, ShakeMagnitude, ShakeDampen);
 
 
                 //Instantiate a bulletFromPool trail
