@@ -121,8 +121,6 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
                 {
                     hideBehavior.EndHideProcessRemote();
                     hideBehavior.enabled = false;
-                    
-
                 }
             }
             else
@@ -221,7 +219,6 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
             {
                 GiveDamage(damageToDeal);
             }
-            animator.SetBool("PunchSwitch", !animator.GetBool("PunchSwitch"));
         }
     }
 
@@ -229,6 +226,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
     {
         attackingPlayer = false;
         inAttackAnim = false;
+        animator.SetBool("PunchSwitch", !animator.GetBool("PunchSwitch"));
     }
 
     private void GiveDamage(float damageToDeal)
