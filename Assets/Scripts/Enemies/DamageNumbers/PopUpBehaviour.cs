@@ -13,6 +13,7 @@ public class PopUpBehaviour : MonoBehaviour, IPoolable
         ProjectileManager.Instance.ReturnToPool(this.gameObject);
         m_TextMeshPro = gameObject.GetComponent<TextMeshPro>();
     }
+
     // Update is called once per frame
     void Update()
     {

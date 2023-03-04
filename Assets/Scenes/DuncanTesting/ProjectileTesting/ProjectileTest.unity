@@ -1103,6 +1103,7 @@ MonoBehaviour:
   m_Activator: {fileID: 0}
   m_DamagePopUpPrefab: {fileID: 0}
   m_PopupFromHere: {fileID: 0}
+  m_showDamageNumbers: 0
   m_Body: {fileID: 0}
 --- !u!4 &182225312
 Transform:
@@ -1662,6 +1663,7 @@ MonoBehaviour:
   m_Activator: {fileID: 0}
   m_DamagePopUpPrefab: {fileID: 0}
   m_PopupFromHere: {fileID: 0}
+  m_showDamageNumbers: 0
   m_Body: {fileID: 0}
 --- !u!4 &317754493
 Transform:
@@ -1774,6 +1776,7 @@ MonoBehaviour:
   m_Activator: {fileID: 0}
   m_DamagePopUpPrefab: {fileID: 0}
   m_PopupFromHere: {fileID: 0}
+  m_showDamageNumbers: 0
   m_Body: {fileID: 0}
 --- !u!4 &384843332
 Transform:
@@ -1840,6 +1843,10 @@ MonoBehaviour:
   m_ProjectilePrefab: {fileID: 6659351617849234464, guid: 5a1d33e698bee0145986b91cf9e4452c, type: 3}
   m_ShootFrom: {fileID: 990457321}
   m_OnKillHealFVX: {fileID: 0}
+  m_DamageTextPrefab: {fileID: 0}
+  m_TextSpawnLocation: {fileID: 0}
+  m_FontSize: 0
+  m_ShowDamageNumbers: 0
   m_WalkableLayers:
     serializedVersion: 2
     m_Bits: 128
@@ -2491,6 +2498,7 @@ MonoBehaviour:
   m_Activator: {fileID: 0}
   m_DamagePopUpPrefab: {fileID: 0}
   m_PopupFromHere: {fileID: 0}
+  m_showDamageNumbers: 0
   m_Body: {fileID: 0}
 --- !u!4 &580385603
 Transform:
@@ -2588,6 +2596,10 @@ MonoBehaviour:
   m_ProjectilePrefab: {fileID: 6659351617849234464, guid: 5a1d33e698bee0145986b91cf9e4452c, type: 3}
   m_ShootFrom: {fileID: 674442367}
   m_OnKillHealFVX: {fileID: 2748225569481887560, guid: de88dfbe0c34dad418728faa198b70e0, type: 3}
+  m_DamageTextPrefab: {fileID: 3377893959702237216, guid: b26933fac4913a747a2bc7b367e9b00b, type: 3}
+  m_TextSpawnLocation: {fileID: 1217459258}
+  m_FontSize: 16
+  m_ShowDamageNumbers: 0
   m_WalkableLayers:
     serializedVersion: 2
     m_Bits: 128
@@ -2644,6 +2656,7 @@ Transform:
   - {fileID: 237661952}
   - {fileID: 1004934818}
   - {fileID: 1974719030}
+  - {fileID: 1217459258}
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3928,6 +3941,7 @@ MonoBehaviour:
   m_Activator: {fileID: 0}
   m_DamagePopUpPrefab: {fileID: 0}
   m_PopupFromHere: {fileID: 0}
+  m_showDamageNumbers: 0
   m_Body: {fileID: 0}
 --- !u!4 &960497678
 Transform:
@@ -4252,6 +4266,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2021510314}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1217459257
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1217459258}
+  m_Layer: 9
+  m_Name: TextSpawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1217459258
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1217459257}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.02, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 599502277}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1283247260
 GameObject:
@@ -6323,6 +6368,10 @@ MonoBehaviour:
   m_ProjectilePrefab: {fileID: 196044, guid: 938459aeb26fb124998973f4dfcfb24d, type: 3}
   m_ShootFrom: {fileID: 9014040487591779391}
   m_OnKillHealFVX: {fileID: 0}
+  m_DamageTextPrefab: {fileID: 0}
+  m_TextSpawnLocation: {fileID: 0}
+  m_FontSize: 0
+  m_ShowDamageNumbers: 0
   m_WalkableLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -6402,6 +6451,7 @@ MonoBehaviour:
   m_Activator: {fileID: 0}
   m_DamagePopUpPrefab: {fileID: 0}
   m_PopupFromHere: {fileID: 0}
+  m_showDamageNumbers: 0
   m_Weapon: {fileID: 7523779096283273143}
   m_Hand: {fileID: 892714397}
   raycastSource: {fileID: 0}
@@ -7158,6 +7208,7 @@ MonoBehaviour:
   m_Activator: {fileID: 0}
   m_DamagePopUpPrefab: {fileID: 0}
   m_PopupFromHere: {fileID: 0}
+  m_showDamageNumbers: 0
   m_Body: {fileID: 0}
 --- !u!1 &7936307942558921138
 GameObject:
@@ -8027,6 +8078,7 @@ MonoBehaviour:
   m_Activator: {fileID: 0}
   m_DamagePopUpPrefab: {fileID: 0}
   m_PopupFromHere: {fileID: 0}
+  m_showDamageNumbers: 0
 --- !u!1 &7936307944695623960
 GameObject:
   m_ObjectHideFlags: 0
