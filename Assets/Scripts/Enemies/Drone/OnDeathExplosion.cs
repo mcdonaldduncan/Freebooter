@@ -18,8 +18,6 @@ public class OnDeathExplosion : MonoBehaviour
     Collider m_Collider;
 
     bool dead = false;
-    bool landed = false; 
-    bool explosion = false;
     
     int deathFrames;
 
@@ -81,8 +79,6 @@ public class OnDeathExplosion : MonoBehaviour
     public void ResetVariables()
     {
         dead = false;
-        landed = false;
-        explosion = false;
         deathFrames = 0;
         Destroy(rb);
         m_Renderer.material.color = Color.white;
@@ -96,7 +92,6 @@ public class OnDeathExplosion : MonoBehaviour
 
         if (collision.collider.gameObject.layer != 9 && collision.collider.gameObject.layer != 8) // Make sure the collision is with something other than enemy because it would collide with itself since the parent object has a collider
         {
-            landed = true;
             Instantiate(explosionparticle, transform.position, Quaternion.identity);
             ExplosionDamage();
             transform.parent.gameObject.SetActive(false);

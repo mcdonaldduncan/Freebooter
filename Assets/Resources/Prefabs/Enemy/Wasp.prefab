@@ -254,7 +254,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -495,7 +495,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -635,25 +635,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b603de6fab946646bee25741608148a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ProjectilePrefab: {fileID: 942786027204400064, guid: 5e459f1952d5c5c42b3e6df63c73881b, type: 3}
+  m_ProjectilePrefab: {fileID: 942786027204400064, guid: 5e459f1952d5c5c42b3e6df63c73881b,
+    type: 3}
   m_ShootFrom: {fileID: 2851899924388004780}
+  m_OnKillHealFVX: {fileID: 2748225569481887560, guid: de88dfbe0c34dad418728faa198b70e0,
+    type: 3}
+  m_DamageTextPrefab: {fileID: 0}
+  m_TextSpawnLocation: {fileID: 0}
+  m_FontSize: 0
+  m_ShowDamageNumbers: 0
   m_WalkableLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_PlayerLayer:
     serializedVersion: 2
     m_Bits: 0
   m_StoppingDistance: 5
   m_RotationSpeed: 20
-  m_SampleRadius: 0
+  m_MovementSampleRadius: 0
   m_WanderDelay: 5
   m_WanderDistance: 5
   m_Range: 40
   m_TimeBetweenShots: 0.75
+  m_FieldOfView: 0
   m_MaxHealth: 75
-  m_Health: 30
-  m_OnKillHealFVX: {fileID: 2748225569481887560, guid: de88dfbe0c34dad418728faa198b70e0, type: 3}
   m_ShouldSleep: 0
   m_Activator: {fileID: 0}
-  m_DamagePopUpPrefab: {fileID: 3377893959702237216, guid: b26933fac4913a747a2bc7b367e9b00b, type: 3}
-  m_PopupFromHere: {fileID: 3907655064562151518}
   m_Body: {fileID: 2851899924537539080}
 --- !u!136 &3138614372399527620
 CapsuleCollider:

@@ -11,7 +11,7 @@ public class Soldier : AgentBase
 
     //bool for kick animations and funtionality
     bool kickBeforeShooting = true, kickOnce = true;
-    bool inAttackAnim;
+    //bool inAttackAnim; unused
     float mostRecentHit;
 
     [Header("Kick Variables")]
@@ -68,7 +68,7 @@ public class Soldier : AgentBase
     private void AttackPlayer()
     {
         //a bool to make sure the swarmer doesn't move while trying to hit the player
-        inAttackAnim = true;
+        //inAttackAnim = true;
         //send out raycast to see if enemy hit player
         if (Physics.Raycast(raycastSource.position, gameObject.transform.forward, out hitInfo, KickRange))
         {

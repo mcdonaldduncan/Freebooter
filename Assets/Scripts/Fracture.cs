@@ -14,7 +14,7 @@ public class Fracture : MonoBehaviour, IDamageable
     private Collider colliderToDisable;
     private Transform groupParent;
     private BarrelGroupBehavior barrelGroupBehavior;
-    private bool isInGroup = false;
+    //private bool isInGroup = false; Unused
     private bool initialDamageTaken = false;
 
     public float Health { get { return health; } set { health = value; } }
@@ -36,7 +36,7 @@ public class Fracture : MonoBehaviour, IDamageable
         if (transform.parent != null && transform.parent.TryGetComponent<BarrelGroupBehavior>(out barrelGroupBehavior))
         {
             //barrelGroupBehavior = transform.parent.GetComponent<BarrelGroupBehavior>();
-            isInGroup = true;
+            //isInGroup = true;
             barrelGroupBehavior.fractureChildren += Breakage;
         }
     }

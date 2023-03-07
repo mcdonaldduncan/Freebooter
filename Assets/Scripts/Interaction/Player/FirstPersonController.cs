@@ -52,10 +52,10 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     [Tooltip("Is the player in the middle of a special movement, i.e. ladder climbing?")]
     [SerializeField]
     public bool playerOnSpecialMovement = false;
-    [SerializeField]
-    private bool playerCanDash = true;
-    [SerializeField]
-    private bool playerCanHeadbob = true;
+    //[SerializeField]
+    //private bool playerCanDash = true; Unused!
+    //[SerializeField]
+    //private bool playerCanHeadbob = true; Unused!
     private bool hasIFrames = false;
 
     //parameters for different movement speeds
@@ -204,7 +204,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     
     public delegate void PlayerDelegate();
     public event PlayerDelegate OnPlayerDashed;
-    public event PlayerDelegate OnDashCooldown;
+    //public event PlayerDelegate OnDashCooldown;  Unused!
     public event PlayerDelegate PlayerHealthChanged;
 
     [NonSerialized] public Vector3 surfaceMotion;

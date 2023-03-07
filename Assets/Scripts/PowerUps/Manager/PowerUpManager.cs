@@ -230,7 +230,7 @@ public class PowerUpManager : Singleton<PowerUpManager>
     }
     public void CheckForDrops(Transform t)
     {
-        var randomNum = Random.RandomRange(0f, 100f);
+        var randomNum = Random.Range(0f, 100f);
         if (randomNum < dropRate && PowerUPS_On == true)
         {
             Instantiate(powerups[Random.Range(0, powerups.Count)], t.position, t.rotation);

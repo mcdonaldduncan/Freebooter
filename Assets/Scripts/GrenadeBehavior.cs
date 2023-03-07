@@ -21,7 +21,7 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
     private float startTime;
     private float hitStopDuration;
     private AudioSource grenadeAudioSource;
-    private bool explosionPlayed = false;
+    //private bool explosionPlayed = false; unused
     private bool timerStarted = false;
     private Renderer grenadeRenderer;
     private Rigidbody grenadeRB;

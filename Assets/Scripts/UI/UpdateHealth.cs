@@ -16,7 +16,7 @@ public class UpdateHealth : MonoBehaviour
     [SerializeField] private float overlay3Health;
     private float CurrentHealth = 100;
     private float MaxHealth;
-    private bool soundPlayed = false;
+    //private bool soundPlayed = false; unused
     FirstPersonController Player;
     private Image HealthCriticalOverlayImage;
 

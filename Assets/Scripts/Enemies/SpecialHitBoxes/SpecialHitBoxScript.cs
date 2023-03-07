@@ -6,7 +6,7 @@ using UnityEngine;
 public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
 {
     private IDamageable damageable;
-    private ParticleSystem particleSystem;
+    private ParticleSystem m_ParticleSystem;
 
     [Header("SetUp")] 
     public GameObject m_Prefab;
@@ -96,7 +96,7 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
     {
         damageable = Prefab.GetComponent<IDamageable>();
         _health = maxHealth;
-        particleSystem = GetComponentInChildren<ParticleSystem>();
+        m_ParticleSystem = GetComponentInChildren<ParticleSystem>();
     }
 
     private void Update()

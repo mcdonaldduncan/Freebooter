@@ -158,7 +158,7 @@ public class MeleeTank : AgentBase, IDamageable
     {
         if (Shield != null)
         {
-            if (Shield.gameObject.active == false) { return; }
+            if (Shield.gameObject.activeSelf == false) { return; }
         }
         if (charging) { return; }
         if (bashOnce != true)
