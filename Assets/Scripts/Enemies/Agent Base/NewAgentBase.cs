@@ -179,12 +179,12 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
 
     public void TakeDamage(float damageTaken)
     {
-        Debug.Log($"{gameObject.name} took damage");
+        //Debug.Log($"{gameObject.name} took damage");
         m_State = AgentState.CHASE;
         Health -= damageTaken;
         m_Damageable.GenerateDamageInfo(damageTaken, HitBoxType.normal);
         CheckForDeath();
-        Debug.Log(Health);
+        //Debug.Log(Health);
     }
 
     public virtual void OnDeath()
