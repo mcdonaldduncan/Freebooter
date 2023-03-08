@@ -41,6 +41,10 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
     [Header("Health Options")]
     [SerializeField] float m_MaxHealth;
 
+    [Header("OnDeath Options")]
+    [SerializeField] bool m_shouldHitStop;
+    [SerializeField] float m_hitStopDuration;
+
     [Header("Activation Options")]
     [SerializeField] bool m_ShouldSleep;
     [SerializeField] GameObject m_Activator;
@@ -189,6 +193,8 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
 
     public virtual void OnDeath()
     {
+        if (m_shouldHitStop) LevelManager.TimeStop(m_hitStopDuration);
+
         if (m_Tracking.DistanceToTarget <= LevelManager.Instance.Player.DistanceToHeal)
         {
             ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);

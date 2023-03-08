@@ -37,7 +37,7 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
     private void OnEnable()
     {
         grenadeGun = LevelManager.Instance.Player.GetComponentInChildren<GrenadeGun>();
-        hitStopDuration = grenadeGun.HitStopDuration;
+        //hitStopDuration = grenadeGun.HitStopDuration;
         transform.SetParent(null, true);
         startTime = Time.time;
         grenadeAudioSource = GetComponent<AudioSource>();
@@ -96,7 +96,7 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
         if (colliders.Length > 0)
         {
             //little bit of time stop and camera shake for VFX
-            LevelManager.TimeStop(hitStopDuration);
+            //LevelManager.TimeStop(hitStopDuration);
             CameraShake.ShakeCamera(explosionShakeDuration, explosionShakeMagnitude, explosionShakeDampen);
         }
 

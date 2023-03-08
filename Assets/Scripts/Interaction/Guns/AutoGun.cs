@@ -29,7 +29,6 @@ public class AutoGun : MonoBehaviour, IGun
     public TrailRenderer BulletTrailRenderer { get; set; }
     public GameObject GunModel { get; set; }
     public AutoGunAnimationHandler GunAnimationHandler { get; set; }
-    public float HitStopDuration { get; set; }
     public float ShakeDuration { get; set; }
     public float ShakeMagnitude { get; set; }
     public float ShakeDampen { get; set; }
@@ -236,7 +235,6 @@ public class AutoGun : MonoBehaviour, IGun
                 //Destroy(p, 1);
 
                 ProjectileManager.Instance.TakeFromPool(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point);
-                LevelManager.TimeStop(HitStopDuration);
                 //CameraShake.ShakeCamera();
 
                 //Get the distance between the enemy and the gun

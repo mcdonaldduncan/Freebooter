@@ -30,7 +30,6 @@ public class ShotGun : MonoBehaviour, IGun
     public GameObject GunModel { get; set; }
     public TrailRenderer BulletTrailRenderer { get; set; }
     public ShotgunAnimationHandler GunAnimationHandler { get; set; }
-    public float HitStopDuration { get; set; }
     public float ShakeDuration { get; set; }
     public float ShakeMagnitude { get; set; }
     public float ShakeDampen { get; set; }
@@ -217,11 +216,11 @@ public class ShotGun : MonoBehaviour, IGun
                 //Get the position of the hit enemy
                 Vector3 targetPosition = hitInfo.transform.position;
                 ProjectileManager.Instance.TakeFromPool(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point);
-                if (!hitOnce)
-                {
-                    LevelManager.TimeStop(HitStopDuration);
-                    hitOnce = true;
-                }
+                //if (!hitOnce)
+                //{
+                //    LevelManager.TimeStop(HitStopDuration);
+                //    hitOnce = true;
+                //}
 
                 //Get the distance between the enemy and the gun
                 float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);

@@ -19,6 +19,10 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
     [SerializeField] private float health = 75;
     [SerializeField] private float damageToDeal = 20;
 
+    [Header("OnDeath Options")]
+    [SerializeField] private bool m_shouldHitStop;
+    [SerializeField] private float m_hitStopDuration;
+
     [Header("Attacks and Movement")]
     [SerializeField] private float distanceToFollow = 20;
     [SerializeField] private float distanceToAttack = 2;
@@ -246,6 +250,8 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
 
     public void OnDeath()
     {
+        if (m_shouldHitStop) LevelManager.TimeStop(m_hitStopDuration);
+
         if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
         {
             ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);
