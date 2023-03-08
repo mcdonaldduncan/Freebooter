@@ -598,6 +598,13 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         HandleHeadbob();
         AdaptFOV();
 
+        //Stop the player from floating along the ceiling
+        if (characterController.velocity.y == 0 && !characterController.isGrounded)
+        {
+            if(holdingJump) holdingJump = false;
+            moveDirection.y = 0;
+        }
+
         //make sure the player is on the ground if applying gravity (after pressing Jump)
         if (!characterController.isGrounded && !playerDashing)
         {
