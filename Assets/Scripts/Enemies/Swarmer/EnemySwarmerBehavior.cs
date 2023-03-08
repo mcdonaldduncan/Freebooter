@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using TMPro;
 
-public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
+public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
 {
     public float Health { get { return health; } set { health = value; } }
 
@@ -56,9 +56,9 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
 
     public Vector3 StartingPosition { get { return m_StartingPosition; } set { m_StartingPosition = value; } }
 
-    public float MovementSampleRadius { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-    public bool ShouldSleep { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-    public IActivator Activator { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    //public float MovementSampleRadius { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    //public bool ShouldSleep { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    //public IActivator Activator { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
     private Vector3 m_StartingPosition;
 
@@ -69,7 +69,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
     public float FontSize => m_fontSize;
     public bool ShowDamageNumbers => m_showDamageNumbers;
 
-    public TextMeshPro Text { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public TextMeshPro Text { get; set; }
 
     private void Awake()
     {
@@ -90,6 +90,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
         LevelManager.PlayerRespawn += OnPlayerRespawn;
         m_Target = LevelManager.Instance.Player.transform;
         //hideBehavior.enabled = false;
+        m_IDamageable.SetupDamageText();
         
     }
 
@@ -297,31 +298,6 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IEnemy
     public void ChangeIgnorePlayer(bool shouldIgnorePlayer)
     {
         ignorePlayer = shouldIgnorePlayer;
-    }
-
-    public void ActivateAggro()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void DeactivateAggro()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnActivate()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnDeactivate()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void MoveToLocation(Transform location)
-    {
-        throw new System.NotImplementedException();
     }
 
     public void TakeDamage(float damageTaken)
