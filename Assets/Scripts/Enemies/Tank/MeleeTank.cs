@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.AI;
 using UnityEngine;
 
-public class MeleeTank : AgentBase, IDamageable
+public class MeleeTank : NewAgentBase
 {
     [Header("Shield GameObject")]
     public GameObject Shield; //for cycle
@@ -47,8 +47,8 @@ public class MeleeTank : AgentBase, IDamageable
     float lastChargeTime;
     float lastMeleeTime;
     float lastChargeHitTime;
-    bool shouldMelee => Time.time > m_TimeBetweenMeleeHits + lastMeleeTime && distanceToPlayer < m_meleeRange;//timer for the melee
-    bool shouldCharge => Time.time > m_TimeBetweenCharges + lastChargeTime && distanceToPlayer < m_chargeRange;//timer for the charge
+    bool shouldMelee => Time.time > m_TimeBetweenMeleeHits + lastMeleeTime && m_Tracking.DistanceToTarget < m_meleeRange;//timer for the melee
+    bool shouldCharge => Time.time > m_TimeBetweenCharges + lastChargeTime && m_Tracking.DistanceToTarget < m_chargeRange;//timer for the charge
     bool shouldDealDamageInCharge => Time.time > m_TimeBetweenChargeHits + lastChargeHitTime;
     bool charging; //Im using this to prevent melee atacking while charging
 
@@ -57,14 +57,22 @@ public class MeleeTank : AgentBase, IDamageable
     float originalSpeed;
     float originalAccel;
 
+    private void Awake()
+    {
+        AwakeSetup();
+    }
+
+    private void OnEnable()
+    {
+        EnableSetup();
+    }
+
     private void Start()
     {
-        m_Agent = gameObject.GetComponent<NavMeshAgent>();
+        Agent = gameObject.GetComponent<NavMeshAgent>();
         originalchargetimer = m_ChargeLifeTime;
-        originalAccel = m_Agent.acceleration;
-        originalSpeed = m_Agent.speed;
-
-        HandleSetup();
+        originalAccel = Agent.acceleration;
+        originalSpeed = Agent.speed;
     }
 
     //public override void Shoot()
@@ -102,56 +110,41 @@ public class MeleeTank : AgentBase, IDamageable
 
     private void Update()
     {
-        m_Animator.SetFloat("Blend", m_Agent.velocity.magnitude);
+        m_Animator.SetFloat("Blend", Agent.velocity.magnitude);
         HandleAgentState();
     }
 
     public override void HandleAgentState()
     {
-        distanceToPlayer = Vector3.Distance(transform.position, m_Target.position);
-
+        
         switch (m_State)
         {
             case AgentState.GUARD:
-                AimRestricted();
-                if (CheckLineOfSight()) m_State = AgentState.CHASE;
+                m_Tracking.TrackTarget2D();
+                if (m_Tracking.CheckFieldOfView()) m_State = AgentState.CHASE;
                 break;
             case AgentState.WANDER:
-                Wander(); 
-                AimRestricted();
-                if (CheckLineOfSight()) m_State = AgentState.CHASE;
+                m_Navigation.Wander();
+                if (m_Tracking.CheckFieldOfView()) m_State = AgentState.CHASE;
                 break;
             case AgentState.CHASE:
-                if (!charging) { AimRestricted(); ChasePlayer(); }
-                //Shoot();
-                //ShootExplosiveGun(); // added explosive gun to the state
+                m_Navigation.ChaseTarget();
+                m_Tracking.TrackTarget2D();
+                if (!m_Tracking.InRange) m_State = AgentState.RETURN;
                 if (shouldMelee) { MeleeHandler(); }
                 if (shouldCharge) { ChargeAttack(); }
-               
                 break;
             case AgentState.RETURN:
-                ReturnToOrigin();
+                m_Navigation.MoveToLocationDirect(m_StartingPosition);
+                if (m_Navigation.CheckReturned(m_StartingPosition)) m_State = m_StartingState;
+                if (m_Tracking.CheckFieldOfView()) m_State = AgentState.CHASE;
+                break;
+            case AgentState.SLEEP:
+                m_Navigation.Sleep();
                 break;
             default:
                 break;
         }
-    }
-
-    protected override void CycleAgent() //added shield to the cycle
-    {
-        base.CycleAgent();
-        if (Shield != null)
-        {
-            var shieldScript = Shield.GetComponent<SpecialHitBoxScript>();
-            shieldScript._health = shieldScript.maxHealth;
-            Shield.SetActive(true);
-        }
-    }
-
-    public override void ChasePlayer()
-    {
-       Vector3 FromPlayerToAgent = transform.position - m_Target.position;
-       MoveToLocation(m_Target.position + FromPlayerToAgent.normalized); 
     }
 
     private void MeleeHandler()
@@ -194,13 +187,13 @@ public class MeleeTank : AgentBase, IDamageable
     {
         if (!shouldCharge) { return; }
         charging = true;
-        m_Agent.speed = m_VelocityLimit / 2;
-        m_Agent.acceleration = m_VelocityLimit;
-        m_Agent.stoppingDistance = m_ChargeStoppingDistance;
+        Agent.speed = m_VelocityLimit / 2;
+        Agent.acceleration = m_VelocityLimit;
+        Agent.stoppingDistance = m_ChargeStoppingDistance;
 
         //m_Agent.SetDestination(m_Target.transform.position);
         Vector3 FromPlayerToAgent = transform.position - LevelManager.Instance.Player.transform.position;
-        m_Agent.SetDestination(LevelManager.Instance.Player.transform.position + FromPlayerToAgent.normalized * m_Agent.stoppingDistance);
+        Agent.SetDestination(LevelManager.Instance.Player.transform.position + FromPlayerToAgent.normalized * Agent.stoppingDistance);
         m_Animator.SetBool("Charge", true);
 
         //if (m_RigidBody.velocity.magnitude > m_VelocityLimit) m_RigidBody.AddForce(-m_RigidBody.velocity.normalized * (m_RigidBody.velocity.magnitude - m_VelocityLimit), ForceMode.Impulse);
@@ -234,10 +227,10 @@ public class MeleeTank : AgentBase, IDamageable
         resetChargeParam = true;
         charging = !charging;
         lastChargeTime = Time.time;
-        m_Agent.speed = originalSpeed;
-        m_Agent.acceleration = originalAccel;
+        Agent.speed = originalSpeed;
+        Agent.acceleration = originalAccel;
         m_ChargeLifeTime = originalchargetimer;
-        m_Agent.ResetPath();
+        Agent.ResetPath();
         m_Animator.SetBool("Charge", false);
     }
 }

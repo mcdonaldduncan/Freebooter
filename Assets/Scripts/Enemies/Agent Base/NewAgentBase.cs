@@ -45,17 +45,17 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
     [SerializeField] bool m_ShouldSleep;
     [SerializeField] GameObject m_Activator;
 
-    AgentState m_State;
-    AgentState m_StartingState;
+    protected AgentState m_State;
+    protected AgentState m_StartingState;
 
-    INavigation m_Navigation;
-    ITracking m_Tracking;
-    IShooting m_Shooting;
-    IRespawn m_Respawn;
-    IDamageable m_Damageable;
+    protected INavigation m_Navigation;
+    protected ITracking m_Tracking;
+    protected IShooting m_Shooting;
+    protected IRespawn m_Respawn;
+    protected IDamageable m_Damageable;
 
-    Vector3 m_StartingPosition;
-    Quaternion m_StartingRotation;
+    protected Vector3 m_StartingPosition;
+    protected Quaternion m_StartingRotation;
 
     protected bool IsDead;
 
@@ -136,7 +136,7 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
         m_Respawn.SubscribeToRespawn();
     }
 
-    public void HandleAgentState()
+    public virtual void HandleAgentState()
     {
         switch (m_State)
         {
