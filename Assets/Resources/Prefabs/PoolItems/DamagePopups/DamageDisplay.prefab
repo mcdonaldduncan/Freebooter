@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5460120336574058352}
   - component: {fileID: 6576220187731120914}
   m_Layer: 0
-  m_Name: DamagePopUps
+  m_Name: DamageDisplay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -112,7 +112,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4286611584
-  m_fontColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -186,6 +186,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3db54dfedb9bfd4cb4b557eae6d4520, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
-  popupDuration: 0.5
-  fontScaleSpeed: 5
+  m_Speed: 4
+  m_Duration: 3.5
+  m_ScaleSpeed: 5
