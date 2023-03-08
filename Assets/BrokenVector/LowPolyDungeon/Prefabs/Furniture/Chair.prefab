@@ -11,7 +11,10 @@ GameObject:
   - component: {fileID: 1149450743610261583}
   - component: {fileID: 1149450743607361647}
   - component: {fileID: 1149450743608492719}
-  - component: {fileID: 2122566037265000455}
+  - component: {fileID: 7075185341504734062}
+  - component: {fileID: 7110828703652938840}
+  - component: {fileID: 7382863925768570438}
+  - component: {fileID: 5424434174047918980}
   m_Layer: 0
   m_Name: Chair
   m_TagString: Untagged
@@ -84,8 +87,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &2122566037265000455
-MeshCollider:
+--- !u!65 &7075185341504734062
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -94,7 +97,45 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 196b5a548621de443976c8d3e69c75e4, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 0.6833221, y: 0.5340458, z: 0.787776}
+  m_Center: {x: 0, y: 0.2670229, z: -0.0019872487}
+--- !u!65 &7110828703652938840
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1149450743610432623}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.6833221, y: 0.9395437, z: 0.14226651}
+  m_Center: {x: 0, y: 1.0028834, z: -0.32474196}
+--- !u!65 &7382863925768570438
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1149450743610432623}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.072532654, y: 0.8188541, z: 0.787776}
+  m_Center: {x: -0.306221, y: 0.40942705, z: -0.0019872487}
+--- !u!65 &5424434174047918980
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1149450743610432623}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.07326275, y: 0.8172711, z: 0.787776}
+  m_Center: {x: 0.30502966, y: 0.40863556, z: -0.0019872487}
