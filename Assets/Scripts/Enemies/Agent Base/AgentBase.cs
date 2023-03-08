@@ -78,7 +78,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
     public float FontSize => m_fontSize;
     public bool ShowDamageNumbers => m_showDamageNumbers;
 
-    public TextMeshPro Text { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public TextMeshPro Text { get; set; }
 
     IDamageable m_IDamageable;
 
@@ -114,7 +114,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         {
             Debug.LogError("Valid IActivator Not Found");
         }
-
+        m_IDamageable.SetupDamageText();
     }
 
     public virtual void HandleAgentState()
