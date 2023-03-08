@@ -21,7 +21,6 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
     private float startTime;
     private float hitStopDuration;
     private AudioSource grenadeAudioSource;
-    //private bool explosionPlayed = false; unused
     private bool timerStarted = false;
     private Renderer grenadeRenderer;
     private Rigidbody grenadeRB;
@@ -61,7 +60,7 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
     {
         if (collision.gameObject.tag != "Player" && !collided)
         {
-            if (collision.gameObject.TryGetComponent(out IEnemy enemy))
+            if (collision.gameObject.TryGetComponent(out IDamageable damageable) && !collision.gameObject.name.Contains("barrel"))
             {
                 Explode();
                 return;
@@ -84,7 +83,7 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
         grenadeRB.AddForce(direction);
 
         //Add torque for a little stylish spinning :)
-        grenadeRB.AddTorque(direction * Random.Range(0, 10));
+        grenadeRB.AddTorque(Vector3.right + (0.05f * direction));
     }
 
     private void Explode()
@@ -131,6 +130,6 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
 
     private void OnDestroy()
     {
-        //grenadeGun.remoteDetonationEvent -= Explode;
+        grenadeGun.remoteDetonationEvent -= Explode;
     }
 }
