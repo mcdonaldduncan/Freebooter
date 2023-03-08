@@ -384,6 +384,12 @@ public sealed class GunHandler : MonoBehaviour
 
             pickedUp = true;
         }
+        else if (guns.Contains(gunType) && gunDict[gunType].CurrentAmmo < gunDict[gunType].MaxAmmo) //If they have the gun already, refill ammo
+        {
+            OnAmmoPickup(gunType, gunDict[gunType].MaxAmmo - gunDict[gunType].CurrentAmmo);
+
+            pickedUp = true;
+        }
 
         //Behavior for equipping newly picked up gun
         currentGun.GunReticle.alpha = 0;
