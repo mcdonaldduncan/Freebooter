@@ -47,7 +47,7 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
 
     [Header("Activation Options")]
     [SerializeField] bool m_ShouldSleep;
-    [SerializeField] GameObject m_Activator;
+    //[SerializeField] GameObject m_Activator;
 
     protected AgentState m_State;
     protected AgentState m_StartingState;
@@ -81,9 +81,9 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
 
     public float LastWanderTime { get; set; }
 
-    public Transform TrackingTransform => transform;
+    public virtual Transform TrackingTransform => transform;
 
-    public Vector3 RayPoint => m_ShootFrom.position;
+    public Transform RayPoint => m_ShootFrom;
 
     public LayerMask TargetLayer => m_PlayerLayer;
 
@@ -98,9 +98,6 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
     public float TimeBetweenShots => m_TimeBetweenShots;
 
     public float LastShotTime { get; set; }
-    public Vector3 StartingPosition { get; set; }
-    public bool ShouldSleep { get; set; }
-    public IActivator Activator { get; set; }
 
     public GameObject DamageTextPrefab => m_DamageTextPrefab;
 
@@ -110,7 +107,6 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
 
     public float FontSize => m_FontSize;
 
-    public bool ShowDamageNumbers => m_ShowDamageNumbers;
 
     protected void AwakeSetup()
     {

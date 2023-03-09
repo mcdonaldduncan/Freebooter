@@ -4,24 +4,24 @@ public interface ITracking
 {
     Transform TrackingTransform { get; }
 
-    Vector3 RayPoint { get; }
+    Transform RayPoint { get; }
     LayerMask TargetLayer { get; }
 
     float Range { get; }
     float RotationSpeed { get; }
     float FOV { get; }
 
-    private Vector3 TargetPosition => LevelManager.Instance.Player.transform.position;
-    private Vector3 TargetDirection => TargetPosition - TrackingTransform.position;
-
-    public float DistanceToTarget => Vector3.Distance(TrackingTransform.position, TargetPosition);
+    private Transform Target => LevelManager.Instance.Player.transform;
+    private Vector3 TargetDirection => Target.position - TrackingTransform.position;
+    private Vector3 RayTargetDirection => Target.position - RayPoint.position;
+    public float DistanceToTarget => Vector3.Distance(TrackingTransform.position, Target.position);
     private float MaxRotationDelta => RotationSpeed * Time.deltaTime;
 
     public bool InRange => DistanceToTarget < Range;
 
     bool CheckLineOfSight()
     {
-        Physics.Raycast(RayPoint, TargetDirection, out RaycastHit hit, Range);
+        Physics.Raycast(RayPoint.position, RayTargetDirection, out RaycastHit hit, Range);
 
         if (hit.collider == null) return false;
 
@@ -36,7 +36,7 @@ public interface ITracking
 
         if (!(dot >= Mathf.Cos(FOV * Mathf.Deg2Rad * 0.5f))) return false;
 
-        if (!Physics.Raycast(RayPoint, TargetDirection, out RaycastHit hit, Range, TargetLayer)) return false;
+        if (!Physics.Raycast(RayPoint.position, RayTargetDirection, out RaycastHit hit, Range)) return false;
 
         if (!hit.collider.CompareTag("Player")) return false;
 
@@ -47,7 +47,7 @@ public interface ITracking
     {
         if (DistanceToTarget < Range)
         {
-            TrackingTransform.LookAt(TargetPosition);
+            TrackingTransform.LookAt(Target);
         }
     }
 
@@ -55,7 +55,7 @@ public interface ITracking
     {
         if (DistanceToTarget < Range)
         {
-            TrackingTransform.LookAt(new Vector3(TargetPosition.x, TrackingTransform.position.y, TargetPosition.z));
+            TrackingTransform.LookAt(new Vector3(Target.position.x, TrackingTransform.position.y, Target.position.z));
         }
     }
 
@@ -67,7 +67,7 @@ public interface ITracking
 
     void LimitedTrackTarget2D()
     {
-        Vector3 targetPosition = new Vector3(TargetPosition.x, TrackingTransform.position.y, TargetPosition.z);
+        Vector3 targetPosition = new Vector3(Target.position.x, TrackingTransform.position.y, Target.position.z);
         Quaternion targetRotation = Quaternion.LookRotation(targetPosition - TrackingTransform.position, Vector3.up);
         TrackingTransform.rotation = Quaternion.RotateTowards(TrackingTransform.rotation, targetRotation, MaxRotationDelta);
     }

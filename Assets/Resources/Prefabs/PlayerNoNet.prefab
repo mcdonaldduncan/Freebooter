@@ -915,8 +915,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 297426594336726724}
-  - component: {fileID: 297426594336726727}
-  - component: {fileID: 297426594336726726}
   - component: {fileID: 297426594336726720}
   - component: {fileID: 909842072}
   - component: {fileID: 4346315670571840642}
@@ -946,56 +944,6 @@ Transform:
   m_Father: {fileID: 297426593068676920}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 84.689, y: -84.686, z: -89.998}
---- !u!33 &297426594336726727
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 297426594336726731}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &297426594336726726
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 297426594336726731}
-  m_Enabled: 0
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &297426594336726720
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1034,7 +982,6 @@ MonoBehaviour:
   shotGunCurrentAmmo: 0
   shotGunMaxAmmo: 16
   shotGunFireRate: 0.5
-  shotGunHitStopDuration: 0.0075
   shotGunAimOffset: 15
   shotGunReticle: {fileID: 2291208426676616775}
   shotGunShotAudio: {fileID: 8300000, guid: c15d23ec2ec14b949aa86c30705b3da5, type: 3}
@@ -1053,7 +1000,6 @@ MonoBehaviour:
   autoGunCurrentAmmo: 0
   autoGunMaxAmmo: 50
   autoFireRate: 0.2
-  autoHitStopDuration: 0.05
   autoGunAimOffset: 15
   autoGunReticle: {fileID: 2291571642965968571}
   autoGunShotAudioList:
@@ -1082,7 +1028,6 @@ MonoBehaviour:
   grenadeGunCurrentAmmo: 0
   grenadeGunMaxAmmo: 5
   grenadeFireRate: 1
-  grenadeGunHitStopDuration: 0
   grenadeGunAimOffset: 15
   grenadeGunReticle: {fileID: 6976750457327859168}
   grenadeGunShotAudio: {fileID: 8300000, guid: d177a80e9988723409484f33238db40c, type: 3}

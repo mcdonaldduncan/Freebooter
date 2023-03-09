@@ -1,16 +1,28 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Turret : AgentBase
+public class Turret : NewAgentBase
 {
+    [Header("Turret Body")]
     [SerializeField] Transform m_Body;
 
     TurretState m_TurretState;
 
+    public override Transform TrackingTransform => m_Body;
+
+    private void Awake()
+    {
+        AwakeSetup();
+    }
+
+    private void OnEnable()
+    {
+        EnableSetup();
+    }
+
     void Start()
     {
-        HandleSetup();
-        m_Transform = m_Body;
+        StartSetup();
     }
 
     void Update()
@@ -18,13 +30,13 @@ public class Turret : AgentBase
         switch (m_TurretState)
         {
             case TurretState.GUARD:
-                Aim();
-                if (CheckLineOfSight()) m_TurretState = TurretState.ATTACK;
+                m_Tracking.TrackTarget();
+                if (m_Tracking.CheckFieldOfView()) m_TurretState = TurretState.ATTACK;
                 break;
             case TurretState.ATTACK:
-                Aim();
-                Shoot();
-                if (!CheckRange()) m_TurretState = TurretState.GUARD;
+                m_Tracking.TrackTarget();
+                if (m_Tracking.CheckLineOfSight()) m_Shooting.Shoot();
+                if (!m_Tracking.InRange) m_TurretState = TurretState.GUARD;
                 break;
             default:
                 break;
