@@ -43,7 +43,8 @@ public class Fracture : MonoBehaviour, IDamageable
 
     public void Breakage()
     {
-        colliderToDisable.enabled = false;
+        if(colliderToDisable != null) colliderToDisable.enabled = false;
+
         foreach (Rigidbody rb in gameObject.GetComponentsInChildren<Rigidbody>())
         {
             rb.isKinematic = false;
@@ -51,11 +52,19 @@ public class Fracture : MonoBehaviour, IDamageable
             rb.AddForce(force);
             rb.transform.SetParent(null);
         }
-        breakSoundSource.PlayOneShot(breakSound);
+
+        if(breakSoundSource != null) breakSoundSource.PlayOneShot(breakSound);
     }
 
     public void TakeDamage(float damageTaken)
     {
+        ////TODO: We should create a tag for barrels/breakable props since this kind of if statement is repeated
+        ////and I don't like checking object names for checks like this
+        //if (!gameObject.name.Contains("barrel"))
+        //{
+        //    return;
+        //}
+
         Health -= damageTaken;
         if (!initialDamageTaken)
         {

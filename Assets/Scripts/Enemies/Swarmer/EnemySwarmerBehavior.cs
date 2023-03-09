@@ -56,6 +56,8 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
     private bool attackingPlayer;
     private bool inAttackAnim;
 
+    private Fracture fractureScript;
+
     private bool isSwarm => Physics.OverlapSphereNonAlloc(transform.position, 15f, hits, enemies) >= hideThreshold;
 
     public Vector3 StartingPosition { get { return m_StartingPosition; } set { m_StartingPosition = value; } }
@@ -95,6 +97,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
         m_Target = LevelManager.Instance.Player.transform;
         //hideBehavior.enabled = false;
         m_IDamageable.SetupDamageText();
+        fractureScript = GetComponentInChildren<Fracture>();
         
     }
 
@@ -252,6 +255,8 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
     {
         if (m_shouldHitStop) LevelManager.TimeStop(m_hitStopDuration);
 
+        fractureScript.Breakage();
+
         if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
         {
             ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);
@@ -309,6 +314,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
     public void TakeDamage(float damageTaken)
     {
         health -= damageTaken;
+        fractureScript.Health = health;
         CheckForDeath();
         m_IDamageable.GenerateDamageInfo(damageTaken, HitBoxType.normal);
     }
