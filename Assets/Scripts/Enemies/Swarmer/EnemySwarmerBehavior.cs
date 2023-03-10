@@ -255,7 +255,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
     {
         if (m_shouldHitStop) LevelManager.TimeStop(m_hitStopDuration);
 
-        fractureScript.Breakage();
+        if (fractureScript != null) fractureScript.Breakage();
 
         if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
         {
@@ -314,7 +314,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
     public void TakeDamage(float damageTaken)
     {
         health -= damageTaken;
-        fractureScript.Health = health;
+        if(fractureScript != null) fractureScript.Health = health;
         CheckForDeath();
         m_IDamageable.GenerateDamageInfo(damageTaken, HitBoxType.normal);
     }
