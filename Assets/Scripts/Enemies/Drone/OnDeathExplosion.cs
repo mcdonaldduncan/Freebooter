@@ -94,7 +94,7 @@ public class OnDeathExplosion : MonoBehaviour
         if (collision.collider.gameObject.layer != 9 && collision.collider.gameObject.layer != 8) // Make sure the collision is with something other than enemy because it would collide with itself since the parent object has a collider
         {
             Instantiate(explosionparticle, transform.position, Quaternion.identity);
-            fractureScript.Breakage();
+            if(fractureScript != null) fractureScript.Breakage();
             ExplosionDamage();
             transform.parent.gameObject.SetActive(false);
         }
