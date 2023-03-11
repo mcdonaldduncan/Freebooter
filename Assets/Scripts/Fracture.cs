@@ -7,17 +7,18 @@ using UnityEngine.XR;
 
 public class Fracture : MonoBehaviour, IDamageable
 {
-    [SerializeField] private float health;
-    [SerializeField] private float breakForceMulitplier;
-    [SerializeField] private AudioClip breakSound;
-    private AudioSource breakSoundSource;
-    private Collider colliderToDisable;
-    private Transform groupParent;
-    private BarrelGroupBehavior barrelGroupBehavior;
+    [SerializeField] private float m_health;
+    [SerializeField] private float m_timeToDespawn;
+    [SerializeField] private float m_breakForceMultiplier;
+    [SerializeField] private AudioClip m_breakSound;
+    private AudioSource m_breakSoundSource;
+    private Collider m_colliderToDisable;
+    private Transform m_groupParent;
+    private BarrelGroupBehavior m_barrelGroupBehavior;
     //private bool isInGroup = false; Unused
-    private bool initialDamageTaken = false;
+    private bool m_initialDamageTaken = false;
 
-    public float Health { get { return health; } set { health = value; } }
+    public float Health { get { return m_health; } set { m_health = value; } }
 
     public GameObject DamageTextPrefab => throw new System.NotImplementedException();
 
@@ -31,29 +32,34 @@ public class Fracture : MonoBehaviour, IDamageable
 
     private void Start()
     {
-        breakSoundSource = GetComponent<AudioSource>();
-        colliderToDisable = GetComponent<Collider>();
-        if (transform.parent != null && transform.parent.TryGetComponent<BarrelGroupBehavior>(out barrelGroupBehavior))
+        m_breakSoundSource = GetComponent<AudioSource>();
+        m_colliderToDisable = GetComponent<Collider>();
+        if (transform.parent != null && transform.parent.TryGetComponent<BarrelGroupBehavior>(out m_barrelGroupBehavior))
         {
-            //barrelGroupBehavior = transform.parent.GetComponent<BarrelGroupBehavior>();
+            //m_barrelGroupBehavior = transform.parent.GetComponent<BarrelGroupBehavior>();
             //isInGroup = true;
-            barrelGroupBehavior.fractureChildren += Breakage;
+            m_barrelGroupBehavior.fractureChildren += Breakage;
         }
     }
 
     public void Breakage()
     {
-        if(colliderToDisable != null) colliderToDisable.enabled = false;
+        if(m_colliderToDisable != null) m_colliderToDisable.enabled = false;
 
-        foreach (Rigidbody rb in gameObject.GetComponentsInChildren<Rigidbody>())
+        foreach (BreakablePieceBehavior breakable in gameObject.GetComponentsInChildren<BreakablePieceBehavior>())
         {
-            rb.isKinematic = false;
-            Vector3 force = (rb.transform.forward * breakForceMulitplier);
-            rb.AddForce(force);
-            rb.transform.SetParent(null);
+            breakable.Break(m_breakForceMultiplier, m_timeToDespawn);
+            breakable.transform.SetParent(null);
         }
 
-        if(breakSoundSource != null) breakSoundSource.PlayOneShot(breakSound);
+        if(m_breakSoundSource != null) m_breakSoundSource.PlayOneShot(m_breakSound);
+    }
+    public void ResetBreakables()
+    {
+        foreach (BreakablePieceBehavior breakable in gameObject.GetComponentsInChildren<BreakablePieceBehavior>())
+        {
+            breakable.ResetLocalPosition();
+        }
     }
 
     public void TakeDamage(float damageTaken)
@@ -66,10 +72,10 @@ public class Fracture : MonoBehaviour, IDamageable
         //}
 
         Health -= damageTaken;
-        if (!initialDamageTaken)
+        if (!m_initialDamageTaken)
         {
-            breakForceMulitplier *= damageTaken;
-            initialDamageTaken = true;
+            m_breakForceMultiplier *= damageTaken;
+            m_initialDamageTaken = true;
         }
         CheckForDeath();
     }
@@ -79,9 +85,9 @@ public class Fracture : MonoBehaviour, IDamageable
     {
         if (Health <= 0)
         {
-            if (barrelGroupBehavior != null && !barrelGroupBehavior.activated)
+            if (m_barrelGroupBehavior != null && !m_barrelGroupBehavior.activated)
             {
-                barrelGroupBehavior.FractureChildren();
+                m_barrelGroupBehavior.FractureChildren();
             }
             Breakage();
         }
