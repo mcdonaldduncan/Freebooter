@@ -233,4 +233,18 @@ public class MeleeTank : NewAgentBase
         Agent.ResetPath();
         m_Animator.SetBool("Charge", false);
     }
+
+    public override void CheckForDeath()
+    {
+        if (Health <= 0)
+        {
+            IsDead = true;
+            m_Animator.SetTrigger("Death");
+        }
+    }
+
+    public void DeathAnimationEnd()
+    {
+        OnDeath();
+    }
 }

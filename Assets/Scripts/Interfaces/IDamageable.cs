@@ -21,10 +21,10 @@ public interface IDamageable
 
     public void SetupDamageText()
     {
-        Text = DamageTextPrefab.GetComponent<TextMeshPro>();
+       // Text = DamageTextPrefab.GetComponent<TextMeshPro>();
     }
 
-    public void GenerateDamageInfo(float damageTaken, HitBoxType hitType)
+    public void GenerateDamageInfo(float damageTaken, HitBoxType hitType, TextMeshPro Text)
     {
         switch (hitType)
         {
@@ -48,19 +48,12 @@ public interface IDamageable
                 Text.text = damageTaken.ToString("0");
                 break;
         }
-        InstantiateDamageNumber();
     }
 
-    public void InstantiateDamageNumber()
+    public void InstantiateDamageNumber(float damageTaken, HitBoxType hitType)
     {
-        ProjectileManager.Instance.TakeFromPool(DamageTextPrefab, new Vector3(TextSpawnLocation.transform.position.x + Random.Range(-1f, 1f), TextSpawnLocation.transform.position.y, TextSpawnLocation.transform.position.z + Random.Range(-1f, 1f)));
-    }
-
-    public void ResetDamageNumberValues()
-    {
-        //var txtpro = DamageTextPrefab.GetComponent<TextMeshPro>();
-        Text.color = Color.gray;
-        Text.fontSize = FontSize;
+        var obj = ProjectileManager.Instance.TakeFromPool(DamageTextPrefab, new Vector3(TextSpawnLocation.transform.position.x + Random.Range(-1f, 1f), TextSpawnLocation.transform.position.y, TextSpawnLocation.transform.position.z + Random.Range(-1f, 1f)));
+        GenerateDamageInfo(damageTaken, hitType, obj.GetComponent<TextMeshPro>());
     }
 
     public void CheckForDeath();

@@ -77,6 +77,8 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
 
     public TextMeshPro Text { get; set; }
 
+    bool dead = false;
+
     private void Awake()
     {
         hideBehavior = GetComponent<HideBehavior>();
@@ -105,7 +107,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
     {
         distanceToPlayer = Vector3.Distance(transform.position, m_Target.position);
 
-
+        if (dead == true) return;
         if (distanceToPlayer <= distanceToFollow)
         {
             navMeshAgent.isStopped = false;
@@ -149,7 +151,6 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
                     hideBehavior.StartHideProcessRemote(m_Target);
                 }
             }
-            
         }
         
 
@@ -247,8 +248,17 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
     {
         if (Health <= 0)
         {
-            OnDeath();
+            dead = true;
+            if (animator.GetInteger("Death") != 0) return;
+            int deathanimation = Random.Range(1, 4);
+            animator.SetInteger("Death", deathanimation);
+            //OnDeath();
         }
+    }
+
+    public void DeathAnimationOver()
+    {
+        OnDeath();
     }
 
     public void OnDeath()
@@ -299,6 +309,8 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
         attackingPlayer = false;
         inAttackAnim = false;
         chasePlayer = false;
+        animator.SetInteger("Death", 0);
+        dead = false;
     }
 
     public void OnCheckPointReached()
@@ -316,6 +328,6 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
         health -= damageTaken;
         if(fractureScript != null) fractureScript.Health = health;
         CheckForDeath();
-        m_IDamageable.GenerateDamageInfo(damageTaken, HitBoxType.normal);
+        m_IDamageable.InstantiateDamageNumber(damageTaken, HitBoxType.normal);
     }
 }

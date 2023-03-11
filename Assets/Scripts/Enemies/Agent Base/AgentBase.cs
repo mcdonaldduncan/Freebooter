@@ -323,7 +323,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         }
         m_Health -= damageTaken;
         CheckForDeath();
-        m_IDamageable.GenerateDamageInfo(damageTaken, HitBoxType.normal);
+        m_IDamageable.InstantiateDamageNumber(damageTaken, HitBoxType.normal);
     }
 
     //public virtual void TakeDamage(float damageTaken, HitBoxType hitType)

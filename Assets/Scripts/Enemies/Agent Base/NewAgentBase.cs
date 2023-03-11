@@ -167,9 +167,8 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
         }
     }
 
-    public void CheckForDeath()
+    public virtual void CheckForDeath()
     {
-        
         if (Health <= 0)
         {
             IsDead = true;
@@ -182,7 +181,7 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
         //Debug.Log($"{gameObject.name} took damage");
         m_State = AgentState.CHASE;
         Health -= damageTaken;
-        m_Damageable.GenerateDamageInfo(damageTaken, HitBoxType.normal);
+        m_Damageable.InstantiateDamageNumber(damageTaken, HitBoxType.normal);
         CheckForDeath();
         //Debug.Log(Health);
     }

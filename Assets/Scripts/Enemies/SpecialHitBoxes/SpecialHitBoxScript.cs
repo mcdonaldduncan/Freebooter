@@ -59,12 +59,12 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
         if (hitboxtype == HitBoxType.critical)
         {
             PlayVFX(critVFX, VFXTransform.position);
-            damageable.GenerateDamageInfo(damageTaken * CriticalDamageMultiplier, hitboxtype);
+            damageable.InstantiateDamageNumber(damageTaken * CriticalDamageMultiplier, hitboxtype);
         }
         if (hitboxtype == HitBoxType.armored)
         {
             PlayVFX(armorVFX, VFXTransform.position);
-            damageable.GenerateDamageInfo(damageTaken * ArmorDamageReductionMultiplier, hitboxtype);
+            damageable.InstantiateDamageNumber(damageTaken * ArmorDamageReductionMultiplier, hitboxtype);
         }
         if (hitboxtype == HitBoxType.shield)
         {
