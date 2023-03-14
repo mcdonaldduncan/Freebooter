@@ -51,7 +51,6 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
     private Animator animator;
     private float mostRecentHit;
     private float distanceToPlayer;
-    private float originalSpeed;
     private bool chasePlayer;
     private bool hideFromPLayer;
     private bool attackingPlayer;
@@ -80,9 +79,6 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
 
     bool dead = false;
 
-    public delegate void SwarmerDelegate();
-    public event SwarmerDelegate SwarmerDeath;
-
     private void Awake()
     {
         hideBehavior = GetComponent<HideBehavior>();
@@ -104,7 +100,6 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
         //hideBehavior.enabled = false;
         m_IDamageable.SetupDamageText();
         fractureScript = GetComponentInChildren<Fracture>();
-        originalSpeed = navMeshAgent.speed;
         
     }
 
@@ -257,13 +252,6 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
             if (animator.GetInteger("Death") != 0) return;
             int deathanimation = Random.Range(1, 4);
             animator.SetInteger("Death", deathanimation);
-
-            if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
-            {
-                ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);
-                //LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
-                LevelManager.Instance.Player.HealthRegen(LevelManager.Instance.Player.PercentToHeal * maxHealth);
-            }
             //OnDeath();
         }
     }
@@ -275,18 +263,22 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
 
     public void OnDeath()
     {
-        navMeshAgent.speed = 0;
-
         if (m_shouldHitStop) LevelManager.TimeStop(m_hitStopDuration);
 
-        //if (fractureScript != null) fractureScript.Breakage();
-        SwarmerDeath?.Invoke();
+        if (fractureScript != null) fractureScript.Breakage();
+
+        if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
+        {
+            ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);
+            //LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
+            LevelManager.Instance.Player.HealthRegen(LevelManager.Instance.Player.PercentToHeal * maxHealth);
+        }
+        navMeshAgent.Warp(m_StartingPosition);
         CycleAgent();
-        //gameObject.SetActive(false);
+        gameObject.SetActive(false);
         hideBehavior.EndHideProcessRemote();
         hideBehavior.enabled = false;
         LevelManager.CheckPointReached += OnCheckPointReached;
-        //navMeshAgent.Warp(m_StartingPosition);
     }
 
     public void OnPlayerRespawn()
@@ -296,8 +288,6 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
             gameObject.SetActive(true);
         }
         navMeshAgent.Warp(m_StartingPosition);
-        navMeshAgent.speed = originalSpeed;
-        navMeshAgent.isStopped = false;
         CycleAgent();
         Health = maxHealth;
     }
