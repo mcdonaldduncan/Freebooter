@@ -34,7 +34,7 @@ public sealed class GunHandler : MonoBehaviour
 
     public enum GunType
     {
-        handGun,
+        //handGun,
         shotGun,
         grenadeGun,
         autoGun
@@ -176,7 +176,7 @@ public sealed class GunHandler : MonoBehaviour
     private void Awake()
     {
         autoGun = gameObject.AddComponent<AutoGun>();
-        handGun = gameObject.AddComponent<HandGun>();
+        //handGun = gameObject.AddComponent<HandGun>();
         shotGun = gameObject.AddComponent<ShotGun>();
         grenadeGun = gameObject.AddComponent<GrenadeGun>();
 
@@ -332,6 +332,7 @@ public sealed class GunHandler : MonoBehaviour
         currentGun.GunReticle.alpha = 0;
         currentGun.GunModel.SetActive(false);
 
+        //scroll down
         if (mouseScrollDirection < 0)
         {
             if (currentGunState != guns.Last())
@@ -343,6 +344,8 @@ public sealed class GunHandler : MonoBehaviour
                 currentGunState = guns[0];
             }
         }
+
+        //scroll up
         if (mouseScrollDirection > 0)
         {
             if (currentGunState != guns[0])
