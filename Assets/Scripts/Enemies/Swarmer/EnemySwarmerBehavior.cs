@@ -52,10 +52,13 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
     private float mostRecentHit;
     private float distanceToPlayer;
     private float originalSpeed;
+    private float ragdollForce;
     private bool chasePlayer;
     private bool hideFromPLayer;
     private bool attackingPlayer;
     private bool inAttackAnim;
+
+    private Rigidbody[] rigidBones;
 
     private Fracture fractureScript;
 
@@ -105,7 +108,11 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
         m_IDamageable.SetupDamageText();
         fractureScript = GetComponentInChildren<Fracture>();
         originalSpeed = navMeshAgent.speed;
-        
+
+        checker = GetComponentInChildren<LineOfSightChecker>();
+
+        rigidBones = gameObject.GetComponentsInChildren<Rigidbody>();
+        DisableRagdoll();
     }
 
     private void Update()
@@ -253,10 +260,10 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
     {
         if (Health <= 0)
         {
-            dead = true;
-            if (animator.GetInteger("Death") != 0) return;
-            int deathanimation = Random.Range(1, 4);
-            animator.SetInteger("Death", deathanimation);
+            //dead = true;
+            //if (animator.GetInteger("Death") != 0) return;
+            //int deathanimation = Random.Range(1, 4);
+            //animator.SetInteger("Death", deathanimation);
 
             if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
             {
@@ -264,7 +271,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
                 //LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
                 LevelManager.Instance.Player.HealthRegen(LevelManager.Instance.Player.PercentToHeal * maxHealth);
             }
-            //OnDeath();
+            OnDeath();
         }
     }
 
@@ -275,7 +282,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
 
     public void OnDeath()
     {
-        navMeshAgent.speed = 0;
+        EnableRagdoll();
 
         if (m_shouldHitStop) LevelManager.TimeStop(m_hitStopDuration);
 
@@ -289,8 +296,36 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
         //navMeshAgent.Warp(m_StartingPosition);
     }
 
+    private void DisableRagdoll()
+    {
+        animator.enabled = true;
+        gameObject.GetComponent<CapsuleCollider>().enabled = true;
+        checker.gameObject.GetComponent<SphereCollider>().enabled = true;
+
+        foreach (Rigidbody r in rigidBones)
+        {
+            r.isKinematic = true;
+        }
+    }
+
+    private void EnableRagdoll()
+    {
+        navMeshAgent.speed = 0;
+        animator.enabled = false;
+        gameObject.GetComponent<CapsuleCollider>().enabled = false;
+        checker.gameObject.GetComponent<SphereCollider>().enabled = false;
+
+        foreach (Rigidbody r in rigidBones)
+        {
+            r.isKinematic = false;
+            //r.AddExplosionForce(ragdollForce, gameObject.transform.position, 50, 70, ForceMode.Impulse);
+            r.AddForce(LevelManager.Instance.Player.transform.forward * ragdollForce, ForceMode.Impulse);
+        }
+    }
+
     public void OnPlayerRespawn()
     {
+        DisableRagdoll();
         if (!gameObject.activeSelf)
         {
             gameObject.SetActive(true);
@@ -336,6 +371,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
     public void TakeDamage(float damageTaken)
     {
         health -= damageTaken;
+        ragdollForce = damageTaken;
         if(fractureScript != null) fractureScript.Health = health;
         CheckForDeath();
         m_IDamageable.InstantiateDamageNumber(damageTaken, HitBoxType.normal);
