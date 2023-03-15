@@ -6,6 +6,7 @@ public class BreakablePieceBehavior : MonoBehaviour
 {
     [SerializeField] private float m_dissolveTime = 0.025f;
     [SerializeField] private float m_dissolveRate = 0.0125f;
+    [SerializeField] private float m_dissolveWidth = 0.02f;
 
     private MeshRenderer m_mesh;
     private Material m_material;
@@ -65,6 +66,8 @@ public class BreakablePieceBehavior : MonoBehaviour
 
     private void Dissolve()
     {
+        m_material.SetFloat("_DissolveWidth", m_dissolveWidth);
+
         if (m_dissolveRefreshStartTime + m_dissolveTime < Time.time)
         {
             m_dissolveCounter += m_dissolveRate;
