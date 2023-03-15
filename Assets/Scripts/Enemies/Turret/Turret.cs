@@ -6,6 +6,9 @@ public class Turret : NewAgentBase
     [Header("Turret Body")]
     [SerializeField] Transform m_Body;
 
+    [Header("Attack Delay")]
+    [SerializeField] float m_AttackDelay;
+
     TurretState m_TurretState;
 
     public override Transform TrackingTransform => m_Body;
@@ -31,16 +34,21 @@ public class Turret : NewAgentBase
         {
             case TurretState.GUARD:
                 m_Tracking.TrackTarget();
-                if (m_Tracking.CheckFieldOfView()) m_TurretState = TurretState.ATTACK;
+                if (m_Tracking.CheckFieldOfView()) Invoke(nameof(SetAttackState), m_AttackDelay);
                 break;
             case TurretState.ATTACK:
                 m_Tracking.TrackTarget();
-                if (m_Tracking.CheckLineOfSight()) m_Shooting.Shoot();
+                if (m_Tracking.CheckFieldOfView()) m_Shooting.Shoot();
                 if (!m_Tracking.InRange) m_TurretState = TurretState.GUARD;
                 break;
             default:
                 break;
         }
+    }
+
+    void SetAttackState()
+    {
+        m_TurretState = TurretState.ATTACK;
     }
 }
 

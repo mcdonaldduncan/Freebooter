@@ -17,7 +17,12 @@ public class BNodeInspector : Editor
         DrawDefaultInspector();
 
         BarrierNode node = (BarrierNode)target;
+
+        if (node == null) return;
+
         BarrierSegment segment = node.transform.parent.GetComponentInChildren<BarrierSegment>();
+
+        if (segment == null) return;
 
         if (GUILayout.Button("Remove Node"))
         {

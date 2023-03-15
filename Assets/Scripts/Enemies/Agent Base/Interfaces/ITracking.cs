@@ -5,7 +5,7 @@ public interface ITracking
     Transform TrackingTransform { get; }
 
     Transform RayPoint { get; }
-    LayerMask TargetLayer { get; }
+    LayerMask SightLayers { get; }
 
     float Range { get; }
     float RotationSpeed { get; }
@@ -36,7 +36,7 @@ public interface ITracking
 
         if (!(dot >= Mathf.Cos(FOV * Mathf.Deg2Rad * 0.5f))) return false;
 
-        if (!Physics.Raycast(RayPoint.position, RayTargetDirection, out RaycastHit hit, Range)) return false;
+        if (!Physics.Raycast(RayPoint.position, RayTargetDirection, out RaycastHit hit, Range, SightLayers)) return false;
 
         if (!hit.collider.CompareTag("Player")) return false;
 

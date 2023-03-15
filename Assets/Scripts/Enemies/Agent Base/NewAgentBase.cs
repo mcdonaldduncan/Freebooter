@@ -20,7 +20,7 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
 
     [Header("Layer mask Options")]
     [SerializeField] LayerMask m_WalkableLayers;
-    [SerializeField] LayerMask m_PlayerLayer;
+    [SerializeField] LayerMask m_SightLayers;
 
     [Header("Movement Options")]
     [SerializeField] float m_StoppingDistance;
@@ -85,7 +85,7 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
 
     public Transform RayPoint => m_ShootFrom;
 
-    public LayerMask TargetLayer => m_PlayerLayer;
+    public LayerMask SightLayers => m_SightLayers;
 
     public float Range => m_Range;
 

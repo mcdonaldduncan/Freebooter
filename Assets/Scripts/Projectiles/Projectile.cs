@@ -122,6 +122,8 @@ public class Projectile : MonoBehaviour, IPoolable
         ResetProjectile();
     }
 
+    
+
     void ResetProjectile()
     {
         m_RigidBody.velocity = Vector3.zero;
