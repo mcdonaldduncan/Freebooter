@@ -346,7 +346,7 @@ Transform:
   m_GameObject: {fileID: 6774125380982462031}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -17.11, y: 1.63, z: -10.47}
-  m_LocalScale: {x: 3.1947737, y: 3.1969965, z: 3.1947732}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6774125381791313688}
@@ -390,26 +390,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ProjectilePrefab: {fileID: 196044, guid: 1e84f30cb39097c4ab5119e76519f052, type: 3}
   m_ShootFrom: {fileID: 6774125381532014997}
+  m_OnKillHealFVX: {fileID: 2748225569481887560, guid: de88dfbe0c34dad418728faa198b70e0,
+    type: 3}
+  m_DamageTextPrefab: {fileID: 3377893959702237216, guid: b26933fac4913a747a2bc7b367e9b00b,
+    type: 3}
+  m_TextSpawnLocation: {fileID: 5624021712473561589}
+  m_FontSize: 14
+  m_ShowDamageNumbers: 1
   m_WalkableLayers:
     serializedVersion: 2
-    m_Bits: 128
-  m_StoppingDistance: 1
+    m_Bits: 2147483647
+  m_SightLayers:
+    serializedVersion: 2
+    m_Bits: 66513
+  m_StoppingDistance: 5
   m_RotationSpeed: 20
-  m_SampleRadius: 10
+  m_MovementSampleRadius: 10
   m_WanderDelay: 5
   m_WanderDistance: 15
   m_Range: 30
   m_TimeBetweenShots: 0.6
+  m_FieldOfView: 180
   m_MaxHealth: 500
-  m_Health: 500
-  m_OnKillHealFVX: {fileID: 2748225569481887560, guid: de88dfbe0c34dad418728faa198b70e0,
-    type: 3}
+  m_ShouldHitStop: 0
+  m_HitStopDuration: 0
   m_ShouldSleep: 0
-  m_Activator: {fileID: 0}
-  m_DamagePopUpPrefab: {fileID: 3377893959702237216, guid: b26933fac4913a747a2bc7b367e9b00b,
-    type: 3}
-  m_PopupFromHere: {fileID: 5624021712473561589}
-  m_showDamageNumbers: 0
   m_Body: {fileID: 6774125381791313667}
   m_SecondaryShootFrom: {fileID: 6774125382417784124}
 --- !u!135 &6774125380982462041
