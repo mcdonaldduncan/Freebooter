@@ -96,7 +96,7 @@ public interface INavigation
     {
         if (!shouldWander) return;
 
-        Agent.SetDestination(RandomPosInSphere(Agent.transform.position, WanderDistance, WalkableLayers));
+        MoveToLocation(RandomPosInSphere(Agent.transform.position, WanderDistance, WalkableLayers));
 
         LastWanderTime = Time.time;
     }

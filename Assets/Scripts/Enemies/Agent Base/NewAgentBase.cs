@@ -109,6 +109,7 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
 
     protected bool IsInCombat { get; set; }
 
+    public bool AltShootFrom { get; set; }
 
     public delegate void CombatStateEventHandler(bool combatState);
     public event CombatStateEventHandler CombatStateChanged;
@@ -146,7 +147,7 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
         switch (m_State)
         {
             case AgentState.GUARD:
-                m_Tracking.TrackTarget2D();
+                m_Tracking.TrackTarget();
                 if (m_Tracking.CheckFieldOfView()) m_State = AgentState.CHASE;
                 if (IsInCombat) HandleCombatStateChange();
                 break;
@@ -157,7 +158,7 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
                 break;
             case AgentState.CHASE:
                 m_Navigation.ChaseTarget();
-                m_Tracking.TrackTarget2D();
+                m_Tracking.TrackTarget();
                 if (m_Tracking.CheckLineOfSight()) m_Shooting.Shoot();
                 if (!m_Tracking.InRange) m_State = AgentState.RETURN;
                 if (!IsInCombat) HandleCombatStateChange();

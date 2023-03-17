@@ -12,6 +12,8 @@ public interface IShooting
 
     bool ShouldShoot => Time.time > LastShotTime + TimeBetweenShots;
 
+    bool AltShootFrom { get; set; }
+
     void Shoot()
     {
         if (!ShouldShoot) return;
@@ -23,6 +25,7 @@ public interface IShooting
         projectile.transform.LookAt(projectile.transform.position + direction);
 
         LastShotTime = Time.time;
+        AltShootFrom = !AltShootFrom;
     }
 
     void Shoot(Vector3 shootFrom)
@@ -36,5 +39,6 @@ public interface IShooting
         projectile.transform.LookAt(projectile.transform.position + direction);
 
         LastShotTime = Time.time;
+        AltShootFrom = !AltShootFrom;
     }
 }
