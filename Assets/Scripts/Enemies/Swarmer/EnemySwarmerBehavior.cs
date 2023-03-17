@@ -264,13 +264,6 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
             //if (animator.GetInteger("Death") != 0) return;
             //int deathanimation = Random.Range(1, 4);
             //animator.SetInteger("Death", deathanimation);
-
-            if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
-            {
-                ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);
-                //LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
-                LevelManager.Instance.Player.HealthRegen(LevelManager.Instance.Player.PercentToHeal * maxHealth);
-            }
             OnDeath();
         }
     }
@@ -285,6 +278,13 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
         EnableRagdoll();
 
         if (m_shouldHitStop) LevelManager.TimeStop(m_hitStopDuration);
+
+        if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
+        {
+            ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);
+            //LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
+            LevelManager.Instance.Player.HealthRegen(LevelManager.Instance.Player.PercentToHeal * maxHealth);
+        }
 
         //if (fractureScript != null) fractureScript.Breakage();
         SwarmerDeath?.Invoke();
@@ -311,6 +311,8 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
     private void EnableRagdoll()
     {
         navMeshAgent.speed = 0;
+        navMeshAgent.stoppingDistance = 0;
+        navMeshAgent.radius = 0;
         animator.enabled = false;
         gameObject.GetComponent<CapsuleCollider>().enabled = false;
         checker.gameObject.GetComponent<SphereCollider>().enabled = false;
