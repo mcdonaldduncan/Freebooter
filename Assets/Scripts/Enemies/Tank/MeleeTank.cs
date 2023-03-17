@@ -116,21 +116,23 @@ public class MeleeTank : NewAgentBase
 
     public override void HandleAgentState()
     {
-        
         switch (m_State)
         {
             case AgentState.GUARD:
                 m_Tracking.TrackTarget2D();
                 if (m_Tracking.CheckFieldOfView()) m_State = AgentState.CHASE;
+                if (IsInCombat) HandleCombatStateChange();
                 break;
             case AgentState.WANDER:
                 m_Navigation.Wander();
                 if (m_Tracking.CheckFieldOfView()) m_State = AgentState.CHASE;
+                if (IsInCombat) HandleCombatStateChange();
                 break;
             case AgentState.CHASE:
                 m_Navigation.ChaseTarget();
                 m_Tracking.TrackTarget2D();
                 if (!m_Tracking.InRange) m_State = AgentState.RETURN;
+                if (!IsInCombat) HandleCombatStateChange();
                 if (shouldMelee) { MeleeHandler(); }
                 if (shouldCharge) { ChargeAttack(); }
                 break;
@@ -138,9 +140,11 @@ public class MeleeTank : NewAgentBase
                 m_Navigation.MoveToLocationDirect(m_StartingPosition);
                 if (m_Navigation.CheckReturned(m_StartingPosition)) m_State = m_StartingState;
                 if (m_Tracking.CheckFieldOfView()) m_State = AgentState.CHASE;
+                if (IsInCombat) HandleCombatStateChange();
                 break;
             case AgentState.SLEEP:
                 m_Navigation.Sleep();
+                if (IsInCombat) HandleCombatStateChange();
                 break;
             default:
                 break;
