@@ -199,17 +199,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ProjectilePrefab: {fileID: 196044, guid: 938459aeb26fb124998973f4dfcfb24d, type: 3}
   m_ShootFrom: {fileID: 9014040488091691166}
-  m_OnKillHealFVX: {fileID: 2748225569481887560, guid: de88dfbe0c34dad418728faa198b70e0, type: 3}
-  m_DamageTextPrefab: {fileID: 3377893959702237216, guid: b26933fac4913a747a2bc7b367e9b00b, type: 3}
+  m_OnKillHealFVX: {fileID: 2748225569481887560, guid: de88dfbe0c34dad418728faa198b70e0,
+    type: 3}
+  m_DamageTextPrefab: {fileID: 3377893959702237216, guid: b26933fac4913a747a2bc7b367e9b00b,
+    type: 3}
   m_TextSpawnLocation: {fileID: 103593482576751841}
   m_FontSize: 0
   m_ShowDamageNumbers: 0
   m_WalkableLayers:
     serializedVersion: 2
     m_Bits: 2147483647
-  m_PlayerLayer:
+  m_SightLayers:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 0
   m_StoppingDistance: 5
   m_RotationSpeed: 30
   m_MovementSampleRadius: 0
@@ -219,8 +221,9 @@ MonoBehaviour:
   m_TimeBetweenShots: 0.35
   m_FieldOfView: 0
   m_MaxHealth: 100
+  m_ShouldHitStop: 0
+  m_HitStopDuration: 0
   m_ShouldSleep: 0
-  m_Activator: {fileID: 0}
   m_Body: {fileID: 9014040488476938554}
 --- !u!136 &8143964890246340086
 CapsuleCollider:
@@ -342,6 +345,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9014040488429798430}
   - component: {fileID: 9014040488429798401}
+  - component: {fileID: 8827108705429867535}
   m_Layer: 9
   m_Name: Point Light
   m_TagString: Untagged
@@ -426,6 +430,26 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &8827108705429867535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9014040488429798431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1 &9014040488476938554
 GameObject:
   m_ObjectHideFlags: 0
@@ -440,6 +464,7 @@ GameObject:
   - component: {fileID: 9014040488476938556}
   - component: {fileID: 5447561733742993269}
   - component: {fileID: 4974310600232614171}
+  - component: {fileID: 2191556816928466856}
   m_Layer: 9
   m_Name: FlyEnemy
   m_TagString: Untagged
@@ -545,6 +570,7 @@ MonoBehaviour:
   m_Damage: 20
   m_Radius: 2
   blinkrate: 0.3
+  fractureScript: {fileID: 0}
 --- !u!64 &4974310600232614171
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -559,6 +585,22 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4732937762076777578, guid: 2a0210414821bbc4a859073ae19b29d8, type: 3}
+--- !u!54 &2191556816928466856
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9014040488476938554}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!1 &9014040488885049117
 GameObject:
   m_ObjectHideFlags: 0
