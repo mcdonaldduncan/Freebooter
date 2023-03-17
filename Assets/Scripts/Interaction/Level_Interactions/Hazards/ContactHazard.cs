@@ -38,9 +38,5 @@ public class ContactHazard : MonoBehaviour
             if (m_InstantKill) damageable.TakeDamage(damageable.Health + 1);
             else damageable.TakeDamage(m_DamageAmount);
         }
-        else
-        {
-            Destroy(collider.gameObject);
-        }
     }
 }
