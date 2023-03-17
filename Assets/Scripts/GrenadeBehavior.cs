@@ -83,7 +83,7 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
         grenadeRB.AddForce(direction);
 
         //Add torque for a little stylish spinning :)
-        grenadeRB.AddTorque(Vector3.right + (0.05f * direction));
+        grenadeRB.AddTorque(direction * 0.01f);
     }
 
     private void Explode()
