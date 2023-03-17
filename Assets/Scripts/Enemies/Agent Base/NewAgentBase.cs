@@ -110,7 +110,7 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
     protected bool IsInCombat { get; set; }
 
 
-    public delegate void CombatStateEventHandler(bool InCombat);
+    public delegate void CombatStateEventHandler(bool combatState);
     public event CombatStateEventHandler CombatStateChanged;
 
     protected void AwakeSetup()
