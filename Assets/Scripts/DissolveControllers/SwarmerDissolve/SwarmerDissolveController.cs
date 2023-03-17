@@ -40,7 +40,7 @@ public class SwarmerDissolveController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (ShouldDissolve && m_timeBeforeDespawn > 0)
+        if (ShouldDissolve)
         {
             Dissolve();
         }
