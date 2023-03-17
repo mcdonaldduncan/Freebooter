@@ -311,8 +311,6 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
     private void EnableRagdoll()
     {
         navMeshAgent.speed = 0;
-        navMeshAgent.stoppingDistance = 0;
-        navMeshAgent.radius = 0;
         animator.enabled = false;
         gameObject.GetComponent<CapsuleCollider>().enabled = false;
         checker.gameObject.GetComponent<SphereCollider>().enabled = false;
