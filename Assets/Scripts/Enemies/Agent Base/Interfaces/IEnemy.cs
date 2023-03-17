@@ -8,6 +8,16 @@ using UnityEngine;
 /// Author: Duncan McDonald
 public interface IEnemy
 {
+    //public bool IsInCombat { get; set; }
+
+
+    //public delegate void CombatStateEventHandler(bool InCombat);
+    //public event CombatStateEventHandler CombatStateChanged;
+
+    //public void HandleCombatState();
+
+
+
     float MovementSampleRadius { get; }
 
     Vector3 StartingPosition { get; set; }
@@ -23,11 +33,5 @@ public interface IEnemy
     void OnActivate();
 
     void OnDeactivate();
-
-    void OnDeath();
-
-    void OnPlayerRespawn();
-
-    void OnCheckPointReached();
 
 }

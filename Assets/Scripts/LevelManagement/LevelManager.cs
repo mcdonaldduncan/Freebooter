@@ -27,6 +27,8 @@ public sealed class LevelManager : MonoBehaviour
     public static event PlayerRespawnDelegate PlayerRespawn;
     public static event PlayerRespawnDelegate CheckPointReached;
 
+    private int CombatantCount;
+
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -45,7 +47,16 @@ public sealed class LevelManager : MonoBehaviour
         {
             Player = GameObject.FindGameObjectWithTag("Player").GetComponent<FirstPersonController>();
         }
+
         timeStopped = false;
+        CombatantCount = 0;
+
+        var enemies = FindObjectsOfType<NewAgentBase>();
+
+        foreach (var enemy in enemies)
+        {
+            enemy.CombatStateChanged += OnCombatStateChanged;
+        }
     }
 
     private void Update()
@@ -58,6 +69,11 @@ public sealed class LevelManager : MonoBehaviour
                 timeStopped = false;
             }
         }
+    }
+
+    private void OnCombatStateChanged(bool combatState)
+    {
+        CombatantCount = combatState ? ++CombatantCount : --CombatantCount;
     }
 
     public static void TimeStop(float duration)

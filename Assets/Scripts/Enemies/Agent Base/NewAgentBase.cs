@@ -42,8 +42,8 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
     [SerializeField] float m_MaxHealth;
 
     [Header("OnDeath Options")]
-    [SerializeField] bool m_shouldHitStop;
-    [SerializeField] float m_hitStopDuration;
+    [SerializeField] bool m_ShouldHitStop;
+    [SerializeField] float m_HitStopDuration;
 
     [Header("Activation Options")]
     [SerializeField] bool m_ShouldSleep;
@@ -107,6 +107,11 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
 
     public float FontSize => m_FontSize;
 
+    protected bool IsInCombat { get; set; }
+
+
+    public delegate void CombatStateEventHandler(bool InCombat);
+    public event CombatStateEventHandler CombatStateChanged;
 
     protected void AwakeSetup()
     {
@@ -143,28 +148,39 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
             case AgentState.GUARD:
                 m_Tracking.TrackTarget2D();
                 if (m_Tracking.CheckFieldOfView()) m_State = AgentState.CHASE;
+                if (IsInCombat) HandleCombatStateChange();
                 break;
             case AgentState.WANDER:
                 m_Navigation.Wander();
                 if (m_Tracking.CheckFieldOfView()) m_State = AgentState.CHASE;
+                if (IsInCombat) HandleCombatStateChange();
                 break;
             case AgentState.CHASE:
                 m_Navigation.ChaseTarget();
                 m_Tracking.TrackTarget2D();
                 if (m_Tracking.CheckLineOfSight()) m_Shooting.Shoot();
                 if (!m_Tracking.InRange) m_State = AgentState.RETURN;
+                if (!IsInCombat) HandleCombatStateChange();
                 break;
             case AgentState.RETURN:
                 m_Navigation.MoveToLocationDirect(m_StartingPosition);
                 if (m_Navigation.CheckReturned(m_StartingPosition)) m_State = m_StartingState;
                 if (m_Tracking.CheckFieldOfView()) m_State = AgentState.CHASE;
+                if (IsInCombat) HandleCombatStateChange();
                 break;
             case AgentState.SLEEP:
                 m_Navigation.Sleep();
+                if (IsInCombat) HandleCombatStateChange();
                 break;
             default:
                 break;
         }
+    }
+
+    public void HandleCombatStateChange()
+    {
+        IsInCombat = !IsInCombat;
+        CombatStateChanged?.Invoke(IsInCombat);
     }
 
     public virtual void CheckForDeath()
@@ -188,13 +204,16 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
 
     public virtual void OnDeath()
     {
-        if (m_shouldHitStop) LevelManager.TimeStop(m_hitStopDuration);
+        if (m_ShouldHitStop) LevelManager.TimeStop(m_HitStopDuration);
 
         if (m_Tracking.DistanceToTarget <= LevelManager.Instance.Player.DistanceToHeal)
         {
             ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);
             LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * m_MaxHealth);
         }
+
+        if (IsInCombat) CombatStateChanged?.Invoke(false);
+
         gameObject.SetActive(false);
         m_Respawn.SubscribeToCheckpointReached();
     }
@@ -203,6 +222,7 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
     {
         m_Navigation.CycleAgent(m_StartingPosition);
         IsDead = false;
+        IsInCombat = false;
         transform.rotation = m_StartingRotation;
         Health = m_MaxHealth;
     }
