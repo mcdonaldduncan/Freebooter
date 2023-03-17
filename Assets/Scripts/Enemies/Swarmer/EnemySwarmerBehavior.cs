@@ -275,6 +275,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
 
     public void OnDeath()
     {
+        ignorePlayer = true;
         EnableRagdoll();
 
         if (m_shouldHitStop) LevelManager.TimeStop(m_hitStopDuration);
@@ -306,6 +307,8 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
         {
             r.isKinematic = true;
         }
+
+        navMeshAgent.speed = originalSpeed;
     }
 
     private void EnableRagdoll()
@@ -331,10 +334,9 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
             gameObject.SetActive(true);
         }
         navMeshAgent.Warp(m_StartingPosition);
-        navMeshAgent.speed = originalSpeed;
-        navMeshAgent.isStopped = false;
         CycleAgent();
         Health = maxHealth;
+        ignorePlayer = false;
     }
 
     void CycleAgent()

@@ -4,40 +4,43 @@ using UnityEngine;
 
 public class SwarmerDissolveController : MonoBehaviour
 {
-    [SerializeField] private float dissolveTime = 0.025f;
-    [SerializeField] private float dissolveRate = 0.0125f;
+    [SerializeField] private float m_timeBeforeDespawn = 3;
+    [SerializeField] private float m_dissolveTime = 0.025f;
+    [SerializeField] private float m_dissolveRate = 0.0125f;
 
-    private SkinnedMeshRenderer skinnedMesh;
-    private Material skinnedMaterial;
-    private EnemySwarmerBehavior swarmerScript;
+    private SkinnedMeshRenderer m_skinnedMesh;
+    private Material m_skinnedMaterial;
+    private EnemySwarmerBehavior m_swarmerScript;
 
-    private float dissolveCounter;
-    private float dissolveRefreshStartTime;
-    private float dissolveAmountStart;
-    
-    private bool swarmerDied = false;
+    private float m_dissolveCounter;
+    private float m_dissolveRefreshStartTime;
+    private float m_dissolveAmountStart;
+    private float m_timeDefeated;
 
-    private bool ShouldDissolve => skinnedMaterial != null && skinnedMaterial.GetFloat("_DissolveAmount") < 1 && swarmerDied;
-    private bool CompletelyDissolved => skinnedMaterial.GetFloat("_DissolveAmount") >= 1;
+    private bool m_swarmerDied = false;
+
+    private bool ShouldDissolve => m_skinnedMaterial != null && m_skinnedMaterial.GetFloat("_DissolveAmount") < 1 && m_swarmerDied 
+        && m_timeDefeated + m_timeBeforeDespawn <= Time.time;
+    private bool CompletelyDissolved => m_skinnedMaterial.GetFloat("_DissolveAmount") >= 1;
 
     // Start is called before the first frame update
     void Start()
     {
-        skinnedMesh = GetComponent<SkinnedMeshRenderer>();
-        swarmerScript = GetComponentInParent<EnemySwarmerBehavior>();
+        m_skinnedMesh = GetComponent<SkinnedMeshRenderer>();
+        m_swarmerScript = GetComponentInParent<EnemySwarmerBehavior>();
 
-        if (skinnedMesh != null) skinnedMaterial = skinnedMesh.materials[0];
+        if (m_skinnedMesh != null) m_skinnedMaterial = m_skinnedMesh.materials[0];
 
-        dissolveAmountStart = skinnedMaterial.GetFloat("_DissolveAmount");
+        m_dissolveAmountStart = m_skinnedMaterial.GetFloat("_DissolveAmount");
 
         LevelManager.PlayerRespawn += OnPlayerRespawn;
-        swarmerScript.SwarmerDeath += OnSwarmerDeath;
+        m_swarmerScript.SwarmerDeath += OnSwarmerDeath;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (ShouldDissolve)
+        if (ShouldDissolve && m_timeBeforeDespawn > 0)
         {
             Dissolve();
         }
@@ -45,30 +48,31 @@ public class SwarmerDissolveController : MonoBehaviour
 
     private void Dissolve()
     {
-        if (dissolveRefreshStartTime + dissolveTime < Time.time)
+        if (m_dissolveRefreshStartTime + m_dissolveTime < Time.time)
         {
-            dissolveCounter += dissolveRate;
-            skinnedMaterial.SetFloat("_DissolveAmount", dissolveCounter);
+            m_dissolveCounter += m_dissolveRate;
+            m_skinnedMaterial.SetFloat("_DissolveAmount", m_dissolveCounter);
 
-            dissolveRefreshStartTime = Time.time;
+            m_dissolveRefreshStartTime = Time.time;
         }
 
-        if (CompletelyDissolved && swarmerScript.gameObject.activeSelf)
+        if (CompletelyDissolved && m_swarmerScript.gameObject.activeSelf)
         {
-            swarmerScript.gameObject.SetActive(false);
+            m_swarmerScript.gameObject.SetActive(false);
         }
     }
 
     private void OnSwarmerDeath()
     {
-        dissolveCounter = 0;
-        dissolveRefreshStartTime = Time.time;
-        swarmerDied = true;
+        m_dissolveCounter = 0;
+        m_dissolveRefreshStartTime = Time.time;
+        m_swarmerDied = true;
+        m_timeDefeated = Time.time;
     }
 
     private void OnPlayerRespawn()
     {
-        swarmerDied = false;
-        skinnedMaterial.SetFloat("_DissolveAmount", dissolveAmountStart);
+        m_swarmerDied = false;
+        m_skinnedMaterial.SetFloat("_DissolveAmount", m_dissolveAmountStart);
     }
 }
