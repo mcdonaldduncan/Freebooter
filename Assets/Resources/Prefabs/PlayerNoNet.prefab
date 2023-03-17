@@ -992,15 +992,15 @@ MonoBehaviour:
   shotShakeDampen: 0.9
   autoGunModel: {fileID: 2327159229049862326}
   autoGunShootFrom: {fileID: 2896727943042922130}
-  autoGunDamageDropStart: 20
-  autoGunDamageDropEnd: 50
-  autoGunMaxDamage: 25
-  autoGunMinDamage: 10
+  autoGunDamageDropStart: 30
+  autoGunDamageDropEnd: 60
+  autoGunMaxDamage: 120
+  autoGunMinDamage: 80
   autoGunHorizontalSpread: 0
   autoGunVerticalSpread: 0
   autoGunCurrentAmmo: 0
-  autoGunMaxAmmo: 50
-  autoFireRate: 0.2
+  autoGunMaxAmmo: 10
+  autoFireRate: 1.7
   autoGunAimOffset: 15
   autoGunReticle: {fileID: 2291571642965968571}
   autoGunShotAudioList:
@@ -1016,9 +1016,9 @@ MonoBehaviour:
   triggerReleasedAudio: {fileID: 8300000, guid: 857e550ef93099249bcb04313653764a,
     type: 3}
   autoGunAnimationHandler: {fileID: 2423536598832608778}
-  autoShakeDuration: 0.5
-  autoShakeMagnitude: 0.1
-  autoShakeDampen: 1
+  autoShakeDuration: 0.3
+  autoShakeMagnitude: 0.5
+  autoShakeDampen: 0.5
   grenadeObject: {fileID: 2469417936984378629, guid: 8178c7fb6a6b5ce46ad893fc448533fe,
     type: 3}
   grenadeGunModel: {fileID: 297426593897619845}
@@ -1464,7 +1464,7 @@ Camera:
   m_GameObject: {fileID: 3975387541455319729}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 3
+  m_ClearFlags: 2
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -2274,6 +2274,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: -22.543442
       objectReference: {fileID: 0}
+    - target: {fileID: 1324203901, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: m_RootOrder
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 1901513714, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2548,6 +2552,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3072037810348470487, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_BlockingMask.m_Bits
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 3072037810348470504, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
       propertyPath: m_Name
@@ -2583,11 +2592,26 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 208.67215
       objectReference: {fileID: 0}
+    - target: {fileID: 3552979574629407292, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_BlocksRaycasts
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3553328773290631872, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_BlocksRaycasts
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3875076895944599315, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
       propertyPath: m_UseSpriteMesh
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4164169884678136699, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: gunHandler
+      value: 
+      objectReference: {fileID: 297426594336726720}
     - target: {fileID: 4562221553111881085, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
       propertyPath: m_fontStyle
@@ -2623,10 +2647,20 @@ PrefabInstance:
       propertyPath: Cgun
       value: 
       objectReference: {fileID: 297426594336726720}
+    - target: {fileID: 5643252665583653275, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_BlocksRaycasts
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6564491022309879836, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6573227952719304866, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 26
       objectReference: {fileID: 0}
     - target: {fileID: 6639961086595536858, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
@@ -2692,6 +2726,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+--- !u!1 &297426593898452115 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3072037810348470504, guid: 0fb508bd654404f498649d3da33487b1,
+    type: 3}
+  m_PrefabInstance: {fileID: 3351445538836964475}
+  m_PrefabAsset: {fileID: 0}
+--- !u!225 &438752469
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 297426593898452115}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!224 &297426593898452143 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3072037810348470484, guid: 0fb508bd654404f498649d3da33487b1,
