@@ -780,7 +780,10 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     {
         isDead = true;
         characterController.enabled = false;
-        
+    }
+
+    public void Respawn()
+    {
         transform.position = LevelManager.Instance.CurrentCheckPoint?.transform.position ?? startingPos;
         transform.rotation = LevelManager.Instance.CurrentCheckPoint?.transform.rotation ?? Quaternion.identity;
 
