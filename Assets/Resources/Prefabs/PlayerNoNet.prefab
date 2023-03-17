@@ -992,15 +992,15 @@ MonoBehaviour:
   shotShakeDampen: 0.9
   autoGunModel: {fileID: 2327159229049862326}
   autoGunShootFrom: {fileID: 2896727943042922130}
-  autoGunDamageDropStart: 20
-  autoGunDamageDropEnd: 50
-  autoGunMaxDamage: 25
-  autoGunMinDamage: 10
+  autoGunDamageDropStart: 30
+  autoGunDamageDropEnd: 60
+  autoGunMaxDamage: 120
+  autoGunMinDamage: 80
   autoGunHorizontalSpread: 0
   autoGunVerticalSpread: 0
   autoGunCurrentAmmo: 0
-  autoGunMaxAmmo: 50
-  autoFireRate: 0.2
+  autoGunMaxAmmo: 10
+  autoFireRate: 1.7
   autoGunAimOffset: 15
   autoGunReticle: {fileID: 2291571642965968571}
   autoGunShotAudioList:
@@ -1016,9 +1016,9 @@ MonoBehaviour:
   triggerReleasedAudio: {fileID: 8300000, guid: 857e550ef93099249bcb04313653764a,
     type: 3}
   autoGunAnimationHandler: {fileID: 2423536598832608778}
-  autoShakeDuration: 0.5
-  autoShakeMagnitude: 0.1
-  autoShakeDampen: 1
+  autoShakeDuration: 0.3
+  autoShakeMagnitude: 0.5
+  autoShakeDampen: 0.5
   grenadeObject: {fileID: 2469417936984378629, guid: 8178c7fb6a6b5ce46ad893fc448533fe,
     type: 3}
   grenadeGunModel: {fileID: 297426593897619845}
@@ -1464,7 +1464,7 @@ Camera:
   m_GameObject: {fileID: 3975387541455319729}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 3
+  m_ClearFlags: 2
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
