@@ -264,13 +264,6 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
             //if (animator.GetInteger("Death") != 0) return;
             //int deathanimation = Random.Range(1, 4);
             //animator.SetInteger("Death", deathanimation);
-
-            if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
-            {
-                ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);
-                //LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
-                LevelManager.Instance.Player.HealthRegen(LevelManager.Instance.Player.PercentToHeal * maxHealth);
-            }
             OnDeath();
         }
     }
@@ -282,9 +275,17 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
 
     public void OnDeath()
     {
+        ignorePlayer = true;
         EnableRagdoll();
 
         if (m_shouldHitStop) LevelManager.TimeStop(m_hitStopDuration);
+
+        if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
+        {
+            ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);
+            //LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
+            LevelManager.Instance.Player.HealthRegen(LevelManager.Instance.Player.PercentToHeal * maxHealth);
+        }
 
         //if (fractureScript != null) fractureScript.Breakage();
         SwarmerDeath?.Invoke();
@@ -306,6 +307,8 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
         {
             r.isKinematic = true;
         }
+
+        navMeshAgent.speed = originalSpeed;
     }
 
     private void EnableRagdoll()
@@ -331,10 +334,9 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
             gameObject.SetActive(true);
         }
         navMeshAgent.Warp(m_StartingPosition);
-        navMeshAgent.speed = originalSpeed;
-        navMeshAgent.isStopped = false;
         CycleAgent();
         Health = maxHealth;
+        ignorePlayer = false;
     }
 
     void CycleAgent()
