@@ -7,6 +7,8 @@ public class DeathScreen : MonoBehaviour
     FirstPersonController FirstPersonController;
     [SerializeField]
     private GameObject UI; //ChildObject called UI 
+    [SerializeField]
+    private GunHandler gunHandler;
 
     bool called = false;
 
@@ -27,8 +29,8 @@ public class DeathScreen : MonoBehaviour
         if (called == true) return; 
         FirstPersonController.enabled = false;
         LevelManager.TogglePause(true);
+        gunHandler.CurrentGun.GunReticle.alpha = 0;
         UI.SetActive(true);
-
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
@@ -36,10 +38,10 @@ public class DeathScreen : MonoBehaviour
     public void Respawn()
     {
         LevelManager.TogglePause(false);
+        gunHandler.CurrentGun.GunReticle.alpha = 1;
         UI.SetActive(false);
         FirstPersonController.enabled = true;
         FirstPersonController.Respawn();
-
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
