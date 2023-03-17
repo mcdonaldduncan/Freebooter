@@ -28,8 +28,7 @@ public class OnDeathExplosion : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         m_Renderer = GetComponent<Renderer>();
-        
-        
+        rb.constraints = RigidbodyConstraints.FreezeAll;
     }
 
     private void Update()
@@ -68,10 +67,11 @@ public class OnDeathExplosion : MonoBehaviour
     {
         if (deathFrames == 0)
         {
-            rb = gameObject.AddComponent<Rigidbody>();
+            rb.isKinematic = false;
             m_Collider.enabled = true;
             rb.useGravity = true;
             Vector3 explosiveForce = new Vector3(Random.Range(-5f, 5f), Random.Range(3f, 7f), Random.Range(-5f, 5f));
+            rb.constraints = RigidbodyConstraints.None;
             rb.AddForce(explosiveForce, ForceMode.Impulse);
         }
         deathFrames++;
@@ -81,7 +81,8 @@ public class OnDeathExplosion : MonoBehaviour
     {
         dead = false;
         deathFrames = 0;
-        Destroy(rb);
+        rb.isKinematic = true;
+        rb.constraints = RigidbodyConstraints.FreezeAll;
         m_Renderer.material.color = Color.white;
         transform.position = transform.parent.position;
         transform.rotation = transform.parent.rotation;
