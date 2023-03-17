@@ -84,6 +84,18 @@ public sealed class LevelManager : MonoBehaviour
         timeStopped = true;
     }
 
+    public static void TogglePause(bool shouldPause)
+    {
+        if (shouldPause == true)
+        {
+            Time.timeScale = 0.0f;
+        }
+        else
+        {
+            Time.timeScale = 1.0f;
+        }
+    }
+
     public void FirePlayerRespawn()
     {
         timeStopped = false;
