@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class DeathScreen : MonoBehaviour
 {
@@ -34,10 +35,10 @@ public class DeathScreen : MonoBehaviour
 
     public void Respawn()
     {
+        LevelManager.TogglePause(false);
         UI.SetActive(false);
         FirstPersonController.enabled = true;
         FirstPersonController.Respawn();
-        LevelManager.TogglePause(false);
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;

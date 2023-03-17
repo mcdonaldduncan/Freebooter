@@ -791,5 +791,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         PlayerHealthChanged?.Invoke();
 
         LevelManager.Instance.FirePlayerRespawn();
+        isDead = false;
+        characterController.enabled = true;
     }
 }
