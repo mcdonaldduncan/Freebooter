@@ -56,6 +56,9 @@ public class Barrier : MonoBehaviour
     }
 #endif
 
+    public delegate void LockedBarrierDelegate();
+    public event LockedBarrierDelegate LockedBarrierAccessed;
+
     // Register events when the script is enabled
     private void OnEnable()
     {
@@ -162,7 +165,7 @@ public class Barrier : MonoBehaviour
             case AccessType.LOCKED:
                 if (!HasKeys)
                 {
-                    // send message to UI
+                    LockedBarrierAccessed?.Invoke();
                     break;
                 }
                 else

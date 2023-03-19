@@ -8,6 +8,8 @@ using UnityEngine;
 /// Author: Duncan McDonald
 public class Key : MonoBehaviour
 {
+    [SerializeField] string m_DisplayName;
+
     [SerializeField] float rotationx;
     [SerializeField] float rotationy;
     [SerializeField] float rotationz;
@@ -17,6 +19,8 @@ public class Key : MonoBehaviour
 
     bool shouldRotate => (rotationx + rotationy + rotationz) > 0;
 
+    public delegate void KeyCollectedDelegate(string name);
+    public event KeyCollectedDelegate KeyCollected;
 
     void Start()
     {
@@ -36,6 +40,7 @@ public class Key : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             KeyManager.Instance.KeyInventory.Add(this);
+            KeyCollected?.Invoke(m_DisplayName);
             player.PlayerAudioSource.PlayOneShot(player.KeyPickupAudio);
             gameObject.SetActive(false);
         }
