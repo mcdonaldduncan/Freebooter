@@ -29,7 +29,7 @@ public class ShotGun : MonoBehaviour, IGun
     public AudioClip GunShotAudio { get; set; }
     public GameObject GunModel { get; set; }
     public TrailRenderer BulletTrailRenderer { get; set; }
-    public ShotgunAnimationHandler GunAnimationHandler { get; set; }
+    public GunAnimationHandler GunAnimationHandler { get; set; }
     public float ShakeDuration { get; set; }
     public float ShakeMagnitude { get; set; }
     public float ShakeDampen { get; set; }

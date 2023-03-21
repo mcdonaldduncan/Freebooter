@@ -23,6 +23,7 @@ public class GrenadeGun : MonoBehaviour, IGun
     public CanvasGroup GunReticle { get; set; }
     public GameObject Bullet { get; set; }
     public TrailRenderer BulletTrailRenderer { get; set; }
+    public GunAnimationHandler GunAnimationHandler { get; set; }
     public AudioClip GunShotAudio { get; set; }
     public float ShakeDuration { get; set; }
     public float ShakeMagnitude { get; set; }

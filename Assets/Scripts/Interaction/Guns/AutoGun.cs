@@ -28,13 +28,14 @@ public class AutoGun : MonoBehaviour, IGun
     public AudioClip[] GunShotAudioList { get; set; }
     public TrailRenderer BulletTrailRenderer { get; set; }
     public GameObject GunModel { get; set; }
-    public AutoGunAnimationHandler GunAnimationHandler { get; set; }
+    public GunAnimationHandler GunAnimationHandler { get; set; }
     public float ShakeDuration { get; set; }
     public float ShakeMagnitude { get; set; }
     public float ShakeDampen { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
 
     public bool CanShoot => lastShotTime + FireRate < Time.time && CurrentAmmo > 0 && GunManager.CurrentGun is AutoGun;
+    public bool FireRateCooldown => lastShotTime + FireRate > Time.time;
 
     private bool holdingTrigger;
     private float lastShotTime;
@@ -70,10 +71,10 @@ public class AutoGun : MonoBehaviour, IGun
     {
         if (context.canceled)
         {
-            if (this.holdingTrigger && GunManager.AutoGunCurrentAmmo > 0)
-            {
-                GunManager.GunShotAudioSource.PlayOneShot(TriggerReleasedAudio);
-            }
+            //if (this.holdingTrigger && GunManager.AutoGunCurrentAmmo > 0)
+            //{
+            //    GunManager.GunShotAudioSource.PlayOneShot(TriggerReleasedAudio);
+            //}
             this.holdingTrigger = false;
             GunAnimationHandler.RecoilAnim.ResetTrigger("RecoilTrigger");
         }

@@ -103,7 +103,7 @@ public sealed class GunHandler : MonoBehaviour
     [SerializeField] private float shotGunAimOffset = 15f;
     [SerializeField] private CanvasGroup shotGunReticle;
     [SerializeField] private AudioClip shotGunShotAudio;
-    [SerializeField] private ShotgunAnimationHandler shotgunAnimationHandler;
+    [SerializeField] private GunAnimationHandler shotgunAnimationHandler;
     [SerializeField] private float shotShakeDuration;
     [SerializeField] private float shotShakeMagnitude;
     [SerializeField] private float shotShakeDampen;
@@ -130,7 +130,7 @@ public sealed class GunHandler : MonoBehaviour
     [SerializeField] private CanvasGroup autoGunReticle;
     [SerializeField] private AudioClip[] autoGunShotAudioList;
     [SerializeField] private AudioClip triggerReleasedAudio;
-    [SerializeField] private AutoGunAnimationHandler autoGunAnimationHandler;
+    [SerializeField] private GunAnimationHandler autoGunAnimationHandler;
     [SerializeField] private float autoShakeDuration;
     [SerializeField] private float autoShakeMagnitude;
     [SerializeField] private float autoShakeDampen;
@@ -215,7 +215,7 @@ public sealed class GunHandler : MonoBehaviour
             autoGun.GunShotAudioList = this.autoGunShotAudioList;
             autoGun.TriggerReleasedAudio = this.triggerReleasedAudio;
             //gun.ReloadWait = this.autoGunReloadWait;
-            autoGun.GunAnimationHandler = this.autoGunAnimationHandler;
+            gun.GunAnimationHandler = this.autoGunAnimationHandler;
             gun.FireRate = this.autoFireRate;
             gun.ShakeDuration = this.autoShakeDuration;
             gun.ShakeMagnitude = this.autoShakeMagnitude;
@@ -253,7 +253,7 @@ public sealed class GunHandler : MonoBehaviour
             gun.GunReticle = this.shotGunReticle;
             gun.GunShotAudio = this.shotGunShotAudio;
             //gun.ReloadWait = this.shotGunReloadWait;
-            shotGun.GunAnimationHandler = this.shotgunAnimationHandler;
+            gun.GunAnimationHandler = this.shotgunAnimationHandler;
             gun.FireRate = this.shotGunFireRate;
             gun.ShakeDuration = this.shotShakeDuration;
             gun.ShakeMagnitude = this.shotShakeMagnitude;
@@ -310,10 +310,11 @@ public sealed class GunHandler : MonoBehaviour
         currentGun = gunDict[GunType.shotGun];
         currentGun.GunReticle.alpha = 1;
         currentGun.GunModel.SetActive(true);
+        currentGun.GunAnimationHandler.RecoilAnim.SetFloat("RecoilSpeed", currentGun.GunAnimationHandler.RecoilAnimClip.length / currentGun.FireRate);
 
         //this.handgunAnimationHandler.RecoilAnim.SetFloat("RecoilSpeed", this.handgunAnimationHandler.RecoilAnimClip.length / this.handGunFireRate);
-        this.shotgunAnimationHandler.RecoilAnim.SetFloat("RecoilSpeed", this.shotgunAnimationHandler.RecoilAnimClip.length / this.shotGunFireRate);
-        this.autoGunAnimationHandler.RecoilAnim.SetFloat("RecoilSpeed", this.autoGunAnimationHandler.RecoilAnimClip.length / this.autoFireRate);
+        //this.shotgunAnimationHandler.RecoilAnim.SetFloat("RecoilSpeed", this.shotgunAnimationHandler.RecoilAnimClip.length / this.shotGunFireRate);
+        //this.autoGunAnimationHandler.RecoilAnim.SetFloat("RecoilSpeed", this.autoGunAnimationHandler.RecoilAnimClip.length / this.autoFireRate);
     }
 
     private void Update()
@@ -361,6 +362,10 @@ public sealed class GunHandler : MonoBehaviour
         currentGun = gunDict[currentGunState];
         currentGun.GunReticle.alpha = 1;
         currentGun.GunModel.SetActive(true);
+        if (currentGun.GunAnimationHandler != null)
+        {
+            currentGun.GunAnimationHandler.RecoilAnim.SetFloat("RecoilSpeed", currentGun.GunAnimationHandler.RecoilAnimClip.length / currentGun.FireRate);
+        }
 
         weaponSwitched?.Invoke();
     }
@@ -403,6 +408,12 @@ public sealed class GunHandler : MonoBehaviour
 
         currentGun.GunReticle.alpha = 1;
         currentGun.GunModel.SetActive(true);
+        if (currentGun.GunAnimationHandler != null)
+        {
+            currentGun.GunAnimationHandler.RecoilAnim.SetFloat("RecoilSpeed", currentGun.GunAnimationHandler.RecoilAnimClip.length / currentGun.FireRate);
+        }
+
+        weaponSwitched?.Invoke();
 
         return pickedUp;
     }

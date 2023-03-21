@@ -168,7 +168,7 @@ RectTransform:
   m_Children:
   - {fileID: 650363195}
   m_Father: {fileID: 297426593898452143}
-  m_RootOrder: 30
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -637,7 +637,7 @@ MonoBehaviour:
   shotGunAimOffset: 15
   shotGunReticle: {fileID: 2291208426676616775}
   shotGunShotAudio: {fileID: 8300000, guid: c15d23ec2ec14b949aa86c30705b3da5, type: 3}
-  shotgunAnimationHandler: {fileID: 211301444}
+  shotgunAnimationHandler: {fileID: 4834069987701003024}
   shotShakeDuration: 0.27
   shotShakeMagnitude: 0.28
   shotShakeDampen: 0.9
@@ -666,7 +666,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 690bae71bb6865348898b7fdf76b0dad, type: 3}
   triggerReleasedAudio: {fileID: 8300000, guid: 857e550ef93099249bcb04313653764a,
     type: 3}
-  autoGunAnimationHandler: {fileID: 2423536598832608778}
+  autoGunAnimationHandler: {fileID: 9051509140675119703}
   autoShakeDuration: 0.3
   autoShakeMagnitude: 0.5
   autoShakeDampen: 0.5
@@ -1369,7 +1369,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &211301444
+--- !u!114 &4834069987701003024
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1378,7 +1378,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 640006171249398621}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb0992720554f6e46b0e7f58075e3fc8, type: 3}
+  m_Script: {fileID: 11500000, guid: 465d02b703c1781489845a8e27e22731, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   recoilAnim: {fileID: 211301443}
@@ -1523,7 +1523,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &449692374
+--- !u!114 &9051509140675119703
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1532,21 +1532,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2327159229049862326}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6af24bf1178600e478e3e272b4618c4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  recoilAnim: {fileID: 449692373}
-  recoilAnimClip: {fileID: 7400000, guid: 6c61421aa3792cc4db50603a76977dc4, type: 2}
---- !u!114 &2423536598832608778
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2327159229049862326}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6af24bf1178600e478e3e272b4618c4d, type: 3}
+  m_Script: {fileID: 11500000, guid: 465d02b703c1781489845a8e27e22731, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   recoilAnim: {fileID: 449692373}
