@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8944999371652729984}
   - component: {fileID: 8944999371649338528}
   - component: {fileID: 8944999371650436704}
-  - component: {fileID: 8944999371652698279}
+  - component: {fileID: 1253438432166815000}
   m_Layer: 0
   m_Name: Flask
   m_TagString: Untagged
@@ -84,8 +84,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &8944999371652698279
-MeshCollider:
+--- !u!136 &1253438432166815000
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -94,7 +94,7 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 9ec750fc4cf747f4fbc15d8898b84ad7, type: 3}
+  m_Radius: 0.12110542
+  m_Height: 0.30988014
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.15494004, z: -0.000000007450581}

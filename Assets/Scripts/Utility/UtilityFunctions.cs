@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 public static class UtilityFunctions
 {
     public static T FindComponentInChildWithTag<T>(this GameObject parent, string tag) where T : Component

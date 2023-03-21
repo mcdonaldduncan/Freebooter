@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 [RequireComponent(typeof(BoxCollider))]
 public class ProximityButton : MonoBehaviour, IActivator
 {

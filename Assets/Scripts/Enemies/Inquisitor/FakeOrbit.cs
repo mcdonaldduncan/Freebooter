@@ -1,7 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 public class FakeOrbit : MonoBehaviour, IDamageable
 {
     [SerializeField] float StartingHealth;
@@ -19,6 +24,16 @@ public class FakeOrbit : MonoBehaviour, IDamageable
     Follower _Follower;
 
     public float Health { get; set; }
+
+    public GameObject DamageTextPrefab => throw new System.NotImplementedException();
+
+    public Transform TextSpawnLocation => throw new System.NotImplementedException();
+
+    public float FontSize => throw new System.NotImplementedException();
+
+    public bool ShowDamageNumbers => throw new System.NotImplementedException();
+
+    public TextMeshPro Text { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
     // Set starting angle and radius
     void Start()

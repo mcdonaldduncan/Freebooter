@@ -14,13 +14,18 @@ public class GunPickup : MonoBehaviour
         player = LevelManager.Instance.Player.GetComponent<FirstPersonController>();
     }
 
+    //Once the player walks over the weapon
     private void OnTriggerEnter(Collider other)
     {
+        //make sure the player is the one walking over the trigger
         if (other.CompareTag("Player"))
         {
-            gunHandler.OnWeaponPickup(gunTypeToPickup);
-            player.PlayerAudioSource.PlayOneShot(player.GunPickupAudio);
-            Destroy(gameObject);
+            //the method returns a bool, making sure that the audio is only played, and the object is set in active if the player doesn't already have the weapon.
+            if (gunHandler.OnWeaponPickup(gunTypeToPickup))
+            {
+                player.PlayerAudioSource.PlayOneShot(player.GunPickupAudio);
+                gameObject.SetActive(false);
+            }
         }
     }
 }

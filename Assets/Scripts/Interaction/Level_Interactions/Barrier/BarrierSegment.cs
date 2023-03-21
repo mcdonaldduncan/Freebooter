@@ -5,6 +5,10 @@ using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 using UnityEngine.UIElements;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 public class BarrierSegment : MonoBehaviour
 {
     [Header("Node Prefab")]

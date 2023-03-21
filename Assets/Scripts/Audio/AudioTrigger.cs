@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 public class AudioTrigger : MonoBehaviour
 {
     [SerializeField] GameObject m_Activator; // reference to the gameobject that activates this audio trigger
@@ -36,8 +40,7 @@ public class AudioTrigger : MonoBehaviour
     private void OnDisable()
     {
         if (m_IActivator == null) return; // if there is no IActivator component, exit the function
-        // unsubscribe to the Activate event
-        m_IActivator.Activate -= OnActivate;
+        m_IActivator.Activate -= OnActivate; // unsubscribe to the Activate event
     }
 
     void OnActivate()

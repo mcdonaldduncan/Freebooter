@@ -54,7 +54,7 @@ public class LineOfSightChecker : MonoBehaviour
 
         float dot = Vector3.Dot(transform.forward, direction);
 
-        if (dot >= Mathf.Cos(FOV * Mathf.Deg2Rad))
+        if (dot >= Mathf.Cos(FOV * Mathf.Deg2Rad * .5f))
         {
             if (!Physics.Raycast(transform.position, direction, out RaycastHit hit, sphereCollider.radius, layerMask)) return false;
 

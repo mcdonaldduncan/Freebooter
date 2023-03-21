@@ -1,7 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 public class ShootableButton : MonoBehaviour, IDamageable, IActivator
 {
     [SerializeField] float m_Health;
@@ -13,6 +18,11 @@ public class ShootableButton : MonoBehaviour, IDamageable, IActivator
     bool isUsable;
 
     public float Health {get; set; }
+    public GameObject DamageTextPrefab { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public Transform TextSpawnLocation { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public float FontSize { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public bool ShowDamageNumbers { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public TextMeshPro Text { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
     public event IActivator.ActivateDelegate Activate;
     public event IActivator.ActivateDelegate Deactivate;

@@ -5,6 +5,10 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 public class Follower : MonoBehaviour
 {
     [SerializeField] float damage;
@@ -93,6 +97,7 @@ public class Follower : MonoBehaviour
         if (other.gameObject.CompareTag("ContactlessProjectile")) return;
         if (other.gameObject.CompareTag("Player")) return;
         if (other.gameObject.CompareTag("Ground")) return;
+        //if (other.gameObject.CompareTag("Enemy")) return;
 
         try
         {

@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 public class ContactHazard : MonoBehaviour
 {
     [SerializeField] bool m_IsLive = true;
@@ -33,10 +37,6 @@ public class ContactHazard : MonoBehaviour
         {
             if (m_InstantKill) damageable.TakeDamage(damageable.Health + 1);
             else damageable.TakeDamage(m_DamageAmount);
-        }
-        else
-        {
-            Destroy(collider.gameObject);
         }
     }
 }

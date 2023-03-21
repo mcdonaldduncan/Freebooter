@@ -7,38 +7,84 @@ using UnityEngine.UI;
 public class UpdateHealth : MonoBehaviour
 {
     private Image HealthBar;
-    public Image HealthCriticalOverlay;
-    public float CurrentHealth = 100;
+    [SerializeField] private GameObject HealthCriticalOverlayObject;
+    [SerializeField] private Sprite HealthCriticalOverlay1;
+    [SerializeField] private Sprite HealthCriticalOverlay2;
+    [SerializeField] private Sprite HealthCriticalOverlay3;
+    [SerializeField] private float overlay1Health;
+    [SerializeField] private float overlay2Health;
+    [SerializeField] private float overlay3Health;
+    private float CurrentHealth = 100;
     private float MaxHealth;
-    private bool soundPlayed = false;
+    //private bool soundPlayed = false; unused
     FirstPersonController Player;
+    private Image HealthCriticalOverlayImage;
+
+    private bool subscribedToDamageEvent;
 
     void Start()
     {
         HealthBar = GetComponent<Image>();
-        Player = FindObjectOfType<FirstPersonController>();
+        HealthCriticalOverlayImage = HealthCriticalOverlayObject.GetComponent<Image>();
+        Player = LevelManager.Instance.Player;
         this.MaxHealth = Player.MaxHealth;
-        HealthCriticalOverlay.enabled = false;
+        CurrentHealth = Player.Health;
+        HealthCriticalOverlayImage.enabled = false;
+        //Player.PlayerHealthChanged += CheckHealth;
+        //subscribedToDamageEvent = true;
     }
+
+    //private void OnEnable()
+    //{
+    //    if (Player != null && !subscribedToDamageEvent)
+    //    {
+    //        Player.PlayerHealthChanged += CheckHealth;
+    //    }
+    //}
+    //private void OnDisable()
+    //{
+    //    if (Player != null && subscribedToDamageEvent)
+    //    {
+    //        Player.PlayerHealthChanged -= CheckHealth;
+    //        subscribedToDamageEvent = false;
+    //    }
+    //}
 
     private void Update()
     {
+        CheckHealth();
+    }
+
+    private void CheckHealth()
+    {
         CurrentHealth = Player.Health;
         HealthBar.fillAmount = CurrentHealth / MaxHealth;
-        if(CurrentHealth <= MaxHealth * .30 && !HealthCriticalOverlay.enabled)
-        {
-            HealthCriticalOverlay.enabled = true;
-            if (!soundPlayed)
-            {
-                Player.PlayerAudioSource.PlayOneShot(Player.LowHealthAudio);
-                soundPlayed = true;
-            }
 
-        }
-        else if (CurrentHealth > MaxHealth * .30 && HealthCriticalOverlay.enabled)
+        if (CurrentHealth > overlay1Health)
         {
-            HealthCriticalOverlay.enabled = false;
-            soundPlayed = false;
+            HealthCriticalOverlayImage.enabled = false;
+            return;
+        }
+
+        if (CurrentHealth <= overlay3Health)
+        {
+            HealthCriticalOverlayImage.sprite = HealthCriticalOverlay3;
+            HealthCriticalOverlayImage.enabled = true;
+            return;
+        }
+
+        if (CurrentHealth <= overlay2Health)
+        {
+            HealthCriticalOverlayImage.sprite = HealthCriticalOverlay2;
+            HealthCriticalOverlayImage.enabled = true;
+            return;
+        }
+
+        if (CurrentHealth <= overlay1Health)
+        {
+            HealthCriticalOverlayImage.sprite = HealthCriticalOverlay1;
+            HealthCriticalOverlayImage.enabled = true;
+            return;
         }
     }
 

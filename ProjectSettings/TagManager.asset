@@ -10,6 +10,7 @@ TagManager:
   - Navigator
   - ContactlessProjectile
   - AttackPoint
+  - BreakablePiece
   layers:
   - Default
   - TransparentFX
@@ -24,11 +25,11 @@ TagManager:
   - NonContactProjectile
   - LineOfSight
   - NoContact
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Gun
+  - BreakablePiece
+  - PlayerBoundary
+  - Projectile
+  - Trigger
   - 
   - 
   - 
@@ -45,7 +46,7 @@ TagManager:
   - 
   m_SortingLayers:
   - name: UI
-    uniqueID: 759665877
+    uniqueID: 2650415313
     locked: 0
   - name: Default
     uniqueID: 0

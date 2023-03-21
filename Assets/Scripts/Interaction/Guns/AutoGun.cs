@@ -20,14 +20,18 @@ public class AutoGun : MonoBehaviour, IGun
     public GameObject HitNonEnemy { get; set; }
     public WaitForSeconds ReloadWait { get; set; }
     public int CurrentAmmo { get { return GunManager.AutoGunCurrentAmmo; } set { GunManager.AutoGunCurrentAmmo = value; } }
-    public int CurrentMaxAmmo { get { return GunManager.AutoGunMaxAmmo; } }
+    public int MaxAmmo { get { return GunManager.AutoGunMaxAmmo; } }
     public CanvasGroup GunReticle { get; set; }
-    public TrailRenderer BulletTrail { get; set; }
+    public GameObject Bullet { get; set; }
     public AudioClip GunShotAudio { get; set; }
     public AudioClip TriggerReleasedAudio { get; set; }
     public AudioClip[] GunShotAudioList { get; set; }
+    public TrailRenderer BulletTrailRenderer { get; set; }
     public GameObject GunModel { get; set; }
     public AutoGunAnimationHandler GunAnimationHandler { get; set; }
+    public float ShakeDuration { get; set; }
+    public float ShakeMagnitude { get; set; }
+    public float ShakeDampen { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
 
     public bool CanShoot => lastShotTime + FireRate < Time.time && CurrentAmmo > 0 && GunManager.CurrentGun is AutoGun;
@@ -36,6 +40,7 @@ public class AutoGun : MonoBehaviour, IGun
     private float lastShotTime;
     private float reloadStartTime;
     private Coroutine reloadCo;
+    private GameObject bulletFromPool;
 
     private void Update()
     {
@@ -65,7 +70,7 @@ public class AutoGun : MonoBehaviour, IGun
     {
         if (context.canceled)
         {
-            if (this.holdingTrigger && GunManager.AutoGunCurrentAmmo > 0 && !GunManager.Reloading)
+            if (this.holdingTrigger && GunManager.AutoGunCurrentAmmo > 0)
             {
                 GunManager.GunShotAudioSource.PlayOneShot(TriggerReleasedAudio);
             }
@@ -77,10 +82,14 @@ public class AutoGun : MonoBehaviour, IGun
             this.holdingTrigger = true;
         }
     }
+    public void AlternateTriggered(InputAction.CallbackContext context)
+    {
+        return;
+    }
 
     private void Shoot()
     {
-        if (!GunManager.Reloading && GunManager.AutoGunCurrentAmmo > 0)
+        if (GunManager.AutoGunCurrentAmmo > 0)
         {
             if (!GunManager.InfiniteAmmo)
             {
@@ -98,27 +107,47 @@ public class AutoGun : MonoBehaviour, IGun
 
             RaycastHit hitInfo;
 
-            int gunShotIndex = Random.RandomRange(0, GunShotAudioList.Length - 1);
+            int gunShotIndex = Random.Range(0, GunShotAudioList.Length - 1);
             GunShotAudio = GunShotAudioList[gunShotIndex];
             GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
+            CameraShake.ShakeCamera(ShakeDuration, ShakeMagnitude, ShakeDampen);
 
             if (Physics.Raycast(ray, out hitInfo, float.MaxValue, ~LayerToIgnore))
             {
-                //Instantiate a bullet trail
-                TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, ShootFrom.transform.localRotation);
-                trail.transform.parent = ShootFrom.transform;
+                ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position, out BulletTrail trail);
 
-                if (hitInfo.transform.name != "Player")
-                {
-                    StartCoroutine(SpawnTrail(trail, hitInfo, HitEnemy));
-                }
+                Quaternion muzzleLook = Quaternion.LookRotation(-GunManager.FPSCam.transform.forward);
+                var muzzleFlash = ProjectileManager.Instance.TakeFromPool(GunManager.MuzzleFlash, ShootFrom.transform.position, muzzleLook);
+                muzzleFlash.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+                muzzleFlash.transform.SetParent(ShootFrom);
+
+                trail.Launch(hitInfo.point);
+                HitEnemyBehavior(hitInfo, hitInfo.transform.GetComponent<IDamageable>());
+        CameraShake.ShakeCamera(ShakeDuration, ShakeMagnitude, ShakeDampen);
+
+
+                //Instantiate a bulletFromPool trail
+                //TrailRenderer trail = Instantiate(Bullet, ShootFrom.transform.position, ShootFrom.transform.localRotation);
+                //bulletFromPool = ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position);
+                //BulletTrailRenderer = bulletFromPool.GetComponent<TrailRenderer>();
+
+                //if (hitInfo.transform.name != "Player")
+                //{
+                //    StartCoroutine(SpawnTrail(BulletTrailRenderer, hitInfo, HitEnemy));
+                //}
             }
             //if the player hit nothing
             else
             {
-                //Spawn the bullet trail
-                TrailRenderer trail = Instantiate(BulletTrail, ShootFrom.transform.position, ShootFrom.transform.localRotation);
-                StartCoroutine(SpawnTrail(trail, ShootFrom.transform.position + ray.direction * 10));
+                ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position, out BulletTrail trail);
+                var muzzleFlash = ProjectileManager.Instance.TakeFromPool(GunManager.MuzzleFlash, ShootFrom.transform.position, Quaternion.LookRotation(-GunManager.FPSCam.transform.forward));
+                muzzleFlash.transform.SetParent(ShootFrom);
+                trail.Launch(ShootFrom.transform.position + ray.direction * 100);
+
+                //Spawn the bulletFromPool trail
+                //bulletFromPool = ProjectileManager.Instance.TakeFromPool(Bullet, ShootFrom.transform.position);
+                //BulletTrailRenderer = bulletFromPool.GetComponent<TrailRenderer>();
+                //StartCoroutine(SpawnTrail(BulletTrailRenderer, ShootFrom.transform.position + ray.direction * 10));
             }
 
             lastShotTime = Time.time;
@@ -154,7 +183,7 @@ public class AutoGun : MonoBehaviour, IGun
 
         trail.transform.position = hitPoint;
 
-        Destroy(trail.gameObject, trail.time);
+        ProjectileManager.Instance.ReturnToPool(bulletFromPool);
     }
 
     /// <summary>
@@ -180,7 +209,7 @@ public class AutoGun : MonoBehaviour, IGun
 
         trail.transform.position = hitInfo.point;
 
-        Destroy(trail.gameObject, trail.time);
+        ProjectileManager.Instance.ReturnToPool(bulletFromPool);
 
         if (hitEffect != null)
         {
@@ -202,8 +231,11 @@ public class AutoGun : MonoBehaviour, IGun
                 Vector3 targetPosition = hitInfo.transform.position;
 
                 //Play blood particle effects on the enemy, where they were hit
-                var p = Instantiate(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-                Destroy(p, 1);
+                //var p = Instantiate(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                //Destroy(p, 1);
+
+                ProjectileManager.Instance.TakeFromPool(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point);
+                //CameraShake.ShakeCamera();
 
                 //Get the distance between the enemy and the gun
                 float distance = Vector3.Distance(targetPosition, ShootFrom.transform.position);
@@ -239,63 +271,24 @@ public class AutoGun : MonoBehaviour, IGun
             }
             catch
             {
-                var p = Instantiate(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-                Destroy(p, 1);
+                //var p = Instantiate(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                //Destroy(p, 1);
+
+                ProjectileManager.Instance.TakeFromPool(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point);
             }
         }
         else
         {
-            var p = Instantiate(HitNonEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-            Destroy(p, 1);
+            //var p = Instantiate(HitNonEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+            //Destroy(p, 1);
+
+            ProjectileManager.Instance.TakeFromPool(HitNonEnemy, hitInfo.point);
         }
-    }
-
-    //public void StartReload()
-    //{
-    //    GunManager.Reloading = true;
-    //    reloadStartTime = Time.time;
-    //}
-
-    //private void Reload()
-    //{
-    //    if (reloadStartTime + ReloadTime < Time.time)
-    //    {
-    //        GunManager.AutoGunCurrentAmmo = GunManager.AutoGunMaxAmmo;
-    //        GunManager.Reloading = false;
-    //    }
-    //}
-
-
-    //fix bug that doesn't restart canceled reload    
-    public void StartReload()
-    {
-        reloadCo = GunManager.StartCoroutine(this.Reload(ReloadWait));
     }
 
     private void OnWeaponSwitch()
     {
         this.holdingTrigger = false;
-        if (reloadCo != null)
-        {
-            GunManager.StopCoroutine(reloadCo);
-            GunManager.Reloading = false;
-        }
         GunAnimationHandler.RecoilAnim.ResetTrigger("RecoilTrigger");
-
-        //if (GunManager.Reloading)
-        //{
-        //    GunManager.Reloading = false;
-        //}
-    }
-
-    public IEnumerator Reload(WaitForSeconds reloadWait)
-    {
-        GunManager.Reloading = true;
-        yield return reloadWait;
-        if (GunManager.Reloading)
-        {
-            GunManager.Reloading = false;
-            GunManager.AutoGunCurrentAmmo = GunManager.AutoGunMaxAmmo;
-        }
     }
 }

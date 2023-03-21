@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -10,6 +11,12 @@ public class Crate_MainMenu : MonoBehaviour, IDamageable
     private float health;
 
     public float Health { get { return health; } set { health = value; } }
+
+    public GameObject DamageTextPrefab { get; set; }
+    public Transform TextSpawnLocation { get; set; }
+    public float FontSize { get; set; }
+    public bool ShowDamageNumbers { get; set; }
+    public TextMeshPro Text { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
     public UnityEvent TriggerEventOnDisable;
 

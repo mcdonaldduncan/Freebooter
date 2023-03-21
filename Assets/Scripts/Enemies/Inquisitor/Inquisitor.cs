@@ -2,9 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 public class Inquisitor : MonoBehaviour, IDamageable
 {
     [SerializeField] Animator m_Animator;
@@ -47,6 +52,18 @@ public class Inquisitor : MonoBehaviour, IDamageable
     Vector3 m_TargetPosition;
 
     WaitForSeconds resetDelay = new WaitForSeconds(.25f);
+
+    [Header("DamagePopUp")]
+    [SerializeField] GameObject m_DamagePopUpPrefab;
+    [SerializeField] Transform m_PopupFromHere;
+    [SerializeField] bool m_showDamageNumbers;
+    float m_fontSize = 5;
+
+    public GameObject DamageTextPrefab { get => m_DamagePopUpPrefab; set => m_DamagePopUpPrefab = value; }
+    public Transform TextSpawnLocation { get => m_PopupFromHere; set => m_PopupFromHere = value; }
+    public float FontSize { get => m_fontSize; set => m_fontSize = value; }
+    public bool ShowDamageNumbers { get => m_showDamageNumbers; set => m_showDamageNumbers = value; }
+    public TextMeshPro Text { get; set; }
 
     private void OnEnable()
     {

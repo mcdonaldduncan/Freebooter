@@ -5,6 +5,10 @@ using static UnityEngine.GraphicsBuffer;
 using UnityEngine.UIElements;
 using System.Linq;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 [RequireComponent(typeof(Collider), typeof(Rigidbody))]
 public class Projectile : MonoBehaviour, IPoolable
 {
@@ -47,6 +51,8 @@ public class Projectile : MonoBehaviour, IPoolable
             m_RigidBody = GetComponent<Rigidbody>();
         }
 
+        LevelManager.PlayerRespawn += ResetProjectile;
+
         hasCollided = false;
 
         startTime = Time.time;
@@ -63,6 +69,7 @@ public class Projectile : MonoBehaviour, IPoolable
 
     private void OnDisable()
     {
+        LevelManager.PlayerRespawn -= ResetProjectile;
         m_RigidBody.velocity = Vector3.zero;
         m_RigidBody.angularVelocity = Vector3.zero;
     }
@@ -76,7 +83,7 @@ public class Projectile : MonoBehaviour, IPoolable
         }
     }
 
-        private void FixedUpdate()
+    private void FixedUpdate()
     {
         if (m_IsTracking) TrackTarget();
     }
@@ -94,22 +101,31 @@ public class Projectile : MonoBehaviour, IPoolable
     private void OnCollisionEnter(Collision collision)
     {
         if (hasCollided) return;
+        //if (collision.gameObject == null) return;
 
         if (m_IsExplosive)
         {
             TriggerExplosion();
         }
-        else
+        else if (m_DamageAll || collision.gameObject.CompareTag("Player"))
         {
-            if (!collision.gameObject.CompareTag("Player") && !m_DamageAll) return;
-            IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
-            if (damageable != null)
-            {
-                damageable.TakeDamage(m_DamageAmount);
-            }
+            if (collision.gameObject.TryGetComponent(out IDamageable temp)) temp.TakeDamage(m_DamageAmount);
+
+            //IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
+            //if (damageable != null)
+            //{
+            //    damageable.TakeDamage(m_DamageAmount);
+            //}
         }
 
         hasCollided = true;
+        ResetProjectile();
+    }
+
+    
+
+    void ResetProjectile()
+    {
         m_RigidBody.velocity = Vector3.zero;
         m_RigidBody.angularVelocity = Vector3.zero;
         transform.position = Vector3.zero;
@@ -126,7 +142,7 @@ public class Projectile : MonoBehaviour, IPoolable
             List<GameObject> found = new List<GameObject>();
             for (int i = 0; i < hits.Length; i++)
             {
-                if (!found.Contains(hits[i].gameObject)) found.Add(gameObject);
+                if (!found.Contains(hits[i].gameObject)) found.Add(hits[i].gameObject);
                 else hits[i] = null;
             }
         }

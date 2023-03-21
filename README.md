@@ -1,4 +1,4 @@
-# Untitled
+# Freebooter
 
 Columbia College Chicago - Game Studio Capstone
 

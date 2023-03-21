@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 public class Barrier : MonoBehaviour
 {
     // State options
@@ -52,6 +56,9 @@ public class Barrier : MonoBehaviour
     }
 #endif
 
+    public delegate void LockedBarrierDelegate();
+    public event LockedBarrierDelegate LockedBarrierAccessed;
+
     // Register events when the script is enabled
     private void OnEnable()
     {
@@ -69,7 +76,7 @@ public class Barrier : MonoBehaviour
         }
         catch (System.Exception)
         {
-            //Debug.LogError("Valid IActivator Not Found");
+            Debug.LogError("Valid IActivator Not Found");
         }
     }
 
@@ -158,7 +165,7 @@ public class Barrier : MonoBehaviour
             case AccessType.LOCKED:
                 if (!HasKeys)
                 {
-                    // send message to UI
+                    LockedBarrierAccessed?.Invoke();
                     break;
                 }
                 else

@@ -17,20 +17,20 @@ public class Display_Reload : MonoBehaviour
 
     void Update()
     {
-        if(Cgun.CurrentGun.CurrentAmmo <= Cgun.CurrentGun.CurrentMaxAmmo * .25 && !Cgun.Reloading)
-        {
-            reloadText.text = "Press R to reload";
-            reloadText.enabled = true;
-        }
-        if (Cgun.Reloading)
-        {
-            reloadText.text = "Reloading...";
-            reloadText.enabled = true;
-        }
-        else if(Cgun.CurrentGun.CurrentAmmo > Cgun.CurrentGun.CurrentMaxAmmo * .25 && !Cgun.Reloading)
-        {
-            reloadText.enabled = false;
-        }
+        //if(Cgun.CurrentGun.CurrentAmmo <= Cgun.CurrentGun.MaxAmmo * .25 && !Cgun.Reloading)
+        //{
+        //    reloadText.text = "Press R to reload";
+        //    reloadText.enabled = true;
+        //}
+        //if (Cgun.Reloading)
+        //{
+        //    reloadText.text = "Reloading...";
+        //    reloadText.enabled = true;
+        //}
+        //else if(Cgun.CurrentGun.CurrentAmmo > Cgun.CurrentGun.MaxAmmo * .25 && !Cgun.Reloading)
+        //{
+        //    reloadText.enabled = false;
+        //}
     }
 
 }

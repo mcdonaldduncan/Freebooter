@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -15,6 +16,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     public AudioSource PlayerAudioSource { get { return playerAudioSource; } }
     public AudioClip LowHealthAudio { get { return lowHealthAudio; } }
     public AudioClip GunPickupAudio { get { return gunPickupAudio; } }
+    public AudioClip KeyPickupAudio { get { return keyPickupAudio; } }
     public float MaxHealth { get { return maxHealth; } set { maxHealth = value; } }
     public float Health { get { return health; } set { health = value; } }
     public float DistanceToHeal { get { return distanceToHeal; } }
@@ -22,12 +24,12 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     public float DashTime { get { return dashTime; } }
     public float DashesAllowed { get { return dashesAllowed; } }
     public float DashesRemaining { get { return dashesRemaining; } }
-    public float DashCooldownTime { get { return dashCooldownTime; } }
+    public float DashCooldownTime { get { return adjustedCooldown; } }
     public float FinalJumpForce { get { return finalJumpForce; } set { finalJumpForce = value; } }
     public bool PlayerCanMove { get; private set; } = true;
     public bool PlayerIsDashing { get; private set; }
     private bool CanDoNextDash => lastDashEnd + timeBetweenDashes < Time.time;
-    private bool DashShouldCooldown => dashesRemaining < dashesAllowed;
+    public bool DashShouldCooldown => dashesRemaining < dashesAllowed;
     private bool NonZeroVelocity => characterController.velocity.z != 0 || characterController.velocity.x != 0;
     private bool PlayerHasDashes => dashesRemaining > dashesAllowed - dashesAllowed;
     public bool PlayerCanDash => PlayerHasDashes && NonZeroVelocity;
@@ -50,10 +52,10 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     [Tooltip("Is the player in the middle of a special movement, i.e. ladder climbing?")]
     [SerializeField]
     public bool playerOnSpecialMovement = false;
-    [SerializeField]
-    private bool playerCanDash = true;
-    [SerializeField]
-    private bool playerCanHeadbob = true;
+    //[SerializeField]
+    //private bool playerCanDash = true; Unused!
+    //[SerializeField]
+    //private bool playerCanHeadbob = true; Unused!
     private bool hasIFrames = false;
 
     //parameters for different movement speeds
@@ -110,14 +112,14 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     private bool holdingJump;
     private float holdJumpTimer;
 
-    [Header("Wallrunning Parameters")]
-    [SerializeField] private LayerMask whatIsWall;
-    [SerializeField] private LayerMask whatIsGround;
-    [SerializeField] private float wallRunGravity;
-    [SerializeField] private float maxWallRunTime;
-    [SerializeField] private float wallCheckDistance;
-    [SerializeField] private float minJumpHeight;
-    [SerializeField] private Transform orientation;
+    //[Header("Wallrunning Parameters")]
+    //[SerializeField] private LayerMask whatIsWall;
+    //[SerializeField] private LayerMask whatIsGround;
+    //[SerializeField] private float wallRunGravity;
+    //[SerializeField] private float maxWallRunTime;
+    //[SerializeField] private float wallCheckDistance;
+    //[SerializeField] private float minJumpHeight;
+    //[SerializeField] private Transform orientation;
     private RaycastHit leftWallHit;
     private RaycastHit rightWallHit;
     private bool wallLeft;
@@ -162,12 +164,12 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     public bool basicMovement;
     public bool wallRunning;
 
-
     [Header("Audio")]
     [SerializeField] private AudioClip dashAudio;
     [SerializeField] private AudioClip lowHealthAudio;
     [SerializeField] private AudioClip playerHitAudio;
     [SerializeField] private AudioClip gunPickupAudio;
+    [SerializeField] private AudioClip keyPickupAudio;
     private AudioSource playerAudioSource;
 
     private Camera playerCamera;
@@ -178,6 +180,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     private Vector3 moveDirection;
     private Vector2 currentInput; //Whether player is moving vertically or horizontally along x and z planes
     private Vector2 dashInput;
+
     public Vector2 MoveInput { get; private set; }
 
     private float rotationX = 0f; //Camera rotation for clamping
@@ -186,6 +189,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     private bool playerDashing;
     private bool dashOnCooldown;
     private bool playerShouldDash;
+    private float adjustedCooldown;
 
     private Coroutine dashRoutine;
 
@@ -198,9 +202,10 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
     private MovementState state;
     
-    public delegate void PlayerDashDelegate();
-    public static PlayerDashDelegate playerDashed;
-    public static PlayerDashDelegate dashCooldown;
+    public delegate void PlayerDelegate();
+    public event PlayerDelegate OnPlayerDashed;
+    //public event PlayerDelegate OnDashCooldown;  Unused!
+    public event PlayerDelegate PlayerHealthChanged;
 
     [NonSerialized] public Vector3 surfaceMotion;
 
@@ -211,10 +216,23 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
     float speedScale => 1 + ((maxSpeedScale - 1) * (1 - (health / maxHealth)));
 
+    public GameObject DamageTextPrefab => throw new NotImplementedException();
+
+    public Transform TextSpawnLocation => throw new NotImplementedException();
+
+    public float FontSize => throw new NotImplementedException();
+
+    public bool ShowDamageNumbers => throw new NotImplementedException();
+
+    public TextMeshPro Text { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+    float originalSpeed, boostSpeedDuration, boostStartedTime;
+    bool boostedSpeedEnabled;
+
     public enum MovementState
     {
-        basic,
-        wallrunning
+        basic
+        //wallrunning
     }
     
     void Awake()
@@ -244,6 +262,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         dashesRemaining = dashesAllowed;
 
         playerAudioSource = GetComponent<AudioSource>();
+        adjustedCooldown = dashCooldownTime;
     }
 
     private void Start()
@@ -259,27 +278,24 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
         if (Health > MaxHealth)
         {
-            Health = MaxHealth;
+            Health = MaxHealth; 
+            PlayerHealthChanged?.Invoke();
         }
 
         if (!playerOnSpecialMovement)
         {
             if (PlayerCanMove)
             {
-                //if (playerShouldDash && PlayerHasDashes)
-                //{
-                //    BeginDash();
-                //    if (playerDashing)
-                //    {
-                //        Dash();
-                //    }
-                ////}
-                //if (DashShouldCooldown)
-                //{
-                //    DashCooldown();
-                //}
-                DashCooldown();
-                CheckForWall();
+                if (boostedSpeedEnabled == true)
+                {
+                    if (boostStartedTime + boostSpeedDuration < Time.time)
+                    {
+                        BoostDashEnd();
+                    }
+                }
+
+                adjustedCooldown = dashCooldownTime / speedScale;
+                //CheckForWall();
                 StateHandler();
             }
         }
@@ -320,17 +336,19 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         _input.HumanoidLand.Restart.performed += ReloadScene;
 
         //HumanoidWall
-        _input.HumanoidWall.Forward.performed += HandleWallrunInput;
-        _input.HumanoidWall.Forward.canceled += HandleWallrunInput;
-        _input.HumanoidWall.Jump.performed += HandleJump;
+        //_input.HumanoidWall.Forward.performed += HandleWallrunInput;
+        //_input.HumanoidWall.Forward.canceled += HandleWallrunInput;
+        //_input.HumanoidWall.Jump.performed += HandleJump;
 
         //GunHandler
         _input.Gun.Shoot.performed += playerGun.Shoot;
         _input.Gun.Shoot.canceled += playerGun.Shoot;
         _input.Gun.SwitchWeapon.performed += playerGun.SwitchWeapon;
-        _input.Gun.Reload.performed += playerGun.Reload;
+        //_input.Gun.Reload.performed += playerGun.Reload;
+        _input.Gun.AlternateFire.performed += playerGun.AlternateShoot;
 
         //if (LevelManager.Instance.Player == null) LevelManager.Instance.Player = this;
+        UpdateDash.DashCooldownCompleted += DashCooldown;
     }
 
     private void OnDisable()
@@ -348,15 +366,18 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         _input.HumanoidLand.Restart.performed -= ReloadScene;
 
         //HumanoidWall
-        _input.HumanoidWall.Forward.performed -= HandleWallrunInput;
-        _input.HumanoidWall.Forward.canceled -= HandleWallrunInput;
-        _input.HumanoidWall.Jump.performed -= HandleJump;
+        //_input.HumanoidWall.Forward.performed -= HandleWallrunInput;
+        //_input.HumanoidWall.Forward.canceled -= HandleWallrunInput;
+        //_input.HumanoidWall.Jump.performed -= HandleJump;
 
         //GunHandler
         _input.Gun.Shoot.performed -= playerGun.Shoot;
         _input.Gun.Shoot.canceled -= playerGun.Shoot;
         _input.Gun.SwitchWeapon.performed -= playerGun.SwitchWeapon;
-        _input.Gun.Reload.performed -= playerGun.Reload;
+        //_input.Gun.Reload.performed -= playerGun.Reload;
+        _input.Gun.AlternateFire.performed -= playerGun.AlternateShoot;
+
+        UpdateDash.DashCooldownCompleted -= DashCooldown;
     }
 
     private void StateHandler()
@@ -371,13 +392,13 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         }
 
         // Mode - Wallrunning
-        if (state == MovementState.wallrunning)
-        {
-            //state = MovementState.wallrunning;
-            _input.HumanoidLand.Disable();
-            _input.HumanoidWall.Enable();
-            ApplyFinalWallrunMovements();
-        }
+        //if (state == MovementState.wallrunning)
+        //{
+        //    //state = MovementState.wallrunning;
+        //    _input.HumanoidLand.Disable();
+        //    _input.HumanoidWall.Enable();
+        //    ApplyFinalWallrunMovements();
+        //}
     }
 
     private void ReloadScene(InputAction.CallbackContext context)
@@ -403,7 +424,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     {
         //when the player presses W and S or A and D
         currentInput = (context.ReadValue<Vector2>());
-        MoveInput = new Vector2(currentInput.x * walkSpeed * speedScale, currentInput.y * walkSpeed * speedScale);
+        MoveInput = new Vector2(currentInput.x, currentInput.y);
 
     }
 
@@ -413,10 +434,14 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         {
             playerShouldDash = false;
             playerDashing = false;
+            hasIFrames = false;
+            if (dashRoutine != null)
+            {
+                StopCoroutine(dashRoutine);
+            }
         }
         if (context.started)
         {
-            //InitiateDash();
             playerShouldDash = true;
 
             if (PlayerCanDash)
@@ -426,11 +451,10 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         }
     }
 
-    //TODO: Doesn't need to be a coroutine
     private IEnumerator Dash()
     {
         dashesRemaining--;
-        playerDashed?.Invoke();
+        OnPlayerDashed?.Invoke();
         float startTime = Time.time;
 
         moveDirection = (transform.TransformDirection(Vector3.right) * MoveInput.x) + (transform.TransformDirection(Vector3.forward) * MoveInput.y);
@@ -466,7 +490,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
             yield return null;
         }
         UpdateDashBar = false;
-        hasIFrames = false; //turn of iframes now that dash is finished
+        hasIFrames = false; //turn off iframes now that dash is finished
 
         if (PlayerCanDashAgain)
         {
@@ -482,15 +506,9 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
     private void DashCooldown()
     {
-        float adjustedCooldown = dashCooldownTime / speedScale;
-        if (dashCooldownStartTime + adjustedCooldown < Time.time)
+        if (DashShouldCooldown)
         {
-            if (DashShouldCooldown)
-            {
-                dashesRemaining++;
-                dashCooldown?.Invoke();
-            }
-            dashCooldownStartTime = Time.time;
+            dashesRemaining++;
         }
     }
 
@@ -537,6 +555,27 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         }
     }
 
+    public void BoostJump(float jumpForceMultiplier)
+    {
+        moveDirection = transform.TransformDirection(Vector3.up) * jumpForceMultiplier;
+    }
+
+    public void BoostDash(float DashMultiplier, float duration)
+    {
+        if (boostedSpeedEnabled) { return; }
+        boostStartedTime = Time.time;
+        boostSpeedDuration = duration;
+        originalSpeed = walkSpeed;
+        walkSpeed *= DashMultiplier;
+        boostedSpeedEnabled = true;
+    }
+
+    void BoostDashEnd()
+    {
+        walkSpeed = originalSpeed;
+        boostedSpeedEnabled = false;
+    }
+
     private void HandleHeadbob()
     {
         if (!characterController.isGrounded && state == MovementState.basic)
@@ -559,6 +598,13 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         HandleHeadbob();
         AdaptFOV();
 
+        //Stop the player from floating along the ceiling
+        if (characterController.velocity.y == 0 && !characterController.isGrounded)
+        {
+            if(holdingJump) holdingJump = false;
+            moveDirection.y = 0;
+        }
+
         //make sure the player is on the ground if applying gravity (after pressing Jump)
         if (!characterController.isGrounded && !playerDashing)
         {
@@ -567,7 +613,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
         //The direction in which the player moves based on input
         float moveDirectionY = moveDirection.y;
-        moveDirection = (transform.TransformDirection(Vector3.right) * MoveInput.x) + (transform.TransformDirection(Vector3.forward) * MoveInput.y);
+        moveDirection = (transform.TransformDirection(Vector3.right) * (MoveInput.x * walkSpeed * speedScale)) + (transform.TransformDirection(Vector3.forward) * (MoveInput.y * walkSpeed * speedScale));
         moveDirection.y = moveDirectionY;
 
         if (OnSteepSlope()) SteepSlopeMovement();
@@ -612,90 +658,92 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     }
 
     //TODO: Consider using OverlapSpheres instead of raycasts as this might help with stutter
-    private void CheckForWall()
-    {
-        //Parameters in order: start point, direction, store hit info, distance, layermask
-        wallRight = Physics.Raycast(transform.position, orientation.right, out rightWallHit, wallCheckDistance, whatIsWall);
-        wallLeft = Physics.Raycast(transform.position, -orientation.right, out leftWallHit, wallCheckDistance, whatIsWall);
+    //private void CheckForWall()
+    //{
+    //    //Parameters in order: start point, direction, store hit info, distance, layermask
+    //    wallRight = Physics.Raycast(transform.position, orientation.right, out rightWallHit, wallCheckDistance, whatIsWall);
+    //    wallLeft = Physics.Raycast(transform.position, -orientation.right, out leftWallHit, wallCheckDistance, whatIsWall);
 
-        verticalInput = Input.GetAxisRaw("Vertical");
+    //    verticalInput = Input.GetAxisRaw("Vertical");
 
-        //If the raycast has detected a wall and the player is not touching the ground
-        if ((wallLeft || wallRight) && verticalInput > 0 && !characterController.isGrounded)
-        {
-            if (!holdingJump)
-            {
-                //Reset the jumps as if the player has touched the ground
-                jumpedOnce = false;
-                jumpsRemaining = jumpsAllowed;
-            }
+    //    //If the raycast has detected a wall and the player is not touching the ground
+    //    if ((wallLeft || wallRight) && verticalInput > 0 && !characterController.isGrounded)
+    //    {
+    //        if (!holdingJump)
+    //        {
+    //            //Reset the jumps as if the player has touched the ground
+    //            jumpedOnce = false;
+    //            jumpsRemaining = jumpsAllowed;
+    //        }
 
-            //If the player is not currently in the wallRunning state
-            if (state != MovementState.wallrunning)
-            {
-                //Make sure the player can't climb the wall
-                moveDirection.y = 0;
-                //Set the state to wallRunning
-                state = MovementState.wallrunning;
-            }
-        }
-        else
-        {
-            //If a wall is not detected and if the player is currently in the wallrunning state
-            if (state == MovementState.wallrunning)
-            {
-                //Set the state back to the basic movement state
-                state = MovementState.basic;
-            }
-        }
-    }
+    //        //If the player is not currently in the wallRunning state
+    //        if (state != MovementState.wallrunning)
+    //        {
+    //            //Make sure the player can't climb the wall
+    //            moveDirection.y = 0;
+    //            //Set the state to wallRunning
+    //            state = MovementState.wallrunning;
+    //        }
+    //    }
+    //    else
+    //    {
+    //        //If a wall is not detected and if the player is currently in the wallrunning state
+    //        if (state == MovementState.wallrunning)
+    //        {
+    //            //Set the state back to the basic movement state
+    //            state = MovementState.basic;
+    //        }
+    //    }
+    //}
 
-    private void HandleWallrunInput(InputAction.CallbackContext context)
-    {
-        currentInput = (context.ReadValue<Vector2>());
-        MoveInput = new Vector2(0, currentInput.y * wallRunSpeed); //Make sure the player can't move up the wall
-    }
+    //private void HandleWallrunInput(InputAction.CallbackContext context)
+    //{
+    //    currentInput = (context.ReadValue<Vector2>());
+    //    MoveInput = new Vector2(0, currentInput.y * wallRunSpeed); //Make sure the player can't move up the wall
+    //}
 
-    private void ApplyFinalWallrunMovements()
-    {
-        HandleHeadbob();
-        AdaptFOV();
+    //private void ApplyFinalWallrunMovements()
+    //{
+    //    HandleHeadbob();
+    //    AdaptFOV();
 
-        //Get of the normal of the surface ray hit on the right or left wall
-        Vector3 wallNormal = wallRight ? rightWallHit.normal : leftWallHit.normal;
+    //    //Get of the normal of the surface ray hit on the right or left wall
+    //    Vector3 wallNormal = wallRight ? rightWallHit.normal : leftWallHit.normal;
 
-        //Get the cross product of the wallNormal and the up direction of the player transform
-        Vector3 wallForward = Vector3.Cross(wallNormal, transform.up);
+    //    //Get the cross product of the wallNormal and the up direction of the player transform
+    //    Vector3 wallForward = Vector3.Cross(wallNormal, transform.up);
 
-        //apply gravity
-        moveDirection.y -= wallRunGravity * Time.deltaTime;
+    //    //apply gravity
+    //    moveDirection.y -= wallRunGravity * Time.deltaTime;
 
-        //The direction in which the player moves based on input
-        float moveDirectionY = moveDirection.y;
-        moveDirection = (transform.TransformDirection(wallForward) * MoveInput.x) + (transform.TransformDirection(Vector3.forward) * MoveInput.y);
-        moveDirection.y = -Mathf.Abs(moveDirectionY);
+    //    //The direction in which the player moves based on input
+    //    float moveDirectionY = moveDirection.y;
+    //    moveDirection = (transform.TransformDirection(wallForward) * MoveInput.x) + (transform.TransformDirection(Vector3.forward) * MoveInput.y);
+    //    moveDirection.y = -Mathf.Abs(moveDirectionY);
 
-        //move the player based on the parameters gathered in the "Handle-" functions
-        characterController.Move(moveDirection * Time.deltaTime);
+    //    //move the player based on the parameters gathered in the "Handle-" functions
+    //    characterController.Move(moveDirection * Time.deltaTime);
 
-        //if the player is on the ground, and they have less than max jumps, reset the remaining jumps to the maximum (for double jumping)
-        if (characterController.isGrounded && jumpsRemaining < jumpsAllowed && !holdingJump)
-        {
-            jumpedOnce = false;
-            jumpsRemaining = jumpsAllowed;
-        }
-    }
+    //    //if the player is on the ground, and they have less than max jumps, reset the remaining jumps to the maximum (for double jumping)
+    //    if (characterController.isGrounded && jumpsRemaining < jumpsAllowed && !holdingJump)
+    //    {
+    //        jumpedOnce = false;
+    //        jumpsRemaining = jumpsAllowed;
+    //    }
+    //}
 
     public void TakeDamage(float damageTaken)
     {
         if (CanBeDamaged)
         {
             Health -= damageTaken;
+            PlayerHealthChanged?.Invoke();
             playerAudioSource.PlayOneShot(playerHitAudio);
             //Debug.Log($"Player Health: { health }");
             CheckForDeath();
         }
     }
+
 
     /// <summary>
     /// For pick up system which is currently not in use
@@ -703,11 +751,14 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     /// <param name="heal"></param>
     public void HealthRegen(float heal)
     {
+        if (health >= maxHealth) return;
+
         health += heal;
-        if (health > MaxHealth)
-        {
-            health = MaxHealth;
-        }
+
+        if (health >= maxHealth) health = maxHealth;
+
+        if (health > MaxHealth) health = MaxHealth;
+        PlayerHealthChanged?.Invoke();
         //Debug.Log($"Player healed. Current health is {health}");
     }
 
@@ -715,10 +766,11 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     {
         if (Health <= 0)
         {
+            PlayerHealthChanged?.Invoke();
             //Debug.Log("Player died!");
             //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
-            
+
             OnDeath();
             
         }
@@ -728,12 +780,18 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     {
         isDead = true;
         characterController.enabled = false;
-        
+    }
+
+    public void Respawn()
+    {
         transform.position = LevelManager.Instance.CurrentCheckPoint?.transform.position ?? startingPos;
         transform.rotation = LevelManager.Instance.CurrentCheckPoint?.transform.rotation ?? Quaternion.identity;
 
         health = maxHealth;
+        PlayerHealthChanged?.Invoke();
 
         LevelManager.Instance.FirePlayerRespawn();
+        isDead = false;
+        characterController.enabled = true;
     }
 }

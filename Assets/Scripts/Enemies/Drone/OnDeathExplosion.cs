@@ -10,6 +10,7 @@ public class OnDeathExplosion : MonoBehaviour
     [SerializeField] float m_Damage;
     [SerializeField] float m_Radius;
     [SerializeField] float blinkrate = .3f;
+    [SerializeField] Fracture fractureScript;
 
     float m_LastBlinkTime;
 
@@ -18,8 +19,6 @@ public class OnDeathExplosion : MonoBehaviour
     Collider m_Collider;
 
     bool dead = false;
-    bool landed = false; 
-    bool explosion = false;
     
     int deathFrames;
 
@@ -29,8 +28,7 @@ public class OnDeathExplosion : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         m_Renderer = GetComponent<Renderer>();
-        
-        
+        rb.constraints = RigidbodyConstraints.FreezeAll;
     }
 
     private void Update()
@@ -69,10 +67,11 @@ public class OnDeathExplosion : MonoBehaviour
     {
         if (deathFrames == 0)
         {
-            rb = gameObject.AddComponent<Rigidbody>();
+            rb.isKinematic = false;
             m_Collider.enabled = true;
             rb.useGravity = true;
             Vector3 explosiveForce = new Vector3(Random.Range(-5f, 5f), Random.Range(3f, 7f), Random.Range(-5f, 5f));
+            rb.constraints = RigidbodyConstraints.None;
             rb.AddForce(explosiveForce, ForceMode.Impulse);
         }
         deathFrames++;
@@ -81,10 +80,10 @@ public class OnDeathExplosion : MonoBehaviour
     public void ResetVariables()
     {
         dead = false;
-        landed = false;
-        explosion = false;
         deathFrames = 0;
-        Destroy(rb);
+        rb.isKinematic = true;
+        rb.constraints = RigidbodyConstraints.FreezeAll;
+        m_Renderer.material.color = Color.white;
         transform.position = transform.parent.position;
         transform.rotation = transform.parent.rotation;
     }
@@ -95,8 +94,8 @@ public class OnDeathExplosion : MonoBehaviour
 
         if (collision.collider.gameObject.layer != 9 && collision.collider.gameObject.layer != 8) // Make sure the collision is with something other than enemy because it would collide with itself since the parent object has a collider
         {
-            landed = true;
             Instantiate(explosionparticle, transform.position, Quaternion.identity);
+            if(fractureScript != null) fractureScript.Breakage();
             ExplosionDamage();
             transform.parent.gameObject.SetActive(false);
         }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7516147023265246560}
   - component: {fileID: 7516147023266049344}
   - component: {fileID: 7516147023267016576}
-  - component: {fileID: 7516147023265018177}
+  - component: {fileID: 7861687667535149505}
   m_Layer: 0
   m_Name: Potion_Green
   m_TagString: Untagged
@@ -85,8 +85,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &7516147023265018177
-MeshCollider:
+--- !u!136 &7861687667535149505
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -95,7 +95,7 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 7e1b98bbe17b88644aea6625cb61b2c5, type: 3}
+  m_Radius: 0.06797274
+  m_Height: 0.2457084
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.12285425, z: 0}

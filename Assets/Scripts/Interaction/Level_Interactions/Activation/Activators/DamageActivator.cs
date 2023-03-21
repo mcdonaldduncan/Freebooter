@@ -1,8 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 public class DamageActivator : MonoBehaviour, IDamageable, IActivator
 {
     [SerializeField] float m_Health;
@@ -10,6 +15,16 @@ public class DamageActivator : MonoBehaviour, IDamageable, IActivator
     
 
     public float Health { get; set; }
+
+    public GameObject DamageTextPrefab => throw new System.NotImplementedException();
+
+    public Transform TextSpawnLocation => throw new System.NotImplementedException();
+
+    public float FontSize => throw new System.NotImplementedException();
+
+    public bool ShowDamageNumbers => throw new System.NotImplementedException();
+
+    public TextMeshPro Text { get; set; }
 
     public event IActivator.ActivateDelegate Activate;
     public event IActivator.ActivateDelegate Deactivate;
@@ -22,7 +37,7 @@ public class DamageActivator : MonoBehaviour, IDamageable, IActivator
 
     public void CheckForDeath()
     {
-        if (m_Health <= 0)
+        if (Health <= 0)
         {
             
             FireActivation();
@@ -49,7 +64,8 @@ public class DamageActivator : MonoBehaviour, IDamageable, IActivator
         Health -= damageTaken;
         CheckForDeath();
     }
-    
+
+
     void SetInactive()
     {
         gameObject.SetActive(false);
@@ -65,7 +81,7 @@ public class DamageActivator : MonoBehaviour, IDamageable, IActivator
     {
         if (m_DeathParticles == null) return;
 
-        Instantiate(m_DeathParticles, this.transform.position, Quaternion.identity);
+        Instantiate(m_DeathParticles, transform.position, Quaternion.identity);
     }
 
     void SetUsable()

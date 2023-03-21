@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UtilityFunctions;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 public class PlatformBase : MonoBehaviour
 {
     [SerializeField] public TranslationType m_TranslationType;
@@ -34,7 +38,7 @@ public class PlatformBase : MonoBehaviour
     float m_LerpTime;
 
     bool m_ShouldMove;
-    bool m_IsAttached;
+    //bool m_IsAttached;
 
     void Start()
     {
@@ -197,7 +201,7 @@ public class PlatformBase : MonoBehaviour
         {
             m_Platform.OnPlayerContact();
             collision.transform.SetParent(transform);
-            m_IsAttached = true;
+            //m_IsAttached = true;
         }
     }
 
@@ -207,7 +211,7 @@ public class PlatformBase : MonoBehaviour
         {
             m_Platform.OnPlayerExit();
             collision.transform.SetParent(null, true);
-            m_IsAttached = false;
+            //m_IsAttached = false;
         }
     }
 

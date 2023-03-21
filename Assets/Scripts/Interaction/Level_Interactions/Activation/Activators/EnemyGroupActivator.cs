@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 public class EnemyGroupActivator : MonoBehaviour, IActivator
 {
     [SerializeField] List<GameObject> m_TargetGroup;

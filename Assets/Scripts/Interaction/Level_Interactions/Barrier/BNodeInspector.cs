@@ -4,6 +4,10 @@ using UnityEditor;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
+/// <summary>
+/// 
+/// </summary>
+/// Author: Duncan McDonald
 #if UNITY_EDITOR
 [CustomEditor(typeof(BarrierNode))]
 public class BNodeInspector : Editor
@@ -13,7 +17,12 @@ public class BNodeInspector : Editor
         DrawDefaultInspector();
 
         BarrierNode node = (BarrierNode)target;
+
+        if (node == null) return;
+
         BarrierSegment segment = node.transform.parent.GetComponentInChildren<BarrierSegment>();
+
+        if (segment == null) return;
 
         if (GUILayout.Button("Remove Node"))
         {

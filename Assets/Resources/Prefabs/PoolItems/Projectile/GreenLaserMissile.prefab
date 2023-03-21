@@ -9659,7 +9659,7 @@ GameObject:
   - component: {fileID: 2670039617322602604}
   - component: {fileID: 3688395080262397405}
   - component: {fileID: 2971053928546595864}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: GreenLaserMissile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14579,10 +14579,11 @@ MonoBehaviour:
   m_EnableGravity: 0
   m_IsTracking: 0
   m_IsExplosive: 1
-  m_LaunchForce: 600
+  m_LaunchForce: 1200
   m_TrackingForce: 0
-  m_DamageAmount: 15
-  m_ExplosionRadius: 1
+  m_DamageAmount: 14
+  m_ExplosionRadius: 3
+  m_VelocityLimit: 0
   m_LifeTime: 15
 --- !u!1 &198250
 GameObject:

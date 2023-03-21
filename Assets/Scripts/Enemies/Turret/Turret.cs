@@ -1,10 +1,31 @@
-public class Turret : AgentBase
+using Unity.VisualScripting;
+using UnityEngine;
+
+sealed class Turret : NewAgentBase
 {
+    [Header("Turret Body")]
+    [SerializeField] Transform m_Body;
+
+    [Header("Attack Delay")]
+    [SerializeField] float m_AttackDelay;
+
     TurretState m_TurretState;
+
+    public override Transform TrackingTransform => m_Body;
+
+    private void Awake()
+    {
+        AwakeSetup();
+    }
+
+    private void OnEnable()
+    {
+        EnableSetup();
+    }
 
     void Start()
     {
-        HandleSetup();
+        StartSetup();
     }
 
     void Update()
@@ -12,17 +33,24 @@ public class Turret : AgentBase
         switch (m_TurretState)
         {
             case TurretState.GUARD:
-                Aim();
-                if (CheckLineOfSight()) m_TurretState = TurretState.ATTACK;
+                m_Tracking.TrackTarget();
+                if (m_Tracking.CheckFieldOfView()) Invoke(nameof(SetAttackState), m_AttackDelay);
+                if (IsInCombat) HandleCombatStateChange();
                 break;
             case TurretState.ATTACK:
-                Aim();
-                Shoot();
-                if (!CheckRange()) m_TurretState = TurretState.GUARD;
+                m_Tracking.TrackTarget();
+                if (m_Tracking.CheckFieldOfView()) m_Shooting.Shoot();
+                if (!m_Tracking.InRange) m_TurretState = TurretState.GUARD;
+                if (!IsInCombat) HandleCombatStateChange();
                 break;
             default:
                 break;
         }
+    }
+
+    void SetAttackState()
+    {
+        m_TurretState = TurretState.ATTACK;
     }
 }
 

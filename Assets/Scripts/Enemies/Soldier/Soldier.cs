@@ -6,7 +6,18 @@ public class Soldier : AgentBase
     [SerializeField] Transform m_Weapon;
     [SerializeField] Transform m_Hand;
 
+    RaycastHit hitInfo;
     Animator m_Animator;
+
+    //bool for kick animations and funtionality
+    bool kickBeforeShooting = true, kickOnce = true;
+    //bool inAttackAnim; unused
+    float mostRecentHit;
+
+    [Header("Kick Variables")]
+    [SerializeField] Transform raycastSource;
+    public float KickDamage = 5;
+    public float KickRange = 3;
 
     private void Start()
     {
@@ -19,6 +30,59 @@ public class Soldier : AgentBase
     {
         m_Animator.SetFloat("Blend", m_Agent.velocity.magnitude);
         HandleAgentState();
+    }
+
+
+    public override void Shoot()
+    {
+        if (!shouldShoot || distanceToPlayer > m_Range) return;
+
+        if (distanceToPlayer < 3 && kickOnce == true)
+        {
+            kickOnce = false;
+            kickBeforeShooting = false;
+            m_Animator.SetTrigger("Kick");
+            Invoke("ResetKickParams", 2);
+        }
+        else if (kickBeforeShooting == true)
+        {
+            base.Shoot();
+            // ^ inheritance dood
+            
+            //GameObject newObj = ProjectileManager.Instance.TakeFromPool(m_ProjectilePrefab, m_ShootFrom.position, out Projectile projectile);
+            //projectile.Launch(m_TargetDirection);
+            //projectile.transform.LookAt(projectile.transform.position + m_TargetDirection);
+
+            //altShoootFrom = !altShoootFrom;
+            //lastShotTime = Time.time;
+        }
+    }
+    
+    void ResetKickParams()
+    {
+        kickOnce = true;
+        kickBeforeShooting = true;
+    }
+
+    //Deals damage with a raycast when kicking, called from the animation itself
+    private void AttackPlayer()
+    {
+        //a bool to make sure the swarmer doesn't move while trying to hit the player
+        //inAttackAnim = true;
+        //send out raycast to see if enemy hit player
+        if (Physics.Raycast(raycastSource.position, gameObject.transform.forward, out hitInfo, KickRange))
+        {
+            if (hitInfo.transform.CompareTag("Player"))
+            {
+                GiveDamage(KickDamage);
+            }
+        }
+    }
+
+    private void GiveDamage(float damageToDeal)
+    {
+        LevelManager.Instance.Player.TakeDamage(damageToDeal);
+        mostRecentHit = Time.time;
     }
 }
 

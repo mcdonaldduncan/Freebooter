@@ -19,16 +19,20 @@ public class GrenadeGun : MonoBehaviour, IGun
     public WaitForSeconds ReloadWait { get; set; }
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
     public int CurrentAmmo { get { return GunManager.GrenadeGunCurrentAmmo; } set { GunManager.GrenadeGunCurrentAmmo = value; } }
-    public int CurrentMaxAmmo { get { return GunManager.GrenadeGunMaxAmmo; } }
+    public int MaxAmmo { get { return GunManager.GrenadeGunMaxAmmo; } }
     public CanvasGroup GunReticle { get; set; }
-    public TrailRenderer BulletTrail { get; set; }
+    public GameObject Bullet { get; set; }
+    public TrailRenderer BulletTrailRenderer { get; set; }
     public AudioClip GunShotAudio { get; set; }
+    public float ShakeDuration { get; set; }
+    public float ShakeMagnitude { get; set; }
+    public float ShakeDampen { get; set; }
     public GameObject GunModel { get; set; }
     public GameObject Grenade { get; set; }
     public float GrenadeLaunchForce { get; set; }
     public Vector3 GrenadeLaunchArcVector { get; set; }
 
-    public bool CanShoot => lastShotTime + FireRate < Time.time && !GunManager.Reloading && CurrentAmmo > 0;
+    public bool CanShoot => lastShotTime + FireRate < Time.time && CurrentAmmo > 0;
 
     //THIS CAN BE IGNORED IT IS NEEDED SO THAT GRENADE GUN CAN STILL USE IGUN INTERFACE
     public float MaxDamage { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
@@ -39,6 +43,9 @@ public class GrenadeGun : MonoBehaviour, IGun
     private float lastShotTime;
     private float reloadStartTime;
     private Coroutine reloadCo;
+
+    public delegate void GrenadeGunDelegate();
+    public event GrenadeGunDelegate remoteDetonationEvent;
 
     private void OnEnable()
     {
@@ -54,37 +61,59 @@ public class GrenadeGun : MonoBehaviour, IGun
         if (CanShoot && context.performed) Shoot();
     }
 
+    public void AlternateTriggered(InputAction.CallbackContext context)
+    {
+        if (context.performed) DetonateGrenades();
+    }
+
     public void Shoot()
     {
+        //Subtract from ammo
         if (!GunManager.InfiniteAmmo)
         {
             CurrentAmmo--;
         }
 
-        //GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
+        //Play the launch sound
+        GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
+
+        //Get the direction that the player is aiming
         Ray ray = GunManager.FPSCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 
+        //calculate the force of launching the grenade
         Vector3 grenadeLaunchForce = (ray.direction + GrenadeLaunchArcVector) * GrenadeLaunchForce;
 
-        GameObject grenade = Instantiate(Grenade, ShootFrom.position, Quaternion.identity);
-        Rigidbody gRB = grenade.GetComponent<Rigidbody>();
-        gRB.AddForce(grenadeLaunchForce);
+        //Take a grenade from the grenade object pool
+        GameObject newGrenade = ProjectileManager.Instance.TakeFromPool(Grenade, ShootFrom.position, out GrenadeBehavior grenade);
+        var muzzleFlash = ProjectileManager.Instance.TakeFromPool(GunManager.MuzzleFlash, ShootFrom.transform.position, Quaternion.LookRotation(GunManager.FPSCam.transform.forward * -1));
+        muzzleFlash.transform.SetParent(ShootFrom);
 
+        //Launch this grenade with the calculated force
+        grenade.Launch(grenadeLaunchForce);
+        CameraShake.ShakeCamera(ShakeDuration, ShakeMagnitude, ShakeDampen);
+
+        //Time of shot, relevant for fire rate
         lastShotTime = Time.time;
     }
 
-    public void StartReload()
+    public void DetonateGrenades()
     {
-        reloadCo = GunManager.StartCoroutine(this.Reload(ReloadWait));
+        //Tell all subscribed grenade objects that the detonation has been invoked.
+        remoteDetonationEvent?.Invoke();
     }
 
-    public IEnumerator Reload(WaitForSeconds reloadWait)
-    {
-        GunManager.Reloading = true;
-        yield return reloadWait;
-        GunManager.Reloading = false;
-        GunManager.GrenadeGunCurrentAmmo = GunManager.GrenadeGunMaxAmmo;
-    }
+    //public void StartReload()
+    //{
+    //    reloadCo = GunManager.StartCoroutine(this.Reload(ReloadWait));
+    //}
+
+    //public IEnumerator Reload(WaitForSeconds reloadWait)
+    //{
+    //    GunManager.Reloading = true;
+    //    yield return reloadWait;
+    //    GunManager.Reloading = false;
+    //    GunManager.GrenadeGunCurrentAmmo = GunManager.GrenadeGunMaxAmmo;
+    //}
 
     private void OnWeaponSwitch()
     {
@@ -93,10 +122,10 @@ public class GrenadeGun : MonoBehaviour, IGun
         //    GunManager.Reloading = false;
         //}
 
-        if (reloadCo != null)
-        {
-            GunManager.StopCoroutine(reloadCo);
-            GunManager.Reloading = false;
-        }
+        //if (reloadCo != null)
+        //{
+        //    GunManager.StopCoroutine(reloadCo);
+        //    GunManager.Reloading = false;
+        //}
     }
 }
