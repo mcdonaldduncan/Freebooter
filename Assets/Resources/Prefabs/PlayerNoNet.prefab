@@ -1989,6 +1989,16 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1921319209942718849, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_FillMethod
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1921319209942718849, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_FillOrigin
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2103727198378389841, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
       propertyPath: m_VerticalAlignment
@@ -2184,6 +2194,11 @@ PrefabInstance:
       propertyPath: m_UseSpriteMesh
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4006254520102639513, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4164169884678136699, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
       propertyPath: gunHandler
@@ -2213,6 +2228,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5244886975493414863, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5262067882689830299, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
@@ -2258,7 +2278,7 @@ PrefabInstance:
     - target: {fileID: 7107586938010698964, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8122098814747410082, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
@@ -2334,6 +2354,34 @@ CanvasGroup:
     type: 3}
   m_PrefabInstance: {fileID: 3351445538836964475}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &5401567981768887755 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7238551788688026032, guid: 0fb508bd654404f498649d3da33487b1,
+    type: 3}
+  m_PrefabInstance: {fileID: 3351445538836964475}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1193141413699346200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5401567981768887755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f30d01a58d0cb254895ac44299f75527, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HealthCriticalOverlayObject: {fileID: 6491152489882856095}
+  HealthCriticalOverlay1: {fileID: 21300000, guid: 5bc85301e2830cd48997eebbc5441231,
+    type: 3}
+  HealthCriticalOverlay2: {fileID: 21300000, guid: 4c8e32dd039c53344a42f486486d7bb6,
+    type: 3}
+  HealthCriticalOverlay3: {fileID: 21300000, guid: c6a50be50c9342e47970a7abfdb87511,
+    type: 3}
+  overlay1Health: 45
+  overlay2Health: 30
+  overlay3Health: 15
 --- !u!114 &6125766113957853364 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8899585820481346767, guid: 0fb508bd654404f498649d3da33487b1,
@@ -2346,6 +2394,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &6491152489882856095 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8401338908992720612, guid: 0fb508bd654404f498649d3da33487b1,
+    type: 3}
+  m_PrefabInstance: {fileID: 3351445538836964475}
+  m_PrefabAsset: {fileID: 0}
 --- !u!225 &6976750457327859168 stripped
 CanvasGroup:
   m_CorrespondingSourceObject: {fileID: 5643252665583653275, guid: 0fb508bd654404f498649d3da33487b1,
