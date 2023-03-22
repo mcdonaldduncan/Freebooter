@@ -169,6 +169,10 @@ public sealed class GunHandler : MonoBehaviour
     private Dictionary<GunType, int> gunTypeDict;
     private Dictionary<GunType, WaitForSeconds> gunReloadWaitDict;
 
+    private int autoGunAmmoCP;
+    private int shotGunAmmoCP;
+    private int grenadeGunAmmoCP;
+
     //Particle Effects for the bullet collision.
     [SerializeField] private GameObject hitEnemy;
     [SerializeField] private GameObject hitNONEnemy;
@@ -312,6 +316,9 @@ public sealed class GunHandler : MonoBehaviour
         currentGun.GunModel.SetActive(true);
         currentGun.GunAnimationHandler.RecoilAnim.SetFloat("RecoilSpeed", currentGun.GunAnimationHandler.RecoilAnimClip.length / currentGun.FireRate);
 
+        LevelManager.CheckPointReached += OnCheckpointReached;
+        LevelManager.PlayerRespawn += OnPlayerRespawn;
+
         //this.handgunAnimationHandler.RecoilAnim.SetFloat("RecoilSpeed", this.handgunAnimationHandler.RecoilAnimClip.length / this.handGunFireRate);
         //this.shotgunAnimationHandler.RecoilAnim.SetFloat("RecoilSpeed", this.shotgunAnimationHandler.RecoilAnimClip.length / this.shotGunFireRate);
         //this.autoGunAnimationHandler.RecoilAnim.SetFloat("RecoilSpeed", this.autoGunAnimationHandler.RecoilAnimClip.length / this.autoFireRate);
@@ -441,6 +448,20 @@ public sealed class GunHandler : MonoBehaviour
     public void AlternateShoot(InputAction.CallbackContext context)
     {
         currentGun.AlternateTriggered(context);
+    }
+
+    private void OnCheckpointReached()
+    {
+        autoGunAmmoCP = autoGun.CurrentAmmo;
+        shotGunAmmoCP = shotGun.CurrentAmmo;
+        grenadeGunAmmoCP = grenadeGun.CurrentAmmo;
+    }
+
+    private void OnPlayerRespawn()
+    {
+        autoGun.CurrentAmmo = autoGunAmmoCP;
+        shotGun.CurrentAmmo = shotGunAmmoCP;
+        grenadeGun.CurrentAmmo = grenadeGunAmmoCP;
     }
 
     //public void Reload(InputAction.CallbackContext context)

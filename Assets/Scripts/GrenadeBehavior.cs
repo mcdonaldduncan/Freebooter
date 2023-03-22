@@ -43,6 +43,7 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
         grenadeAudioSource = GetComponent<AudioSource>();
         grenadeRenderer = GetComponent<Renderer>();
         grenadeGun.remoteDetonationEvent += Explode;
+        LevelManager.PlayerRespawn += OnPlayerRespawn;
         startTime = Time.time;
         timerStarted = true;
         collided = false;
@@ -95,8 +96,7 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
         if (colliders.Length > 0)
         {
-            //little bit of time stop and camera shake for VFX
-            //LevelManager.TimeStop(hitStopDuration);
+            //little bit of camera shake for VFX
             CameraShake.ShakeCamera(explosionShakeDuration, explosionShakeMagnitude, explosionShakeDampen);
         }
 
@@ -120,6 +120,16 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
             }
         }
 
+        //Unsubscribe from the detonation event (subscribed in OnEnable)
+        grenadeGun.remoteDetonationEvent -= Explode;
+        transform.SetParent(null, true);
+
+        //Return the grenade to the object pool
+        ProjectileManager.Instance.ReturnToPool(gameObject);
+    }
+
+    private void OnPlayerRespawn()
+    {
         //Unsubscribe from the detonation event (subscribed in OnEnable)
         grenadeGun.remoteDetonationEvent -= Explode;
         transform.SetParent(null, true);
