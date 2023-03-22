@@ -170,7 +170,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     [SerializeField] private AudioClip playerHitAudio;
     [SerializeField] private AudioClip gunPickupAudio;
     [SerializeField] private AudioClip keyPickupAudio;
-    [SerializeField] private AudioClip m_DashRechargeSound;
+    [SerializeField] private AudioClip m_DashRechargeAudio;
+    [SerializeField] private AudioClip m_JumpAudio;
     private AudioSource playerAudioSource;
 
     private Camera playerCamera;
@@ -509,7 +510,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     {
         if (DashShouldCooldown)
         {
-            playerAudioSource.PlayOneShot(m_DashRechargeSound);
+            playerAudioSource.PlayOneShot(m_DashRechargeAudio);
             dashesRemaining++;
         }
     }
@@ -542,6 +543,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         }
         if (context.performed && jumpsRemaining > 0)
         {
+            playerAudioSource.PlayOneShot(m_JumpAudio);
             jumpsRemaining--;
             holdingJump = true;
             if (!jumpedOnce)
