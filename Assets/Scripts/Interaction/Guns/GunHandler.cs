@@ -413,6 +413,7 @@ public sealed class GunHandler : MonoBehaviour
         currentGunState = guns[guns.IndexOf(gunType)];
         currentGun = gunDict[currentGunState];
 
+        currentGun.CurrentAmmo = currentGun.MaxAmmo;
         currentGun.GunReticle.alpha = 1;
         currentGun.GunModel.SetActive(true);
         if (currentGun.GunAnimationHandler != null)
@@ -453,14 +454,14 @@ public sealed class GunHandler : MonoBehaviour
     private void OnCheckpointReached()
     {
         autoGunAmmoCP = autoGun.CurrentAmmo;
-        shotGunAmmoCP = shotGun.CurrentAmmo;
+        //shotGunAmmoCP = shotGun.CurrentAmmo;
         grenadeGunAmmoCP = grenadeGun.CurrentAmmo;
     }
 
     private void OnPlayerRespawn()
     {
         autoGun.CurrentAmmo = autoGunAmmoCP;
-        shotGun.CurrentAmmo = shotGunAmmoCP;
+        //shotGun.CurrentAmmo = shotGunAmmoCP;
         grenadeGun.CurrentAmmo = grenadeGunAmmoCP;
     }
 
