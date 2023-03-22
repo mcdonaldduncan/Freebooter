@@ -1393,6 +1393,7 @@ GameObject:
   - component: {fileID: 917186358641078123}
   - component: {fileID: 5700368874852525657}
   - component: {fileID: 7684279660054784107}
+  - component: {fileID: 126511313767820238}
   m_Layer: 0
   m_Name: mixamorig:Head
   m_TagString: Untagged
@@ -1492,6 +1493,35 @@ CharacterJoint:
   m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &126511313767820238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5564198808623310884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da9fc9bb9ab3bdd40915d0d83192a0ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Prefab: {fileID: 7291302619202209340}
+  VFXTransform: {fileID: 3668984181104418188}
+  hitboxtype: 0
+  critVFX: {fileID: 5370587334564516452, guid: dc767005043a0854ba027fe93f20ed5b, type: 3}
+  armorVFX: {fileID: 6625540849553152293, guid: 392f1e838e7e43e45ba97de3a19451a0,
+    type: 3}
+  shieldVFXBlue: {fileID: 336830904740376970, guid: 7800df8b90e98174aaaff6d2367201d9,
+    type: 3}
+  shieldVFXYellow: {fileID: 336830904740376970, guid: a7171cbe862e39b45aebe9e322db9cdd,
+    type: 3}
+  shieldVFXRed: {fileID: 336830904740376970, guid: bf35d47c76ad29345baa7174d7394b7e,
+    type: 3}
+  CriticalDamageMultiplier: 1.2
+  ArmorDamageReductionMultiplier: 0.5
+  ShieldGameObject: {fileID: 0}
+  _health: 0
+  maxHealth: 0
 --- !u!1 &5674790473515549454
 GameObject:
   m_ObjectHideFlags: 0
@@ -2639,8 +2669,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 028a8dd5159b632499aa4e5412e0ccb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dissolveTime: 0.025
-  dissolveRate: 0.0125
+  m_timeBeforeDespawn: 3
+  m_dissolveTime: 0.025
+  m_dissolveRate: 0.0125
 --- !u!1 &9135798757915005277
 GameObject:
   m_ObjectHideFlags: 0
@@ -2824,6 +2855,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpecialHitboxPrefab
       objectReference: {fileID: 0}
+    - target: {fileID: 5275076217087910831, guid: b38bc3fb91f2e6a44bc58f09c8494078,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6167492751692961984, guid: b38bc3fb91f2e6a44bc58f09c8494078,
         type: 3}
       propertyPath: m_RootOrder
@@ -2837,12 +2873,12 @@ PrefabInstance:
     - target: {fileID: 6167492751692961984, guid: b38bc3fb91f2e6a44bc58f09c8494078,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.092
       objectReference: {fileID: 0}
     - target: {fileID: 6167492751692961984, guid: b38bc3fb91f2e6a44bc58f09c8494078,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.033
       objectReference: {fileID: 0}
     - target: {fileID: 6167492751692961984, guid: b38bc3fb91f2e6a44bc58f09c8494078,
         type: 3}
@@ -2886,6 +2922,25 @@ PrefabInstance:
       objectReference: {fileID: 7291302619202209340}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b38bc3fb91f2e6a44bc58f09c8494078, type: 3}
+--- !u!1 &3335295446550046435 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5275076217087910831, guid: b38bc3fb91f2e6a44bc58f09c8494078,
+    type: 3}
+  m_PrefabInstance: {fileID: 7457270865067312460}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &6529867952316503361
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3335295446550046435}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.42
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!4 &3668984181104418188 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6167492751692961984, guid: b38bc3fb91f2e6a44bc58f09c8494078,
