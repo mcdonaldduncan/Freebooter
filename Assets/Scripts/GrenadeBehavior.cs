@@ -61,7 +61,7 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
     {
         if (collision.gameObject.tag != "Player" && !collided)
         {
-            if (collision.gameObject.TryGetComponent(out IDamageable damageable) && !collision.gameObject.name.Contains("barrel"))
+            if ((collision.gameObject.TryGetComponent(out IDamageable damageable) || collision.gameObject.GetComponentInParent<IDamageable>() != null) && !collision.gameObject.name.Contains("barrel"))
             {
                 Explode();
                 return;
