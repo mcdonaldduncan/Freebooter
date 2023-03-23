@@ -35,6 +35,9 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
     [SerializeField] bool m_showDamageNumbers;
     float m_fontSize = 5;
 
+    [Header("Soun")]
+    [SerializeField] AudioClip m_AttackSound;
+
     [Header("Misc")]
     [SerializeField] private Transform raycastSource;
     [Tooltip("The layer of colliders that will be considered when counting nearby enemies")]
@@ -86,12 +89,15 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
     public delegate void SwarmerDelegate();
     public event SwarmerDelegate SwarmerDeath;
 
+    AudioSource m_AudioSource;
+
     private void Awake()
     {
         hideBehavior = GetComponent<HideBehavior>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         m_IDamageable = this;
+        m_AudioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -232,7 +238,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
     {
         //a bool to make sure the swarmer doesn't move while trying to hit the player
         inAttackAnim = true;
-
+        m_AudioSource.PlayOneShot(m_AttackSound);
         //send out raycast to see if enemy hit player
         if (Physics.Raycast(raycastSource.position, gameObject.transform.forward, out hitInfo, attackReach))
         {
