@@ -149,6 +149,8 @@ public class MovingPlatform : MonoBehaviour
 
     private void Reset()
     {
+        currentIndex = 0;
+        Base.SetTargets(m_Nodes[currentIndex], m_Nodes[++currentIndex]);
         isActivated = m_MovementType == MovementType.CONSTANT;
         Base.SetState(isActivated);
         Platform.transform.position = transform.position;
