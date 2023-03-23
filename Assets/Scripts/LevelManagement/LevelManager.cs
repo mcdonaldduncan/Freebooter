@@ -27,7 +27,12 @@ public sealed class LevelManager : MonoBehaviour
     public static event PlayerRespawnDelegate PlayerRespawn;
     public static event PlayerRespawnDelegate CheckPointReached;
 
+    public delegate void PlayerCombatDelegate(bool inCombat);
+    public event PlayerCombatDelegate CombatStateChanged;
+
     private int CombatantCount;
+
+    private bool InCombat;
 
     void Awake()
     {
@@ -74,6 +79,18 @@ public sealed class LevelManager : MonoBehaviour
     private void OnCombatStateChanged(bool combatState)
     {
         CombatantCount = combatState ? ++CombatantCount : --CombatantCount;
+
+        if (CombatantCount > 0 && !InCombat)
+        {
+            CombatStateChanged?.Invoke(true);
+            InCombat = true;
+        }
+
+        if (CombatantCount <= 0 && InCombat)
+        {
+            CombatStateChanged?.Invoke(false);
+            InCombat = false;
+        }
     }
 
     public static void TimeStop(float duration)
