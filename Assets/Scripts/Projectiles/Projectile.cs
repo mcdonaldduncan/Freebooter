@@ -77,7 +77,6 @@ public class Projectile : MonoBehaviour, IPoolable
 
     private void OnDisable()
     {
-        //trailRenderer.emitting = false;
         LevelManager.PlayerRespawn -= ResetProjectile;
         m_RigidBody.velocity = Vector3.zero;
         m_RigidBody.angularVelocity = Vector3.zero;
