@@ -28,4 +28,6 @@ public class MainMenuManager : MonoBehaviour
     {
         Image.sprite = Sprites[index];
     }
+
+    
 }
