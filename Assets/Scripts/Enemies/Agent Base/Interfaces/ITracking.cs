@@ -19,6 +19,10 @@ public interface ITracking
 
     public bool InRange => DistanceToTarget < Range;
 
+    /// <summary>
+    /// Raycast check without regard to FOV
+    /// </summary>
+    /// <returns></returns>
     bool CheckLineOfSight()
     {
         Physics.Raycast(RayPoint.position, RayTargetDirection, out RaycastHit hit, Range);
@@ -30,6 +34,10 @@ public interface ITracking
         return true;
     }
 
+    /// <summary>
+    /// Raycast check with regard to FOV
+    /// </summary>
+    /// <returns></returns>
     bool CheckFieldOfView()
     {
         float dot = Vector3.Dot(TrackingTransform.forward, TargetDirection.normalized);
@@ -43,6 +51,9 @@ public interface ITracking
         return true;
     }
 
+    /// <summary>
+    /// Look at target if within range
+    /// </summary>
     void TrackTarget()
     {
         if (DistanceToTarget < Range)
@@ -51,6 +62,9 @@ public interface ITracking
         }
     }
 
+    /// <summary>
+    /// Look at target on 2D plane (will not look up or down)
+    /// </summary>
     void TrackTarget2D()
     {
         if (DistanceToTarget < Range)
@@ -59,12 +73,18 @@ public interface ITracking
         }
     }
 
+    /// <summary>
+    /// Attempt to look at target with limited rotation speed
+    /// </summary>
     void LimitedTrackTarget()
     {
         Quaternion targetRotation = Quaternion.LookRotation(TargetDirection, Vector3.up);
         TrackingTransform.rotation = Quaternion.RotateTowards(TrackingTransform.rotation, targetRotation, MaxRotationDelta);
     }
 
+    /// <summary>
+    /// Attempt to look at target with limited rotation speed on a 2D plane
+    /// </summary>
     void LimitedTrackTarget2D()
     {
         Vector3 targetPosition = new Vector3(Target.position.x, TrackingTransform.position.y, Target.position.z);

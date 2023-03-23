@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 
 /// <summary>
-/// 
+/// Reusable, damageable activator
 /// </summary>
 /// Author: Duncan McDonald
 public class ShootableButton : MonoBehaviour, IDamageable, IActivator

@@ -17,8 +17,14 @@ public interface INavigation
     float WanderDistance { get; }
     float LastWanderTime { get; set; }
 
+    /// <summary>
+    /// Returns true if wander time is valid and path status is complete
+    /// </summary>
     private bool shouldWander => Time.time > WanderDelay + LastWanderTime && Agent.pathStatus == NavMeshPathStatus.PathComplete;
 
+    /// <summary>
+    /// Chase the player, attempting to follow at the distance provided by stopping distance
+    /// </summary>
     void ChaseTarget()
     {
         Vector3 FromPlayerToAgent = Agent.transform.position - LevelManager.Instance.Player.transform.position;
@@ -29,6 +35,10 @@ public interface INavigation
         
     }
 
+    /// <summary>
+    /// Attempt to sample a navmesh position at location.position and move to that position
+    /// </summary>
+    /// <param name="location">transform at desired location</param>
     void MoveToLocation(Transform location)
     {
         if (NavMesh.SamplePosition(location.position, out NavMeshHit hit, MovementSampleRadius, NavMesh.AllAreas))
@@ -42,6 +52,10 @@ public interface INavigation
 
     }
 
+    /// <summary>
+    /// Attempt to sample a navmesh position and location and move to that position
+    /// </summary>
+    /// <param name="location">Vector3 describing desired location</param>
     void MoveToLocation(Vector3 location)
     {
         if (NavMesh.SamplePosition(location, out NavMeshHit hit, MovementSampleRadius, NavMesh.AllAreas))
@@ -55,11 +69,20 @@ public interface INavigation
 
     }
 
+    /// <summary>
+    /// Attempt to move to a location without previously sampling
+    /// </summary>
+    /// <param name="position"></param>
     void MoveToLocationDirect(Vector3 position)
     {
         Agent.SetDestination(position);
     }
 
+    /// <summary>
+    /// Returns true if agent is within one unit of starting position
+    /// </summary>
+    /// <param name="startingPosition"></param>
+    /// <returns></returns>
     bool CheckReturned(Vector3 startingPosition)
     {
         if (Vector3.Distance(Agent.transform.position, startingPosition) < 1f) return true;
@@ -67,6 +90,10 @@ public interface INavigation
         return false;
     }
 
+    /// <summary>
+    /// Cycle agent for teleportation and resetting to ensure navmesh connection
+    /// </summary>
+    /// <param name="startingPosition"></param>
     void CycleAgent(Vector3 startingPosition)
     {
         if (Agent == null) return;
@@ -85,6 +112,13 @@ public interface INavigation
         Agent.Warp(startingPosition);
     }
 
+    /// <summary>
+    /// Return random position on the navmesh within radius distance
+    /// </summary>
+    /// <param name="origin"></param>
+    /// <param name="distance"></param>
+    /// <param name="layerMask"></param>
+    /// <returns></returns>
     Vector3 RandomPosInSphere(Vector3 origin, float distance, LayerMask layerMask)
     {
         Vector3 randomPosition = Random.insideUnitSphere * distance;
@@ -92,6 +126,9 @@ public interface INavigation
         return navHit.position;
     }
 
+    /// <summary>
+    /// Update callable method to wander when next available
+    /// </summary>
     void Wander()
     {
         if (!shouldWander) return;
@@ -101,6 +138,9 @@ public interface INavigation
         LastWanderTime = Time.time;
     }
 
+    /// <summary>
+    /// Set agent to stopped and
+    /// </summary>
     void Sleep()
     {
         if (Agent.isStopped) return;
@@ -109,6 +149,9 @@ public interface INavigation
         Agent.isStopped = true;
     }
 
+    /// <summary>
+    /// Wake agent
+    /// </summary>
     void Wake()
     {
         if (!Agent.isStopped || !Agent.isActiveAndEnabled) return;

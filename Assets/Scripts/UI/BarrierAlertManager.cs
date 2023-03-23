@@ -32,7 +32,11 @@ public class BarrierAlertManager : Singleton<BarrierAlertManager>
 
     bool IsActive;
 
+    /// <summary>
+    /// Returns true if time has expired for message display time
+    /// </summary>
     bool CounterExpired => Time.time > LastMessageTime + m_DisplayTime;
+
 
     void Start()
     {
@@ -41,14 +45,15 @@ public class BarrierAlertManager : Singleton<BarrierAlertManager>
 
         IsActive = false;
 
+        // Find all Keys and subscribe to KeyCollected event
         Keys = FindObjectsOfType<Key>();
-        Barriers = FindObjectsOfType<Barrier>();
-
         foreach (var key in Keys)
         {
             key.KeyCollected += OnKeyCollected;
         }
 
+        // Find all Barriers and subscribe to LockedBarrierAccessed event
+        Barriers = FindObjectsOfType<Barrier>();
         foreach (var barrier in Barriers)
         {
             barrier.LockedBarrierAccessed += OnBarrierAccessed;
@@ -57,11 +62,13 @@ public class BarrierAlertManager : Singleton<BarrierAlertManager>
 
     private void OnDisable()
     {
+        // Unsubscribe from all key events
         foreach (var key in Keys)
         {
             key.KeyCollected -= OnKeyCollected;
         }
 
+        // Unsubscribe from all barrier events
         foreach (var barrier in Barriers)
         {
             barrier.LockedBarrierAccessed -= OnBarrierAccessed;
@@ -70,8 +77,10 @@ public class BarrierAlertManager : Singleton<BarrierAlertManager>
 
     void Update()
     {
+        // If the alert is not currently active, return
         if (!IsActive) return;
 
+        // If the counter is expired, deactivate alerts and set inactive
         if (CounterExpired)
         {
             m_BarrierAlertPanel.SetActive(false);
@@ -79,6 +88,10 @@ public class BarrierAlertManager : Singleton<BarrierAlertManager>
         }
     }
 
+    /// <summary>
+    /// Set display panel active and adjust text accordingly, subscribe to key collected events
+    /// </summary>
+    /// <param name="name"></param>
     void OnKeyCollected(string name)
     {
         m_BarrierAlertPanel.SetActive(true);
@@ -87,6 +100,9 @@ public class BarrierAlertManager : Singleton<BarrierAlertManager>
         IsActive = true;
     }
 
+    /// <summary>
+    /// Set display panel active and adjust text accordingly, subscribe to barrier accessed events
+    /// </summary>
     void OnBarrierAccessed()
     {
         m_BarrierAlertPanel.SetActive(true);
