@@ -31,6 +31,7 @@ public class Projectile : MonoBehaviour, IPoolable
     Vector3 velocity;
     Vector3 acceleration;
 
+    TrailRenderer trailRenderer;
     public bool EnableGravity { get { return m_EnableGravity; } set { m_EnableGravity = value; } }
     public bool IsTracking { get { return m_IsTracking; } set { m_IsTracking = value; } }
     public bool IsExplosive { get { return m_IsExplosive; } set { m_IsExplosive = value; } }
@@ -51,6 +52,13 @@ public class Projectile : MonoBehaviour, IPoolable
             m_RigidBody = GetComponent<Rigidbody>();
         }
 
+        if (trailRenderer == null)
+        {
+            trailRenderer = GetComponentInChildren<TrailRenderer>();
+        }
+
+        trailRenderer.Clear();
+
         LevelManager.PlayerRespawn += ResetProjectile;
 
         hasCollided = false;
@@ -69,9 +77,11 @@ public class Projectile : MonoBehaviour, IPoolable
 
     private void OnDisable()
     {
+        //trailRenderer.emitting = false;
         LevelManager.PlayerRespawn -= ResetProjectile;
         m_RigidBody.velocity = Vector3.zero;
         m_RigidBody.angularVelocity = Vector3.zero;
+
     }
 
     private void Update()
