@@ -56,7 +56,7 @@ public sealed class LevelManager : MonoBehaviour
         timeStopped = false;
         CombatantCount = 0;
 
-        var enemies = FindObjectsOfType<NewAgentBase>();
+        var enemies = FindObjectsOfType<NewAgentBase>(true);
 
         foreach (var enemy in enemies)
         {
