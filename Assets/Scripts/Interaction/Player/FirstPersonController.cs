@@ -802,4 +802,9 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         isDead = false;
         characterController.enabled = true;
     }
+
+    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -65,4 +65,13 @@ public class ShootableButton : MonoBehaviour, IDamageable, IActivator
         m_Renderer.material = m_Materials[0];
     }
 
+    void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint)
+    {
+
+    }
+
+    void IDamageable.TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint)
+    {
+        throw new System.NotImplementedException();
+    }
 }

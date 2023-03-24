@@ -238,4 +238,8 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
         ResetValues();
     }
 
+    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint)
+    {
+        throw new System.NotImplementedException();
+    }
 }

@@ -19,6 +19,8 @@ public interface IDamageable
 
     void TakeDamage(float damageTaken, HitBoxType hitbox);
 
+    void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint);
+
     public void SetupDamageText()
     {
        // Text = DamageTextPrefab.GetComponent<TextMeshPro>();

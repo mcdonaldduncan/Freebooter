@@ -268,7 +268,7 @@ public class AutoGun : MonoBehaviour, IGun
                 }
 
                 //Damage the target
-                damageableTarget.TakeDamage(realDamage, HitBoxType.normal);
+                damageableTarget.TakeDamage(realDamage, HitBoxType.normal, hitInfo.point);
             }
             catch
             {

@@ -92,4 +92,9 @@ public class DamageActivator : MonoBehaviour, IDamageable, IActivator
         }
         Health = m_Health;
     }
+
+    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint)
+    {
+        throw new System.NotImplementedException();
+    }
 }

@@ -84,4 +84,9 @@ public class FakeOrbit : MonoBehaviour, IDamageable
             
         }
     }
+
+    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint)
+    {
+        throw new System.NotImplementedException();
+    }
 }
