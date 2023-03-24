@@ -125,6 +125,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
 
     private void Update()
     {
+        Debug.Log(IsDead);
         distanceToPlayer = Vector3.Distance(transform.position, m_Target.position);
 
         if (IsDead) return;
@@ -367,7 +368,6 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
         inAttackAnim = false;
         chasePlayer = false;
         animator.SetInteger("Death", 0);
-        IsDead = false;
     }
 
     public void OnCheckPointReached()

@@ -20,7 +20,7 @@ public class EnemyGroupActivator : MonoBehaviour, IActivator
 
     // Removing this beautiful bit of code bc it allocates memory :(
     // bool m_Inactive => m_TargetGroup.Where(x => x.activeSelf).Any();
-    bool m_Inactive
+    bool m_AnyMemberActive
     {
         get
         {
@@ -50,7 +50,7 @@ public class EnemyGroupActivator : MonoBehaviour, IActivator
         }
     }
 
-    bool m_IsActivated;
+    bool m_IsActivated = false;
 
     Coroutine m_Coroutine;
 
@@ -81,7 +81,7 @@ public class EnemyGroupActivator : MonoBehaviour, IActivator
     {
         if (m_IsActivated) return;
 
-        if (!m_Inactive)
+        if (!m_AnyMemberActive)
         {
             FireActivation();
         }
@@ -96,7 +96,7 @@ public class EnemyGroupActivator : MonoBehaviour, IActivator
     void SetState()
     {
         //m_IsActivated = !m_Inactive;
-        if (m_Inactive)
+        if (m_AnyMemberActive)
         {
             FireDeactivation();
         }
