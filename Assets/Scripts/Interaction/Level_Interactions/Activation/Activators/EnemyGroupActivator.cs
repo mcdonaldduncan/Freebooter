@@ -14,7 +14,23 @@ public class EnemyGroupActivator : MonoBehaviour, IActivator
     public event IActivator.ActivateDelegate Activate;
     public event IActivator.ActivateDelegate Deactivate;
 
-    bool m_Inactive => m_TargetGroup.Where(x => x.activeSelf).Any();
+    // Removing this beautiful bit of code bc it allocates memory :(
+    //bool m_Inactive => m_TargetGroup.Where(x => x.activeSelf).Any();
+    bool m_Inactive
+    {
+        get
+        {
+            foreach (var obj in m_TargetGroup)
+            {
+                if (obj.activeSelf) return true;
+            }
+
+            return false;
+        }
+    }
+    // eeeew
+
+
     bool m_IsActivated;
 
     Coroutine m_Coroutine;
