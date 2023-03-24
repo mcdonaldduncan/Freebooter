@@ -93,6 +93,7 @@ public class Inquisitor : MonoBehaviour, IDamageable, IGroupable
 
     public void TakeDamage(float damageTaken, HitBoxType hitbox)
     {
+        if (damageTaken < 1) return; 
         Health -= damageTaken;
         Debug.Log(hitbox.ToString());
         m_Damageable.InstantiateDamageNumber(damageTaken, hitbox);
