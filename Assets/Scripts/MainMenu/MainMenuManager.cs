@@ -25,7 +25,7 @@ public class MainMenuManager : MonoBehaviour
     private void OnEnable()
     {
         LoadingPanel.SetActive(false);
-        LoadingBar.fillAmount = .1f;
+        LoadingBar.fillAmount = .25f;
     }
 
     public void StartLevel(int index)
@@ -57,8 +57,7 @@ public class MainMenuManager : MonoBehaviour
 
         while (!operation.isDone)
         {
-            Debug.Log(operation.progress);
-            LoadingBar.fillAmount = operation.progress;
+            LoadingBar.fillAmount = operation.progress + .1f;
 
             if (operation.progress >= LoadThreshold)
             {
