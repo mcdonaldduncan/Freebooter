@@ -118,7 +118,7 @@ public class Projectile : MonoBehaviour, IPoolable
         }
         else if (m_DamageAll || collision.gameObject.CompareTag("Player"))
         {
-            if (collision.gameObject.TryGetComponent(out IDamageable temp)) temp.TakeDamage(m_DamageAmount);
+            if (collision.gameObject.TryGetComponent(out IDamageable temp)) temp.TakeDamage(m_DamageAmount, HitBoxType.normal);
 
             //IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
             //if (damageable != null)
@@ -161,7 +161,7 @@ public class Projectile : MonoBehaviour, IPoolable
             if (hit == null) continue;
             if (hit.TryGetComponent(out IDamageable damageable))
             {
-                damageable.TakeDamage(m_DamageAmount);
+                damageable.TakeDamage(m_DamageAmount, HitBoxType.normal);
             }
         }
 

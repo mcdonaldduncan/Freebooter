@@ -66,7 +66,7 @@ public class FakeOrbit : MonoBehaviour, IDamageable
         _Transform.position = target.position + polarVector;
     }
 
-    public void TakeDamage(float damageTaken)
+    public void TakeDamage(float damageTaken, HitBoxType hitbox)
     {
         Health -= damageTaken;
         //Debug.Log("Orbit Damaged");

@@ -102,7 +102,7 @@ public class Follower : MonoBehaviour
         try
         {
             IDamageable damageable = other.transform.GetComponent<IDamageable>();
-            damageable.TakeDamage(damage * Time.deltaTime);
+            damageable.TakeDamage(damage * Time.deltaTime, HitBoxType.normal);
             if (damageable == null) Despawn();
             return;
         }
@@ -119,7 +119,7 @@ public class Follower : MonoBehaviour
         try
         {
             IDamageable damageable = other.transform.GetComponent<IDamageable>();
-            damageable.TakeDamage(damage * Time.deltaTime);
+            damageable.TakeDamage(damage * Time.deltaTime, HitBoxType.normal);
             //Debug.Log($"{other.transform.name}: {damageable.Health}");
         }
         catch

@@ -81,7 +81,7 @@ public class Soldier : AgentBase
 
     private void GiveDamage(float damageToDeal)
     {
-        LevelManager.Instance.Player.TakeDamage(damageToDeal);
+        LevelManager.Instance.Player.TakeDamage(damageToDeal, HitBoxType.normal);
         mostRecentHit = Time.time;
     }
 }

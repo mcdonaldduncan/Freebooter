@@ -85,7 +85,7 @@ public class Inquisitor : MonoBehaviour, IDamageable, IGroupable
         Health = m_StartingHealth;
     }
 
-    public void TakeDamage(float damageTaken)
+    public void TakeDamage(float damageTaken, HitBoxType hitbox)
     {
         Health -= damageTaken;
         CheckForDeath();
@@ -267,7 +267,7 @@ public class Inquisitor : MonoBehaviour, IDamageable, IGroupable
         {
             if (hit.collider.CompareTag("Player"))
             {
-                LevelManager.Instance.Player.TakeDamage(m_LaserDamage * Time.deltaTime);
+                LevelManager.Instance.Player.TakeDamage(m_LaserDamage * Time.deltaTime, HitBoxType.normal);
             }
         }
     }
