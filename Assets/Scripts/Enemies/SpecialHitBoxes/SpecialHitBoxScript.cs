@@ -99,12 +99,12 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
         m_ParticleSystem = GetComponentInChildren<ParticleSystem>();
     }
 
-    private void Update()
-    {
-        shieldVFXBlue.transform.position = VFXTransform.position;
-        shieldVFXYellow.transform.position = VFXTransform.position;
-        shieldVFXRed.transform.position = VFXTransform.position;
-    }
+    //private void Update()
+    //{
+    //    shieldVFXBlue.transform.position = VFXTransform.position;
+    //    shieldVFXYellow.transform.position = VFXTransform.position;
+    //    shieldVFXRed.transform.position = VFXTransform.position;
+    //}
 }
 public enum HitBoxType
 {
