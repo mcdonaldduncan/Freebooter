@@ -101,7 +101,7 @@ public class BarrierAlertManager : Singleton<BarrierAlertManager>
 
     void OnAmmoPickup(int value, IGun gun)
     {
-        string gunType = gun.GetType().Name;
+        string gunType = gun.GetType().Name.Split('.')[0];
 
         m_BarrierAlertPanel.SetActive(true);
         BarrierAlertText.text = $"Aqcuired {value} {gunType} ammo!" ;

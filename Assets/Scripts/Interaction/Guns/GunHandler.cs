@@ -170,7 +170,7 @@ public sealed class GunHandler : MonoBehaviour
     private Dictionary<GunType, int> gunTypeDict;
     private Dictionary<GunType, WaitForSeconds> gunReloadWaitDict;
 
-    private int autoGunAmmoCP;
+    private int autoGunAmmoCP;  
     private int shotGunAmmoCP;
     private int grenadeGunAmmoCP;
 
