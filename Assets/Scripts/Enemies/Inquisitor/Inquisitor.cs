@@ -28,6 +28,7 @@ public class Inquisitor : MonoBehaviour, IDamageable, IGroupable
     [SerializeField] float m_MaxFollowerDistance;
     [SerializeField] float m_MaxForce;
     [SerializeField] float m_Speed;
+    [SerializeField] float m_RotSpeed;
     [SerializeField] public List<FakeOrbit> m_Orbits;
     [SerializeField] List<Transform> m_FollowerSpawns;
 
@@ -252,7 +253,7 @@ public class Inquisitor : MonoBehaviour, IDamageable, IGroupable
         }
         Vector3 adjustedLook = (m_Target.position + normalCross * 30f) - transform.position;
         var rotGoal = Quaternion.LookRotation(new Vector3(adjustedLook.x, transform.position.y, adjustedLook.z));
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, rotGoal, 20f * Time.deltaTime);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, rotGoal, m_RotSpeed * Time.deltaTime);
         
         m_AttackSpawn.transform.LookAt(m_TargetPosition);
 
