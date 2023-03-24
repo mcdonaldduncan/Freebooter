@@ -93,6 +93,8 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
 
     AudioSource m_AudioSource;
 
+    bool defaultIgnorePlayer;
+
     private void Awake()
     {
         hideBehavior = GetComponent<HideBehavior>();
@@ -104,6 +106,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
 
     private void Start()
     {
+        defaultIgnorePlayer = ignorePlayer;
         m_StartingPosition = transform.position;
         Health = maxHealth;
         chasePlayer = false;
@@ -346,7 +349,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
         navMeshAgent.Warp(m_StartingPosition);
         CycleAgent();
         Health = maxHealth;
-        ignorePlayer = false;
+        ignorePlayer = defaultIgnorePlayer;
     }
 
     void CycleAgent()
