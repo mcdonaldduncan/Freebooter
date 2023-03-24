@@ -64,7 +64,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Restart"",
+                    ""name"": ""Pause"",
                     ""type"": ""Button"",
                     ""id"": ""eaecf600-5fa2-47b2-a14e-5e73d6e6eeb7"",
                     ""expectedControlType"": ""Button"",
@@ -264,11 +264,11 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""249913cc-3ef7-4948-aa0b-8a6f6a388fa7"",
-                    ""path"": ""<Keyboard>/l"",
+                    ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Restart"",
+                    ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -430,7 +430,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         m_HumanoidLand_Look = m_HumanoidLand.FindAction("Look", throwIfNotFound: true);
         m_HumanoidLand_Dash = m_HumanoidLand.FindAction("Dash", throwIfNotFound: true);
         m_HumanoidLand_Jump = m_HumanoidLand.FindAction("Jump", throwIfNotFound: true);
-        m_HumanoidLand_Restart = m_HumanoidLand.FindAction("Restart", throwIfNotFound: true);
+        m_HumanoidLand_Restart = m_HumanoidLand.FindAction("Pause", throwIfNotFound: true);
         // HumanoidWall
         m_HumanoidWall = asset.FindActionMap("HumanoidWall", throwIfNotFound: true);
         m_HumanoidWall_Forward = m_HumanoidWall.FindAction("Forward", throwIfNotFound: true);
