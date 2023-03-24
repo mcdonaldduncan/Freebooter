@@ -28,6 +28,7 @@ public class Inquisitor : MonoBehaviour, IDamageable, IGroupable
     [SerializeField] float m_MaxFollowerDistance;
     [SerializeField] float m_MaxForce;
     [SerializeField] float m_Speed;
+    [SerializeField] float m_RotSpeed;
     [SerializeField] public List<FakeOrbit> m_Orbits;
     [SerializeField] List<Transform> m_FollowerSpawns;
 
@@ -84,7 +85,7 @@ public class Inquisitor : MonoBehaviour, IDamageable, IGroupable
         Health = m_StartingHealth;
     }
 
-    public void TakeDamage(float damageTaken)
+    public void TakeDamage(float damageTaken, HitBoxType hitbox)
     {
         Health -= damageTaken;
         CheckForDeath();
@@ -251,8 +252,8 @@ public class Inquisitor : MonoBehaviour, IDamageable, IGroupable
             normalCross = Vector3.zero;
         }
         Vector3 adjustedLook = (m_Target.position + normalCross * 30f) - transform.position;
-        var rotGoal = Quaternion.LookRotation(adjustedLook);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, rotGoal, 20f * Time.deltaTime);
+        var rotGoal = Quaternion.LookRotation(new Vector3(adjustedLook.x, transform.position.y, adjustedLook.z));
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, rotGoal, m_RotSpeed * Time.deltaTime);
         
         m_AttackSpawn.transform.LookAt(m_TargetPosition);
 
@@ -266,7 +267,7 @@ public class Inquisitor : MonoBehaviour, IDamageable, IGroupable
         {
             if (hit.collider.CompareTag("Player"))
             {
-                LevelManager.Instance.Player.TakeDamage(m_LaserDamage * Time.deltaTime);
+                LevelManager.Instance.Player.TakeDamage(m_LaserDamage * Time.deltaTime, HitBoxType.normal);
             }
         }
     }

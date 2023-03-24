@@ -110,7 +110,7 @@ public class OnDeathExplosion : MonoBehaviour
             
             if (m_HitsSaved[i].TryGetComponent(out IDamageable damageable))
             {
-                damageable.TakeDamage(m_Damage);
+                damageable.TakeDamage(m_Damage, HitBoxType.normal);
                 m_HitsSaved[i] = null;
             }
         }

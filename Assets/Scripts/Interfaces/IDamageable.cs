@@ -17,7 +17,7 @@ public interface IDamageable
 
     public float FontSize { get; }
 
-    void TakeDamage(float damageTaken);
+    void TakeDamage(float damageTaken, HitBoxType hitbox);
 
     public void SetupDamageText()
     {

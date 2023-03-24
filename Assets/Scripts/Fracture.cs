@@ -62,7 +62,7 @@ public class Fracture : MonoBehaviour, IDamageable
         }
     }
 
-    public void TakeDamage(float damageTaken)
+    public void TakeDamage(float damageTaken, HitBoxType hitbox)
     {
         ////TODO: We should create a tag for barrels/breakable props since this kind of if statement is repeated
         ////and I don't like checking object names for checks like this

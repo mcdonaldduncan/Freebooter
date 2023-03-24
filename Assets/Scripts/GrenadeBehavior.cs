@@ -110,7 +110,7 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
                 {
                     try
                     {
-                        damageableTarget.TakeDamage(explosionDamage);
+                        damageableTarget.TakeDamage(explosionDamage, HitBoxType.normal);
                     }
                     catch
                     {

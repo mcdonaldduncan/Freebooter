@@ -486,7 +486,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
                     var damageableTarget = hitInfo.transform.GetComponent<IDamageable>();
                     if (damageableTarget != null)
                     {
-                        damageableTarget.TakeDamage(dashDamage);
+                        damageableTarget.TakeDamage(dashDamage, HitBoxType.normal);
                     }
                 }
             }
@@ -740,7 +740,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     //    }
     //}
 
-    public void TakeDamage(float damageTaken)
+    public void TakeDamage(float damageTaken, HitBoxType hitBox)
     {
         if (CanBeDamaged)
         {

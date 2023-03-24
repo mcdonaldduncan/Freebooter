@@ -47,7 +47,7 @@ public class Beehive : MonoBehaviour, IDamageable
         }
     }
 
-    public void TakeDamage(float damageTaken)
+    public void TakeDamage(float damageTaken, HitBoxType hitbox)
     {
         Health -= damageTaken;
         ActivateBees();

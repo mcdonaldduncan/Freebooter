@@ -263,7 +263,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
 
     private void GiveDamage(float damageToDeal)
     {
-        LevelManager.Instance.Player.TakeDamage(damageToDeal);
+        LevelManager.Instance.Player.TakeDamage(damageToDeal, HitBoxType.normal);
         mostRecentHit = Time.time;
     }
 
@@ -382,12 +382,12 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
         ignorePlayer = shouldIgnorePlayer;
     }
 
-    public void TakeDamage(float damageTaken)
+    public void TakeDamage(float damageTaken, HitBoxType hitbox)
     {
         health -= damageTaken;
         ragdollForce = damageTaken;
         if(fractureScript != null) fractureScript.Health = health;
         CheckForDeath();
-        m_IDamageable.InstantiateDamageNumber(damageTaken, HitBoxType.normal);
+        m_IDamageable.InstantiateDamageNumber(damageTaken, hitbox);
     }
 }

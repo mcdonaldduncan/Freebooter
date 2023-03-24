@@ -35,8 +35,8 @@ public class ContactHazard : MonoBehaviour
         IDamageable damageable = collider.gameObject.GetComponent<IDamageable>();
         if (damageable != null)
         {
-            if (m_InstantKill) damageable.TakeDamage(damageable.Health + 1);
-            else damageable.TakeDamage(m_DamageAmount);
+            if (m_InstantKill) damageable.TakeDamage(damageable.Health + 1, HitBoxType.normal);
+            else damageable.TakeDamage(m_DamageAmount, HitBoxType.normal);
         }
     }
 }

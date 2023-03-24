@@ -63,7 +63,7 @@ public class LaserHazard : MonoBehaviour, IRecipient
         {
             if (hit.collider.gameObject.TryGetComponent(out IDamageable damageable))
             {
-                damageable.TakeDamage(m_DamagePerTick * Time.deltaTime);
+                damageable.TakeDamage(m_DamagePerTick * Time.deltaTime, HitBoxType.normal);
             }
         }
     }
