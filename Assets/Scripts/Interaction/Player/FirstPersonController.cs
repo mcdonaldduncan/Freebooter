@@ -337,7 +337,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         _input.HumanoidLand.Dash.canceled += HandleDashInput;
         _input.HumanoidLand.Jump.performed += HandleJump;
         _input.HumanoidLand.Jump.canceled += HandleJump;
-        _input.HumanoidLand.Restart.performed += pauseController.OnPause;
+        _input.HumanoidLand.Restart.performed += ReloadScene;
+        _input.HumanoidLand.Pause.performed += pauseController.OnPause;
 
         //HumanoidWall
         //_input.HumanoidWall.Forward.performed += HandleWallrunInput;
@@ -367,7 +368,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         _input.HumanoidLand.Dash.canceled -= HandleDashInput;
         _input.HumanoidLand.Jump.performed -= HandleJump;
         _input.HumanoidLand.Jump.canceled -= HandleJump;
-        _input.HumanoidLand.Restart.performed -= pauseController.OnPause;
+        _input.HumanoidLand.Restart.performed -= ReloadScene;
+        _input.HumanoidLand.Pause.performed -= pauseController.OnPause;
 
         //HumanoidWall
         //_input.HumanoidWall.Forward.performed -= HandleWallrunInput;
