@@ -79,6 +79,7 @@ public class Inquisitor : MonoBehaviour, IDamageable, IGroupable
 
     public void Init()
     {
+        IsDead = false;
         m_Target = LevelManager.Instance.Player.transform;
         Health = m_StartingHealth;
     }
@@ -151,6 +152,7 @@ public class Inquisitor : MonoBehaviour, IDamageable, IGroupable
     {
         if (Health <= 0)
         {
+            IsDead = true;
             m_DeathExplosion.SetActive(true);
             gameObject.SetActive(false);
             if (m_Follower == null) return;
