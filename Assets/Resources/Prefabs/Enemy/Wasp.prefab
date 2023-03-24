@@ -679,16 +679,17 @@ MonoBehaviour:
   m_ShootFrom: {fileID: 2851899924388004780}
   m_OnKillHealFVX: {fileID: 2748225569481887560, guid: de88dfbe0c34dad418728faa198b70e0,
     type: 3}
-  m_DamageTextPrefab: {fileID: 0}
-  m_TextSpawnLocation: {fileID: 0}
-  m_FontSize: 0
-  m_ShowDamageNumbers: 0
+  m_DamageTextPrefab: {fileID: 3377893959702237216, guid: b26933fac4913a747a2bc7b367e9b00b,
+    type: 3}
+  m_TextSpawnLocation: {fileID: 3907655064562151518}
+  m_FontSize: 12
+  m_ShowDamageNumbers: 1
   m_WalkableLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 129
   m_SightLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 82881
   m_StoppingDistance: 5
   m_RotationSpeed: 20
   m_MovementSampleRadius: 0
@@ -696,7 +697,7 @@ MonoBehaviour:
   m_WanderDistance: 5
   m_Range: 40
   m_TimeBetweenShots: 0.75
-  m_FieldOfView: 0
+  m_FieldOfView: 180
   m_MaxHealth: 75
   m_ShouldHitStop: 0
   m_HitStopDuration: 0
