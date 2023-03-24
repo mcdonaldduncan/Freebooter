@@ -448,6 +448,10 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         m_State = AgentState.SLEEP;
     }
 
+    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint)
+    {
+        throw new NotImplementedException();
+    }
 }
 
 public enum AgentState

@@ -2023,6 +2023,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2158ba971f7da634bbbe34df0de8af33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TorsoRigidBody: {fileID: 335546571941596875}
   ignorePlayer: 0
   hideThreshold: 0
   maxHealth: 65
@@ -2045,6 +2046,7 @@ MonoBehaviour:
     m_Bits: 512
   m_OnKillHealFVX: {fileID: 2748225569481887560, guid: de88dfbe0c34dad418728faa198b70e0,
     type: 3}
+  ragdollForce: 50
 --- !u!195 &7633180016213686031
 NavMeshAgent:
   m_ObjectHideFlags: 0

@@ -299,4 +299,9 @@ public class Inquisitor : MonoBehaviour, IDamageable, IGroupable
         steer *= m_MaxForce;
         return steer;
     }
+
+    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint)
+    {
+        throw new System.NotImplementedException();
+    }
 }

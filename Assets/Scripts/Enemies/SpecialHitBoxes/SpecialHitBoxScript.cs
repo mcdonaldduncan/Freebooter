@@ -100,6 +100,11 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable
         m_ParticleSystem = GetComponentInChildren<ParticleSystem>();
     }
 
+    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint)
+    {
+        throw new System.NotImplementedException();
+    }
+
     // what do you even think you are doing here?
     //private void Update()
     //{

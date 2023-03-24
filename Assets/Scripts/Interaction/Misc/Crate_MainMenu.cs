@@ -77,4 +77,9 @@ public class Crate_MainMenu : MonoBehaviour, IDamageable
     {
         SceneManager.LoadScene(sceneToLoad);
     }
+
+    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint)
+    {
+        throw new System.NotImplementedException();
+    }
 }
