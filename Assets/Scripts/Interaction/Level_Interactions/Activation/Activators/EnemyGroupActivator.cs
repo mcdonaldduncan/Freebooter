@@ -15,7 +15,7 @@ public class EnemyGroupActivator : MonoBehaviour, IActivator
     public event IActivator.ActivateDelegate Deactivate;
 
     // Removing this beautiful bit of code bc it allocates memory :(
-    //bool m_Inactive => m_TargetGroup.Where(x => x.activeSelf).Any();
+    // bool m_Inactive => m_TargetGroup.Where(x => x.activeSelf).Any();
     bool m_Inactive
     {
         get
@@ -28,7 +28,7 @@ public class EnemyGroupActivator : MonoBehaviour, IActivator
             return false;
         }
     }
-    // eeeew
+    // why is ugly code always better performance!!
 
 
     bool m_IsActivated;
