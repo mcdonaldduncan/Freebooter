@@ -178,6 +178,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     private CharacterController characterController;
     private Rigidbody playerRB;
     private GunHandler playerGun;
+    private PauseController pauseController;
 
     private Vector3 moveDirection;
     private Vector2 currentInput; //Whether player is moving vertically or horizontally along x and z planes
@@ -247,6 +248,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         characterController = GetComponent<CharacterController>();
         playerRB = GetComponent<Rigidbody>();
         playerGun = GetComponentInChildren<GunHandler>();
+        pauseController = GetComponentInChildren<PauseController>();
 
         defaultYPosCamera = playerCamera.transform.localPosition.y;
 
@@ -335,7 +337,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         _input.HumanoidLand.Dash.canceled += HandleDashInput;
         _input.HumanoidLand.Jump.performed += HandleJump;
         _input.HumanoidLand.Jump.canceled += HandleJump;
-        _input.HumanoidLand.Restart.performed += ReloadScene;
+        _input.HumanoidLand.Restart.performed += pauseController.OnPause;
 
         //HumanoidWall
         //_input.HumanoidWall.Forward.performed += HandleWallrunInput;
@@ -365,7 +367,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         _input.HumanoidLand.Dash.canceled -= HandleDashInput;
         _input.HumanoidLand.Jump.performed -= HandleJump;
         _input.HumanoidLand.Jump.canceled -= HandleJump;
-        _input.HumanoidLand.Restart.performed -= ReloadScene;
+        _input.HumanoidLand.Restart.performed -= pauseController.OnPause;
 
         //HumanoidWall
         //_input.HumanoidWall.Forward.performed -= HandleWallrunInput;
