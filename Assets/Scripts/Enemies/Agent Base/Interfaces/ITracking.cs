@@ -80,6 +80,7 @@ public interface ITracking
     {
         Quaternion targetRotation = Quaternion.LookRotation(TargetDirection, Vector3.up);
         TrackingTransform.rotation = Quaternion.RotateTowards(TrackingTransform.rotation, targetRotation, MaxRotationDelta);
+
     }
 
     /// <summary>
