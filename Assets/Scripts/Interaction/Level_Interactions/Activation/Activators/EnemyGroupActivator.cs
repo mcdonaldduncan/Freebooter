@@ -45,7 +45,7 @@ public class EnemyGroupActivator : MonoBehaviour, IActivator
             }
             else
             {
-                Debug.LogWarning("Invalid object in group");
+                Debug.LogWarning($"Invalid object in group, object: {target.name}");
             }
         }
     }

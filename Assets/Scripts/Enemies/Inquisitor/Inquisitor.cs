@@ -1,3 +1,4 @@
+using Assets.Scripts.Enemies.Agent_Base.Interfaces;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ using UnityEngine.UIElements;
 /// 
 /// </summary>
 /// Author: Duncan McDonald
-public class Inquisitor : MonoBehaviour, IDamageable
+public class Inquisitor : MonoBehaviour, IDamageable, IGroupable
 {
     [SerializeField] Animator m_Animator;
     [SerializeField] GameObject m_Follower_GO;
@@ -64,6 +65,7 @@ public class Inquisitor : MonoBehaviour, IDamageable
     public float FontSize { get => m_fontSize; set => m_fontSize = value; }
     public bool ShowDamageNumbers { get => m_showDamageNumbers; set => m_showDamageNumbers = value; }
     public TextMeshPro Text { get; set; }
+    public bool IsDead { get; set; }
 
     private void OnEnable()
     {
