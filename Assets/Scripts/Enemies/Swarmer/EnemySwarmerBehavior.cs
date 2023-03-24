@@ -125,7 +125,6 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
 
     private void Update()
     {
-        Debug.Log(IsDead);
         distanceToPlayer = Vector3.Distance(transform.position, m_Target.position);
 
         if (IsDead) return;
