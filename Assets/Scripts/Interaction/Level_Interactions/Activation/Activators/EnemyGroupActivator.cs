@@ -32,11 +32,13 @@ public class EnemyGroupActivator : MonoBehaviour, IActivator
     public void FireActivation()
     {
         Activate?.Invoke();
+        m_IsActivated = true;
     }
 
     public void FireDeactivation()
     {
         Deactivate?.Invoke();
+        m_IsActivated = false;
     }
 
 
@@ -47,7 +49,6 @@ public class EnemyGroupActivator : MonoBehaviour, IActivator
         if (!m_Inactive)
         {
             FireActivation();
-            
         }
     }
 
@@ -59,7 +60,7 @@ public class EnemyGroupActivator : MonoBehaviour, IActivator
 
     void SetState()
     {
-        m_IsActivated = !m_Inactive;
+        //m_IsActivated = !m_Inactive;
         if (m_Inactive)
         {
             FireDeactivation();
