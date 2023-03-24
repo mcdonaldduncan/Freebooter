@@ -1,8 +1,10 @@
 using UnityEngine;
 using UnityEngine.AI;
 using TMPro;
+using Assets.Scripts.Enemies.Agent_Base.Interfaces;
+using Unity.VisualScripting;
 
-public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
+public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupable
 {
     public float Health { get { return health; } set { health = value; } }
 
@@ -84,7 +86,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
 
     public TextMeshPro Text { get; set; }
 
-    bool dead = false;
+    public bool IsDead { get; set; } = false;
 
     public delegate void SwarmerDelegate();
     public event SwarmerDelegate SwarmerDeath;
@@ -125,7 +127,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
     {
         distanceToPlayer = Vector3.Distance(transform.position, m_Target.position);
 
-        if (dead == true) return;
+        if (IsDead) return;
         if (distanceToPlayer <= distanceToFollow)
         {
             navMeshAgent.isStopped = false;
@@ -281,6 +283,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
 
     public void OnDeath()
     {
+        IsDead = true;
         ignorePlayer = true;
         EnableRagdoll();
 
@@ -334,6 +337,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
 
     public void OnPlayerRespawn()
     {
+        IsDead = false;
         DisableRagdoll();
         if (!gameObject.activeSelf)
         {
@@ -363,7 +367,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable
         inAttackAnim = false;
         chasePlayer = false;
         animator.SetInteger("Death", 0);
-        dead = false;
+        IsDead = false;
     }
 
     public void OnCheckPointReached()

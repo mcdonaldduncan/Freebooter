@@ -1,6 +1,8 @@
+using Assets.Scripts.Enemies.Agent_Base.Interfaces;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 /// <summary>
@@ -10,6 +12,8 @@ using UnityEngine;
 public class EnemyGroupActivator : MonoBehaviour, IActivator
 {
     [SerializeField] List<GameObject> m_TargetGroup;
+    
+    List<IGroupable> m_Group;
 
     public event IActivator.ActivateDelegate Activate;
     public event IActivator.ActivateDelegate Deactivate;
@@ -20,9 +24,9 @@ public class EnemyGroupActivator : MonoBehaviour, IActivator
     {
         get
         {
-            foreach (var obj in m_TargetGroup)
+            foreach (var obj in m_Group)
             {
-                if (obj.activeSelf) return true;
+                if (!obj.IsDead) return true;
             }
 
             return false;
@@ -30,6 +34,21 @@ public class EnemyGroupActivator : MonoBehaviour, IActivator
     }
     // why is ugly code always better performance!!
 
+    private void Start()
+    {
+        m_Group = new List<IGroupable>();
+        foreach (var target in m_TargetGroup)
+        {
+            if (target.TryGetComponent(out IGroupable groupable))
+            {
+                m_Group.Add(groupable);
+            }
+            else
+            {
+                Debug.LogWarning("Invalid object in group");
+            }
+        }
+    }
 
     bool m_IsActivated;
 
