@@ -54,6 +54,7 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
         }
     }
 
+    /// is this even working?
     public void TakeDamage(float damageTaken)
     {
         if (hitboxtype == HitBoxType.critical)
