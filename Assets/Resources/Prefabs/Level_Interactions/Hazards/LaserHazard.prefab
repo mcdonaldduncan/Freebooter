@@ -80,6 +80,9 @@ MonoBehaviour:
   m_Activator: {fileID: 0}
   m_LaserBeam: {fileID: 5750262698090159214}
   m_LaserTarget: {fileID: 5750262698053416518}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 768
   m_DamagePerTick: 50
   m_TimeActive: 3
 --- !u!1001 &5750262698090062688
@@ -145,11 +148,13 @@ PrefabInstance:
   m_SourcePrefab: {fileID: 100100000, guid: f2489df8d266b964d860607e5b26e454, type: 3}
 --- !u!4 &5750262698089657716 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 415252, guid: f2489df8d266b964d860607e5b26e454, type: 3}
+  m_CorrespondingSourceObject: {fileID: 415252, guid: f2489df8d266b964d860607e5b26e454,
+    type: 3}
   m_PrefabInstance: {fileID: 5750262698090062688}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &5750262698090159214 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 114446, guid: f2489df8d266b964d860607e5b26e454, type: 3}
+  m_CorrespondingSourceObject: {fileID: 114446, guid: f2489df8d266b964d860607e5b26e454,
+    type: 3}
   m_PrefabInstance: {fileID: 5750262698090062688}
   m_PrefabAsset: {fileID: 0}
