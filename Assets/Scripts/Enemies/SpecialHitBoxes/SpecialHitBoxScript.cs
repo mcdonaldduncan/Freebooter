@@ -54,7 +54,7 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
         }
     }
 
-    /// is this even working?
+    /// is this even working? Health only gets changed if the hitbox is a shield
     public void TakeDamage(float damageTaken)
     {
         if (hitboxtype == HitBoxType.critical)
@@ -100,6 +100,7 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
         m_ParticleSystem = GetComponentInChildren<ParticleSystem>();
     }
 
+    // what do you even think you are doing here?
     //private void Update()
     //{
     //    shieldVFXBlue.transform.position = VFXTransform.position;
