@@ -22,8 +22,14 @@ public class BarrierAlertManager : Singleton<BarrierAlertManager>
 
     [Header("Barrier Alert Content")]
     [SerializeField] string m_BarrierAlertContent;
-    
+
+    [Header("Ammo Alert Content")]
+    [SerializeField] string m_AmmoAlertContent;
+    [SerializeField] string m_AmmoPickupAlertContent;
+
     TextMeshProUGUI BarrierAlertText;
+
+    GunHandler m_GunHandler;
 
     Key[] Keys;
     Barrier[] Barriers;
@@ -58,6 +64,11 @@ public class BarrierAlertManager : Singleton<BarrierAlertManager>
         {
             barrier.LockedBarrierAccessed += OnBarrierAccessed;
         }
+
+        m_GunHandler = LevelManager.Instance.Player.GetComponentInChildren<GunHandler>();
+
+        m_GunHandler.AmmoEmpty += OnAmmoEmpty;
+        m_GunHandler.AmmoPickup += OnAmmoPickup;
     }
 
     private void OnDisable()
@@ -86,6 +97,24 @@ public class BarrierAlertManager : Singleton<BarrierAlertManager>
             m_BarrierAlertPanel.SetActive(false);
             IsActive = false;
         }
+    }
+
+    void OnAmmoPickup(int value, IGun gun)
+    {
+        string gunType = gun.GetType().Name.Split('.')[0];
+
+        m_BarrierAlertPanel.SetActive(true);
+        BarrierAlertText.text = $"Aqcuired {value} {gunType} ammo!" ;
+        LastMessageTime = Time.time;
+        IsActive = true;
+    }
+
+    void OnAmmoEmpty()
+    {
+        m_BarrierAlertPanel.SetActive(true);
+        BarrierAlertText.text = m_AmmoAlertContent;
+        LastMessageTime = Time.time;
+        IsActive = true;
     }
 
     /// <summary>

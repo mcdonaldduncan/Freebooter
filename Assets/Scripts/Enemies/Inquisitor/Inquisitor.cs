@@ -67,10 +67,16 @@ public class Inquisitor : MonoBehaviour, IDamageable, IGroupable
     public bool ShowDamageNumbers { get => m_showDamageNumbers; set => m_showDamageNumbers = value; }
     public TextMeshPro Text { get; set; }
     public bool IsDead { get; set; }
+    private IDamageable m_Damageable;
 
     private void OnEnable()
     {
         //potentialTargets = FindObjectsOfType<FirstPersonController>().Select(item => item.transform).ToList();
+    }
+
+    private void Awake()
+    {
+        m_Damageable = this;
     }
 
     void Start()
@@ -87,7 +93,10 @@ public class Inquisitor : MonoBehaviour, IDamageable, IGroupable
 
     public void TakeDamage(float damageTaken, HitBoxType hitbox)
     {
+        if (damageTaken < 1) return; 
         Health -= damageTaken;
+        Debug.Log(hitbox.ToString());
+        m_Damageable.InstantiateDamageNumber(damageTaken, hitbox);
         CheckForDeath();
     }
 
