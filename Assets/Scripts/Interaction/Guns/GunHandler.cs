@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -176,6 +177,13 @@ public sealed class GunHandler : MonoBehaviour
     //Particle Effects for the bullet collision.
     [SerializeField] private GameObject hitEnemy;
     [SerializeField] private GameObject hitNONEnemy;
+
+    public delegate void AmmoNotificationDelegate();
+    public event AmmoNotificationDelegate AmmoEmpty;
+
+
+    public delegate void AmmoPickupDelegate(int amount, IGun gun);
+    public event AmmoPickupDelegate AmmoPickup;
 
     private void Awake()
     {
@@ -429,20 +437,32 @@ public sealed class GunHandler : MonoBehaviour
     public void OnAmmoPickup(GunType gunType, int ammoToAdd)
     {
         IGun gunToRecieveAmmo = gunDict[gunType];
+        int temp = ammoToAdd;
+
+        if (gunToRecieveAmmo.CurrentAmmo + ammoToAdd >= gunToRecieveAmmo.MaxAmmo)
+        {
+            temp = gunToRecieveAmmo.MaxAmmo - gunToRecieveAmmo.CurrentAmmo;
+        }
+
+        
         gunToRecieveAmmo.CurrentAmmo += ammoToAdd;
+
+
 
         if (gunToRecieveAmmo.CurrentAmmo >= gunToRecieveAmmo.MaxAmmo)
         {
             gunToRecieveAmmo.CurrentAmmo = gunToRecieveAmmo.MaxAmmo;
         }
+
+        AmmoPickup?.Invoke(temp, currentGun);
     }
 
     public void Shoot(InputAction.CallbackContext context)
     {
-        //if (currentGun.CurrentAmmo <= 0)
-        //{
-        //    currentGun.StartReload();
-        //}
+        if (currentGun.CurrentAmmo <= 0)
+        {
+            AmmoEmpty?.Invoke();
+        }
         currentGun.ShootTriggered(context);
     }
 
