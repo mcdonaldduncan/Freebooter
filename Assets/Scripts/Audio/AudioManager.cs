@@ -122,7 +122,10 @@ public class AudioManager : Singleton<AudioManager>
         m_CurrentPrimary = m_CurrentSecondary;
         m_CurrentPrimary.clip = inCombat ? m_CombatMusic : m_ReleaseMusic;
 
-        if (m_CurrentPrimary.clip != m_CombatMusic) m_CurrentPrimary.Play();
+        if (m_CurrentPrimary.clip != m_CombatMusic || !m_CurrentPrimary.isPlaying)
+        {
+            m_CurrentPrimary.Play();
+        }
 
         m_CurrentSecondary = temp;
         
