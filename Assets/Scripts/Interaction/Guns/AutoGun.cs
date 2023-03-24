@@ -24,7 +24,7 @@ public class AutoGun : MonoBehaviour, IGun
     public CanvasGroup GunReticle { get; set; }
     public GameObject Bullet { get; set; }
     public AudioClip GunShotAudio { get; set; }
-    public AudioClip TriggerReleasedAudio { get; set; }
+    //public AudioClip TriggerReleasedAudio { get; set; }
     public AudioClip[] GunShotAudioList { get; set; }
     public TrailRenderer BulletTrailRenderer { get; set; }
     public GameObject GunModel { get; set; }
@@ -157,7 +157,7 @@ public class AutoGun : MonoBehaviour, IGun
         if (GunManager.AutoGunCurrentAmmo <= 0)
         {
             this.holdingTrigger = false;
-            GunManager.GunShotAudioSource.PlayOneShot(TriggerReleasedAudio);
+            //GunManager.GunShotAudioSource.PlayOneShot(TriggerReleasedAudio);
         }
     }
 

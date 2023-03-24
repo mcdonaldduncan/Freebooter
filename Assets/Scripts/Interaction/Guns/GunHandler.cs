@@ -129,7 +129,7 @@ public sealed class GunHandler : MonoBehaviour
     [SerializeField] private float autoGunAimOffset = 15f;
     [SerializeField] private CanvasGroup autoGunReticle;
     [SerializeField] private AudioClip[] autoGunShotAudioList;
-    [SerializeField] private AudioClip triggerReleasedAudio;
+    //[SerializeField] private AudioClip triggerReleasedAudio;
     [SerializeField] private GunAnimationHandler autoGunAnimationHandler;
     [SerializeField] private float autoShakeDuration;
     [SerializeField] private float autoShakeMagnitude;
@@ -217,7 +217,7 @@ public sealed class GunHandler : MonoBehaviour
             gun.AimOffset = this.autoGunAimOffset;
             gun.GunReticle = this.autoGunReticle;
             autoGun.GunShotAudioList = this.autoGunShotAudioList;
-            autoGun.TriggerReleasedAudio = this.triggerReleasedAudio;
+            //autoGun.TriggerReleasedAudio = this.triggerReleasedAudio;
             //gun.ReloadWait = this.autoGunReloadWait;
             gun.GunAnimationHandler = this.autoGunAnimationHandler;
             gun.FireRate = this.autoFireRate;

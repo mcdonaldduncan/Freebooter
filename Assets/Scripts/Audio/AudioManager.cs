@@ -22,6 +22,10 @@ public class AudioManager : Singleton<AudioManager>
     [SerializeField] AudioClip m_CombatMusic;
     [SerializeField] AudioClip m_ReleaseMusic;
 
+    [SerializeField] float m_ExplorationVolume;
+    [SerializeField] float m_CombatVolume;
+    [SerializeField] float m_ReleaseVolume;
+
     AudioSource m_CurrentPrimary;
     AudioSource m_CurrentSecondary;
 
@@ -32,6 +36,8 @@ public class AudioManager : Singleton<AudioManager>
     bool m_IsReleasing;
 
     bool m_Shouldrelease => m_IsReleasing && Time.time > m_ReleaseTime + m_LastReleaseTime;
+
+    float m_currentVolume => m_CurrentPrimary.clip == m_ExplorationMusic ? m_ExplorationVolume : m_CurrentPrimary.clip == m_CombatMusic ? m_CombatVolume : m_ReleaseVolume;
 
     // On start, the AudioSource component is assigned to the Player game object's AudioSource component
     private void Start()
@@ -148,7 +154,7 @@ public class AudioManager : Singleton<AudioManager>
     public void AdjustPrimaryVolume()
     {
         if (m_CurrentPrimary.volume == 1) return;
-        m_CurrentPrimary.volume = Mathf.MoveTowards(m_CurrentPrimary.volume, 1, m_TransitionSpeed * Time.deltaTime);
+        m_CurrentPrimary.volume = Mathf.MoveTowards(m_CurrentPrimary.volume, m_currentVolume, m_TransitionSpeed * Time.deltaTime);
     }
 
     public void AdjustSecondaryVolume()
