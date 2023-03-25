@@ -740,7 +740,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     //    }
     //}
 
-    public void TakeDamage(float damageTaken, HitBoxType hitBox)
+    public void TakeDamage(float damageTaken, HitBoxType hitBox, Vector3 hitPoint = default(Vector3))
     {
         if (CanBeDamaged)
         {
@@ -801,10 +801,5 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         LevelManager.Instance.FirePlayerRespawn();
         isDead = false;
         characterController.enabled = true;
-    }
-
-    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint)
-    {
-        throw new NotImplementedException();
     }
 }

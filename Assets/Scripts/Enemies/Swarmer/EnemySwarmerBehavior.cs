@@ -421,7 +421,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
         m_IDamageable.InstantiateDamageNumber(damageTaken, hitbox);
     }
 
-    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint)
+    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint = default(Vector3))
     {
         health -= damageTaken;
         ragdollForce = damageTaken;

@@ -47,7 +47,7 @@ public class Beehive : MonoBehaviour, IDamageable
         }
     }
 
-    public void TakeDamage(float damageTaken, HitBoxType hitbox)
+    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint = default(Vector3))
     {
         Health -= damageTaken;
         ActivateBees();
@@ -100,10 +100,5 @@ public class Beehive : MonoBehaviour, IDamageable
         {
             bees[beeIndex].SetActive(true);
         }
-    }
-
-    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint)
-    {
-        throw new System.NotImplementedException();
     }
 }

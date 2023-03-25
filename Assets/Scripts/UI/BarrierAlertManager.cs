@@ -101,7 +101,15 @@ public class BarrierAlertManager : Singleton<BarrierAlertManager>
 
     void OnAmmoPickup(int value, IGun gun)
     {
-        string gunType = gun.GetType().Name.Split('.')[0];
+        string gunType = "";
+        if (gun is AutoGun)
+        {
+            gunType = "Rifle";
+        }
+        else if (gun is GrenadeGun)
+        {
+            gunType = "Grenade Launcher";
+        }
 
         m_BarrierAlertPanel.SetActive(true);
         BarrierAlertText.text = $"Aqcuired {value} {gunType} ammo!" ;

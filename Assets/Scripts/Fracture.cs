@@ -62,7 +62,7 @@ public class Fracture : MonoBehaviour, IDamageable
         }
     }
 
-    public void TakeDamage(float damageTaken, HitBoxType hitbox)
+    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint = default(Vector3))
     {
         ////TODO: We should create a tag for barrels/breakable props since this kind of if statement is repeated
         ////and I don't like checking object names for checks like this
@@ -91,10 +91,5 @@ public class Fracture : MonoBehaviour, IDamageable
             }
             Breakage();
         }
-    }
-
-    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint)
-    {
-        throw new System.NotImplementedException();
     }
 }

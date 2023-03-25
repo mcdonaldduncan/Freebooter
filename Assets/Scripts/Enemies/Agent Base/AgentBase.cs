@@ -315,7 +315,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         Resetvalues();
     }
 
-    public virtual void TakeDamage(float damageTaken, HitBoxType hitbox)
+    public virtual void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint = default(Vector3))
     {
         if (m_State != AgentState.CHASE)
         {
@@ -446,11 +446,6 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
     public void DeactivateAggro()
     {
         m_State = AgentState.SLEEP;
-    }
-
-    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint)
-    {
-        throw new NotImplementedException();
     }
 }
 

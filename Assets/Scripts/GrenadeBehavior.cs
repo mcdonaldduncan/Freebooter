@@ -27,6 +27,7 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
     private GrenadeGun grenadeGun;
     private bool collided = false;
     private bool exploded = false;
+    private Vector3 stickPosition;
 
     // Start is called before the first frame update
     //void Start()
@@ -67,6 +68,7 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
                 return;
             }
             grenadeRB.constraints = RigidbodyConstraints.FreezeAll;
+            stickPosition = gameObject.transform.position;
             transform.SetParent(collision.transform);
             collided = true;
         }
@@ -110,7 +112,7 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
                 {
                     try
                     {
-                        damageableTarget.TakeDamage(explosionDamage, HitBoxType.normal);
+                        damageableTarget.TakeDamage(explosionDamage, HitBoxType.normal, stickPosition);
                     }
                     catch
                     {

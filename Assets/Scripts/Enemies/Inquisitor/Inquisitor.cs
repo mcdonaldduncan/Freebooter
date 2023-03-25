@@ -91,7 +91,7 @@ public class Inquisitor : MonoBehaviour, IDamageable, IGroupable
         Health = m_StartingHealth;
     }
 
-    public void TakeDamage(float damageTaken, HitBoxType hitbox)
+    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint = default(Vector3))
     {
         if (damageTaken < 1) return; 
         Health -= damageTaken;
@@ -298,10 +298,5 @@ public class Inquisitor : MonoBehaviour, IDamageable, IGroupable
         steer = steer.normalized;
         steer *= m_MaxForce;
         return steer;
-    }
-
-    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint)
-    {
-        throw new System.NotImplementedException();
     }
 }

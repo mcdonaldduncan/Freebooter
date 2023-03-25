@@ -194,7 +194,7 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
         }
     }
 
-    public virtual void TakeDamage(float damageTaken, HitBoxType hitbox)
+    public virtual void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint = default(Vector3))
     {
         //Debug.Log($"{gameObject.name} took damage");
         m_State = AgentState.CHASE;
@@ -236,10 +236,5 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
             gameObject.SetActive(true);
         }
         ResetValues();
-    }
-
-    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint)
-    {
-        throw new System.NotImplementedException();
     }
 }

@@ -55,7 +55,7 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable
     }
 
     /// is this even working? Health only gets changed if the hitbox is a shield
-    public void TakeDamage(float damageTaken, HitBoxType hitbox)
+    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint = default(Vector3))
     {
         if (hitboxtype == HitBoxType.critical)
         {
@@ -98,11 +98,6 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable
         damageable = Prefab.GetComponent<IDamageable>();
         _health = maxHealth;
         m_ParticleSystem = GetComponentInChildren<ParticleSystem>();
-    }
-
-    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint)
-    {
-        throw new System.NotImplementedException();
     }
 
     // what do you even think you are doing here?

@@ -454,7 +454,7 @@ public sealed class GunHandler : MonoBehaviour
             gunToRecieveAmmo.CurrentAmmo = gunToRecieveAmmo.MaxAmmo;
         }
 
-        AmmoPickup?.Invoke(temp, currentGun);
+        AmmoPickup?.Invoke(temp, gunToRecieveAmmo);
     }
 
     public void Shoot(InputAction.CallbackContext context)

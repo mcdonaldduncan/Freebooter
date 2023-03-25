@@ -51,7 +51,7 @@ public class Crate_MainMenu : MonoBehaviour, IDamageable
         }
     }
 
-    public void TakeDamage(float damageTaken, HitBoxType hitbox)
+    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint = default(Vector3))
     {
         Health -= damageTaken;
         CheckForDeath();
@@ -76,10 +76,5 @@ public class Crate_MainMenu : MonoBehaviour, IDamageable
     public void LoadScene(string sceneToLoad)
     {
         SceneManager.LoadScene(sceneToLoad);
-    }
-
-    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint)
-    {
-        throw new System.NotImplementedException();
     }
 }

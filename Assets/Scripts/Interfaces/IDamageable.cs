@@ -17,9 +17,9 @@ public interface IDamageable
 
     public float FontSize { get; }
 
-    void TakeDamage(float damageTaken, HitBoxType hitbox);
+    //void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3? hitPoint = null);
 
-    void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint);
+    void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint = default(Vector3));
 
     public void SetupDamageText()
     {

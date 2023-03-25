@@ -58,7 +58,7 @@ public class DamageActivator : MonoBehaviour, IDamageable, IActivator
         Deactivate?.Invoke();
     }
 
-    public void TakeDamage(float damageTaken, HitBoxType hitbox)
+    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint = default(Vector3))
     {
         if (Health < 0) return;
         Health -= damageTaken;
@@ -91,10 +91,5 @@ public class DamageActivator : MonoBehaviour, IDamageable, IActivator
             gameObject.SetActive(true);
         }
         Health = m_Health;
-    }
-
-    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint)
-    {
-        throw new System.NotImplementedException();
     }
 }

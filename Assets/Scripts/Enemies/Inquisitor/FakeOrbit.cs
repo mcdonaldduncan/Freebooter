@@ -66,7 +66,7 @@ public class FakeOrbit : MonoBehaviour, IDamageable
         _Transform.position = target.position + polarVector;
     }
 
-    public void TakeDamage(float damageTaken, HitBoxType hitbox)
+    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint = default(Vector3))
     {
         Health -= damageTaken;
         //Debug.Log("Orbit Damaged");
@@ -83,10 +83,5 @@ public class FakeOrbit : MonoBehaviour, IDamageable
             _Inquisitor.CheckOrbits();
             
         }
-    }
-
-    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint)
-    {
-        throw new System.NotImplementedException();
     }
 }

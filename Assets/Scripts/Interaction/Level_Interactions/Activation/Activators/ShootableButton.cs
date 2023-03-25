@@ -52,7 +52,7 @@ public class ShootableButton : MonoBehaviour, IDamageable, IActivator
         Deactivate?.Invoke();
     }
 
-    public void TakeDamage(float damageTaken, HitBoxType hitbox)
+    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint = default(Vector3))
     {
         if (Health < 0) return;
         Health -= damageTaken;
@@ -63,15 +63,5 @@ public class ShootableButton : MonoBehaviour, IDamageable, IActivator
     {
         Health = m_Health;
         m_Renderer.material = m_Materials[0];
-    }
-
-    void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint)
-    {
-
-    }
-
-    void IDamageable.TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint)
-    {
-        throw new System.NotImplementedException();
     }
 }
