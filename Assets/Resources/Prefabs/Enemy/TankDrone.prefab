@@ -619,7 +619,6 @@ MonoBehaviour:
   explosionparticle: {fileID: 130090, guid: c89f79686d89e7841a3386694fb086e1, type: 3}
   m_Damage: 20
   m_Radius: 2
-  blinkrate: 0.3
   fractureScript: {fileID: 0}
 --- !u!135 &2173390544780296809
 SphereCollider:
@@ -632,7 +631,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 0
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &8986416174363993285
 Rigidbody:
