@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 
 /// <summary>
-/// 
+/// Reusable, damageable activator
 /// </summary>
 /// Author: Duncan McDonald
 public class ShootableButton : MonoBehaviour, IDamageable, IActivator
@@ -52,7 +52,7 @@ public class ShootableButton : MonoBehaviour, IDamageable, IActivator
         Deactivate?.Invoke();
     }
 
-    public void TakeDamage(float damageTaken)
+    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint = default(Vector3))
     {
         if (Health < 0) return;
         Health -= damageTaken;
@@ -64,5 +64,4 @@ public class ShootableButton : MonoBehaviour, IDamageable, IActivator
         Health = m_Health;
         m_Renderer.material = m_Materials[0];
     }
-
 }

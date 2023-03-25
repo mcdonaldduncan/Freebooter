@@ -26,7 +26,7 @@ public interface IGun
     GameObject Bullet { get; set; }
     AudioClip GunShotAudio { get; set; }
     GameObject GunModel { get; set; }
-
+    GunAnimationHandler GunAnimationHandler { get; set; }
     TrailRenderer BulletTrailRenderer { get; set; }
     bool CanShoot { get; }
     float ShakeDuration { get; set; }

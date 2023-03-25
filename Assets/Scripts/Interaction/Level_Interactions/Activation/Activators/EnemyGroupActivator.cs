@@ -1,6 +1,8 @@
+using Assets.Scripts.Enemies.Agent_Base.Interfaces;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 /// <summary>
@@ -10,12 +12,45 @@ using UnityEngine;
 public class EnemyGroupActivator : MonoBehaviour, IActivator
 {
     [SerializeField] List<GameObject> m_TargetGroup;
+    
+    List<IGroupable> m_Group;
 
     public event IActivator.ActivateDelegate Activate;
     public event IActivator.ActivateDelegate Deactivate;
 
-    bool m_Inactive => m_TargetGroup.Where(x => x.activeSelf).Any();
-    bool m_IsActivated;
+    // Removing this beautiful bit of code bc it allocates memory :(
+    // bool m_Inactive => m_TargetGroup.Where(x => x.activeSelf).Any();
+    bool m_AnyMemberActive
+    {
+        get
+        {
+            foreach (var obj in m_Group)
+            {
+                if (!obj.IsDead) return true;
+            }
+
+            return false;
+        }
+    }
+    // why is ugly code always better performance!!
+
+    private void Start()
+    {
+        m_Group = new List<IGroupable>();
+        foreach (var target in m_TargetGroup)
+        {
+            if (target.TryGetComponent(out IGroupable groupable))
+            {
+                m_Group.Add(groupable);
+            }
+            else
+            {
+                Debug.LogWarning($"Invalid object in group, object: {target.name}");
+            }
+        }
+    }
+
+    bool m_IsActivated = false;
 
     Coroutine m_Coroutine;
 
@@ -32,11 +67,13 @@ public class EnemyGroupActivator : MonoBehaviour, IActivator
     public void FireActivation()
     {
         Activate?.Invoke();
+        m_IsActivated = true;
     }
 
     public void FireDeactivation()
     {
         Deactivate?.Invoke();
+        m_IsActivated = false;
     }
 
 
@@ -44,10 +81,9 @@ public class EnemyGroupActivator : MonoBehaviour, IActivator
     {
         if (m_IsActivated) return;
 
-        if (!m_Inactive)
+        if (!m_AnyMemberActive)
         {
             FireActivation();
-            
         }
     }
 
@@ -59,8 +95,8 @@ public class EnemyGroupActivator : MonoBehaviour, IActivator
 
     void SetState()
     {
-        m_IsActivated = !m_Inactive;
-        if (m_Inactive)
+        //m_IsActivated = !m_Inactive;
+        if (m_AnyMemberActive)
         {
             FireDeactivation();
         }

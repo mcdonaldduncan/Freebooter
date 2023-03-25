@@ -14,10 +14,11 @@ public class MovingPlatform : MonoBehaviour
 {
     [Header("Movement Properties")]
     [SerializeField] MovementType m_MovementType;
-    [SerializeField] GameObject m_Activator;
+    [SerializeField] GameObject[] m_Activators;
     
     [SerializeField] float m_MoveSpeed;
     [SerializeField] float m_nodeDelay;
+    [SerializeField] bool m_ActivatePerNode;
     [SerializeField] bool m_ShouldLoop;
 
     [Header("Node Prefab")]
@@ -32,7 +33,7 @@ public class MovingPlatform : MonoBehaviour
 
     Vector3 lastPosition;
 
-    IActivator m_IActivator;
+    List<IActivator> m_IActivators;
 
     bool isActivated;
     bool isLooping;
@@ -65,31 +66,39 @@ public class MovingPlatform : MonoBehaviour
     private void OnEnable()
     {
         LevelManager.PlayerRespawn += Reset;
+        m_IActivators = new List<IActivator>();
 
-        if (m_Activator == null || m_MovementType != MovementType.ACTIVATE) return;
 
-        try
+        foreach (var activator in m_Activators)
         {
-            m_IActivator = (IActivator)m_Activator.GetComponent(typeof(IActivator));
-            m_IActivator.Activate += AgnosticActivate;
-            m_IActivator.Deactivate += OnDeactivate;
-        }
-        catch (System.Exception)
-        {
-            Debug.LogError("Valid IActivator Not Found");
-        }
+            if (activator == null || m_MovementType != MovementType.ACTIVATE) return;
 
-        
+            try
+            {
+                IActivator temp = (IActivator)activator.GetComponent(typeof(IActivator));
 
+                m_IActivators.Add(temp);
+                temp.Activate += AgnosticActivate;
+                //temp.Deactivate += OnDeactivate;
+            }
+            catch (System.Exception)
+            {
+                Debug.LogError("Valid IActivator Not Found");
+            }
+        }
     }
 
     private void OnDisable()
     {
         LevelManager.PlayerRespawn -= Reset;
 
-        if (m_IActivator == null || m_MovementType != MovementType.ACTIVATE) return;
-        m_IActivator.Activate -= AgnosticActivate;
-        m_IActivator.Deactivate -= OnDeactivate;
+
+        foreach (var Iactivator in m_IActivators)
+        {
+            if (Iactivator == null || m_MovementType != MovementType.ACTIVATE) return;
+            Iactivator.Activate -= AgnosticActivate;
+            //Iactivator.Deactivate -= OnDeactivate;
+        }
     }
 
 
@@ -140,6 +149,8 @@ public class MovingPlatform : MonoBehaviour
 
     private void Reset()
     {
+        currentIndex = 0;
+        Base.SetTargets(m_Nodes[currentIndex], m_Nodes[++currentIndex]);
         isActivated = m_MovementType == MovementType.CONSTANT;
         Base.SetState(isActivated);
         Platform.transform.position = transform.position;
@@ -155,6 +166,7 @@ public class MovingPlatform : MonoBehaviour
         if (!isActivated) return;
         
         if (Vector3.Distance(m_Transform.position, m_Nodes[currentIndex].position) > .5f) return;
+
         TransitionTargets();
     }
 
@@ -170,8 +182,11 @@ public class MovingPlatform : MonoBehaviour
             else
             {
                 Base.SetTargets(m_Nodes[currentIndex], m_Nodes[--currentIndex]);
+
+                
             }
             lastNodeTime = Time.time;
+            if (m_ActivatePerNode) OnDeactivate();
         }
         else
         {
@@ -193,6 +208,7 @@ public class MovingPlatform : MonoBehaviour
                 Base.SetTargets(m_Nodes[currentIndex], m_Nodes[++currentIndex]);
             }
             lastNodeTime = Time.time;
+            if (m_ActivatePerNode) OnDeactivate();
         }
     }
 

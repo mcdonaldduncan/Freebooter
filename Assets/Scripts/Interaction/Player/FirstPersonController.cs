@@ -170,12 +170,15 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     [SerializeField] private AudioClip playerHitAudio;
     [SerializeField] private AudioClip gunPickupAudio;
     [SerializeField] private AudioClip keyPickupAudio;
+    [SerializeField] private AudioClip m_DashRechargeAudio;
+    [SerializeField] private AudioClip m_JumpAudio;
     private AudioSource playerAudioSource;
 
     private Camera playerCamera;
     private CharacterController characterController;
     private Rigidbody playerRB;
     private GunHandler playerGun;
+    private PauseController pauseController;
 
     private Vector3 moveDirection;
     private Vector2 currentInput; //Whether player is moving vertically or horizontally along x and z planes
@@ -245,6 +248,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         characterController = GetComponent<CharacterController>();
         playerRB = GetComponent<Rigidbody>();
         playerGun = GetComponentInChildren<GunHandler>();
+        pauseController = GetComponentInChildren<PauseController>();
 
         defaultYPosCamera = playerCamera.transform.localPosition.y;
 
@@ -334,6 +338,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         _input.HumanoidLand.Jump.performed += HandleJump;
         _input.HumanoidLand.Jump.canceled += HandleJump;
         _input.HumanoidLand.Restart.performed += ReloadScene;
+        _input.HumanoidLand.Pause.performed += pauseController.OnPause;
 
         //HumanoidWall
         //_input.HumanoidWall.Forward.performed += HandleWallrunInput;
@@ -364,6 +369,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         _input.HumanoidLand.Jump.performed -= HandleJump;
         _input.HumanoidLand.Jump.canceled -= HandleJump;
         _input.HumanoidLand.Restart.performed -= ReloadScene;
+        _input.HumanoidLand.Pause.performed -= pauseController.OnPause;
 
         //HumanoidWall
         //_input.HumanoidWall.Forward.performed -= HandleWallrunInput;
@@ -480,7 +486,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
                     var damageableTarget = hitInfo.transform.GetComponent<IDamageable>();
                     if (damageableTarget != null)
                     {
-                        damageableTarget.TakeDamage(dashDamage);
+                        damageableTarget.TakeDamage(dashDamage, HitBoxType.normal);
                     }
                 }
             }
@@ -508,6 +514,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     {
         if (DashShouldCooldown)
         {
+            playerAudioSource.PlayOneShot(m_DashRechargeAudio);
             dashesRemaining++;
         }
     }
@@ -540,6 +547,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         }
         if (context.performed && jumpsRemaining > 0)
         {
+            playerAudioSource.PlayOneShot(m_JumpAudio);
             jumpsRemaining--;
             holdingJump = true;
             if (!jumpedOnce)
@@ -732,7 +740,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     //    }
     //}
 
-    public void TakeDamage(float damageTaken)
+    public void TakeDamage(float damageTaken, HitBoxType hitBox, Vector3 hitPoint = default(Vector3))
     {
         if (CanBeDamaged)
         {

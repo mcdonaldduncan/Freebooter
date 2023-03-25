@@ -28,6 +28,7 @@ public class DeathScreen : MonoBehaviour
         if (FirstPersonController.isDead == false) return;
         if (called == true) return; 
         FirstPersonController.enabled = false;
+        CameraShake.ShakeCamera(0, 0, 0);
         LevelManager.TogglePause(true);
         gunHandler.CurrentGun.GunReticle.alpha = 0;
         UI.SetActive(true);

@@ -315,7 +315,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         Resetvalues();
     }
 
-    public virtual void TakeDamage(float damageTaken)
+    public virtual void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint = default(Vector3))
     {
         if (m_State != AgentState.CHASE)
         {
@@ -323,7 +323,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         }
         m_Health -= damageTaken;
         CheckForDeath();
-        m_IDamageable.InstantiateDamageNumber(damageTaken, HitBoxType.normal);
+        m_IDamageable.InstantiateDamageNumber(damageTaken, hitbox);
     }
 
     //public virtual void TakeDamage(float damageTaken, HitBoxType hitType)
@@ -447,7 +447,6 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
     {
         m_State = AgentState.SLEEP;
     }
-
 }
 
 public enum AgentState

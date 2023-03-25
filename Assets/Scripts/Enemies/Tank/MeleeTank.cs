@@ -75,6 +75,7 @@ public class MeleeTank : NewAgentBase
         originalSpeed = Agent.speed;
     }
 
+
     //public override void Shoot()
     //{
     //    //shoots two lasers at a time
@@ -184,7 +185,7 @@ public class MeleeTank : NewAgentBase
 
     private void GiveDamage(float damageToDeal)
     {
-        LevelManager.Instance.Player.TakeDamage(damageToDeal);
+        LevelManager.Instance.Player.TakeDamage(damageToDeal, HitBoxType.normal);
     }
 
     private void ChargeAttack()
@@ -243,12 +244,13 @@ public class MeleeTank : NewAgentBase
         if (Health <= 0)
         {
             IsDead = true;
-            m_Animator.SetTrigger("Death");
+            m_Animator.SetBool("Death", true);
         }
     }
 
     public void DeathAnimationEnd()
     {
         OnDeath();
+        m_Animator.SetBool("Death", false);
     }
 }

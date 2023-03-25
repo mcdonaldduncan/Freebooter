@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
+public class SpecialHitBoxScript : MonoBehaviour, IDamageable
 {
     private IDamageable damageable;
     private ParticleSystem m_ParticleSystem;
@@ -54,17 +54,18 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
         }
     }
 
-    public void TakeDamage(float damageTaken)
+    /// is this even working? Health only gets changed if the hitbox is a shield
+    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint = default(Vector3))
     {
         if (hitboxtype == HitBoxType.critical)
         {
             PlayVFX(critVFX, VFXTransform.position);
-            damageable.InstantiateDamageNumber(damageTaken * CriticalDamageMultiplier, hitboxtype);
+            damageable.TakeDamage(damageTaken * CriticalDamageMultiplier, HitBoxType.critical);
         }
         if (hitboxtype == HitBoxType.armored)
         {
             PlayVFX(armorVFX, VFXTransform.position);
-            damageable.InstantiateDamageNumber(damageTaken * ArmorDamageReductionMultiplier, hitboxtype);
+            damageable.TakeDamage(damageTaken * ArmorDamageReductionMultiplier, HitBoxType.armored);
         }
         if (hitboxtype == HitBoxType.shield)
         {
@@ -99,17 +100,18 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable, IPoolable
         m_ParticleSystem = GetComponentInChildren<ParticleSystem>();
     }
 
-    private void Update()
-    {
-        shieldVFXBlue.transform.position = VFXTransform.position;
-        shieldVFXYellow.transform.position = VFXTransform.position;
-        shieldVFXRed.transform.position = VFXTransform.position;
-    }
+    // what do you even think you are doing here?
+    //private void Update()
+    //{
+    //    shieldVFXBlue.transform.position = VFXTransform.position;
+    //    shieldVFXYellow.transform.position = VFXTransform.position;
+    //    shieldVFXRed.transform.position = VFXTransform.position;
+    //}
 }
 public enum HitBoxType
 {
+    normal,
     critical,
     armored,
-    shield,
-    normal
+    shield
 }

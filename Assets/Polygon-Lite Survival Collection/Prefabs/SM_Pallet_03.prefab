@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2783348557568460906}
   - component: {fileID: 1229389589521221583}
   - component: {fileID: 3957357958004290309}
+  - component: {fileID: -566847998814421213}
   m_Layer: 0
   m_Name: SM_Pallet_03
   m_TagString: Untagged
@@ -83,3 +84,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &-566847998814421213
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3308914722744996560}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.011328, y: 0.059999995, z: 1.0202475}
+  m_Center: {x: -0.0007998049, y: 0.015, z: 0.0013258755}

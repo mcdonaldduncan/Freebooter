@@ -1,3 +1,4 @@
+using Assets.Scripts.Enemies.Agent_Base.Interfaces;
 using System.Collections;
 using System.Collections.Generic;
 //using System.Diagnostics;
@@ -5,7 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
-public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, ITracking, IShooting, IRespawn
+public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, ITracking, IShooting, IRespawn, IGroupable
 {
     [Header("Projectile Prefab and Projectile Spawn Point")]
     [SerializeField] GameObject m_ProjectilePrefab;
@@ -61,7 +62,7 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
     protected Vector3 m_StartingPosition;
     protected Quaternion m_StartingRotation;
 
-    protected bool IsDead;
+    public bool IsDead { get; set; }
 
     public float Health { get; set; }
     
@@ -193,12 +194,12 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
         }
     }
 
-    public void TakeDamage(float damageTaken)
+    public virtual void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint = default(Vector3))
     {
         //Debug.Log($"{gameObject.name} took damage");
         m_State = AgentState.CHASE;
         Health -= damageTaken;
-        m_Damageable.InstantiateDamageNumber(damageTaken, HitBoxType.normal);
+        m_Damageable.InstantiateDamageNumber(damageTaken, hitbox);
         CheckForDeath();
         //Debug.Log(Health);
     }
@@ -236,5 +237,4 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
         }
         ResetValues();
     }
-
 }

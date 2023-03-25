@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4364796984944592}
   - component: {fileID: 33999340075727482}
   - component: {fileID: 23399562952030428}
-  - component: {fileID: 6310971340796269218}
+  - component: {fileID: 425553322863136466}
   m_Layer: 0
   m_Name: rock_path_2
   m_TagString: Untagged
@@ -84,8 +84,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &6310971340796269218
-MeshCollider:
+--- !u!65 &425553322863136466
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -94,7 +94,6 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 90dd01c9686e0b844a9ae8371bcf2086, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 2.2592258, y: 0.18852277, z: 10.403974}
+  m_Center: {x: 0.07145798, y: 0.08194884, z: 0.59146214}

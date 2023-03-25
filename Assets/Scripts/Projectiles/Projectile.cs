@@ -31,6 +31,7 @@ public class Projectile : MonoBehaviour, IPoolable
     Vector3 velocity;
     Vector3 acceleration;
 
+    TrailRenderer trailRenderer;
     public bool EnableGravity { get { return m_EnableGravity; } set { m_EnableGravity = value; } }
     public bool IsTracking { get { return m_IsTracking; } set { m_IsTracking = value; } }
     public bool IsExplosive { get { return m_IsExplosive; } set { m_IsExplosive = value; } }
@@ -50,6 +51,13 @@ public class Projectile : MonoBehaviour, IPoolable
         {
             m_RigidBody = GetComponent<Rigidbody>();
         }
+
+        if (trailRenderer == null)
+        {
+            trailRenderer = GetComponentInChildren<TrailRenderer>();
+        }
+
+        trailRenderer.Clear();
 
         LevelManager.PlayerRespawn += ResetProjectile;
 
@@ -72,6 +80,7 @@ public class Projectile : MonoBehaviour, IPoolable
         LevelManager.PlayerRespawn -= ResetProjectile;
         m_RigidBody.velocity = Vector3.zero;
         m_RigidBody.angularVelocity = Vector3.zero;
+
     }
 
     private void Update()
@@ -109,7 +118,7 @@ public class Projectile : MonoBehaviour, IPoolable
         }
         else if (m_DamageAll || collision.gameObject.CompareTag("Player"))
         {
-            if (collision.gameObject.TryGetComponent(out IDamageable temp)) temp.TakeDamage(m_DamageAmount);
+            if (collision.gameObject.TryGetComponent(out IDamageable temp)) temp.TakeDamage(m_DamageAmount, HitBoxType.normal);
 
             //IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
             //if (damageable != null)
@@ -152,7 +161,7 @@ public class Projectile : MonoBehaviour, IPoolable
             if (hit == null) continue;
             if (hit.TryGetComponent(out IDamageable damageable))
             {
-                damageable.TakeDamage(m_DamageAmount);
+                damageable.TakeDamage(m_DamageAmount, HitBoxType.normal);
             }
         }
 

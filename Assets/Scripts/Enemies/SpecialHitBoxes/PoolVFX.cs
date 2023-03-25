@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// Why did you just make an exact copy of my explosion script instead of just asking if we should rename it?
+[RequireComponent(typeof(ParticleSystem))]
 public class PoolVFX : MonoBehaviour, IPoolable
 {
     [SerializeField] GameObject m_Prefab;
@@ -22,11 +25,8 @@ public class PoolVFX : MonoBehaviour, IPoolable
         //    m_TrailRenderer = GetComponent<TrailRenderer>();
         //}
 
-        if (m_ParticleSystem != null)
-        {
-            var mainModule = m_ParticleSystem.main;
-            mainModule.stopAction = ParticleSystemStopAction.Disable;
-        }
+        var mainModule = m_ParticleSystem.main;
+        mainModule.stopAction = ParticleSystemStopAction.Disable;
     }
 
     private void OnDisable()

@@ -16,6 +16,7 @@ public class AmmoPickup : MonoBehaviour
     {
         gunHandler = LevelManager.Instance.Player.GetComponentInChildren<GunHandler>();
         player = LevelManager.Instance.Player.GetComponent<FirstPersonController>();
+        LevelManager.PlayerRespawn += OnPlayerRespawn;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -34,6 +35,20 @@ public class AmmoPickup : MonoBehaviour
             gunHandler.OnAmmoPickup(ammoTypeToGive, ammoAmount);
             player.PlayerAudioSource.PlayOneShot(ammoPickupSound);
             gameObject.SetActive(false);
+            LevelManager.CheckPointReached += OnCheckPointReached;
+        }
+    }
+
+    private void OnCheckPointReached()
+    {
+        LevelManager.PlayerRespawn -= OnPlayerRespawn;
+    }
+
+    private void OnPlayerRespawn()
+    {
+        if (!gameObject.activeSelf)
+        {
+            gameObject.SetActive(true);
         }
     }
 }

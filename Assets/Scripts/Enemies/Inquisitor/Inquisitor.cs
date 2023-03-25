@@ -1,3 +1,4 @@
+using Assets.Scripts.Enemies.Agent_Base.Interfaces;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ using UnityEngine.UIElements;
 /// 
 /// </summary>
 /// Author: Duncan McDonald
-public class Inquisitor : MonoBehaviour, IDamageable
+public class Inquisitor : MonoBehaviour, IDamageable, IGroupable
 {
     [SerializeField] Animator m_Animator;
     [SerializeField] GameObject m_Follower_GO;
@@ -27,6 +28,7 @@ public class Inquisitor : MonoBehaviour, IDamageable
     [SerializeField] float m_MaxFollowerDistance;
     [SerializeField] float m_MaxForce;
     [SerializeField] float m_Speed;
+    [SerializeField] float m_RotSpeed;
     [SerializeField] public List<FakeOrbit> m_Orbits;
     [SerializeField] List<Transform> m_FollowerSpawns;
 
@@ -64,10 +66,17 @@ public class Inquisitor : MonoBehaviour, IDamageable
     public float FontSize { get => m_fontSize; set => m_fontSize = value; }
     public bool ShowDamageNumbers { get => m_showDamageNumbers; set => m_showDamageNumbers = value; }
     public TextMeshPro Text { get; set; }
+    public bool IsDead { get; set; }
+    private IDamageable m_Damageable;
 
     private void OnEnable()
     {
         //potentialTargets = FindObjectsOfType<FirstPersonController>().Select(item => item.transform).ToList();
+    }
+
+    private void Awake()
+    {
+        m_Damageable = this;
     }
 
     void Start()
@@ -77,13 +86,17 @@ public class Inquisitor : MonoBehaviour, IDamageable
 
     public void Init()
     {
+        IsDead = false;
         m_Target = LevelManager.Instance.Player.transform;
         Health = m_StartingHealth;
     }
 
-    public void TakeDamage(float damageTaken)
+    public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint = default(Vector3))
     {
+        if (damageTaken < 1) return; 
         Health -= damageTaken;
+        Debug.Log(hitbox.ToString());
+        m_Damageable.InstantiateDamageNumber(damageTaken, hitbox);
         CheckForDeath();
     }
 
@@ -149,6 +162,7 @@ public class Inquisitor : MonoBehaviour, IDamageable
     {
         if (Health <= 0)
         {
+            IsDead = true;
             m_DeathExplosion.SetActive(true);
             gameObject.SetActive(false);
             if (m_Follower == null) return;
@@ -247,8 +261,8 @@ public class Inquisitor : MonoBehaviour, IDamageable
             normalCross = Vector3.zero;
         }
         Vector3 adjustedLook = (m_Target.position + normalCross * 30f) - transform.position;
-        var rotGoal = Quaternion.LookRotation(adjustedLook);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, rotGoal, 20f * Time.deltaTime);
+        var rotGoal = Quaternion.LookRotation(new Vector3(adjustedLook.x, transform.position.y, adjustedLook.z));
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, rotGoal, m_RotSpeed * Time.deltaTime);
         
         m_AttackSpawn.transform.LookAt(m_TargetPosition);
 
@@ -262,7 +276,7 @@ public class Inquisitor : MonoBehaviour, IDamageable
         {
             if (hit.collider.CompareTag("Player"))
             {
-                LevelManager.Instance.Player.TakeDamage(m_LaserDamage * Time.deltaTime);
+                LevelManager.Instance.Player.TakeDamage(m_LaserDamage * Time.deltaTime, HitBoxType.normal);
             }
         }
     }

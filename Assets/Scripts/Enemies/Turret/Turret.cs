@@ -33,12 +33,12 @@ sealed class Turret : NewAgentBase
         switch (m_TurretState)
         {
             case TurretState.GUARD:
-                m_Tracking.TrackTarget();
+                m_Tracking.LimitedTrackTarget();
                 if (m_Tracking.CheckFieldOfView()) Invoke(nameof(SetAttackState), m_AttackDelay);
                 if (IsInCombat) HandleCombatStateChange();
                 break;
             case TurretState.ATTACK:
-                m_Tracking.TrackTarget();
+                m_Tracking.LimitedTrackTarget();
                 if (m_Tracking.CheckFieldOfView()) m_Shooting.Shoot();
                 if (!m_Tracking.InRange) m_TurretState = TurretState.GUARD;
                 if (!IsInCombat) HandleCombatStateChange();

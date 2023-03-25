@@ -58,6 +58,7 @@ public class Barrier : MonoBehaviour
 
     public delegate void LockedBarrierDelegate();
     public event LockedBarrierDelegate LockedBarrierAccessed;
+    public event LockedBarrierDelegate LockedBarrierOpened;
 
     // Register events when the script is enabled
     private void OnEnable()
@@ -171,6 +172,7 @@ public class Barrier : MonoBehaviour
                 else
                 {
                     OnActivate();
+                    LockedBarrierOpened?.Invoke();
                 }
 
                 break;
