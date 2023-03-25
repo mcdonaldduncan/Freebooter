@@ -163,7 +163,7 @@ public class AudioManager : Singleton<AudioManager>
 
     public void AdjustSecondaryVolume()
     {
-        if (m_CurrentPrimary.volume == 0) return;
+        if (m_CurrentSecondary.volume == 0) return;
         m_CurrentSecondary.volume = Mathf.MoveTowards(m_CurrentSecondary.volume, 0, m_TransitionSpeed * Time.deltaTime);
     }
 }
