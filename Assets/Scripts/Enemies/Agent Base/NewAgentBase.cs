@@ -92,7 +92,7 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
 
     public GameObject ProjectilePrefab => m_ProjectilePrefab;
 
-    public Vector3 ShootFrom => m_ShootFrom.position;
+    public Transform ShootFrom => m_ShootFrom;
 
     public float TimeBetweenShots => m_TimeBetweenShots;
 

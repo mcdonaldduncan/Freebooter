@@ -5,7 +5,7 @@ using UnityEngine;
 public interface IShooting
 {
     GameObject ProjectilePrefab { get; }
-    Vector3 ShootFrom { get; }
+    Transform ShootFrom { get; }
 
     float TimeBetweenShots { get; }
     float LastShotTime { get; set; }
@@ -18,9 +18,9 @@ public interface IShooting
     {
         if (!ShouldShoot) return;
 
-        Vector3 direction = LevelManager.Instance.Player.transform.position - ShootFrom;
+        Vector3 direction = LevelManager.Instance.Player.transform.position - ShootFrom.position;
 
-        ProjectileManager.Instance.TakeFromPool(ProjectilePrefab, ShootFrom, out Projectile projectile);
+        ProjectileManager.Instance.TakeFromPool(ProjectilePrefab, ShootFrom.position, out Projectile projectile);
         projectile.Launch(direction);
         projectile.transform.LookAt(projectile.transform.position + direction);
 
@@ -28,15 +28,43 @@ public interface IShooting
         AltShootFrom = !AltShootFrom;
     }
 
-    void Shoot(Vector3 shootFrom)
+    void Shoot(Transform shootFrom)
     {
         if (!ShouldShoot) return;
 
-        Vector3 direction = LevelManager.Instance.Player.transform.position - shootFrom;
+        Vector3 direction = LevelManager.Instance.Player.transform.position - shootFrom.position;
 
-        ProjectileManager.Instance.TakeFromPool(ProjectilePrefab, shootFrom, out Projectile projectile);
+        ProjectileManager.Instance.TakeFromPool(ProjectilePrefab, shootFrom.position, out Projectile projectile);
         projectile.Launch(direction);
         projectile.transform.LookAt(projectile.transform.position + direction);
+
+        LastShotTime = Time.time;
+        AltShootFrom = !AltShootFrom;
+    }
+
+    void Shoot(bool shootStraight)
+    {
+        if (!ShouldShoot) return;
+
+        //Vector3 direction = LevelManager.Instance.Player.transform.position - ShootFrom;
+
+        ProjectileManager.Instance.TakeFromPool(ProjectilePrefab, ShootFrom.position, out Projectile projectile);
+        projectile.Launch(ShootFrom.forward);
+        projectile.transform.LookAt(projectile.transform.position + ShootFrom.forward);
+
+        LastShotTime = Time.time;
+        AltShootFrom = !AltShootFrom;
+    }
+
+    void Shoot(Transform shootFrom, bool shootStraight)
+    {
+        if (!ShouldShoot) return;
+
+        //Vector3 direction = LevelManager.Instance.Player.transform.position - shootFrom;
+
+        ProjectileManager.Instance.TakeFromPool(ProjectilePrefab, shootFrom.position, out Projectile projectile);
+        projectile.Launch(shootFrom.forward);
+        projectile.transform.LookAt(projectile.transform.position + shootFrom.forward);
 
         LastShotTime = Time.time;
         AltShootFrom = !AltShootFrom;

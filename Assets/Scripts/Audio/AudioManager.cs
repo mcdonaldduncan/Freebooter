@@ -62,7 +62,6 @@ public class AudioManager : Singleton<AudioManager>
     // In update, if there are any clips in the queue and the audio source is not currently playing, the next clip in the queue is played
     void Update()
     {
-        Debug.Log(m_CurrentPrimary.clip);
         AdjustPrimaryVolume();
         AdjustSecondaryVolume();
 

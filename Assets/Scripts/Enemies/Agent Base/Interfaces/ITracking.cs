@@ -56,10 +56,7 @@ public interface ITracking
     /// </summary>
     void TrackTarget()
     {
-        if (DistanceToTarget < Range)
-        {
-            TrackingTransform.LookAt(Target);
-        }
+        TrackingTransform.LookAt(Target);
     }
 
     /// <summary>
@@ -67,10 +64,7 @@ public interface ITracking
     /// </summary>
     void TrackTarget2D()
     {
-        if (DistanceToTarget < Range)
-        {
-            TrackingTransform.LookAt(new Vector3(Target.position.x, TrackingTransform.position.y, Target.position.z));
-        }
+        TrackingTransform.LookAt(new Vector3(Target.position.x, TrackingTransform.position.y, Target.position.z));
     }
 
     /// <summary>

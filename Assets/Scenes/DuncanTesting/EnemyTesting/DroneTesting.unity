@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731715, g: 0.13414735, b: 0.121078536, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -122,7 +122,7 @@ NavMeshSettings:
     preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 23800000, guid: d1c89d640c6778840b6a1cc40207d822, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 5561dcfdff8b7044ba5f69d0c0e3d95d, type: 2}
 --- !u!1001 &57251334
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -514,11 +514,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 154182692469458873, guid: 0e9b9dab7b14c274a8e3c105b9c685f4,
-        type: 3}
-      propertyPath: m_Radius
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 6774125380982462019, guid: 0e9b9dab7b14c274a8e3c105b9c685f4,
         type: 3}
       propertyPath: m_RootOrder
@@ -578,11 +573,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TankDrone
-      objectReference: {fileID: 0}
-    - target: {fileID: 6774125380982462031, guid: 0e9b9dab7b14c274a8e3c105b9c685f4,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0e9b9dab7b14c274a8e3c105b9c685f4, type: 3}
@@ -672,7 +662,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!108 &329076977
 Light:
   m_ObjectHideFlags: 0
@@ -1357,20 +1347,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1513274620143034692, guid: 91fd97a10ae64254eb9e9140e39afc58,
-        type: 3}
-      propertyPath: m_SightLayers.m_Bits
-      value: 82897
-      objectReference: {fileID: 0}
     - target: {fileID: 9014040487749469227, guid: 91fd97a10ae64254eb9e9140e39afc58,
         type: 3}
       propertyPath: m_Name
       value: Drone
-      objectReference: {fileID: 0}
-    - target: {fileID: 9014040487749469227, guid: 91fd97a10ae64254eb9e9140e39afc58,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9014040487749469228, guid: 91fd97a10ae64254eb9e9140e39afc58,
         type: 3}

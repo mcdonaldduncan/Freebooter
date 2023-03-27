@@ -26,6 +26,8 @@ public interface INavigation
     /// </summary>
     void ChaseTarget()
     {
+        Agent.updateRotation = false;
+
         float randomX = Random.Range(-1f, 1f);
         float randomZ = Random.Range(-1f, 1f);
 
@@ -137,6 +139,7 @@ public interface INavigation
     {
         if (!shouldWander) return;
 
+        Agent.updateRotation = true;
         Agent.SetDestination(RandomPosInSphere(Agent.transform.position, WanderDistance, NavMesh.AllAreas));
 
         LastWanderTime = Time.time;

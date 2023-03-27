@@ -178,7 +178,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &9014040487749469228
 Transform:
   m_ObjectHideFlags: 0
@@ -240,14 +240,11 @@ MonoBehaviour:
   m_TextSpawnLocation: {fileID: 103593482576751841}
   m_FontSize: 12
   m_ShowDamageNumbers: 1
-  m_WalkableLayers:
-    serializedVersion: 2
-    m_Bits: 2147483647
   m_SightLayers:
     serializedVersion: 2
-    m_Bits: 82881
+    m_Bits: 82897
   m_StoppingDistance: 5
-  m_RotationSpeed: 30
+  m_RotationSpeed: 180
   m_MovementSampleRadius: 10
   m_WanderDelay: 5
   m_WanderDistance: 10

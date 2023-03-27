@@ -64,12 +64,11 @@ public class TankDrone : NewAgentBase
             case AgentState.CHASE:
                 m_Navigation.ChaseTarget();
                 m_Tracking.TrackTarget();
-                if (m_Tracking.CheckLineOfSight())
+                if (m_Tracking.CheckFieldOfView())
                 {
 
-                    if (AltShootFrom) m_Shooting.Shoot(m_SecondaryShootFrom.position);
-                    else m_Shooting.Shoot();
-
+                    if (AltShootFrom) m_Shooting.Shoot(m_SecondaryShootFrom, true);
+                    else m_Shooting.Shoot(true);
                     
                 }
                 if (!m_Tracking.InRange) m_State = AgentState.RETURN;
