@@ -20,7 +20,6 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
     [SerializeField] bool m_ShowDamageNumbers;
 
     [Header("Layer mask Options")]
-    [SerializeField] LayerMask m_WalkableLayers;
     [SerializeField] LayerMask m_SightLayers;
 
     [Header("Movement Options")]
@@ -68,7 +67,6 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
     
     public NavMeshAgent Agent { get; set; }
 
-    public LayerMask WalkableLayers => m_WalkableLayers;
 
     public float StoppingDistance => m_StoppingDistance;
 

@@ -7,7 +7,6 @@ public interface INavigation
 {
     NavMeshAgent Agent { get; set; }
 
-    LayerMask WalkableLayers { get; }
 
     float StoppingDistance { get; }
     float RotationSpeed { get; }
