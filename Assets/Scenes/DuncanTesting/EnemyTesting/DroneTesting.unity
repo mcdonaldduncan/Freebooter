@@ -122,7 +122,7 @@ NavMeshSettings:
     preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 23800000, guid: d1c89d640c6778840b6a1cc40207d822, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 1f0dd1cd1545f534e99dd4bbd31eb9ab, type: 2}
 --- !u!1001 &57251334
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -130,6 +130,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 297426594678655172, guid: c90d46f9dd3b05e40bc328c8de0abd16,
+        type: 3}
+      propertyPath: invincible
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 297426594678655177, guid: c90d46f9dd3b05e40bc328c8de0abd16,
         type: 3}
       propertyPath: m_Name
@@ -234,9 +239,9 @@ GameObject:
   - component: {fileID: 112798517}
   - component: {fileID: 112798516}
   - component: {fileID: 112798515}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Ground
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 8
@@ -527,7 +532,7 @@ PrefabInstance:
     - target: {fileID: 6774125380982462019, guid: 0e9b9dab7b14c274a8e3c105b9c685f4,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.95
+      value: 4.74
       objectReference: {fileID: 0}
     - target: {fileID: 6774125380982462019, guid: 0e9b9dab7b14c274a8e3c105b9c685f4,
         type: 3}
@@ -573,11 +578,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TankDrone
-      objectReference: {fileID: 0}
-    - target: {fileID: 6774125380982462031, guid: 0e9b9dab7b14c274a8e3c105b9c685f4,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0e9b9dab7b14c274a8e3c105b9c685f4, type: 3}

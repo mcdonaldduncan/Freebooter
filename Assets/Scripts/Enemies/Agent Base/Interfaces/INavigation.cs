@@ -20,7 +20,9 @@ public interface INavigation
     /// <summary>
     /// Returns true if wander time is valid and path status is complete
     /// </summary>
-    private bool shouldWander => Time.time > WanderDelay + LastWanderTime && Agent.pathStatus == NavMeshPathStatus.PathComplete;
+    private bool shouldWander => Time.time > WanderDelay + LastWanderTime;
+
+    // && Agent.pathStatus == NavMeshPathStatus.PathComplete
 
     /// <summary>
     /// Chase the player, attempting to follow at the distance provided by stopping distance
@@ -133,7 +135,7 @@ public interface INavigation
     {
         if (!shouldWander) return;
 
-        MoveToLocation(RandomPosInSphere(Agent.transform.position, WanderDistance, WalkableLayers));
+        Agent.SetDestination(RandomPosInSphere(Agent.transform.position, WanderDistance, NavMesh.AllAreas));
 
         LastWanderTime = Time.time;
     }
