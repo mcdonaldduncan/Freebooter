@@ -129,11 +129,14 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
     [Header("Headbob Parameters")]
     [SerializeField]
+    private Transform gunHolder;
+    [SerializeField]
     private float walkBobSpeed = 14f;
     [SerializeField]
     private float walkBobAmount = 0.05f;
-    private float defaultYPosCamera = 0;
+    private float defaultYPosBobObj = 0;
     private float timer;
+    private Vector3 defaultLocalPosition;
 
     [Header("Dash Parameters")]
     [SerializeField]
@@ -250,7 +253,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         playerGun = GetComponentInChildren<GunHandler>();
         pauseController = GetComponentInChildren<PauseController>();
 
-        defaultYPosCamera = playerCamera.transform.localPosition.y;
+        defaultYPosBobObj = playerCamera.transform.localPosition.y;
 
         //Lock and hide cursor
         Cursor.lockState = CursorLockMode.Locked;
@@ -272,6 +275,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     private void Start()
     {
         startingPos = transform.position;
+        defaultLocalPosition = gunHolder.localPosition;
+        defaultYPosBobObj = defaultLocalPosition.y;
     }
 
     // Update is called once per frame
@@ -594,10 +599,14 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         if (Mathf.Abs(moveDirection.x) > 0.1f || Mathf.Abs(moveDirection.z) > 0.1f)
         {
             timer += Time.deltaTime * (walkBobSpeed);
-            playerCamera.transform.localPosition = new Vector3(
-                playerCamera.transform.localPosition.x,
-                defaultYPosCamera + Mathf.Sin(timer) * (walkBobAmount),
-                playerCamera.transform.localPosition.z);
+            gunHolder.localPosition = new Vector3(
+                gunHolder.localPosition.x,
+                defaultYPosBobObj + Mathf.Sin(timer) * (walkBobAmount),
+                gunHolder.localPosition.z);
+        }
+        else
+        {
+            gunHolder.localPosition = defaultLocalPosition;
         }
     }
 

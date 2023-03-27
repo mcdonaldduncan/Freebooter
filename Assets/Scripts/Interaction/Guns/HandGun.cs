@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 
 public class HandGun : MonoBehaviour, IGun
 {
+    public string GunName { get { return "Pistol"; } }
     public GunHandler GunManager { get; set; }
     public Transform ShootFrom { get; set; }
     public LayerMask LayerToIgnore { get; set; }

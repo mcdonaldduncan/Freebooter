@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 public interface IGun
 {
+    string GunName { get; }
     GunHandler GunManager { get; set; }
     Transform ShootFrom { get; set; }
     LayerMask LayerToIgnore { get; set; }

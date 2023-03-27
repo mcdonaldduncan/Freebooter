@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 public class GrenadeGun : MonoBehaviour, IGun
 {
+    public string GunName { get { return "Grenade Launcher"; } }
     public GunHandler GunManager { get; set; }
     public Transform ShootFrom { get; set; }
     public LayerMask LayerToIgnore { get; set; }

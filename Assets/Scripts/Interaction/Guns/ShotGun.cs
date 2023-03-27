@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 
 public class ShotGun : MonoBehaviour, IGun
 {
+    public string GunName { get { return "Shotgun"; } }
     public GunHandler GunManager { get; set; }
     public Transform ShootFrom { get; set; }
     public LayerMask LayerToIgnore { get; set; }
@@ -252,7 +253,7 @@ public class ShotGun : MonoBehaviour, IGun
                 }
 
                 //Damage the target
-                damageableTarget.TakeDamage(realDamage, HitBoxType.normal);
+                damageableTarget.TakeDamage(realDamage, HitBoxType.normal, hitInfo.point);
             }
             catch
             {
