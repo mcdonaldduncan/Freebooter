@@ -613,7 +613,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 6774125380982462031}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 2
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -647,9 +647,6 @@ MonoBehaviour:
   m_TextSpawnLocation: {fileID: 1019891561009280133}
   m_FontSize: 14
   m_ShowDamageNumbers: 1
-  m_WalkableLayers:
-    serializedVersion: 2
-    m_Bits: 2147483647
   m_SightLayers:
     serializedVersion: 2
     m_Bits: 66513
