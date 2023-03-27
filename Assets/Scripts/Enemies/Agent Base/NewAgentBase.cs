@@ -20,7 +20,6 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
     [SerializeField] bool m_ShowDamageNumbers;
 
     [Header("Layer mask Options")]
-    [SerializeField] LayerMask m_WalkableLayers;
     [SerializeField] LayerMask m_SightLayers;
 
     [Header("Movement Options")]
@@ -50,8 +49,10 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
     [SerializeField] bool m_ShouldSleep;
     //[SerializeField] GameObject m_Activator;
 
+    [Header("State Options")]
+    [SerializeField] protected AgentState m_StartingState;
+
     protected AgentState m_State;
-    protected AgentState m_StartingState;
 
     protected INavigation m_Navigation;
     protected ITracking m_Tracking;
@@ -67,8 +68,6 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
     public float Health { get; set; }
     
     public NavMeshAgent Agent { get; set; }
-
-    public LayerMask WalkableLayers => m_WalkableLayers;
 
     public float StoppingDistance => m_StoppingDistance;
 

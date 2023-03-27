@@ -14,10 +14,6 @@ public class TankDrone : NewAgentBase
 
     OnDeathExplosion m_DeathExplosion;
 
-    int shotCount;
-
-    bool altShootFrom;
-
     private void Awake()
     {
         AwakeSetup();
