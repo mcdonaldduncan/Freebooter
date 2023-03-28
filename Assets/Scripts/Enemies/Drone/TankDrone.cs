@@ -14,9 +14,7 @@ public class TankDrone : NewAgentBase
 
     OnDeathExplosion m_DeathExplosion;
 
-    int shotCount;
-
-    bool altShootFrom;
+    public override Transform TrackingTransform => m_Body.transform;
 
     private void Awake()
     {
@@ -40,7 +38,7 @@ public class TankDrone : NewAgentBase
         m_DeathExplosion.ResetVariables();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (IsDead) return;
         
@@ -52,7 +50,7 @@ public class TankDrone : NewAgentBase
         switch (m_State)
         {
             case AgentState.GUARD:
-                m_Tracking.LimitedTrackTarget();
+                m_Tracking.TrackTarget();
                 if (m_Tracking.CheckFieldOfView()) m_State = AgentState.CHASE;
                 if (IsInCombat) HandleCombatStateChange();
                 break;
@@ -63,7 +61,7 @@ public class TankDrone : NewAgentBase
                 break;
             case AgentState.CHASE:
                 m_Navigation.ChaseTarget();
-                m_Tracking.LimitedTrackTarget();
+                m_Tracking.TrackTarget();
                 if (m_Tracking.CheckFieldOfView())
                 {
 

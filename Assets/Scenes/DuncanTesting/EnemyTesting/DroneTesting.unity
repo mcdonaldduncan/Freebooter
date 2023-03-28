@@ -527,7 +527,7 @@ PrefabInstance:
     - target: {fileID: 6774125380982462019, guid: 0e9b9dab7b14c274a8e3c105b9c685f4,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.95
+      value: 4.75
       objectReference: {fileID: 0}
     - target: {fileID: 6774125380982462019, guid: 0e9b9dab7b14c274a8e3c105b9c685f4,
         type: 3}
@@ -573,6 +573,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TankDrone
+      objectReference: {fileID: 0}
+    - target: {fileID: 8986416174363993285, guid: 0e9b9dab7b14c274a8e3c105b9c685f4,
+        type: 3}
+      propertyPath: m_Constraints
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8986416174363993285, guid: 0e9b9dab7b14c274a8e3c105b9c685f4,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0e9b9dab7b14c274a8e3c105b9c685f4, type: 3}
