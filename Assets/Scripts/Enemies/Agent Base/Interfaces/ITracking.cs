@@ -72,7 +72,7 @@ public interface ITracking
     /// </summary>
     void LimitedTrackTarget()
     {
-        Quaternion targetRotation = Quaternion.LookRotation(TargetDirection, Vector3.up);
+        Quaternion targetRotation = Quaternion.LookRotation(TargetDirection);
         TrackingTransform.rotation = Quaternion.RotateTowards(TrackingTransform.rotation, targetRotation, MaxRotationDelta);
 
     }
@@ -83,7 +83,7 @@ public interface ITracking
     void LimitedTrackTarget2D()
     {
         Vector3 targetPosition = new Vector3(Target.position.x, TrackingTransform.position.y, Target.position.z);
-        Quaternion targetRotation = Quaternion.LookRotation(targetPosition - TrackingTransform.position, Vector3.up);
+        Quaternion targetRotation = Quaternion.LookRotation(targetPosition - TrackingTransform.position);
         TrackingTransform.rotation = Quaternion.RotateTowards(TrackingTransform.rotation, targetRotation, MaxRotationDelta);
     }
 

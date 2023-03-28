@@ -54,9 +54,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7936307943014886290}
-  m_LocalRotation: {x: 0.5, y: 0.5, z: 0.5, w: 0.5}
-  m_LocalPosition: {x: 0, y: 0, z: 1.028}
-  m_LocalScale: {x: 0.089604, y: 0.15641062, z: 0.089604}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.948}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7936307943390632110}
@@ -456,21 +456,18 @@ MonoBehaviour:
   m_TextSpawnLocation: {fileID: 7349209687543015189}
   m_FontSize: 14
   m_ShowDamageNumbers: 1
-  m_WalkableLayers:
-    serializedVersion: 2
-    m_Bits: 0
   m_SightLayers:
     serializedVersion: 2
     m_Bits: 50113
   m_StoppingDistance: 0
-  m_RotationSpeed: 0.8
+  m_RotationSpeed: 90
   m_MovementSampleRadius: 0
   m_WanderDelay: 0
   m_WanderDistance: 0
   m_Range: 50
   m_TimeBetweenShots: 0.2
   m_FieldOfView: 180
-  m_MaxHealth: 110
+  m_MaxHealth: 50
   m_ShouldHitStop: 0
   m_HitStopDuration: 0
   m_ShouldSleep: 0

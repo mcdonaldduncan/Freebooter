@@ -52,7 +52,7 @@ public class TankDrone : NewAgentBase
         switch (m_State)
         {
             case AgentState.GUARD:
-                m_Tracking.TrackTarget();
+                m_Tracking.LimitedTrackTarget();
                 if (m_Tracking.CheckFieldOfView()) m_State = AgentState.CHASE;
                 if (IsInCombat) HandleCombatStateChange();
                 break;
@@ -63,15 +63,16 @@ public class TankDrone : NewAgentBase
                 break;
             case AgentState.CHASE:
                 m_Navigation.ChaseTarget();
-                m_Tracking.TrackTarget();
+                m_Tracking.LimitedTrackTarget();
                 if (m_Tracking.CheckFieldOfView())
                 {
 
-                    if (AltShootFrom) m_Shooting.Shoot(m_SecondaryShootFrom, true);
-                    else m_Shooting.Shoot(true);
-                    
+                    if (AltShootFrom) m_Shooting.Shoot(m_SecondaryShootFrom);
+                    else m_Shooting.Shoot();
+
                 }
-                if (!m_Tracking.InRange) m_State = AgentState.RETURN;
+                else if (m_Tracking.InRange) m_State = AgentState.GUARD;
+                else m_State = AgentState.RETURN;
                 if (!IsInCombat) HandleCombatStateChange();
                 break;
             case AgentState.RETURN:
@@ -90,7 +91,7 @@ public class TankDrone : NewAgentBase
     }
 
     //if (altShoootFrom) Shoot(m_SecondaryShootFrom);
-
+    
     public override void OnDeath()
     {
         base.OnDeath();

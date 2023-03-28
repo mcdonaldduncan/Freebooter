@@ -39,7 +39,7 @@ sealed class Turret : NewAgentBase
                 break;
             case TurretState.ATTACK:
                 m_Tracking.LimitedTrackTarget();
-                if (m_Tracking.CheckFieldOfView()) m_Shooting.Shoot();
+                if (m_Tracking.CheckFieldOfView()) m_Shooting.Shoot(true);
                 if (!m_Tracking.InRange) m_TurretState = TurretState.GUARD;
                 if (!IsInCombat) HandleCombatStateChange();
                 break;

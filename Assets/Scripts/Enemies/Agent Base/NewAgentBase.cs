@@ -159,7 +159,8 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
                 m_Navigation.ChaseTarget();
                 m_Tracking.TrackTarget();
                 if (m_Tracking.CheckLineOfSight()) m_Shooting.Shoot();
-                if (!m_Tracking.InRange) m_State = AgentState.RETURN;
+                else if (m_Tracking.InRange) m_State = AgentState.GUARD;
+                else m_State = AgentState.RETURN;
                 if (!IsInCombat) HandleCombatStateChange();
                 break;
             case AgentState.RETURN:
