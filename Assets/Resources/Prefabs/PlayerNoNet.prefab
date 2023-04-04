@@ -747,7 +747,7 @@ MonoBehaviour:
   grenadeGunMaxAmmo: 5
   grenadeFireRate: 1
   grenadeGunAimOffset: 15
-  grenadeGunReticle: {fileID: 0}
+  grenadeGunReticle: {fileID: 4214982182433732892}
   grenadeGunShotAudio: {fileID: 8300000, guid: d177a80e9988723409484f33238db40c, type: 3}
   grenadeLaunchForce: 800
   grenadeLaunchArc: 0.25
@@ -2003,6 +2003,12 @@ CanvasGroup:
 --- !u!225 &2291571642965968571 stripped
 CanvasGroup:
   m_CorrespondingSourceObject: {fileID: 3553328773290631872, guid: 0fb508bd654404f498649d3da33487b1,
+    type: 3}
+  m_PrefabInstance: {fileID: 3351445538836964475}
+  m_PrefabAsset: {fileID: 0}
+--- !u!225 &4214982182433732892 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 1512125371311578471, guid: 0fb508bd654404f498649d3da33487b1,
     type: 3}
   m_PrefabInstance: {fileID: 3351445538836964475}
   m_PrefabAsset: {fileID: 0}
