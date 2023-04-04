@@ -127,14 +127,17 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     private float wallRunTimer;
     private float verticalInput;
 
-    [Header("Headbob Parameters")]
+    [Header("Bob Parameters")]
     [SerializeField]
-    private Transform gunHolder;
+    private Transform bobObjHolder;
     [SerializeField]
-    private float walkBobSpeed = 14f;
+    private float bobSpeed = 14f;
     [SerializeField]
-    private float walkBobAmount = 0.05f;
+    private float yBobAmount = 0.05f;
+    [SerializeField]
+    private float xBobAmount = 0.05f;
     private float defaultYPosBobObj = 0;
+    private float defaultXPosBobObj = 0;
     private float timer;
     private Vector3 defaultLocalPosition;
 
@@ -253,8 +256,6 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         playerGun = GetComponentInChildren<GunHandler>();
         pauseController = GetComponentInChildren<PauseController>();
 
-        defaultYPosBobObj = playerCamera.transform.localPosition.y;
-
         //Lock and hide cursor
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -275,8 +276,9 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     private void Start()
     {
         startingPos = transform.position;
-        defaultLocalPosition = gunHolder.localPosition;
+        defaultLocalPosition = bobObjHolder.localPosition;
         defaultYPosBobObj = defaultLocalPosition.y;
+        defaultXPosBobObj = defaultLocalPosition.x;
     }
 
     // Update is called once per frame
@@ -598,15 +600,15 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
         if (Mathf.Abs(moveDirection.x) > 0.1f || Mathf.Abs(moveDirection.z) > 0.1f)
         {
-            timer += Time.deltaTime * (walkBobSpeed);
-            gunHolder.localPosition = new Vector3(
-                gunHolder.localPosition.x,
-                defaultYPosBobObj + Mathf.Sin(timer) * (walkBobAmount),
-                gunHolder.localPosition.z);
+            timer += Time.deltaTime * (bobSpeed);
+            bobObjHolder.localPosition = new Vector3(
+                defaultXPosBobObj + Mathf.Sin(timer) * (xBobAmount),
+                defaultYPosBobObj + Mathf.Sin(timer) * (yBobAmount),
+                bobObjHolder.localPosition.z);
         }
         else
         {
-            gunHolder.localPosition = defaultLocalPosition;
+            bobObjHolder.localPosition = defaultLocalPosition;
         }
     }
 

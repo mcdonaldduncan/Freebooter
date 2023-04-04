@@ -965,9 +965,10 @@ MonoBehaviour:
   jumpForce: 10
   secondJumpForce: 14
   gravity: 30
-  gunHolder: {fileID: 297426594336726724}
-  walkBobSpeed: 10
-  walkBobAmount: 0.075
+  bobObjHolder: {fileID: 297426594336726724}
+  bobSpeed: 8
+  yBobAmount: 0.01
+  xBobAmount: 0.05
   dashDamage: 5
   dashRayDistance: 1.5
   dashesAllowed: 2
