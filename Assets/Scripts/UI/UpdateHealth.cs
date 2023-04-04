@@ -16,7 +16,7 @@ public class UpdateHealth : MonoBehaviour
     [SerializeField] private float overlay3Health;
     private float CurrentHealth = 100;
     private float MaxHealth;
-    //private bool soundPlayed = false; unused
+    private bool soundPlayed = false;
     FirstPersonController Player;
     private Image HealthCriticalOverlayImage;
 
@@ -60,6 +60,8 @@ public class UpdateHealth : MonoBehaviour
         CurrentHealth = Player.Health;
         HealthBar.fillAmount = CurrentHealth / MaxHealth;
 
+        if (CurrentHealth > overlay3Health) soundPlayed = false;
+
         if (CurrentHealth > overlay1Health)
         {
             HealthCriticalOverlayImage.enabled = false;
@@ -68,6 +70,11 @@ public class UpdateHealth : MonoBehaviour
 
         if (CurrentHealth <= overlay3Health)
         {
+            if (!soundPlayed)
+            {
+                Player.PlayerAudioSource.PlayOneShot(Player.LowHealthAudio);
+                soundPlayed = true;
+            }
             HealthCriticalOverlayImage.sprite = HealthCriticalOverlay3;
             HealthCriticalOverlayImage.enabled = true;
             return;
