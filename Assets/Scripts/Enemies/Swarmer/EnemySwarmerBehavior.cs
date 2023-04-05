@@ -3,8 +3,9 @@ using UnityEngine.AI;
 using TMPro;
 using Assets.Scripts.Enemies.Agent_Base.Interfaces;
 using Unity.VisualScripting;
+using System;
 
-public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupable
+public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupable, IDissolvable
 {
     public float Health { get { return health; } set { health = value; } }
     [SerializeField] Rigidbody TorsoRigidBody;
@@ -89,8 +90,9 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
 
     public bool IsDead { get; set; } = false;
 
-    public delegate void SwarmerDelegate();
-    public event SwarmerDelegate SwarmerDeath;
+    public DissolvableDelegate EnemyDied { get; set; }
+    //public delegate void DissolvableDelegate();
+    //public event DissolvableDelegate EnemyDied;
 
     AudioSource m_AudioSource;
 
@@ -301,7 +303,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
         }
 
         //if (fractureScript != null) fractureScript.Breakage();
-        SwarmerDeath?.Invoke();
+        EnemyDied?.Invoke();
         CycleAgent();
         //gameObject.SetActive(false);
         hideBehavior.EndHideProcessRemote();
@@ -326,7 +328,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
         }
 
         //if (fractureScript != null) fractureScript.Breakage();
-        SwarmerDeath?.Invoke();
+        EnemyDied?.Invoke();
         CycleAgent();
         //gameObject.SetActive(false);
         hideBehavior.EndHideProcessRemote();

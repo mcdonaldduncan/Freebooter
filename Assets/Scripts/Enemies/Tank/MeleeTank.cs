@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using UnityEngine.AI;
 using UnityEngine;
 
-public class MeleeTank : NewAgentBase
+public class MeleeTank : NewAgentBase, IDissolvable
 {
     [Header("Shield GameObject")]
     public GameObject Shield; //for cycle
 
     [Header("Animator")]
     [SerializeField] Animator m_Animator;
+    [SerializeField] Rigidbody m_torsoRB;
+    [SerializeField] private float ragdollForce;
+    [SerializeField] private float ragdollForceScale;
 
     //[Header("ExplosiveGun")]
     //[SerializeField] protected GameObject m_ProjectilePrefabExplosive;
@@ -57,6 +60,10 @@ public class MeleeTank : NewAgentBase
     float originalSpeed;
     float originalAccel;
 
+    public DissolvableDelegate EnemyDied { get; set; }
+    //public delegate void MetalonDelegate();
+    //public event MetalonDelegate MetalonDeath;
+
     private void Awake()
     {
         AwakeSetup();
@@ -73,6 +80,7 @@ public class MeleeTank : NewAgentBase
         originalchargetimer = m_ChargeLifeTime;
         originalAccel = Agent.acceleration;
         originalSpeed = Agent.speed;
+        DisableRagdoll();
     }
 
 
@@ -117,6 +125,8 @@ public class MeleeTank : NewAgentBase
 
     public override void HandleAgentState()
     {
+        if (IsDead) return;
+
         switch (m_State)
         {
             case AgentState.GUARD:
@@ -239,6 +249,18 @@ public class MeleeTank : NewAgentBase
         m_Animator.SetBool("Charge", false);
     }
 
+    public override void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint = default(Vector3))
+    {
+        m_State = AgentState.CHASE;
+        Health -= damageTaken;
+        m_Damageable.InstantiateDamageNumber(damageTaken, hitbox);
+        if(Health <= 0)
+        {
+            IsDead = true;
+            OnDeathRagdoll(hitPoint);
+        }
+    }
+
     public override void CheckForDeath()
     {
         if (Health <= 0)
@@ -246,6 +268,59 @@ public class MeleeTank : NewAgentBase
             IsDead = true;
             m_Animator.SetBool("Death", true);
         }
+    }
+
+    private void OnDeathRagdoll(Vector3 hitPoint)
+    {
+        EnableRagdoll(hitPoint);
+        base.OnDeath();
+        gameObject.SetActive(true);
+        EnemyDied?.Invoke();
+    }
+
+    public override void OnPlayerRespawn()
+    {
+        IsDead = false;
+        DisableRagdoll();
+        base.OnPlayerRespawn();
+    }
+
+    private void DisableRagdoll()
+    {
+        Agent.speed = originalSpeed;
+        m_Animator.enabled = true;
+        BoxCollider[] boxColliders = GetComponentsInChildren<BoxCollider>();
+        Rigidbody[] rigidBones = GetComponentsInChildren<Rigidbody>();
+        
+        foreach (Collider c in boxColliders)
+        {
+            c.enabled = true;
+        }
+
+        foreach (Rigidbody r in rigidBones)
+        {
+            r.isKinematic = true;
+        }
+    }
+
+    private void EnableRagdoll(Vector3 hitPoint)
+    {
+        Agent.speed = 0;
+        m_Animator.enabled = false;
+        BoxCollider[] boxColliders = GetComponentsInChildren<BoxCollider>();
+        Rigidbody[] rigidBones = GetComponentsInChildren<Rigidbody>();
+        foreach(BoxCollider c in boxColliders)
+        {
+            c.enabled = false;
+        }
+
+        foreach(Rigidbody r in rigidBones)
+        {
+            r.isKinematic = false;
+        }
+        Vector3 forceDirection = m_torsoRB.position - hitPoint;
+
+        m_torsoRB.AddForce(forceDirection.normalized * ragdollForce * ragdollForceScale, ForceMode.Impulse);
     }
 
     public void DeathAnimationEnd()
