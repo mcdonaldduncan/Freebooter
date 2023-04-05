@@ -4789,6 +4789,7 @@ GameObject:
   m_Component:
   - component: {fileID: 416604}
   - component: {fileID: 10849494}
+  - component: {fileID: 1553344104622905854}
   m_Layer: 0
   m_Name: Point light
   m_TagString: Untagged
@@ -4873,6 +4874,26 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &1553344104622905854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 137098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1 &173332
 GameObject:
   m_ObjectHideFlags: 0
@@ -14581,7 +14602,7 @@ MonoBehaviour:
   m_IsExplosive: 0
   m_LaunchForce: 2000
   m_TrackingForce: 0
-  m_DamageAmount: 5
+  m_DamageAmount: 3
   m_ExplosionRadius: 0
   m_VelocityLimit: 0
   m_LifeTime: 15
