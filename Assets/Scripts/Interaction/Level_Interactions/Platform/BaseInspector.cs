@@ -18,10 +18,14 @@ public class BaseInspector : Editor
         Type_Prop,
         lerpScale_Prop,
         damping_Prop,
-        curve_Prop;
+        curve_Prop,
+        rotSpeed_Prop,
+        shouldRot_Prop;
         
     private void OnEnable()
     {
+        shouldRot_Prop = serializedObject.FindProperty("m_TrackCurrentTarget");
+        rotSpeed_Prop = serializedObject.FindProperty("m_RotationSpeed");
         maxForce_Prop = serializedObject.FindProperty("m_MaxForce");
         maxSpeed_Prop = serializedObject.FindProperty("m_MaxSpeed");
         Type_Prop = serializedObject.FindProperty("m_TranslationType");
@@ -35,11 +39,19 @@ public class BaseInspector : Editor
         //DrawDefaultInspector();
         serializedObject.Update();
 
+        
+
         PlatformBase _base = (PlatformBase)target;
         TranslationType type = _base.m_TranslationType;
         AnimationCurve curve = _base.m_AnimationCurve;
 
         EditorGUILayout.PropertyField(Type_Prop);
+        EditorGUILayout.PropertyField(shouldRot_Prop);
+
+        if (_base.ShouldRotate)
+        {
+            EditorGUILayout.PropertyField(rotSpeed_Prop);
+        }
 
         switch (type)
         {
