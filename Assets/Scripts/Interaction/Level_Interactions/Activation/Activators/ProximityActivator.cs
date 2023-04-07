@@ -7,8 +7,9 @@ using UnityEngine;
 /// </summary>
 /// Author: Duncan McDonald
 [RequireComponent(typeof(BoxCollider))]
-public class ProximityActivator : MonoBehaviour, IActivator
+public class ProximityActivator : MonoBehaviour, IActivator, IRespawn
 {
+    [SerializeField] bool m_SingleUse;
     [SerializeField] float m_ResetDelay;
 
     BoxCollider m_BoxCollider;
@@ -29,8 +30,15 @@ public class ProximityActivator : MonoBehaviour, IActivator
         Deactivate?.Invoke();
     }
 
+    public void OnPlayerRespawn()
+    {
+        SetUsable();
+    }
+
     private void OnEnable()
     {
+        ((IRespawn)this).SubscribeToRespawn();
+
         m_BoxCollider = GetComponent<BoxCollider>();
         m_BoxCollider.isTrigger = true;
         m_isUsable = true;
@@ -45,7 +53,7 @@ public class ProximityActivator : MonoBehaviour, IActivator
             m_inTrigger = true;
             m_isUsable = false;
             FireActivation();
-            Invoke(nameof(SetUsable), m_ResetDelay);
+            if (!m_SingleUse) Invoke(nameof(SetUsable), m_ResetDelay);
         }
     }
 
