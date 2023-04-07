@@ -1846,6 +1846,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 297426594678655179}
     m_Modifications:
+    - target: {fileID: 682567102853721915, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 682567102853721915, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 1563125079758065414, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
       propertyPath: m_RaycastPadding.w
@@ -1976,6 +1986,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 3202073279061586366, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 3202073279061586366, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 55
+      objectReference: {fileID: 0}
     - target: {fileID: 3754203274649300316, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
       propertyPath: m_gunHandler
@@ -2000,7 +2020,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 28f508ebf3731c5439a2b0d776779355,
+      objectReference: {fileID: 21300000, guid: c1d1ad3844a149e40bc4d3e274ce2017,
         type: 3}
     - target: {fileID: 3875076895944599315, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
@@ -2031,7 +2051,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: c98fe9be843361c4bbb6d8e678c2f029,
+      objectReference: {fileID: 21300000, guid: c3530b36d5979fd41844ae1361e0fe87,
         type: 3}
     - target: {fileID: 4302156593190066418, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
@@ -2111,12 +2131,12 @@ PrefabInstance:
     - target: {fileID: 8122098814747410082, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 534
+      value: 526
       objectReference: {fileID: 0}
     - target: {fileID: 8122098814747410082, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 139
+      value: 143
       objectReference: {fileID: 0}
     - target: {fileID: 8122098814747410082, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
