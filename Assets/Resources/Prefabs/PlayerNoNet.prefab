@@ -1961,6 +1961,21 @@ PrefabInstance:
       propertyPath: m_gunHandler
       value: 
       objectReference: {fileID: 297426594336726720}
+    - target: {fileID: 3815999960730444275, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.76135
+      objectReference: {fileID: 0}
+    - target: {fileID: 3815999960730444275, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.76135
+      objectReference: {fileID: 0}
+    - target: {fileID: 3815999960730444275, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.76135
+      objectReference: {fileID: 0}
     - target: {fileID: 3951574299378161173, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
       propertyPath: m_IsActive
@@ -1976,11 +1991,21 @@ PrefabInstance:
       propertyPath: gunController
       value: 
       objectReference: {fileID: 297426594336726720}
+    - target: {fileID: 5517287855257698352, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5592566713663173566, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
       propertyPath: Cgun
       value: 
       objectReference: {fileID: 297426594336726720}
+    - target: {fileID: 6128056500783047253, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_Name
+      value: YouDied
+      objectReference: {fileID: 0}
     - target: {fileID: 8220136294697721202, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
       propertyPath: m_IsActive
@@ -2024,6 +2049,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &8901790305876149806 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6128056500783047253, guid: 0fb508bd654404f498649d3da33487b1,
+    type: 3}
+  m_PrefabInstance: {fileID: 3351445538836964475}
+  m_PrefabAsset: {fileID: 0}
+--- !u!222 &1082779276
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8901790305876149806}
+  m_CullTransparentMesh: 1
 --- !u!1001 &9030876546877203409
 PrefabInstance:
   m_ObjectHideFlags: 0
