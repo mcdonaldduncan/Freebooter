@@ -35,17 +35,19 @@ public class DeathScreen : MonoBehaviour
         UI.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        called = true;
     }
 
     public void Respawn()
     {
-        LevelManager.TogglePause(false);
         gunHandler.CurrentGun.GunReticle.alpha = 1;
-        UI.SetActive(false);
-        FirstPersonController.enabled = true;
-        FirstPersonController.Respawn();
+        UI.SetActive(false);    
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        FirstPersonController.enabled = true;
+        FirstPersonController.Respawn();
+        LevelManager.TogglePause(false);
+        called = false;
     }
 
     public void OnLevelSelect()
@@ -55,6 +57,7 @@ public class DeathScreen : MonoBehaviour
         UI.gameObject.SetActive(false);
         LevelManager.TogglePause(false);
         SceneManager.LoadScene(0);
+        called = false;
     }
 
     public void OnQuit()

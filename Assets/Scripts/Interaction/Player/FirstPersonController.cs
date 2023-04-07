@@ -418,6 +418,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        LevelManager.TogglePause(false);
         SceneManager.LoadScene(0);
     }
 
