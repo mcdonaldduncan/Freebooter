@@ -207,7 +207,7 @@ public class MeleeTank : NewAgentBase, IDissolvable
         Agent.stoppingDistance = m_ChargeStoppingDistance;
 
         // Dude, why do you keep copying and pasting code when you have access to it already
-        //Navigation.ChaseTarget(); this is the exact same thing as what you copied and pasted below
+        //Navigation.ChaseTargetDirect(); this is the exact same thing as what you copied and pasted below
         
         //m_Agent.SetDestination(m_Target.transform.position);
         Vector3 FromPlayerToAgent = transform.position - LevelManager.Instance.Player.transform.position;

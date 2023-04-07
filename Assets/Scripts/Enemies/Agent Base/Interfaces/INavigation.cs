@@ -28,17 +28,28 @@ public interface INavigation
     {
         Agent.updateRotation = false;
 
-        //float randomX = Random.Range(-1f, 1f);
-        //float randomZ = Random.Range(-1f, 1f);
+        float randomX = Random.Range(-1f, 1f);
+        float randomZ = Random.Range(-1f, 1f);
 
         Vector3 playerToAgent = Agent.transform.position - LevelManager.Instance.Player.transform.position;
-        //Vector3 randomOffset = new Vector3(randomX, 0, randomZ);
+        Vector3 randomOffset = new Vector3(randomX, 0, randomZ);
 
-        if (StoppingDistance <= playerToAgent.magnitude)
+        if (playerToAgent.magnitude >= StoppingDistance)
         {
-            MoveToLocation(LevelManager.Instance.Player.transform.position * StoppingDistance);
+            MoveToLocation(LevelManager.Instance.Player.transform.position + randomOffset.normalized * StoppingDistance);
         }
-        // + randomOffset.normalized
+    }
+
+    void ChaseTargetDirect()
+    {
+        Agent.updateRotation = false;
+
+        Vector3 playerToAgent = Agent.transform.position - LevelManager.Instance.Player.transform.position;
+
+        if (playerToAgent.magnitude >= StoppingDistance)
+        {
+            MoveToLocation(LevelManager.Instance.Player.transform.position + playerToAgent.normalized * StoppingDistance);
+        }
     }
 
     /// <summary>
