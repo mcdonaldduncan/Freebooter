@@ -147,7 +147,7 @@ public class MovingPlatform : MonoBehaviour
 
     void OnDeactivate()
     {
-        if (lateActivate)
+        if (lateActivate && isActivated)
         {
             lateActivate = false;
             return;
