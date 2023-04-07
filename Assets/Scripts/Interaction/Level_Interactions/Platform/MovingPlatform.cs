@@ -39,6 +39,8 @@ public class MovingPlatform : MonoBehaviour
     bool isLooping;
     bool isAttached;
 
+    bool lateActivate;
+
     int currentIndex = 0;
 
     float lastNodeTime;
@@ -137,12 +139,20 @@ public class MovingPlatform : MonoBehaviour
 
     void OnActivate()
     {
+        if (isActivated) { lateActivate = true; }
+
         isActivated = true;
         Base.SetState(true);
     }
 
     void OnDeactivate()
     {
+        if (lateActivate)
+        {
+            lateActivate = false;
+            return;
+        }
+
         isActivated = false;
         Base.SetState(false);
     }
