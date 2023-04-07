@@ -226,6 +226,7 @@ public class AutoGun : MonoBehaviour, IGun
         {
             bool breakableObject = hitInfo.transform.TryGetComponent<Fracture>(out Fracture component);
 
+            // Could we just use an if statement here? try catch is very inefficient
             //using a try catch to prevent destroyed enemies from throwing null reference exceptions
             try
             {
