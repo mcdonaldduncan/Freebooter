@@ -51,6 +51,18 @@ public class PauseController : MonoBehaviour
         m_isPaused = false;
     }
 
+    public void OnRespawnCheckpoint()
+    {
+        m_gunHandler.CurrentGun.GunReticle.alpha = 1;
+        m_ui.gameObject.SetActive(false);
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        m_fpsController.enabled = true;
+        m_fpsController.Respawn();
+        LevelManager.TogglePause(false);
+        m_isPaused = false;
+    }
+
     public void OnRestartLevel()
     {
         Cursor.lockState = CursorLockMode.None;
