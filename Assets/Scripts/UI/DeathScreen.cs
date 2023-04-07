@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class DeathScreen : MonoBehaviour
 {
@@ -47,5 +48,17 @@ public class DeathScreen : MonoBehaviour
         Cursor.visible = false;
     }
 
-    
+    public void OnLevelSelect()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        UI.gameObject.SetActive(false);
+        LevelManager.TogglePause(false);
+        SceneManager.LoadScene(0);
+    }
+
+    public void OnQuit()
+    {
+        Application.Quit();
+    }
 }
