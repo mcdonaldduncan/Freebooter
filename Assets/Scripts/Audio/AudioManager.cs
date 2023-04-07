@@ -9,19 +9,26 @@ using UnityEngine.UI;
 /// Author: Duncan McDonald
 public class AudioManager : Singleton<AudioManager>
 {
-    [SerializeField] AudioSource m_AudioSource;// AudioSource component that plays the audio clips
+    [Header("Navigator Audio Source and Image")]
+    [SerializeField] AudioSource m_AudioSource; // AudioSource component that plays the audio clips
+    [SerializeField] Image m_NavImage; // Image component that displays a navigation icon
+
+    [Header("Soundtrack Audio Sources")]
     [SerializeField] AudioSource m_PrimaryMusicSource;
     [SerializeField] AudioSource m_SecondaryMusicSource;
-    [SerializeField] Image m_NavImage; // Image component that displays a navigation icon
-    [SerializeField] float m_TransitionSpeed;
-    [SerializeField] float m_ReleaseTime;
-    [SerializeField] float m_InitialCombatVolume;
 
-
+    [Header("Soundtrack Clips")]
     [SerializeField] AudioClip m_ExplorationMusic;
     [SerializeField] AudioClip m_CombatMusic;
     [SerializeField] AudioClip m_ReleaseMusic;
 
+    [Header("Soundtrack Transition options")]
+    [SerializeField] float m_TransitionSpeed;
+    [SerializeField] float m_ReleaseTime;
+    [SerializeField] float m_InitialCombatVolume;
+    [SerializeField] float m_CombatExitDelay;
+
+    [Header("Soundtrack Volume Options")]
     [SerializeField] float m_ExplorationVolume;
     [SerializeField] float m_CombatVolume;
     [SerializeField] float m_ReleaseVolume;
@@ -31,17 +38,23 @@ public class AudioManager : Singleton<AudioManager>
 
     Queue<AudioClip> m_ClipQueue; // A queue that stores audio clips to be played
 
+    Coroutine m_CombatTransitionRoutine;
+    WaitForSeconds m_CombatExitDelayWFS;
+
     float m_LastReleaseTime;
 
     bool m_IsReleasing;
 
+    bool m_IsCombat;
+
     bool m_Shouldrelease => m_IsReleasing && Time.time > m_ReleaseTime + m_LastReleaseTime;
 
-    float m_currentVolume => m_CurrentPrimary.clip == m_ExplorationMusic ? m_ExplorationVolume : m_CurrentPrimary.clip == m_CombatMusic ? m_CombatVolume : m_ReleaseVolume;
+    float m_CurrentVolume => m_CurrentPrimary.clip == m_ExplorationMusic ? m_ExplorationVolume : m_CurrentPrimary.clip == m_CombatMusic ? m_CombatVolume : m_ReleaseVolume;
 
     // On start, the AudioSource component is assigned to the Player game object's AudioSource component
     private void Start()
     {
+        m_CombatExitDelayWFS = new WaitForSeconds(m_CombatExitDelay);
         LevelManager.Instance.CombatStateChanged += OnCombatStateChanged;
 
         if (m_PrimaryMusicSource == null || m_SecondaryMusicSource == null)
@@ -115,12 +128,28 @@ public class AudioManager : Singleton<AudioManager>
         return m_AudioSource.clip == clip && !m_AudioSource.isPlaying;
     }
 
-    private void OnCombatStateChanged(bool inCombat)
+    private void OnCombatStateChanged(bool newCombatState)
     {
+        if (newCombatState && m_IsReleasing) m_IsReleasing = false;
+
+        if (m_IsCombat && !newCombatState) m_CombatTransitionRoutine = StartCoroutine(CombatTransition());
+        else
+        {
+            if (m_CombatTransitionRoutine != null) StopCoroutine(m_CombatTransitionRoutine);
+
+            AdjustCurrentMusic(newCombatState);
+        }
+    }
+
+    private void AdjustCurrentMusic(bool newCombatState)
+    {
+        if (newCombatState && m_IsCombat) return;
+        m_IsCombat = newCombatState;
+
         var temp = m_CurrentPrimary;
 
         m_CurrentPrimary = m_CurrentSecondary;
-        m_CurrentPrimary.clip = inCombat ? m_CombatMusic : m_ReleaseMusic;
+        m_CurrentPrimary.clip = newCombatState ? m_CombatMusic : m_ReleaseMusic;
 
         if (m_CurrentPrimary.clip != m_CombatMusic || !m_CurrentPrimary.isPlaying)
         {
@@ -128,9 +157,9 @@ public class AudioManager : Singleton<AudioManager>
         }
 
         m_CurrentSecondary = temp;
-        
 
-        if (!inCombat)
+
+        if (!newCombatState)
         {
             m_IsReleasing = true;
             m_LastReleaseTime = Time.time;
@@ -154,15 +183,23 @@ public class AudioManager : Singleton<AudioManager>
         m_IsReleasing = false;
     }
 
-    public void AdjustPrimaryVolume()
+    IEnumerator CombatTransition()
     {
-        if (m_CurrentPrimary.volume == m_currentVolume) return;
-        m_CurrentPrimary.volume = Mathf.MoveTowards(m_CurrentPrimary.volume, m_currentVolume, m_TransitionSpeed * Time.deltaTime);
+        yield return m_CombatExitDelayWFS;
+
+        AdjustCurrentMusic(false);
     }
 
-    public void AdjustSecondaryVolume()
+    private void AdjustPrimaryVolume()
+    {
+        if (m_CurrentPrimary.volume == m_CurrentVolume) return;
+        m_CurrentPrimary.volume = Mathf.MoveTowards(m_CurrentPrimary.volume, m_CurrentVolume, m_TransitionSpeed * Time.deltaTime);
+    }
+
+    private void AdjustSecondaryVolume()
     {
         if (m_CurrentSecondary.volume == 0) return;
         m_CurrentSecondary.volume = Mathf.MoveTowards(m_CurrentSecondary.volume, 0, m_TransitionSpeed * Time.deltaTime);
     }
+
 }
