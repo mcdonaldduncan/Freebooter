@@ -22,7 +22,7 @@ public class SetGroupActive : MonoBehaviour
         try
         {
             m_IActivator = (IActivator)m_Activator.GetComponent(typeof(IActivator));
-            m_IActivator.Activate += Onactivate;
+            m_IActivator.Activate += OnActivate;
         }
         catch (System.Exception)
         {
@@ -34,7 +34,7 @@ public class SetGroupActive : MonoBehaviour
     private void OnDisable()
     {
         if (m_IActivator == null) return;
-        m_IActivator.Activate -= Onactivate;
+        m_IActivator.Activate -= OnActivate;
     }
 
     void Start()
@@ -42,7 +42,7 @@ public class SetGroupActive : MonoBehaviour
         LevelManager.PlayerRespawn += OnPlayerRespawn;
     }
 
-    void Onactivate()
+    void OnActivate()
     {
         if (m_UseChildren)
         {

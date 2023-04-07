@@ -39,8 +39,6 @@ public class BaseInspector : Editor
         //DrawDefaultInspector();
         serializedObject.Update();
 
-        
-
         PlatformBase _base = (PlatformBase)target;
         TranslationType type = _base.m_TranslationType;
         AnimationCurve curve = _base.m_AnimationCurve;
