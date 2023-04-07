@@ -50,8 +50,8 @@ public class MeleeTank : NewAgentBase, IDissolvable
     float lastChargeTime;
     float lastMeleeTime;
     float lastChargeHitTime;
-    bool shouldMelee => Time.time > m_TimeBetweenMeleeHits + lastMeleeTime && m_Tracking.DistanceToTarget < m_meleeRange;//timer for the melee
-    bool shouldCharge => Time.time > m_TimeBetweenCharges + lastChargeTime && m_Tracking.DistanceToTarget < m_chargeRange;//timer for the charge
+    bool shouldMelee => Time.time > m_TimeBetweenMeleeHits + lastMeleeTime && Tracking.DistanceToTarget < m_meleeRange;//timer for the melee
+    bool shouldCharge => Time.time > m_TimeBetweenCharges + lastChargeTime && Tracking.DistanceToTarget < m_chargeRange;//timer for the charge
     bool shouldDealDamageInCharge => Time.time > m_TimeBetweenChargeHits + lastChargeHitTime;
     bool charging; //Im using this to prevent melee atacking while charging
 
@@ -127,34 +127,34 @@ public class MeleeTank : NewAgentBase, IDissolvable
     {
         if (IsDead) return;
 
-        switch (m_State)
+        switch (State)
         {
             case AgentState.GUARD:
-                m_Tracking.TrackTarget2D();
-                if (m_Tracking.CheckFieldOfView()) m_State = AgentState.CHASE;
+                Tracking.TrackTarget2D();
+                if (Tracking.CheckFieldOfView()) State = AgentState.CHASE;
                 if (IsInCombat) HandleCombatStateChange();
                 break;
             case AgentState.WANDER:
-                m_Navigation.Wander();
-                if (m_Tracking.CheckFieldOfView()) m_State = AgentState.CHASE;
+                Navigation.Wander();
+                if (Tracking.CheckFieldOfView()) State = AgentState.CHASE;
                 if (IsInCombat) HandleCombatStateChange();
                 break;
             case AgentState.CHASE:
-                m_Navigation.ChaseTarget();
-                m_Tracking.TrackTarget2D();
-                if (!m_Tracking.InRange) m_State = AgentState.RETURN;
+                Navigation.ChaseTarget();
+                Tracking.TrackTarget2D();
+                if (!Tracking.InRange) State = AgentState.RETURN;
                 if (!IsInCombat) HandleCombatStateChange();
                 if (shouldMelee) { MeleeHandler(); }
                 if (shouldCharge) { ChargeAttack(); }
                 break;
             case AgentState.RETURN:
-                m_Navigation.MoveToLocationDirect(m_StartingPosition);
-                if (m_Navigation.CheckReturned(m_StartingPosition)) m_State = m_StartingState;
-                if (m_Tracking.CheckFieldOfView()) m_State = AgentState.CHASE;
+                Navigation.MoveToLocationDirect(StartingPosition);
+                if (Navigation.CheckReturned(StartingPosition)) State = StartingState;
+                if (Tracking.CheckFieldOfView()) State = AgentState.CHASE;
                 if (IsInCombat) HandleCombatStateChange();
                 break;
             case AgentState.SLEEP:
-                m_Navigation.Sleep();
+                Navigation.Sleep();
                 if (IsInCombat) HandleCombatStateChange();
                 break;
             default:
@@ -206,6 +206,9 @@ public class MeleeTank : NewAgentBase, IDissolvable
         Agent.acceleration = m_VelocityLimit;
         Agent.stoppingDistance = m_ChargeStoppingDistance;
 
+        // Dude, why do you keep copying and pasting code when you have access to it already
+        //Navigation.ChaseTarget(); this is the exact same thing as what you copied and pasted below
+        
         //m_Agent.SetDestination(m_Target.transform.position);
         Vector3 FromPlayerToAgent = transform.position - LevelManager.Instance.Player.transform.position;
         Agent.SetDestination(LevelManager.Instance.Player.transform.position + FromPlayerToAgent.normalized * Agent.stoppingDistance);
@@ -251,9 +254,9 @@ public class MeleeTank : NewAgentBase, IDissolvable
 
     public override void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint = default(Vector3))
     {
-        m_State = AgentState.CHASE;
+        State = AgentState.CHASE;
         Health -= damageTaken;
-        m_Damageable.InstantiateDamageNumber(damageTaken, hitbox);
+        Damageable.InstantiateDamageNumber(damageTaken, hitbox);
         if(Health <= 0)
         {
             IsDead = true;

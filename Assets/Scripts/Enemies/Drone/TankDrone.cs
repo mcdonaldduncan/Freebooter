@@ -47,40 +47,40 @@ public class TankDrone : NewAgentBase
 
     public override void HandleAgentState()
     {
-        switch (m_State)
+        switch (State)
         {
             case AgentState.GUARD:
-                m_Tracking.TrackTarget();
-                if (m_Tracking.CheckFieldOfView()) m_State = AgentState.CHASE;
+                Tracking.TrackTarget();
+                if (Tracking.CheckFieldOfView()) State = AgentState.CHASE;
                 if (IsInCombat) HandleCombatStateChange();
                 break;
             case AgentState.WANDER:
-                m_Navigation.Wander();
-                if (m_Tracking.CheckFieldOfView()) m_State = AgentState.CHASE;
+                Navigation.Wander();
+                if (Tracking.CheckFieldOfView()) State = AgentState.CHASE;
                 if (IsInCombat) HandleCombatStateChange();
                 break;
             case AgentState.CHASE:
-                m_Navigation.ChaseTarget();
-                m_Tracking.TrackTarget();
-                if (m_Tracking.CheckFieldOfView())
+                Navigation.ChaseTarget();
+                Tracking.TrackTarget();
+                if (Tracking.CheckFieldOfView())
                 {
 
-                    if (AltShootFrom) m_Shooting.Shoot(m_SecondaryShootFrom);
-                    else m_Shooting.Shoot();
+                    if (AltShootFrom) Shooting.Shoot(m_SecondaryShootFrom);
+                    else Shooting.Shoot();
 
                 }
-                else if (m_Tracking.InRange) m_State = AgentState.GUARD;
-                else m_State = AgentState.RETURN;
+                else if (Tracking.InRange) State = AgentState.GUARD;
+                else State = AgentState.RETURN;
                 if (!IsInCombat) HandleCombatStateChange();
                 break;
             case AgentState.RETURN:
-                m_Navigation.MoveToLocationDirect(m_StartingPosition);
-                if (m_Navigation.CheckReturned(m_StartingPosition)) m_State = m_StartingState;
-                if (m_Tracking.CheckFieldOfView()) m_State = AgentState.CHASE;
+                Navigation.MoveToLocationDirect(StartingPosition);
+                if (Navigation.CheckReturned(StartingPosition)) State = StartingState;
+                if (Tracking.CheckFieldOfView()) State = AgentState.CHASE;
                 if (IsInCombat) HandleCombatStateChange();
                 break;
             case AgentState.SLEEP:
-                m_Navigation.Sleep();
+                Navigation.Sleep();
                 if (IsInCombat) HandleCombatStateChange();
                 break;
             default:

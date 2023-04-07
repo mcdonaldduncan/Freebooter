@@ -48,17 +48,17 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
     [SerializeField] bool m_ShouldSleep;
     //[SerializeField] GameObject m_Activator;
 
-    protected AgentState m_State;
-    protected AgentState m_StartingState;
+    protected AgentState State;
+    protected AgentState StartingState;
 
-    protected INavigation m_Navigation;
-    protected ITracking m_Tracking;
-    protected IShooting m_Shooting;
-    protected IRespawn m_Respawn;
-    protected IDamageable m_Damageable;
+    protected INavigation Navigation;
+    protected ITracking Tracking;
+    protected IShooting Shooting;
+    protected IRespawn Respawn;
+    protected IDamageable Damageable;
 
-    protected Vector3 m_StartingPosition;
-    protected Quaternion m_StartingRotation;
+    protected Vector3 StartingPosition;
+    protected Quaternion StartingRotation;
 
     public bool IsDead { get; set; }
 
@@ -116,60 +116,60 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
     {
         Agent = GetComponent<NavMeshAgent>();
 
-        m_Navigation = this;
-        m_Tracking = this;
-        m_Shooting = this;
-        m_Respawn = this;
-        m_Damageable = this;
+        Navigation = this;
+        Tracking = this;
+        Shooting = this;
+        Respawn = this;
+        Damageable = this;
     }
 
     protected void EnableSetup()
     {
         Health = m_MaxHealth;
-        m_StartingPosition = transform.position;
-        m_StartingRotation = transform.rotation;
+        StartingPosition = transform.position;
+        StartingRotation = transform.rotation;
 
-        m_State = m_ShouldSleep ? AgentState.SLEEP : AgentState.WANDER;
-        m_StartingState = m_State;
+        State = m_ShouldSleep ? AgentState.SLEEP : AgentState.WANDER;
+        StartingState = State;
 
-        m_Damageable.SetupDamageText();
+        Damageable.SetupDamageText();
     }
 
     protected void StartSetup()
     {
-        m_Respawn.SubscribeToRespawn();
+        Respawn.SubscribeToRespawn();
     }
 
     public virtual void HandleAgentState()
     {
-        switch (m_State)
+        switch (State)
         {
             case AgentState.GUARD:
-                m_Tracking.TrackTarget();
-                if (m_Tracking.CheckFieldOfView()) m_State = AgentState.CHASE;
+                Tracking.TrackTarget();
+                if (Tracking.CheckFieldOfView()) State = AgentState.CHASE;
                 if (IsInCombat) HandleCombatStateChange();
                 break;
             case AgentState.WANDER:
-                m_Navigation.Wander();
-                if (m_Tracking.CheckFieldOfView()) m_State = AgentState.CHASE;
+                Navigation.Wander();
+                if (Tracking.CheckFieldOfView()) State = AgentState.CHASE;
                 if (IsInCombat) HandleCombatStateChange();
                 break;
             case AgentState.CHASE:
-                m_Navigation.ChaseTarget();
-                m_Tracking.TrackTarget();
-                if (m_Tracking.CheckLineOfSight()) m_Shooting.Shoot();
-                else if (m_Tracking.InRange) m_State = AgentState.GUARD;
-                else m_State = AgentState.RETURN;
+                Navigation.ChaseTarget();
+                Tracking.TrackTarget();
+                if (Tracking.CheckLineOfSight()) Shooting.Shoot();
+                else if (Tracking.InRange) State = AgentState.GUARD;
+                else State = AgentState.RETURN;
                 if (!IsInCombat) HandleCombatStateChange();
                 break;
             case AgentState.RETURN:
-                m_Navigation.MoveToLocationDirect(m_StartingPosition);
-                if (m_Navigation.CheckReturned(m_StartingPosition)) m_State = m_StartingState;
-                if (m_Tracking.CheckFieldOfView()) m_State = AgentState.CHASE;
+                Navigation.MoveToLocationDirect(StartingPosition);
+                if (Navigation.CheckReturned(StartingPosition)) State = StartingState;
+                if (Tracking.CheckFieldOfView()) State = AgentState.CHASE;
                 if (IsInCombat) HandleCombatStateChange();
                 break;
             case AgentState.SLEEP:
-                m_Navigation.Sleep();
+                Navigation.Sleep();
                 if (IsInCombat) HandleCombatStateChange();
                 break;
             default:
@@ -195,9 +195,9 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
     public virtual void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint = default(Vector3))
     {
         //Debug.Log($"{gameObject.name} took damage");
-        m_State = AgentState.CHASE;
+        State = AgentState.CHASE;
         Health -= damageTaken;
-        m_Damageable.InstantiateDamageNumber(damageTaken, hitbox);
+        Damageable.InstantiateDamageNumber(damageTaken, hitbox);
         CheckForDeath();
         //Debug.Log(Health);
     }
@@ -206,7 +206,7 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
     {
         if (m_ShouldHitStop) LevelManager.TimeStop(m_HitStopDuration);
 
-        if (m_Tracking.DistanceToTarget <= LevelManager.Instance.Player.DistanceToHeal)
+        if (Tracking.DistanceToTarget <= LevelManager.Instance.Player.DistanceToHeal)
         {
             ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);
             LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * m_MaxHealth);
@@ -215,15 +215,15 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
         if (IsInCombat) CombatStateChanged?.Invoke(false);
 
         gameObject.SetActive(false);
-        m_Respawn.SubscribeToCheckpointReached();
+        Respawn.SubscribeToCheckpointReached();
     }
 
     void ResetValues()
     {
-        m_Navigation.CycleAgent(m_StartingPosition);
+        Navigation.CycleAgent(StartingPosition);
         IsDead = false;
         IsInCombat = false;
-        transform.rotation = m_StartingRotation;
+        transform.rotation = StartingRotation;
         Health = m_MaxHealth;
     }
 
