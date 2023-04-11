@@ -6,32 +6,34 @@ using UnityEngine;
 /// 
 /// </summary>
 /// Author: Duncan McDonald
+
+public delegate void CombatStateEventHandler(bool InCombat);
 public interface IEnemy
 {
-    //public bool IsInCombat { get; set; }
+    public bool IsInCombat { get; set; }
 
 
     //public delegate void CombatStateEventHandler(bool InCombat);
-    //public event CombatStateEventHandler CombatStateChanged;
+    /*public event */CombatStateEventHandler CombatStateChanged { get; set; }
 
-    //public void HandleCombatState();
+    public void HandleCombatStateChange();
 
 
 
-    float MovementSampleRadius { get; }
+    //float MovementSampleRadius { get; }
 
-    Vector3 StartingPosition { get; set; }
+    //Vector3 StartingPosition { get; set; }
 
-    bool ShouldSleep { get; set; }
+    //bool ShouldSleep { get; set; }
 
-    IActivator Activator { get; set; }
+    //IActivator Activator { get; set; }
 
-    void ActivateAggro();
+    //void ActivateAggro();
 
-    void DeactivateAggro();
+    //void DeactivateAggro();
 
-    void OnActivate();
+    //void OnActivate();
 
-    void OnDeactivate();
+    //void OnDeactivate();
 
 }

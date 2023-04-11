@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
-public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, ITracking, IShooting, IRespawn, IGroupable
+public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, ITracking, IShooting, IRespawn, IGroupable, IEnemy
 {
     [Header("Projectile Prefab and Projectile Spawn Point")]
     [SerializeField] GameObject m_ProjectilePrefab;
@@ -105,12 +105,12 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
 
     public float FontSize => m_FontSize;
 
-    protected bool IsInCombat { get; set; }
+    public bool IsInCombat { get; set; }
 
     public bool AltShootFrom { get; set; }
 
-    public delegate void CombatStateEventHandler(bool combatState);
-    public event CombatStateEventHandler CombatStateChanged;
+    //public delegate void CombatStateEventHandler(bool combatState);
+    public CombatStateEventHandler CombatStateChanged { get; set; }
 
     protected void AwakeSetup()
     {

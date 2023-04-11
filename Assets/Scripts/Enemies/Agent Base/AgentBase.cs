@@ -7,7 +7,7 @@ using UnityEngine.AI;
 using UnityEngine.UIElements;
 using TMPro;
 
-public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
+public abstract class AgentBase : MonoBehaviour, IDamageable
 {
     [Header("Projectile Prefab and Projectile Spawn Point")]
     [SerializeField] GameObject m_ProjectilePrefab;

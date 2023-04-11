@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -56,7 +57,7 @@ public sealed class LevelManager : MonoBehaviour
         timeStopped = false;
         CombatantCount = 0;
 
-        var enemies = FindObjectsOfType<NewAgentBase>(true);
+        var enemies = FindObjectsOfType<MonoBehaviour>(true).OfType<IEnemy>();
 
         foreach (var enemy in enemies)
         {

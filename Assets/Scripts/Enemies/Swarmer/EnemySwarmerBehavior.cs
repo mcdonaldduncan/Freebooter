@@ -5,7 +5,7 @@ using Assets.Scripts.Enemies.Agent_Base.Interfaces;
 using Unity.VisualScripting;
 using System;
 
-public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupable, IDissolvable
+public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupable, IDissolvable, IEnemy
 {
     public float Health { get { return health; } set { health = value; } }
     [SerializeField] Rigidbody TorsoRigidBody;
@@ -64,6 +64,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
     private bool hideFromPLayer;
     private bool attackingPlayer;
     private bool inAttackAnim;
+    private bool m_updateAnims;
 
     private Rigidbody[] rigidBones;
 
@@ -89,7 +90,9 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
     public TextMeshPro Text { get; set; }
 
     public bool IsDead { get; set; } = false;
+    public bool IsInCombat { get; set; }
 
+    public CombatStateEventHandler CombatStateChanged { get; set; }
     public DissolvableDelegate EnemyDied { get; set; }
     //public delegate void DissolvableDelegate();
     //public event DissolvableDelegate EnemyDied;
@@ -109,6 +112,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
 
     private void Start()
     {
+        m_updateAnims = true;
         defaultIgnorePlayer = ignorePlayer;
         m_StartingPosition = transform.position;
         Health = maxHealth;
@@ -202,7 +206,13 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
             }
         }
 
-        UpdateAnimations();
+        if (m_updateAnims) UpdateAnimations();
+    }
+
+    public void HandleCombatStateChange()
+    {
+        IsInCombat = !IsInCombat;
+        CombatStateChanged?.Invoke(IsInCombat);
     }
 
     private void FacePlayer()
@@ -214,10 +224,10 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
     }
 
     private void UpdateAnimations()
-    {
-        //if the player is close enough to be attacked
+    {//if the player is close enough to be attacked
         if (distanceToPlayer <= distanceToAttack)
         {
+            if (!IsInCombat) HandleCombatStateChange();
             attackingPlayer = true;
             animator.SetBool("ChasePlayer", false);
             animator.SetBool("AttackPlayer", true);
@@ -227,19 +237,20 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
         //if the player is too far to be attacked but close enough to be chased
         if (distanceToPlayer >= distanceToAttack && distanceToPlayer <= distanceToFollow)
         {
+            if (!IsInCombat) HandleCombatStateChange();
             animator.SetBool("AttackPlayer", false);
             animator.SetBool("ChasePlayer", true);
             animator.SetBool("PlayerTooFar", false);
         }
-        
+
         //If the player is too far away from the enemy
         if (distanceToPlayer >= distanceToFollow)
         {
+            if (IsInCombat) HandleCombatStateChange();
             animator.SetBool("ChasePlayer", false);
             animator.SetBool("AttackPlayer", false);
             animator.SetBool("PlayerTooFar", true);
         }
-
     }
 
     private void AttackPlayer()
@@ -291,7 +302,10 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
     {
         IsDead = true;
         ignorePlayer = true;
+        m_updateAnims = false;
         EnableRagdoll(Vector3.zero);
+
+        if (IsInCombat) HandleCombatStateChange();
 
         if (m_shouldHitStop) LevelManager.TimeStop(m_hitStopDuration);
 
@@ -316,7 +330,10 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
     {
         IsDead = true;
         ignorePlayer = true;
+        m_updateAnims = false;
         EnableRagdoll(hitPoint);
+
+        if (IsInCombat) HandleCombatStateChange();
 
         if (m_shouldHitStop) LevelManager.TimeStop(m_hitStopDuration);
 
@@ -382,6 +399,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
         CycleAgent();
         Health = maxHealth;
         ignorePlayer = defaultIgnorePlayer;
+        m_updateAnims = true;
     }
 
     void CycleAgent()
