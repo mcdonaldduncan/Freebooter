@@ -17,6 +17,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     public AudioClip LowHealthAudio { get { return lowHealthAudio; } }
     public AudioClip GunPickupAudio { get { return gunPickupAudio; } }
     public AudioClip KeyPickupAudio { get { return keyPickupAudio; } }
+    public Camera PlayerCamera { get { return playerCamera; } }
+    public GunHandler PlayerGun { get { return playerGun; } }
     public float MaxHealth { get { return maxHealth; } set { maxHealth = value; } }
     public float Health { get { return health; } set { health = value; } }
     public float DistanceToHeal { get { return distanceToHeal; } }

@@ -125,7 +125,7 @@ public class AutoGun : MonoBehaviour, IGun
 
                 trail.Launch(hitInfo.point);
                 HitEnemyBehavior(hitInfo, hitInfo.transform.GetComponent<IDamageable>());
-        CameraShake.ShakeCamera(ShakeDuration, ShakeMagnitude, ShakeDampen);
+                CameraShake.ShakeCamera(ShakeDuration, ShakeMagnitude, ShakeDampen);
 
 
                 //Instantiate a bulletFromPool trail
