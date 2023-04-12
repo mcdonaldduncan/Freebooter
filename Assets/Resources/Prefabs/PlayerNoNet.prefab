@@ -1856,6 +1856,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 50
       objectReference: {fileID: 0}
+    - target: {fileID: 1301278268331187238, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1563125079758065414, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
       propertyPath: m_RaycastPadding.w
@@ -1996,6 +2001,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 55
       objectReference: {fileID: 0}
+    - target: {fileID: 3354773748363385177, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3754203274649300316, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
       propertyPath: m_gunHandler
@@ -2068,11 +2078,26 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4302891835973170649, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_Name
+      value: Reticle
+      objectReference: {fileID: 0}
+    - target: {fileID: 4758397857985802332, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4761406980309467964, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
       propertyPath: gunController
       value: 
       objectReference: {fileID: 297426594336726720}
+    - target: {fileID: 4815242156314447880, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_Name
+      value: Reticle
+      objectReference: {fileID: 0}
     - target: {fileID: 5517287855257698352, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
       propertyPath: m_IsActive
@@ -2083,6 +2108,26 @@ PrefabInstance:
       propertyPath: Cgun
       value: 
       objectReference: {fileID: 297426594336726720}
+    - target: {fileID: 5669460637552808984, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 335.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5669460637552808984, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 150.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5842054497279365068, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_Name
+      value: Reticle
+      objectReference: {fileID: 0}
+    - target: {fileID: 5943696835836141272, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6128056500783047253, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
       propertyPath: m_Name
@@ -2151,12 +2196,17 @@ PrefabInstance:
     - target: {fileID: 8122098814747410082, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 5.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8220136294697721202, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8980937418745774432, guid: 0fb508bd654404f498649d3da33487b1,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 171.9
       objectReference: {fileID: 0}
     - target: {fileID: 9067329525842909151, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
