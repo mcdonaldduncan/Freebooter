@@ -97,6 +97,7 @@ public class AutoGun : MonoBehaviour, IGun
             {
                 CurrentAmmo--;
             }
+            GunManager.UpdateAmmoDisplay();
 
             GunAnimationHandler.RecoilAnim.SetTrigger("RecoilTrigger");
 

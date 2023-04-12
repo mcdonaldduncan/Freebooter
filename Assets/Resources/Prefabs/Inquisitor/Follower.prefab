@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3537218446233725536}
   - component: {fileID: -1745851659075531224}
   - component: {fileID: 6979748253768828120}
+  - component: {fileID: 8744508110481480742}
   m_Layer: 10
   m_Name: Follower
   m_TagString: ContactlessProjectile
@@ -80,6 +81,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!135 &8744508110481480742
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3537218446233725566}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.25
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &507019931
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -155,7 +169,8 @@ PrefabInstance:
   m_SourcePrefab: {fileID: 100100000, guid: ca86889bde346334da06a2d48463c7fc, type: 3}
 --- !u!4 &507498785 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 480186, guid: ca86889bde346334da06a2d48463c7fc, type: 3}
+  m_CorrespondingSourceObject: {fileID: 480186, guid: ca86889bde346334da06a2d48463c7fc,
+    type: 3}
   m_PrefabInstance: {fileID: 507019931}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5143733367816843503
@@ -221,6 +236,7 @@ PrefabInstance:
   m_SourcePrefab: {fileID: 100100000, guid: 8e197dcc591031548bff44f581ad784e, type: 3}
 --- !u!4 &5143733367816887891 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 487100, guid: 8e197dcc591031548bff44f581ad784e, type: 3}
+  m_CorrespondingSourceObject: {fileID: 487100, guid: 8e197dcc591031548bff44f581ad784e,
+    type: 3}
   m_PrefabInstance: {fileID: 5143733367816843503}
   m_PrefabAsset: {fileID: 0}

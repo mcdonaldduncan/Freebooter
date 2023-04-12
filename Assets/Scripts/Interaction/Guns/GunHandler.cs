@@ -327,16 +327,15 @@ public sealed class GunHandler : MonoBehaviour
         LevelManager.CheckPointReached += OnCheckpointReached;
         LevelManager.PlayerRespawn += OnPlayerRespawn;
 
+        UpdateAmmoDisplay();
+
         //this.handgunAnimationHandler.RecoilAnim.SetFloat("RecoilSpeed", this.handgunAnimationHandler.RecoilAnimClip.length / this.handGunFireRate);
         //this.shotgunAnimationHandler.RecoilAnim.SetFloat("RecoilSpeed", this.shotgunAnimationHandler.RecoilAnimClip.length / this.shotGunFireRate);
         //this.autoGunAnimationHandler.RecoilAnim.SetFloat("RecoilSpeed", this.autoGunAnimationHandler.RecoilAnimClip.length / this.autoFireRate);
     }
 
-    private void Update()
+    public void UpdateAmmoDisplay()
     {
-        //currentGunAmmo = currentGun.CurrentAmmo;
-
-        // change this to either an event or check that only updates when necessary, lots of garbage collection from this
         bool isUnlimitedGun = currentGun is ShotGun;
         ammoText.text = $"{(isUnlimitedGun ? "\u221E" : currentGun.CurrentAmmo)}";
     }
@@ -383,6 +382,7 @@ public sealed class GunHandler : MonoBehaviour
         }
 
         weaponSwitched?.Invoke();
+        UpdateAmmoDisplay();
     }
 
     //Behavior for picking up the weapon and adding it to the inventory
@@ -430,6 +430,7 @@ public sealed class GunHandler : MonoBehaviour
         }
 
         weaponSwitched?.Invoke();
+        UpdateAmmoDisplay();
 
         return pickedUp;
     }
@@ -455,6 +456,7 @@ public sealed class GunHandler : MonoBehaviour
         }
 
         AmmoPickup?.Invoke(temp, gunToRecieveAmmo);
+        UpdateAmmoDisplay();
     }
 
     public void Shoot(InputAction.CallbackContext context)
@@ -464,11 +466,13 @@ public sealed class GunHandler : MonoBehaviour
             AmmoEmpty?.Invoke();
         }
         currentGun.ShootTriggered(context);
+        UpdateAmmoDisplay();
     }
 
     public void AlternateShoot(InputAction.CallbackContext context)
     {
         currentGun.AlternateTriggered(context);
+        UpdateAmmoDisplay();
     }
 
     private void OnCheckpointReached()
