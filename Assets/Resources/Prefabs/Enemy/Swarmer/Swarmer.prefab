@@ -235,6 +235,7 @@ GameObject:
   - component: {fileID: 7962784312013281219}
   - component: {fileID: 6441153941075795013}
   - component: {fileID: 2088312409405900161}
+  - component: {fileID: 5985690927188471834}
   m_Layer: 0
   m_Name: mixamorig:LeftUpLeg
   m_TagString: Untagged
@@ -334,6 +335,35 @@ CharacterJoint:
   m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &5985690927188471834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1394609230835988002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da9fc9bb9ab3bdd40915d0d83192a0ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Prefab: {fileID: 7291302619202209340}
+  VFXTransform: {fileID: 0}
+  hitboxtype: 0
+  critVFX: {fileID: 5370587334564516452, guid: dc767005043a0854ba027fe93f20ed5b, type: 3}
+  armorVFX: {fileID: 6625540849553152293, guid: 392f1e838e7e43e45ba97de3a19451a0,
+    type: 3}
+  shieldVFXBlue: {fileID: 336830904740376970, guid: 7800df8b90e98174aaaff6d2367201d9,
+    type: 3}
+  shieldVFXYellow: {fileID: 336830904740376970, guid: a7171cbe862e39b45aebe9e322db9cdd,
+    type: 3}
+  shieldVFXRed: {fileID: 336830904740376970, guid: bf35d47c76ad29345baa7174d7394b7e,
+    type: 3}
+  CriticalDamageMultiplier: 1.2
+  ArmorDamageReductionMultiplier: 0.5
+  ShieldGameObject: {fileID: 0}
+  _health: 0
+  maxHealth: 0
 --- !u!1 &1523786820678649927
 GameObject:
   m_ObjectHideFlags: 0
@@ -444,6 +474,7 @@ GameObject:
   - component: {fileID: 7067672399322463110}
   - component: {fileID: 6070441983625334742}
   - component: {fileID: 473974304115441857}
+  - component: {fileID: 5531397221982316778}
   m_Layer: 0
   m_Name: mixamorig:LeftArm
   m_TagString: Untagged
@@ -543,6 +574,35 @@ CharacterJoint:
   m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &5531397221982316778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1865994757027217984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da9fc9bb9ab3bdd40915d0d83192a0ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Prefab: {fileID: 7291302619202209340}
+  VFXTransform: {fileID: 0}
+  hitboxtype: 0
+  critVFX: {fileID: 5370587334564516452, guid: dc767005043a0854ba027fe93f20ed5b, type: 3}
+  armorVFX: {fileID: 6625540849553152293, guid: 392f1e838e7e43e45ba97de3a19451a0,
+    type: 3}
+  shieldVFXBlue: {fileID: 336830904740376970, guid: 7800df8b90e98174aaaff6d2367201d9,
+    type: 3}
+  shieldVFXYellow: {fileID: 336830904740376970, guid: a7171cbe862e39b45aebe9e322db9cdd,
+    type: 3}
+  shieldVFXRed: {fileID: 336830904740376970, guid: bf35d47c76ad29345baa7174d7394b7e,
+    type: 3}
+  CriticalDamageMultiplier: 1.2
+  ArmorDamageReductionMultiplier: 0.5
+  ShieldGameObject: {fileID: 0}
+  _health: 0
+  maxHealth: 0
 --- !u!1 &1941474495548689492
 GameObject:
   m_ObjectHideFlags: 0
@@ -681,6 +741,7 @@ GameObject:
   - component: {fileID: 7979424546310758393}
   - component: {fileID: 1215532276355704311}
   - component: {fileID: 4854923125939463198}
+  - component: {fileID: 5785668001315592942}
   m_Layer: 0
   m_Name: mixamorig:RightLeg
   m_TagString: Untagged
@@ -780,6 +841,35 @@ CharacterJoint:
   m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &5785668001315592942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2448743581403920496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da9fc9bb9ab3bdd40915d0d83192a0ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Prefab: {fileID: 7291302619202209340}
+  VFXTransform: {fileID: 0}
+  hitboxtype: 0
+  critVFX: {fileID: 5370587334564516452, guid: dc767005043a0854ba027fe93f20ed5b, type: 3}
+  armorVFX: {fileID: 6625540849553152293, guid: 392f1e838e7e43e45ba97de3a19451a0,
+    type: 3}
+  shieldVFXBlue: {fileID: 336830904740376970, guid: 7800df8b90e98174aaaff6d2367201d9,
+    type: 3}
+  shieldVFXYellow: {fileID: 336830904740376970, guid: a7171cbe862e39b45aebe9e322db9cdd,
+    type: 3}
+  shieldVFXRed: {fileID: 336830904740376970, guid: bf35d47c76ad29345baa7174d7394b7e,
+    type: 3}
+  CriticalDamageMultiplier: 1.2
+  ArmorDamageReductionMultiplier: 0.5
+  ShieldGameObject: {fileID: 0}
+  _health: 0
+  maxHealth: 0
 --- !u!1 &2796786560243002414
 GameObject:
   m_ObjectHideFlags: 0
@@ -949,6 +1039,7 @@ GameObject:
   - component: {fileID: 3336906442312290585}
   - component: {fileID: 335546571941596875}
   - component: {fileID: 333790797171765538}
+  - component: {fileID: 6829336791180780261}
   m_Layer: 0
   m_Name: mixamorig:Spine1
   m_TagString: Untagged
@@ -983,8 +1074,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.3554573, y: 0.23636125, z: 0.26354182}
-  m_Center: {x: 0.0000010579824, y: 0.11818046, z: -0.004705563}
+  m_Size: {x: 0.3554573, y: 0.49127078, z: 0.26354182}
+  m_Center: {x: 0.0000010576786, y: -0.009273849, z: -0.0047055627}
 --- !u!54 &335546571941596875
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1047,6 +1138,35 @@ CharacterJoint:
   m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &6829336791180780261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3744570754756832937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da9fc9bb9ab3bdd40915d0d83192a0ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Prefab: {fileID: 7291302619202209340}
+  VFXTransform: {fileID: 0}
+  hitboxtype: 0
+  critVFX: {fileID: 5370587334564516452, guid: dc767005043a0854ba027fe93f20ed5b, type: 3}
+  armorVFX: {fileID: 6625540849553152293, guid: 392f1e838e7e43e45ba97de3a19451a0,
+    type: 3}
+  shieldVFXBlue: {fileID: 336830904740376970, guid: 7800df8b90e98174aaaff6d2367201d9,
+    type: 3}
+  shieldVFXYellow: {fileID: 336830904740376970, guid: a7171cbe862e39b45aebe9e322db9cdd,
+    type: 3}
+  shieldVFXRed: {fileID: 336830904740376970, guid: bf35d47c76ad29345baa7174d7394b7e,
+    type: 3}
+  CriticalDamageMultiplier: 1.2
+  ArmorDamageReductionMultiplier: 0.5
+  ShieldGameObject: {fileID: 0}
+  _health: 0
+  maxHealth: 0
 --- !u!1 &3748002323581830140
 GameObject:
   m_ObjectHideFlags: 0
@@ -1059,6 +1179,7 @@ GameObject:
   - component: {fileID: 4455226148527626769}
   - component: {fileID: 1103926676213771459}
   - component: {fileID: 946022920236754098}
+  - component: {fileID: 8010351007431508972}
   m_Layer: 0
   m_Name: mixamorig:RightUpLeg
   m_TagString: Untagged
@@ -1158,6 +1279,35 @@ CharacterJoint:
   m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &8010351007431508972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3748002323581830140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da9fc9bb9ab3bdd40915d0d83192a0ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Prefab: {fileID: 7291302619202209340}
+  VFXTransform: {fileID: 0}
+  hitboxtype: 0
+  critVFX: {fileID: 5370587334564516452, guid: dc767005043a0854ba027fe93f20ed5b, type: 3}
+  armorVFX: {fileID: 6625540849553152293, guid: 392f1e838e7e43e45ba97de3a19451a0,
+    type: 3}
+  shieldVFXBlue: {fileID: 336830904740376970, guid: 7800df8b90e98174aaaff6d2367201d9,
+    type: 3}
+  shieldVFXYellow: {fileID: 336830904740376970, guid: a7171cbe862e39b45aebe9e322db9cdd,
+    type: 3}
+  shieldVFXRed: {fileID: 336830904740376970, guid: bf35d47c76ad29345baa7174d7394b7e,
+    type: 3}
+  CriticalDamageMultiplier: 1.2
+  ArmorDamageReductionMultiplier: 0.5
+  ShieldGameObject: {fileID: 0}
+  _health: 0
+  maxHealth: 0
 --- !u!1 &3758255204466735523
 GameObject:
   m_ObjectHideFlags: 0
@@ -1414,7 +1564,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6501751170825295355}
-  - {fileID: 3668984181104418188}
   m_Father: {fileID: 1437029011069694671}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1429,8 +1578,8 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.08886484
-  m_Center: {x: 0, y: 0.08886484, z: 0}
+  m_Radius: 0.13218744
+  m_Center: {x: -8.1726665e-14, y: 0.08886485, z: 0.012187436}
 --- !u!54 &5700368874852525657
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1506,8 +1655,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Prefab: {fileID: 7291302619202209340}
-  VFXTransform: {fileID: 3668984181104418188}
-  hitboxtype: 0
+  VFXTransform: {fileID: 0}
+  hitboxtype: 1
   critVFX: {fileID: 5370587334564516452, guid: dc767005043a0854ba027fe93f20ed5b, type: 3}
   armorVFX: {fileID: 6625540849553152293, guid: 392f1e838e7e43e45ba97de3a19451a0,
     type: 3}
@@ -1629,6 +1778,7 @@ GameObject:
   - component: {fileID: 3103168909790222013}
   - component: {fileID: 7440839733195992308}
   - component: {fileID: 5269764041832378654}
+  - component: {fileID: 462935796044175448}
   m_Layer: 0
   m_Name: mixamorig:LeftLeg
   m_TagString: Untagged
@@ -1728,6 +1878,35 @@ CharacterJoint:
   m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &462935796044175448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6085340161468924072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da9fc9bb9ab3bdd40915d0d83192a0ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Prefab: {fileID: 7291302619202209340}
+  VFXTransform: {fileID: 0}
+  hitboxtype: 0
+  critVFX: {fileID: 5370587334564516452, guid: dc767005043a0854ba027fe93f20ed5b, type: 3}
+  armorVFX: {fileID: 6625540849553152293, guid: 392f1e838e7e43e45ba97de3a19451a0,
+    type: 3}
+  shieldVFXBlue: {fileID: 336830904740376970, guid: 7800df8b90e98174aaaff6d2367201d9,
+    type: 3}
+  shieldVFXYellow: {fileID: 336830904740376970, guid: a7171cbe862e39b45aebe9e322db9cdd,
+    type: 3}
+  shieldVFXRed: {fileID: 336830904740376970, guid: bf35d47c76ad29345baa7174d7394b7e,
+    type: 3}
+  CriticalDamageMultiplier: 1.2
+  ArmorDamageReductionMultiplier: 0.5
+  ShieldGameObject: {fileID: 0}
+  _health: 0
+  maxHealth: 0
 --- !u!1 &6162135728055903830
 GameObject:
   m_ObjectHideFlags: 0
@@ -1836,6 +2015,7 @@ GameObject:
   - component: {fileID: 7871935528823483497}
   - component: {fileID: 7164766499023219023}
   - component: {fileID: 44642884848980393}
+  - component: {fileID: 1201556872349409176}
   m_Layer: 0
   m_Name: mixamorig:LeftForeArm
   m_TagString: Untagged
@@ -1935,6 +2115,35 @@ CharacterJoint:
   m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &1201556872349409176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7054733258972686267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da9fc9bb9ab3bdd40915d0d83192a0ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Prefab: {fileID: 7291302619202209340}
+  VFXTransform: {fileID: 0}
+  hitboxtype: 0
+  critVFX: {fileID: 5370587334564516452, guid: dc767005043a0854ba027fe93f20ed5b, type: 3}
+  armorVFX: {fileID: 6625540849553152293, guid: 392f1e838e7e43e45ba97de3a19451a0,
+    type: 3}
+  shieldVFXBlue: {fileID: 336830904740376970, guid: 7800df8b90e98174aaaff6d2367201d9,
+    type: 3}
+  shieldVFXYellow: {fileID: 336830904740376970, guid: a7171cbe862e39b45aebe9e322db9cdd,
+    type: 3}
+  shieldVFXRed: {fileID: 336830904740376970, guid: bf35d47c76ad29345baa7174d7394b7e,
+    type: 3}
+  CriticalDamageMultiplier: 1.2
+  ArmorDamageReductionMultiplier: 0.5
+  ShieldGameObject: {fileID: 0}
+  _health: 0
+  maxHealth: 0
 --- !u!1 &7291302619202209340
 GameObject:
   m_ObjectHideFlags: 0
@@ -1944,7 +2153,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7954546293506579590}
-  - component: {fileID: 7633180016213686029}
   - component: {fileID: 7633180016213686017}
   - component: {fileID: 7633180016213686018}
   - component: {fileID: 7633180016213686031}
@@ -1977,20 +2185,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &7633180016213686029
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7291302619202209340}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.35
-  m_Height: 1.8002626
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.80693775, z: 0}
 --- !u!95 &7633180016213686017
 Animator:
   serializedVersion: 4
@@ -2291,6 +2485,7 @@ GameObject:
   - component: {fileID: 6152926701939394343}
   - component: {fileID: 1490381778536596698}
   - component: {fileID: 69869274753807035}
+  - component: {fileID: 4809439697825832801}
   m_Layer: 0
   m_Name: mixamorig:RightArm
   m_TagString: Untagged
@@ -2390,6 +2585,35 @@ CharacterJoint:
   m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &4809439697825832801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7867218966740026054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da9fc9bb9ab3bdd40915d0d83192a0ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Prefab: {fileID: 7291302619202209340}
+  VFXTransform: {fileID: 0}
+  hitboxtype: 0
+  critVFX: {fileID: 5370587334564516452, guid: dc767005043a0854ba027fe93f20ed5b, type: 3}
+  armorVFX: {fileID: 6625540849553152293, guid: 392f1e838e7e43e45ba97de3a19451a0,
+    type: 3}
+  shieldVFXBlue: {fileID: 336830904740376970, guid: 7800df8b90e98174aaaff6d2367201d9,
+    type: 3}
+  shieldVFXYellow: {fileID: 336830904740376970, guid: a7171cbe862e39b45aebe9e322db9cdd,
+    type: 3}
+  shieldVFXRed: {fileID: 336830904740376970, guid: bf35d47c76ad29345baa7174d7394b7e,
+    type: 3}
+  CriticalDamageMultiplier: 1.2
+  ArmorDamageReductionMultiplier: 0.5
+  ShieldGameObject: {fileID: 0}
+  _health: 0
+  maxHealth: 0
 --- !u!1 &8104052888304671376
 GameObject:
   m_ObjectHideFlags: 0
@@ -2402,6 +2626,7 @@ GameObject:
   - component: {fileID: 6167097380165776728}
   - component: {fileID: 4715560445231563842}
   - component: {fileID: 6698321825160866246}
+  - component: {fileID: 7790429625886185250}
   m_Layer: 0
   m_Name: mixamorig:RightForeArm
   m_TagString: Untagged
@@ -2501,6 +2726,35 @@ CharacterJoint:
   m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &7790429625886185250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8104052888304671376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da9fc9bb9ab3bdd40915d0d83192a0ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Prefab: {fileID: 7291302619202209340}
+  VFXTransform: {fileID: 0}
+  hitboxtype: 0
+  critVFX: {fileID: 5370587334564516452, guid: dc767005043a0854ba027fe93f20ed5b, type: 3}
+  armorVFX: {fileID: 6625540849553152293, guid: 392f1e838e7e43e45ba97de3a19451a0,
+    type: 3}
+  shieldVFXBlue: {fileID: 336830904740376970, guid: 7800df8b90e98174aaaff6d2367201d9,
+    type: 3}
+  shieldVFXYellow: {fileID: 336830904740376970, guid: a7171cbe862e39b45aebe9e322db9cdd,
+    type: 3}
+  shieldVFXRed: {fileID: 336830904740376970, guid: bf35d47c76ad29345baa7174d7394b7e,
+    type: 3}
+  CriticalDamageMultiplier: 1.2
+  ArmorDamageReductionMultiplier: 0.5
+  ShieldGameObject: {fileID: 0}
+  _health: 0
+  maxHealth: 0
 --- !u!1 &8116646778606383075
 GameObject:
   m_ObjectHideFlags: 0
@@ -2944,108 +3198,4 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5884490519233375807, guid: 4152d5ce9d6eb674aa54f9f9d7da875c,
     type: 3}
   m_PrefabInstance: {fileID: 789050733980662456}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &7457270865067312460
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 2206405271088438257}
-    m_Modifications:
-    - target: {fileID: 5275076217087910831, guid: b38bc3fb91f2e6a44bc58f09c8494078,
-        type: 3}
-      propertyPath: m_Name
-      value: SpecialHitboxPrefab
-      objectReference: {fileID: 0}
-    - target: {fileID: 5275076217087910831, guid: b38bc3fb91f2e6a44bc58f09c8494078,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6167492751692961984, guid: b38bc3fb91f2e6a44bc58f09c8494078,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6167492751692961984, guid: b38bc3fb91f2e6a44bc58f09c8494078,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6167492751692961984, guid: b38bc3fb91f2e6a44bc58f09c8494078,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.092
-      objectReference: {fileID: 0}
-    - target: {fileID: 6167492751692961984, guid: b38bc3fb91f2e6a44bc58f09c8494078,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.033
-      objectReference: {fileID: 0}
-    - target: {fileID: 6167492751692961984, guid: b38bc3fb91f2e6a44bc58f09c8494078,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6167492751692961984, guid: b38bc3fb91f2e6a44bc58f09c8494078,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6167492751692961984, guid: b38bc3fb91f2e6a44bc58f09c8494078,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6167492751692961984, guid: b38bc3fb91f2e6a44bc58f09c8494078,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6167492751692961984, guid: b38bc3fb91f2e6a44bc58f09c8494078,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6167492751692961984, guid: b38bc3fb91f2e6a44bc58f09c8494078,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6167492751692961984, guid: b38bc3fb91f2e6a44bc58f09c8494078,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9118849971536370741, guid: b38bc3fb91f2e6a44bc58f09c8494078,
-        type: 3}
-      propertyPath: m_Prefab
-      value: 
-      objectReference: {fileID: 7291302619202209340}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: b38bc3fb91f2e6a44bc58f09c8494078, type: 3}
---- !u!1 &3335295446550046435 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5275076217087910831, guid: b38bc3fb91f2e6a44bc58f09c8494078,
-    type: 3}
-  m_PrefabInstance: {fileID: 7457270865067312460}
-  m_PrefabAsset: {fileID: 0}
---- !u!135 &6529867952316503361
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3335295446550046435}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.42
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!4 &3668984181104418188 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6167492751692961984, guid: b38bc3fb91f2e6a44bc58f09c8494078,
-    type: 3}
-  m_PrefabInstance: {fileID: 7457270865067312460}
   m_PrefabAsset: {fileID: 0}

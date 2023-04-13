@@ -357,8 +357,6 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
     private void DisableRagdoll()
     {
         animator.enabled = true;
-        gameObject.GetComponent<CapsuleCollider>().enabled = true;
-        checker.gameObject.GetComponent<SphereCollider>().enabled = true;
 
         foreach (Rigidbody r in rigidBones)
         {
@@ -372,7 +370,6 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
     {
         navMeshAgent.speed = 0;
         animator.enabled = false;
-        gameObject.GetComponent<CapsuleCollider>().enabled = false;
         checker.gameObject.GetComponent<SphereCollider>().enabled = false;
 
         foreach (Rigidbody r in rigidBones)
