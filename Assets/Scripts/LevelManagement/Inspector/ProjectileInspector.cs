@@ -25,10 +25,12 @@ public class ProjectileInspector : Editor
         DamageAll_Prop,
         VelocityLimit_Prop,
         LifeTime_Prop,
-        ExplosionRadius_prop;
+        ExplosionRadius_prop,
+        HasTrail_prop;
 
     private void OnEnable()
     {
+        HasTrail_prop = serializedObject.FindProperty("m_HasTrail");
         LifeTime_Prop = serializedObject.FindProperty("m_LifeTime");
         VelocityLimit_Prop = serializedObject.FindProperty("m_VelocityLimit");
         DamageAll_Prop = serializedObject.FindProperty("m_DamageAll");
@@ -53,6 +55,7 @@ public class ProjectileInspector : Editor
         EditorGUILayout.PropertyField(Damage_prop);
         EditorGUILayout.PropertyField(LaunchForce_prop);
         EditorGUILayout.PropertyField(LifeTime_Prop);
+        EditorGUILayout.PropertyField(HasTrail_prop);
         EditorGUILayout.LabelField(Environment.NewLine);
 
         EditorGUILayout.LabelField("Optional Properties", EditorStyles.boldLabel);

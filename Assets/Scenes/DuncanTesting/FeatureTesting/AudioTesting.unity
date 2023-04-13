@@ -1036,6 +1036,21 @@ PrefabInstance:
       propertyPath: m_MaxHealth
       value: 50
       objectReference: {fileID: 0}
+    - target: {fileID: 7789221693854972693, guid: d7d8f96912b1e7944aedacfd12136b6c,
+        type: 3}
+      propertyPath: m_ProjectilePrefab
+      value: 
+      objectReference: {fileID: 196044, guid: e3f32cdc4d865c148945e308b76992c3, type: 3}
+    - target: {fileID: 7789221693854972693, guid: d7d8f96912b1e7944aedacfd12136b6c,
+        type: 3}
+      propertyPath: m_TimeBetweenShots
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7936307943014886291, guid: d7d8f96912b1e7944aedacfd12136b6c,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.45
+      objectReference: {fileID: 0}
     - target: {fileID: 7936307944237820728, guid: d7d8f96912b1e7944aedacfd12136b6c,
         type: 3}
       propertyPath: m_Name
