@@ -8,7 +8,7 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable
     private IDamageable damageable;
     private ParticleSystem m_ParticleSystem;
 
-    [Header("SetUp")] 
+    [Header("SetUp")]
     public GameObject m_Prefab;
     public Transform VFXTransform;
 
@@ -57,6 +57,10 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable
     /// is this even working? Health only gets changed if the hitbox is a shield
     public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint = default(Vector3))
     {
+        if (hitboxtype == HitBoxType.normal)
+        {
+            damageable.TakeDamage(damageTaken, HitBoxType.normal);
+        }
         if (hitboxtype == HitBoxType.critical)
         {
             PlayVFX(critVFX, VFXTransform.position);
@@ -95,6 +99,7 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable
 
     void Start()
     {
+        VFXTransform = this.transform;
         damageable = Prefab.GetComponent<IDamageable>();
         _health = maxHealth;
         m_ParticleSystem = GetComponentInChildren<ParticleSystem>();
@@ -108,6 +113,7 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable
     //    shieldVFXRed.transform.position = VFXTransform.position;
     //}
 }
+
 public enum HitBoxType
 {
     normal,
