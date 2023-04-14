@@ -452,7 +452,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
         health -= damageTaken;
         ragdollForce = damageTaken;
         if (fractureScript != null) fractureScript.Health = health;
-        if (Health <= 0 && !m_isDead) OnDeath(hitPoint);
+        if (Health <= 0) OnDeath(hitPoint);
         m_IDamageable.InstantiateDamageNumber(damageTaken, hitbox);
     }
 }

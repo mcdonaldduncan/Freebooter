@@ -17,6 +17,8 @@ public class Fracture : MonoBehaviour, IDamageable
     private BarrelGroupBehavior m_barrelGroupBehavior;
     //private bool isInGroup = false; Unused
     private bool m_initialDamageTaken = false;
+    private bool m_shouldPlayAudio;
+    private bool m_isInGroup;
 
     public float Health { get { return m_health; } set { m_health = value; } }
 
@@ -52,8 +54,19 @@ public class Fracture : MonoBehaviour, IDamageable
             breakable.transform.SetParent(null);
         }
 
-        if(m_breakSoundSource != null) m_breakSoundSource.PlayOneShot(m_breakSound);
+        if (m_breakSoundSource == null) return;
+
+        if (m_barrelGroupBehavior != null)
+        {
+            if(m_barrelGroupBehavior.ShouldPlayBarrelAudio) m_breakSoundSource.PlayOneShot(m_breakSound);
+            m_barrelGroupBehavior.ShouldPlayBarrelAudio = false;
+        }
+        else
+        {
+            m_breakSoundSource.PlayOneShot(m_breakSound);
+        }
     }
+
     public void ResetBreakables()
     {
         foreach (BreakablePieceBehavior breakable in gameObject.GetComponentsInChildren<BreakablePieceBehavior>())
