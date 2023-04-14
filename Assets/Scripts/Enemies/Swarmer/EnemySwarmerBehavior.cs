@@ -65,6 +65,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
     private bool attackingPlayer;
     private bool inAttackAnim;
     private bool m_updateAnims;
+    private bool m_isDead;
 
     private Rigidbody[] rigidBones;
 
@@ -114,6 +115,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
     private void Start()
     {
         m_updateAnims = true;
+        m_isDead = false;
         defaultIgnorePlayer = ignorePlayer;
         m_StartingPosition = transform.position;
         Health = maxHealth;
@@ -284,7 +286,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
 
     public void CheckForDeath()
     {
-        if (Health <= 0)
+        if (Health <= 0 && !m_isDead)
         {
             //dead = true;
             //if (animator.GetInteger("Death") != 0) return;
@@ -301,6 +303,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
 
     public void OnDeath()
     {
+        m_isDead = true;
         IsDead = true;
         ignorePlayer = true;
         m_updateAnims = false;
@@ -353,6 +356,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
         hideBehavior.EndHideProcessRemote();
         hideBehavior.enabled = false;
         LevelManager.CheckPointReached += OnCheckPointReached;
+        m_isDead = true;
         //navMeshAgent.Warp(m_StartingPosition);
     }
 
@@ -380,8 +384,10 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
             //r.AddExplosionForce(ragdollForce, gameObject.transform.position, 50, 70, ForceMode.Impulse);
             //r.AddForce(LevelManager.Instance.Player.transform.forward * ragdollForce, ForceMode.Impulse);
         }
-        Vector3 forceDirection = TorsoRigidBody.position - hitPoint;
 
+
+        Vector3 forceDirection = TorsoRigidBody.position - hitPoint;
+        
         TorsoRigidBody.AddForce(forceDirection.normalized * ragdollForce * ragdollForceScale, ForceMode.Impulse);
 
     }
@@ -389,6 +395,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
     public void OnPlayerRespawn()
     {
         IsDead = false;
+        m_isDead = false;
         DisableRagdoll();
         if (!gameObject.activeSelf)
         {
@@ -445,7 +452,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
         health -= damageTaken;
         ragdollForce = damageTaken;
         if (fractureScript != null) fractureScript.Health = health;
-        if (Health <= 0) OnDeath(hitPoint);
+        if (Health <= 0 && !m_isDead) OnDeath(hitPoint);
         m_IDamageable.InstantiateDamageNumber(damageTaken, hitbox);
     }
 }
