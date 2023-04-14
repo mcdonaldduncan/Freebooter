@@ -83,7 +83,7 @@ public class GrenadeGun : MonoBehaviour, IGun
         Ray ray = GunManager.FPSCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 
         //calculate the force of launching the grenade
-        Vector3 grenadeLaunchForce = (ray.direction + GrenadeLaunchArcVector) * GrenadeLaunchForce;
+        Vector3 grenadeLaunchForce = ray.direction * GrenadeLaunchForce;
 
         //Take a grenade from the grenade object pool
         GameObject newGrenade = ProjectileManager.Instance.TakeFromPool(Grenade, ShootFrom.position, out GrenadeBehavior grenade);
