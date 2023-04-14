@@ -1,10 +1,12 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 /// <summary>
 /// 
@@ -44,14 +46,22 @@ public sealed class LevelManager : MonoBehaviour
     [SerializeField] private int PlayerDeaths;
 
     [SerializeField] private GameObject ScorePanel;
+    [SerializeField] private GameObject UIPanel;
     [SerializeField] private TextMeshProUGUI LevelTime;
     [SerializeField] private TextMeshProUGUI DamageDealt;
     [SerializeField] private TextMeshProUGUI DamageTaken;
     [SerializeField] private TextMeshProUGUI EnemyKills;
     [SerializeField] private TextMeshProUGUI PlayerDeath;
+    [SerializeField] private Image PanelImage;
+    
+
+    [SerializeField] float FadeSpeed;
 
     float LevelStartTime;
     float LevelEndTime;
+
+    float BackgroundPanelAlpha;
+    Coroutine FadeRoutineInstance;
 
     void Awake()
     {
@@ -68,6 +78,7 @@ public sealed class LevelManager : MonoBehaviour
 
     private void Start()
     {
+        BackgroundPanelAlpha = 0;
         LevelStartTime = Time.unscaledTime;
 
         if (Player == null) Player = GameObject.FindGameObjectWithTag("Player").GetComponent<FirstPersonController>();
@@ -103,17 +114,10 @@ public sealed class LevelManager : MonoBehaviour
         }
     }
 
-    public void EndLevel()
+    private void OnLevelEnd()
     {
-        OnLevelEnd();
-        CameraShake.ShakeCamera(0, 0, 0);
-        TogglePause(true);
-        ScorePanel.SetActive(true);
-        Player.enabled = false;
-        Player.PlayerGun.CurrentGun.GunReticle.alpha = 0;
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
 
+        StopCoroutine(FadeRoutineInstance);
 
         var totalTime = TimeSpan.FromSeconds(LevelEndTime - LevelStartTime);
 
@@ -128,6 +132,38 @@ public sealed class LevelManager : MonoBehaviour
         DamageTaken.text = TotalDamageTaken.ToString("n2");
         EnemyKills.text = EnemiesDefeated.ToString();
         PlayerDeath.text = PlayerDeaths.ToString();
+
+        UIPanel.SetActive(true);
+    }
+
+    public void EndLevel()
+    {
+        Player.enabled = false;
+        Player.PlayerGun.CurrentGun.GunReticle.alpha = 0;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        CameraShake.ShakeCamera(0, 0, 0);
+        UIPanel.SetActive(false);
+        LevelEndTime = Time.unscaledTime;
+        BackgroundPanelAlpha = 0;
+        FadeRoutineInstance = StartCoroutine(FadeRoutine());
+        TogglePause(true);
+        ScorePanel.SetActive(true);
+    }
+
+    IEnumerator FadeRoutine()
+    {
+        while (true)
+        {
+            BackgroundPanelAlpha = Mathf.MoveTowards(BackgroundPanelAlpha, 1f, FadeSpeed * Time.unscaledDeltaTime);
+            var temp = PanelImage.color;
+            temp.a = BackgroundPanelAlpha;
+            PanelImage.color = temp;
+
+            if (BackgroundPanelAlpha >= 1f) OnLevelEnd();
+
+            yield return null;
+        }
     }
 
     public void RegisterDamageTracker(IDamageTracking tracker)
@@ -155,10 +191,7 @@ public sealed class LevelManager : MonoBehaviour
         TotalDamageTaken += damage;
     }
 
-    private void OnLevelEnd()
-    {
-        LevelEndTime = Time.unscaledTime;
-    }
+    
 
     private void OnCombatStateChanged(bool combatState)
     {
@@ -237,6 +270,13 @@ public sealed class LevelManager : MonoBehaviour
         //Debug.Log("");
     }
 
+    public void ReloadLevel()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        TogglePause(false);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
 }
 
 
