@@ -402,7 +402,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable
         {
             m_Agent.SetDestination(hit.position);
 
-            Debug.Log("Destination set to " + hit.position);
+            //Debug.Log("Destination set to " + hit.position);
         }
         else
         {
