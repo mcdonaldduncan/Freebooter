@@ -217,7 +217,7 @@ NavMeshAgent:
   m_AutoRepath: 1
   m_Height: 2
   m_BaseOffset: 3.2
-  m_WalkableMask: 4294967295
+  m_WalkableMask: 1
   m_ObstacleAvoidanceType: 4
 --- !u!114 &1513274620143034692
 MonoBehaviour:
@@ -243,7 +243,7 @@ MonoBehaviour:
   m_SightLayers:
     serializedVersion: 2
     m_Bits: 82897
-  m_StoppingDistance: 5
+  m_StoppingDistance: 10
   m_RotationSpeed: 180
   m_MovementSampleRadius: 10
   m_WanderDelay: 5
@@ -251,7 +251,7 @@ MonoBehaviour:
   m_Range: 30
   m_TimeBetweenShots: 0.35
   m_FieldOfView: 360
-  m_MaxHealth: 200
+  m_MaxHealth: 100
   m_ShouldHitStop: 0
   m_HitStopDuration: 0
   m_ShouldSleep: 0
