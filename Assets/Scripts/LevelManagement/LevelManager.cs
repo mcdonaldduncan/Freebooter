@@ -116,7 +116,6 @@ public sealed class LevelManager : MonoBehaviour
 
     private void OnLevelEnd()
     {
-
         StopCoroutine(FadeRoutineInstance);
 
         var totalTime = TimeSpan.FromSeconds(LevelEndTime - LevelStartTime);
@@ -128,8 +127,12 @@ public sealed class LevelManager : MonoBehaviour
 
         LevelTime.text = sb.ToString();
 
-        DamageDealt.text = TotalDamageDealt.ToString("n2");
-        DamageTaken.text = TotalDamageTaken.ToString("n2");
+        var temp = TotalDamageDealt.ToString("n");
+        var temp2 = TotalDamageTaken.ToString("n");
+
+        DamageDealt.text = temp.Substring(0, temp.Length - 3);
+        DamageTaken.text = temp2.Substring(0, temp2.Length - 3);
+
         EnemyKills.text = EnemiesDefeated.ToString();
         PlayerDeath.text = PlayerDeaths.ToString();
 
