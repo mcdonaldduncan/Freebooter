@@ -214,9 +214,12 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     private MovementState state;
     
     public delegate void PlayerDelegate();
-    public event PlayerDelegate OnPlayerDashed;
+    public event PlayerDelegate PlayerDashed;
     //public event PlayerDelegate OnDashCooldown;  Unused!
     public event PlayerDelegate PlayerHealthChanged;
+
+    public delegate void DamageTrackingDelegate(float damage);
+    public event DamageTrackingDelegate PlayerDamaged;
 
     [NonSerialized] public Vector3 surfaceMotion;
 
@@ -470,7 +473,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     private IEnumerator Dash()
     {
         dashesRemaining--;
-        OnPlayerDashed?.Invoke();
+        PlayerDashed?.Invoke();
         float startTime = Time.time;
 
         moveDirection = (transform.TransformDirection(Vector3.right) * MoveInput.x) + (transform.TransformDirection(Vector3.forward) * MoveInput.y);
@@ -760,6 +763,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         {
             Health -= damageTaken;
             PlayerHealthChanged?.Invoke();
+            PlayerDamaged?.Invoke(damageTaken);
             playerAudioSource.PlayOneShot(playerHitAudio);
             //Debug.Log($"Player Health: { health }");
             CheckForDeath();

@@ -15,7 +15,7 @@ public class UpdateDash : MonoBehaviour
     private void Start()
     {
         Player = LevelManager.Instance.Player;
-        Player.OnPlayerDashed += OnPlayerDash;
+        Player.PlayerDashed += OnPlayerDash;
         //Player.OnDashCooldown += OnDashCooldown;
         subscribedToDash = true;
     }
@@ -47,7 +47,7 @@ public class UpdateDash : MonoBehaviour
     {
         if (Player != null && !subscribedToDash)
         {
-            Player.OnPlayerDashed += OnPlayerDash;
+            Player.PlayerDashed += OnPlayerDash;
             //Player.OnDashCooldown += OnDashCooldown;
             subscribedToDash = true;
         }
@@ -56,7 +56,7 @@ public class UpdateDash : MonoBehaviour
     {
         if (Player != null && subscribedToDash)
         {
-            Player.OnPlayerDashed -= OnPlayerDash;
+            Player.PlayerDashed -= OnPlayerDash;
             //Player.OnDashCooldown -= OnDashCooldown;
             subscribedToDash = false;
         }

@@ -15,6 +15,7 @@ public interface IEnemy
 
     //public delegate void CombatStateEventHandler(bool InCombat);
     /*public event */CombatStateEventHandler CombatStateChanged { get; set; }
+    CombatStateEventHandler EnemyDefeated { get; set; }
 
     public void HandleCombatStateChange();
 

@@ -111,6 +111,7 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
 
     //public delegate void CombatStateEventHandler(bool combatState);
     public CombatStateEventHandler CombatStateChanged { get; set; }
+    public CombatStateEventHandler EnemyDefeated { get; set; }
 
     protected void AwakeSetup()
     {
@@ -213,7 +214,7 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
         }
 
         if (IsInCombat) CombatStateChanged?.Invoke(false);
-
+        EnemyDefeated?.Invoke(true);
         gameObject.SetActive(false);
         Respawn.SubscribeToCheckpointReached();
     }

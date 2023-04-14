@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class AutoGun : MonoBehaviour, IGun
+public class AutoGun : MonoBehaviour, IGun, IDamageTracking
 {
     public string GunName { get { return "Rifle"; } }
     public GunHandler GunManager { get; set; }
@@ -37,6 +37,8 @@ public class AutoGun : MonoBehaviour, IGun
 
     public bool CanShoot => lastShotTime + FireRate < Time.time && CurrentAmmo > 0 && GunManager.CurrentGun is AutoGun;
     public bool FireRateCooldown => lastShotTime + FireRate > Time.time;
+
+    public PlayerDamageDelegate DamageDealt { get; set; }
 
     private bool holdingTrigger;
     private float lastShotTime;
@@ -272,6 +274,7 @@ public class AutoGun : MonoBehaviour, IGun
 
                 //Damage the target
                 damageableTarget.TakeDamage(realDamage, HitBoxType.normal, hitInfo.point);
+                DamageDealt?.Invoke(realDamage);
             }
             catch
             {

@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class ShotGun : MonoBehaviour, IGun
+public class ShotGun : MonoBehaviour, IGun, IDamageTracking
 {
     public string GunName { get { return "Shotgun"; } }
     public GunHandler GunManager { get; set; }
@@ -36,6 +36,8 @@ public class ShotGun : MonoBehaviour, IGun
     public float ShakeDampen { get; set; }
 
     public bool CanShoot => lastShotTime + FireRate < Time.time && CurrentAmmo > 0;
+
+    public PlayerDamageDelegate DamageDealt { get; set; }
 
     private float lastShotTime;
     private float reloadStartTime;
@@ -254,6 +256,7 @@ public class ShotGun : MonoBehaviour, IGun
 
                 //Damage the target
                 damageableTarget.TakeDamage(realDamage, HitBoxType.normal, hitInfo.point);
+                DamageDealt?.Invoke(realDamage);
             }
             catch
             {

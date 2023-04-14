@@ -93,6 +93,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
     public bool IsInCombat { get; set; }
 
     public CombatStateEventHandler CombatStateChanged { get; set; }
+    public CombatStateEventHandler EnemyDefeated { get; set; }
     public DissolvableDelegate EnemyDied { get; set; }
     //public delegate void DissolvableDelegate();
     //public event DissolvableDelegate EnemyDied;
@@ -318,6 +319,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
 
         //if (fractureScript != null) fractureScript.Breakage();
         EnemyDied?.Invoke();
+        EnemyDefeated?.Invoke(true);
         CycleAgent();
         //gameObject.SetActive(false);
         hideBehavior.EndHideProcessRemote();

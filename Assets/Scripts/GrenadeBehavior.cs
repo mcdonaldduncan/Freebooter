@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class GrenadeBehavior : MonoBehaviour, IPoolable
+public class GrenadeBehavior : MonoBehaviour, IPoolable, IDamageTracking
 {
     [SerializeField] private float timeBeforeExplosion;
     [SerializeField] private float explosionRadius;
@@ -17,6 +17,7 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
     private bool ShouldExplode => timerStarted && startTime + timeBeforeExplosion <= Time.time && !exploded;
 
     public GameObject Prefab { get => m_Prefab; set => m_Prefab = value; }
+    public PlayerDamageDelegate DamageDealt { get; set; }
 
     private float startTime;
     private float hitStopDuration;
@@ -102,6 +103,7 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
             CameraShake.ShakeCamera(explosionShakeDuration, explosionShakeMagnitude, explosionShakeDampen);
         }
 
+        // We really do not need to be using try catch, it is innefficient
         //Damage each object that is an IDamageable
         foreach (var hit in colliders)
         {
@@ -113,6 +115,7 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable
                     try
                     {
                         damageableTarget.TakeDamage(explosionDamage, HitBoxType.normal, stickPosition);
+                        DamageDealt?.Invoke(explosionDamage);
                     }
                     catch
                     {

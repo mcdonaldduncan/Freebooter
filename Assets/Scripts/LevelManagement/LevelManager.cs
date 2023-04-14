@@ -35,6 +35,10 @@ public sealed class LevelManager : MonoBehaviour
 
     private bool InCombat;
 
+    private float TotalDamageTaken;
+    private float TotalDamageDealt;
+    private int EnemiesDefeated;
+
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -54,14 +58,24 @@ public sealed class LevelManager : MonoBehaviour
             Player = GameObject.FindGameObjectWithTag("Player").GetComponent<FirstPersonController>();
         }
 
+        TotalDamageTaken = 0;
+        Player.PlayerDamaged += OnPlayerDamaged;
+
         timeStopped = false;
         CombatantCount = 0;
 
-        var enemies = FindObjectsOfType<MonoBehaviour>(true).OfType<IEnemy>();
+        // Get all guns, want to make a base class
+
+        // way more efficient
+        var baseEnemies = FindObjectsOfType<NewAgentBase>(true).ToArray<IEnemy>();
+        var swarmers = FindObjectsOfType<EnemySwarmerBehavior>(true).ToArray<IEnemy>();
+
+        var enemies = baseEnemies.Concat(swarmers).ToArray();
 
         foreach (var enemy in enemies)
         {
             enemy.CombatStateChanged += OnCombatStateChanged;
+            enemy.EnemyDefeated += OnEnemyDefeated;
         }
     }
 
@@ -75,6 +89,21 @@ public sealed class LevelManager : MonoBehaviour
                 timeStopped = false;
             }
         }
+    }
+
+    private void OnDamageDealt(float damage)
+    {
+        TotalDamageDealt += damage;
+    }
+
+    private void OnEnemyDefeated(bool isDead)
+    {
+        EnemiesDefeated++;
+    }
+
+    private void OnPlayerDamaged(float damage)
+    {
+        TotalDamageTaken += damage;
     }
 
     private void OnCombatStateChanged(bool combatState)

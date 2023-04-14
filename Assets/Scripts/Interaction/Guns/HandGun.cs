@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class HandGun : MonoBehaviour, IGun
+public class HandGun : MonoBehaviour, IGun, IDamageTracking
 {
     public string GunName { get { return "Pistol"; } }
     public GunHandler GunManager { get; set; }
@@ -36,6 +36,8 @@ public class HandGun : MonoBehaviour, IGun
     //public bool Reloading { get { return GunManager.Reloading; } set { GunManager.Reloading = value; } }
 
     public bool CanShoot => lastShotTime + FireRate < Time.time && CurrentAmmo > 0;
+
+    public PlayerDamageDelegate DamageDealt { get; set; }
 
     //private bool ReloadNow => reloadStartTime + ReloadTime < Time.time && GunManager.Reloading;
     private float lastShotTime;
@@ -233,6 +235,7 @@ public class HandGun : MonoBehaviour, IGun
 
                 //Damage the target
                 damageableTarget.TakeDamage(realDamage, HitBoxType.normal);
+                DamageDealt?.Invoke(realDamage);
             }
             catch
             {
