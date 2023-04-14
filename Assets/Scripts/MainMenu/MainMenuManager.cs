@@ -20,11 +20,15 @@ public class MainMenuManager : MonoBehaviour
 
     [Header("Loading Options")]
     [SerializeField] Image LoadingBar;
+    [SerializeField] GameObject LaunchButton;
     [SerializeField] float LoadThreshold;
+
+    AsyncOperation operation;
 
     private void OnEnable()
     {
         LoadingPanel.SetActive(false);
+        LaunchButton.SetActive(false);
         LoadingBar.fillAmount = .25f;
     }
 
@@ -33,8 +37,13 @@ public class MainMenuManager : MonoBehaviour
         //SceneManager.LoadScene(index);
         MainPanel.SetActive(false);
         LoadingPanel.SetActive(true);
-        StartCoroutine(LoadSceneAsync(index));
         
+        StartCoroutine(LoadSceneAsync(index));
+    }
+
+    public void Launch()
+    {
+        operation.allowSceneActivation = true;
     }
 
     public void QuitGame()
@@ -50,8 +59,7 @@ public class MainMenuManager : MonoBehaviour
 
     IEnumerator LoadSceneAsync(int index)
     {
-        
-        AsyncOperation operation = SceneManager.LoadSceneAsync(index);
+        operation = SceneManager.LoadSceneAsync(index);
         operation.allowSceneActivation = false;
         
 
@@ -61,7 +69,7 @@ public class MainMenuManager : MonoBehaviour
 
             if (operation.progress >= LoadThreshold)
             {
-                operation.allowSceneActivation = true;
+                LaunchButton.SetActive(true);
             }
             yield return null;
         }
