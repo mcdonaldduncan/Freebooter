@@ -59,17 +59,17 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable
     {
         if (hitboxtype == HitBoxType.normal)
         {
-            damageable.TakeDamage(damageTaken, HitBoxType.normal);
+            damageable.TakeDamage(damageTaken, HitBoxType.normal, hitPoint);
         }
         if (hitboxtype == HitBoxType.critical)
         {
             PlayVFX(critVFX, VFXTransform.position);
-            damageable.TakeDamage(damageTaken * CriticalDamageMultiplier, HitBoxType.critical);
+            damageable.TakeDamage(damageTaken * CriticalDamageMultiplier, HitBoxType.critical, hitPoint);
         }
         if (hitboxtype == HitBoxType.armored)
         {
             PlayVFX(armorVFX, VFXTransform.position);
-            damageable.TakeDamage(damageTaken * ArmorDamageReductionMultiplier, HitBoxType.armored);
+            damageable.TakeDamage(damageTaken * ArmorDamageReductionMultiplier, HitBoxType.armored, hitPoint);
         }
         if (hitboxtype == HitBoxType.shield)
         {
