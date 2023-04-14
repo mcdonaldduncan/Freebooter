@@ -106,8 +106,14 @@ public sealed class LevelManager : MonoBehaviour
     public void EndLevel()
     {
         OnLevelEnd();
+        CameraShake.ShakeCamera(0, 0, 0);
         TogglePause(true);
         ScorePanel.SetActive(true);
+        Player.enabled = false;
+        Player.PlayerGun.CurrentGun.GunReticle.alpha = 0;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
 
         var totalTime = TimeSpan.FromSeconds(LevelEndTime - LevelStartTime);
 
