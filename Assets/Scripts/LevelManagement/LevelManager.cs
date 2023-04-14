@@ -40,6 +40,8 @@ public sealed class LevelManager : MonoBehaviour
     [SerializeField] private int EnemiesDefeated;
     [SerializeField] private int PlayerDeaths;
 
+    float LevelStartTime;
+    float LevelEndTime;
 
     void Awake()
     {
@@ -55,6 +57,8 @@ public sealed class LevelManager : MonoBehaviour
 
     private void Start()
     {
+        LevelStartTime = Time.unscaledTime;
+
         if (Player == null)
         {
             Player = GameObject.FindGameObjectWithTag("Player").GetComponent<FirstPersonController>();
@@ -65,8 +69,6 @@ public sealed class LevelManager : MonoBehaviour
 
         timeStopped = false;
         CombatantCount = 0;
-
-        //var Guns =
 
         var baseEnemies = FindObjectsOfType<NewAgentBase>(true).ToArray<IEnemy>();
         var swarmers = FindObjectsOfType<EnemySwarmerBehavior>(true).ToArray<IEnemy>();
@@ -115,6 +117,11 @@ public sealed class LevelManager : MonoBehaviour
     private void OnPlayerDamaged(float damage)
     {
         TotalDamageTaken += damage;
+    }
+
+    private void OnLevelEnd()
+    {
+        LevelEndTime = Time.unscaledTime;
     }
 
     private void OnCombatStateChanged(bool combatState)

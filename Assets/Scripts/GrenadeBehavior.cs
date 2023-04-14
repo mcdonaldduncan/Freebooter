@@ -57,7 +57,7 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable, IDamageTracking
     {
         if (ShouldExplode)
         {
-            //Explode();
+            Explode();
         }
     }
 
