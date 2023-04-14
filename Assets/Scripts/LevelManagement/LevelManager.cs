@@ -65,6 +65,7 @@ public sealed class LevelManager : MonoBehaviour
         Player.PlayerDamaged += OnPlayerDamaged;
 
         timeStopped = false;
+        TogglePause(false);
         CombatantCount = 0;
 
         var baseEnemies = FindObjectsOfType<NewAgentBase>(true).ToArray<IEnemy>();
