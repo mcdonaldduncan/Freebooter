@@ -4928,17 +4928,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Prefab: {fileID: 196044}
-  m_ExplosionPrefab: {fileID: 0}
+  m_ExplosionPrefab: {fileID: 8987779508820533509, guid: 3bba93b081a56284c8382221d884862d,
+    type: 3}
   m_DamageAll: 1
   m_EnableGravity: 0
   m_IsTracking: 1
-  m_IsExplosive: 0
+  m_IsExplosive: 1
   m_HasTrail: 0
   m_LaunchForce: 200
   m_TrackingForce: 4
-  m_DamageAmount: 5
-  m_ExplosionRadius: 0
-  m_VelocityLimit: 4
+  m_DamageAmount: 10
+  m_ExplosionRadius: 1
+  m_VelocityLimit: 7
   m_LifeTime: 15
 --- !u!1001 &4647728203972624821
 PrefabInstance:
