@@ -60,6 +60,11 @@ public class AutoGun : MonoBehaviour, IGun, IDamageTracking
 
     }
 
+    private void Start()
+    {
+        LevelManager.Instance.RegisterDamageTracker(this);
+    }
+
     private void OnEnable()
     {
         GunHandler.weaponSwitched += OnWeaponSwitch;

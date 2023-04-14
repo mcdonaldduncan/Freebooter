@@ -38,12 +38,13 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable, IDamageTracking
 
     private void OnEnable()
     {
-        grenadeGun = LevelManager.Instance.Player.GetComponentInChildren<GrenadeGun>();
+        RegisterWithLevelManager();
+        if (grenadeGun == null) grenadeGun = LevelManager.Instance.Player.GetComponentInChildren<GrenadeGun>();
         //hitStopDuration = grenadeGun.HitStopDuration;
         transform.SetParent(null, true);
         startTime = Time.time;
-        grenadeAudioSource = GetComponent<AudioSource>();
-        grenadeRenderer = GetComponent<Renderer>();
+        if (grenadeAudioSource == null) grenadeAudioSource = GetComponent<AudioSource>();
+        if (grenadeRenderer == null) grenadeRenderer = GetComponent<Renderer>();
         grenadeGun.remoteDetonationEvent += Explode;
         LevelManager.PlayerRespawn += OnPlayerRespawn;
         startTime = Time.time;
@@ -51,6 +52,7 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable, IDamageTracking
         collided = false;
     }
 
+    // ????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
     private void Update()
     {
         if (ShouldExplode)
@@ -74,6 +76,17 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable, IDamageTracking
             collided = true;
         }
     }
+
+    private void OnDisable()
+    {
+        LevelManager.Instance.DeRegisterDamageTracker(this);
+    }
+
+    void RegisterWithLevelManager()
+    {
+        LevelManager.Instance.RegisterDamageTracker(this);
+    }
+
 
     public void Launch(Vector3 direction)
     {

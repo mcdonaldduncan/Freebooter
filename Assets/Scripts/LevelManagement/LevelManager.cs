@@ -35,9 +35,11 @@ public sealed class LevelManager : MonoBehaviour
 
     private bool InCombat;
 
-    private float TotalDamageTaken;
-    private float TotalDamageDealt;
-    private int EnemiesDefeated;
+    [SerializeField] private float TotalDamageTaken;
+    [SerializeField] private float TotalDamageDealt;
+    [SerializeField] private int EnemiesDefeated;
+    [SerializeField] private int PlayerDeaths;
+
 
     void Awake()
     {
@@ -64,6 +66,8 @@ public sealed class LevelManager : MonoBehaviour
         timeStopped = false;
         CombatantCount = 0;
 
+        //var Guns =
+
         var baseEnemies = FindObjectsOfType<NewAgentBase>(true).ToArray<IEnemy>();
         var swarmers = FindObjectsOfType<EnemySwarmerBehavior>(true).ToArray<IEnemy>();
 
@@ -86,6 +90,16 @@ public sealed class LevelManager : MonoBehaviour
                 timeStopped = false;
             }
         }
+    }
+
+    public void RegisterDamageTracker(IDamageTracking tracker)
+    {
+        tracker.DamageDealt += OnDamageDealt;
+    }
+    
+    public void DeRegisterDamageTracker(IDamageTracking tracker)
+    {
+        tracker.DamageDealt -= OnDamageDealt;
     }
 
     private void OnDamageDealt(float damage)
@@ -145,6 +159,7 @@ public sealed class LevelManager : MonoBehaviour
         timeStopped = false;
         Time.timeScale = 1.0f;
         PlayerRespawn?.Invoke();
+        PlayerDeaths++;
     }
 
     public void UpdateCurrentCP(CheckPoint cp)

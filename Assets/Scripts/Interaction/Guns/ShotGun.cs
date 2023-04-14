@@ -47,9 +47,15 @@ public class ShotGun : MonoBehaviour, IGun, IDamageTracking
     private int trailCounter;
     private bool hitOnce = false;
 
+    private void Start()
+    {
+        LevelManager.Instance.RegisterDamageTracker(this);
+    }
+
     private void OnEnable()
     {
         GunHandler.weaponSwitched += OnWeaponSwitch;
+        
     }
     private void OnDisable()
     {
