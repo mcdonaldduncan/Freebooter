@@ -9,6 +9,8 @@ using UnityEngine.UI;
 /// Author: Duncan McDonald
 public class AudioManager : Singleton<AudioManager>
 {
+    [SerializeField] public string CurrentSource;
+
     [Header("Navigator Audio Source and Image")]
     [SerializeField] AudioSource m_AudioSource; // AudioSource component that plays the audio clips
     [SerializeField] Image m_NavImage; // Image component that displays a navigation icon
@@ -75,6 +77,8 @@ public class AudioManager : Singleton<AudioManager>
     // In update, if there are any clips in the queue and the audio source is not currently playing, the next clip in the queue is played
     void Update()
     {
+        CurrentSource = m_CurrentPrimary.clip.name.Substring(m_CurrentPrimary.clip.name.Length - 20);
+
         AdjustPrimaryVolume();
         AdjustSecondaryVolume();
 

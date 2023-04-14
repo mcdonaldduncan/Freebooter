@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -912,6 +912,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1bfcba181dab024488b9471db28eb84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CurrentSource: {fileID: 0}
   m_AudioSource: {fileID: 57251339}
   m_NavImage: {fileID: 57251338}
   m_PrimaryMusicSource: {fileID: 1886694137}
@@ -920,9 +921,9 @@ MonoBehaviour:
   m_CombatMusic: {fileID: 8300000, guid: 71396107d00f7154685747d4525d3220, type: 3}
   m_ReleaseMusic: {fileID: 8300000, guid: 9612921d40006514db70c17e7464c95c, type: 3}
   m_TransitionSpeed: 0.2
-  m_ReleaseTime: 20
+  m_ReleaseTime: 15
   m_InitialCombatVolume: 0.2
-  m_CombatExitDelay: 10
+  m_CombatExitDelay: 5
   m_ExplorationVolume: 0.5
   m_CombatVolume: 0.5
   m_ReleaseVolume: 0.5
