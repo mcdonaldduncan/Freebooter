@@ -64,9 +64,6 @@ public sealed class LevelManager : MonoBehaviour
         timeStopped = false;
         CombatantCount = 0;
 
-        // Get all guns, want to make a base class
-
-        // way more efficient
         var baseEnemies = FindObjectsOfType<NewAgentBase>(true).ToArray<IEnemy>();
         var swarmers = FindObjectsOfType<EnemySwarmerBehavior>(true).ToArray<IEnemy>();
 
