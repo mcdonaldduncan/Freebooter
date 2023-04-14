@@ -59,10 +59,7 @@ public sealed class LevelManager : MonoBehaviour
     {
         LevelStartTime = Time.unscaledTime;
 
-        if (Player == null)
-        {
-            Player = GameObject.FindGameObjectWithTag("Player").GetComponent<FirstPersonController>();
-        }
+        if (Player == null) Player = GameObject.FindGameObjectWithTag("Player").GetComponent<FirstPersonController>();
 
         TotalDamageTaken = 0;
         Player.PlayerDamaged += OnPlayerDamaged;
