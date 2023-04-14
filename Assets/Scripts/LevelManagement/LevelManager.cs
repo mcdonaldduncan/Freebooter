@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -40,11 +43,19 @@ public sealed class LevelManager : MonoBehaviour
     [SerializeField] private int EnemiesDefeated;
     [SerializeField] private int PlayerDeaths;
 
+    [SerializeField] private GameObject ScorePanel;
+    [SerializeField] private TextMeshProUGUI LevelTime;
+    [SerializeField] private TextMeshProUGUI DamageDealt;
+    [SerializeField] private TextMeshProUGUI DamageTaken;
+    [SerializeField] private TextMeshProUGUI EnemyKills;
+    [SerializeField] private TextMeshProUGUI PlayerDeath;
+
     float LevelStartTime;
     float LevelEndTime;
 
     void Awake()
     {
+        ScorePanel.SetActive(false);
         if (Instance != null && Instance != this)
         {
             Destroy(this);
@@ -90,6 +101,27 @@ public sealed class LevelManager : MonoBehaviour
                 timeStopped = false;
             }
         }
+    }
+
+    public void EndLevel()
+    {
+        OnLevelEnd();
+        TogglePause(true);
+        ScorePanel.SetActive(true);
+
+        var totalTime = TimeSpan.FromSeconds(LevelEndTime - LevelStartTime);
+
+        StringBuilder sb = new StringBuilder();
+        sb.Append(totalTime.Minutes);
+        sb.Append(":");
+        sb.Append(totalTime.Seconds);
+
+        LevelTime.text = sb.ToString();
+
+        DamageDealt.text = TotalDamageDealt.ToString("n2");
+        DamageTaken.text = TotalDamageTaken.ToString("n2");
+        EnemyKills.text = EnemiesDefeated.ToString();
+        PlayerDeath.text = PlayerDeaths.ToString();
     }
 
     public void RegisterDamageTracker(IDamageTracking tracker)
@@ -149,14 +181,7 @@ public sealed class LevelManager : MonoBehaviour
 
     public static void TogglePause(bool shouldPause)
     {
-        if (shouldPause == true)
-        {
-            Time.timeScale = 0.0f;
-        }
-        else
-        {
-            Time.timeScale = 1.0f;
-        }
+        Time.timeScale = shouldPause ? 0 : 1;  
     }
 
     public void FirePlayerRespawn()
