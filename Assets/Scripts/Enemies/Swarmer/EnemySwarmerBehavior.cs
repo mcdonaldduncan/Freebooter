@@ -338,11 +338,11 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
         m_updateAnims = false;
         EnableRagdoll(hitPoint);
 
-        if (IsInCombat) HandleCombatStateChange();
+        if (IsInCombat && !m_isDead) HandleCombatStateChange();
 
-        if (m_shouldHitStop) LevelManager.TimeStop(m_hitStopDuration);
+        if (m_shouldHitStop && !m_isDead) LevelManager.TimeStop(m_hitStopDuration);
 
-        if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
+        if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal && !m_isDead)
         {
             ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);
             //LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
@@ -452,7 +452,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
         health -= damageTaken;
         ragdollForce = damageTaken;
         if (fractureScript != null) fractureScript.Health = health;
-        if (Health <= 0 && !m_isDead) OnDeath(hitPoint);
+        if (Health <= 0) OnDeath(hitPoint);
         m_IDamageable.InstantiateDamageNumber(damageTaken, hitbox);
     }
 }

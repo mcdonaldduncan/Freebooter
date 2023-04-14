@@ -10,6 +10,14 @@ public class BarrelGroupBehavior : MonoBehaviour
     public event BarrelGroupDelegate fractureChildren;
     [HideInInspector]
     public bool activated = false;
+    private bool m_shouldPlayBarrelAudio;
+
+    public bool ShouldPlayBarrelAudio { get { return m_shouldPlayBarrelAudio; } set { m_shouldPlayBarrelAudio = value; } }
+
+    private void Start()
+    {
+        m_shouldPlayBarrelAudio = true;
+    }
 
     public GameObject AddBarrel()
     {
