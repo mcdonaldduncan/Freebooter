@@ -99,7 +99,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable
         m_State = m_ShouldSleep ? AgentState.SLEEP : AgentState.WANDER;
         m_StartingState = m_State;
 
-        LevelManager.PlayerRespawn += OnPlayerRespawn;
+        LevelManager.Instance.PlayerRespawn += OnPlayerRespawn;
 
         if (m_Activator == null) return;
 
@@ -292,7 +292,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable
 
     public void OnCheckPointReached()
     {
-        LevelManager.PlayerRespawn -= OnPlayerRespawn;
+        LevelManager.Instance.PlayerRespawn -= OnPlayerRespawn;
     }
 
     public virtual void OnDeath()
@@ -303,7 +303,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable
             LevelManager.Instance.Player.HealthRegen(LevelManager.Instance.Player.PercentToHeal * m_MaxHealth);
         }
         gameObject.SetActive(false);
-        LevelManager.CheckPointReached += OnCheckPointReached;
+        LevelManager.Instance.CheckPointReached += OnCheckPointReached;
     }
 
     public virtual void OnPlayerRespawn()

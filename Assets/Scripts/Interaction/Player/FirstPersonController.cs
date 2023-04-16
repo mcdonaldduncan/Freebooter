@@ -286,7 +286,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         defaultLocalPosition = bobObjHolder.localPosition;
         defaultYPosBobObj = defaultLocalPosition.y;
         defaultXPosBobObj = defaultLocalPosition.x;
-        m_deathScreen = LevelManager.Instance.Player.GetComponentInChildren<DeathScreen>();
+        m_deathScreen = GetComponentInChildren<DeathScreen>();
     }
 
     // Update is called once per frame

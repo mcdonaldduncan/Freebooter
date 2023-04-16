@@ -12,7 +12,7 @@ using UnityEngine.UI;
 /// 
 /// </summary>
 /// Author: Duncan McDonald
-public sealed class LevelManager : MonoBehaviour
+public sealed class LevelManager : Singleton<LevelManager>
 {
     [SerializeField] public FirstPersonController Player;
     [SerializeField] public GameObject CheckPointPrefab;
@@ -27,11 +27,11 @@ public sealed class LevelManager : MonoBehaviour
     
     public CheckPoint CurrentCheckPoint { get { return m_CurrentCheckPoint; } set { m_CurrentCheckPoint = value; } }
 
-    public static LevelManager Instance { get; private set; }
+    //public static LevelManager Instance { get; private set; }
 
     public delegate void PlayerRespawnDelegate();
-    public static event PlayerRespawnDelegate PlayerRespawn;
-    public static event PlayerRespawnDelegate CheckPointReached;
+    public event PlayerRespawnDelegate PlayerRespawn;
+    public event PlayerRespawnDelegate CheckPointReached;
 
     public delegate void PlayerCombatDelegate(bool inCombat);
     public event PlayerCombatDelegate CombatStateChanged;
@@ -65,19 +65,19 @@ public sealed class LevelManager : MonoBehaviour
 
     void Awake()
     {
-        ScorePanel.SetActive(false);
-        if (Instance != null && Instance != this)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            Instance = this;
-        }
+        //if (Instance != null && Instance != this)
+        //{
+        //    Destroy(this);
+        //}
+        //else
+        //{
+        //    Instance = this;
+        //}
     }
 
     private void Start()
     {
+        ScorePanel.SetActive(false);
         BackgroundPanelAlpha = 0;
         LevelStartTime = Time.unscaledTime;
 

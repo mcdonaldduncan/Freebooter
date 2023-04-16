@@ -123,7 +123,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
         animator.SetBool("PlayerTooFar", true);
         animator.SetBool("ChasePlayer", false);
         animator.SetBool("AttackPlayer", false);
-        LevelManager.PlayerRespawn += OnPlayerRespawn;
+        LevelManager.Instance.PlayerRespawn += OnPlayerRespawn;
         m_Target = LevelManager.Instance.Player.transform;
         //hideBehavior.enabled = false;
         m_IDamageable.SetupDamageText();
@@ -327,7 +327,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
         //gameObject.SetActive(false);
         hideBehavior.EndHideProcessRemote();
         hideBehavior.enabled = false;
-        LevelManager.CheckPointReached += OnCheckPointReached;
+        LevelManager.Instance.CheckPointReached += OnCheckPointReached;
         //navMeshAgent.Warp(m_StartingPosition);
     }
 
@@ -355,7 +355,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
         //gameObject.SetActive(false);
         hideBehavior.EndHideProcessRemote();
         hideBehavior.enabled = false;
-        LevelManager.CheckPointReached += OnCheckPointReached;
+        LevelManager.Instance.CheckPointReached += OnCheckPointReached;
         m_isDead = true;
         //navMeshAgent.Warp(m_StartingPosition);
     }
@@ -430,7 +430,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
 
     public void OnCheckPointReached()
     {
-        LevelManager.PlayerRespawn -= OnPlayerRespawn;
+        LevelManager.Instance.PlayerRespawn -= OnPlayerRespawn;
     }
 
     public void ChangeIgnorePlayer(bool shouldIgnorePlayer)

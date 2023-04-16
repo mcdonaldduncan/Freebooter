@@ -22,7 +22,7 @@ public class ProximityActivator : MonoBehaviour, IActivator, IRespawn
 
     public void FireActivation()
     {
-        Debug.Log("Activated Proximity!");
+        //Debug.Log($"Activated Proximity!{gameObject.name}{transform.position}");
         Activate?.Invoke();
     }
 

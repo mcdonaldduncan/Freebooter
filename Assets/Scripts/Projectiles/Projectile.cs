@@ -65,7 +65,7 @@ public class Projectile : MonoBehaviour, IPoolable
 
         if (m_HasTrail) trailRenderer.Clear();
 
-        LevelManager.PlayerRespawn += ResetProjectile;
+        LevelManager.Instance.PlayerRespawn += ResetProjectile;
 
         hasCollided = false;
 
@@ -90,7 +90,7 @@ public class Projectile : MonoBehaviour, IPoolable
 
     private void OnDisable()
     {
-        LevelManager.PlayerRespawn -= ResetProjectile;
+        LevelManager.Instance.PlayerRespawn -= ResetProjectile;
         m_RigidBody.velocity = Vector3.zero;
         m_RigidBody.angularVelocity = Vector3.zero;
 

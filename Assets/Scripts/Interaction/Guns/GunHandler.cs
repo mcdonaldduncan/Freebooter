@@ -324,8 +324,8 @@ public sealed class GunHandler : MonoBehaviour
         currentGun.GunModel.SetActive(true);
         currentGun.GunAnimationHandler.RecoilAnim.SetFloat("RecoilSpeed", currentGun.GunAnimationHandler.RecoilAnimClip.length / currentGun.FireRate);
 
-        LevelManager.CheckPointReached += OnCheckpointReached;
-        LevelManager.PlayerRespawn += OnPlayerRespawn;
+        LevelManager.Instance.CheckPointReached += OnCheckpointReached;
+        LevelManager.Instance.PlayerRespawn += OnPlayerRespawn;
 
         UpdateAmmoDisplay();
 

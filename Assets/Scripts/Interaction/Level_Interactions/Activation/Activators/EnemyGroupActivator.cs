@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -36,6 +37,8 @@ public class EnemyGroupActivator : MonoBehaviour, IActivator
 
     private void Start()
     {
+        LevelManager.Instance.PlayerRespawn += OnRespawn;
+
         m_Group = new List<IGroupable>();
         foreach (var target in m_TargetGroup)
         {
@@ -56,12 +59,14 @@ public class EnemyGroupActivator : MonoBehaviour, IActivator
 
     private void OnEnable()
     {
-        LevelManager.PlayerRespawn += OnRespawn;
+        
     }
+
+    
 
     private void OnDisable()
     {
-        LevelManager.PlayerRespawn -= OnRespawn;
+        //LevelManager.Instance.PlayerRespawn -= OnRespawn;
     }
 
     public void FireActivation()

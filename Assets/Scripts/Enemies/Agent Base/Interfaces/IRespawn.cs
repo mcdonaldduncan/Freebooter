@@ -8,17 +8,17 @@ public interface IRespawn
 
     public void SubscribeToRespawn()
     {
-        LevelManager.PlayerRespawn += OnPlayerRespawn;
+        LevelManager.Instance.PlayerRespawn += OnPlayerRespawn;
     }
 
     public void SubscribeToCheckpointReached()
     {
-        LevelManager.CheckPointReached += OnCheckPointReached;
+        LevelManager.Instance.CheckPointReached += OnCheckPointReached;
     }
 
     public void OnCheckPointReached()
     {
-        LevelManager.PlayerRespawn -= OnPlayerRespawn;
+        LevelManager.Instance.PlayerRespawn -= OnPlayerRespawn;
     }
 
     void OnPlayerRespawn();

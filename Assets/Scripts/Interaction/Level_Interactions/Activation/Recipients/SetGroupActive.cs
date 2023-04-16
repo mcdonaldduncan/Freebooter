@@ -39,7 +39,7 @@ public class SetGroupActive : MonoBehaviour
 
     void Start()
     {
-        LevelManager.PlayerRespawn += OnPlayerRespawn;
+        LevelManager.Instance.PlayerRespawn += OnPlayerRespawn;
     }
 
     void OnActivate()
@@ -62,7 +62,7 @@ public class SetGroupActive : MonoBehaviour
         }
 
         
-        LevelManager.CheckPointReached += OnCheckPointReached;
+        LevelManager.Instance.CheckPointReached += OnCheckPointReached;
     }
 
     void OnPlayerRespawn()
@@ -88,6 +88,6 @@ public class SetGroupActive : MonoBehaviour
 
     void OnCheckPointReached()
     {
-        LevelManager.PlayerRespawn -= OnPlayerRespawn;
+        LevelManager.Instance.PlayerRespawn -= OnPlayerRespawn;
     }
 }

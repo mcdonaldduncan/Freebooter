@@ -34,7 +34,7 @@ public class EnemyDissolveController : MonoBehaviour
 
         m_dissolveAmountStart = m_skinnedMaterial.GetFloat("_DissolveAmount");
 
-        LevelManager.PlayerRespawn += OnPlayerRespawn;
+        LevelManager.Instance.PlayerRespawn += OnPlayerRespawn;
         m_enemyScript.EnemyDied += OnEnemyDeath;
     }
 

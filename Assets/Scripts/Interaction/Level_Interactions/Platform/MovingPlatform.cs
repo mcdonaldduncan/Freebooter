@@ -67,7 +67,7 @@ public class MovingPlatform : MonoBehaviour
 
     private void OnEnable()
     {
-        LevelManager.PlayerRespawn += Reset;
+        
         m_IActivators = new List<IActivator>();
 
 
@@ -92,7 +92,7 @@ public class MovingPlatform : MonoBehaviour
 
     private void OnDisable()
     {
-        LevelManager.PlayerRespawn -= Reset;
+        //LevelManager.Instance.PlayerRespawn -= Reset;
 
 
         foreach (var Iactivator in m_IActivators)
@@ -106,6 +106,7 @@ public class MovingPlatform : MonoBehaviour
 
     void Start()
     {
+        LevelManager.Instance.PlayerRespawn += Reset;
         //Player = GameObject.FindGameObjectWithTag("Player").GetComponent<FirstPersonController>();
         Platform = gameObject.FindChildWithTag("Platform");
         Base = Platform.GetComponent<PlatformBase>();
