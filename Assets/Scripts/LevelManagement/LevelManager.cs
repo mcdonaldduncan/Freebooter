@@ -63,18 +63,6 @@ public sealed class LevelManager : Singleton<LevelManager>
     float BackgroundPanelAlpha;
     Coroutine FadeRoutineInstance;
 
-    void Awake()
-    {
-        //if (Instance != null && Instance != this)
-        //{
-        //    Destroy(this);
-        //}
-        //else
-        //{
-        //    Instance = this;
-        //}
-    }
-
     private void Start()
     {
         ScorePanel.SetActive(false);
