@@ -19,14 +19,8 @@ public class DeathScreen : MonoBehaviour
         UI.SetActive(false);
     }
 
-    private void Update()
-    {
-        StopTimeWhenDead();
-    }
-
     public void StopTimeWhenDead()
     {
-        if (FirstPersonController.isDead == false) return;
         if (called == true) return; 
         FirstPersonController.enabled = false;
         CameraShake.ShakeCamera(0, 0, 0);

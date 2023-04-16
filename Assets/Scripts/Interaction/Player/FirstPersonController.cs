@@ -243,6 +243,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     float originalSpeed, boostSpeedDuration, boostStartedTime;
     bool boostedSpeedEnabled;
 
+    private DeathScreen m_deathScreen;
+
     public enum MovementState
     {
         basic
@@ -284,6 +286,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         defaultLocalPosition = bobObjHolder.localPosition;
         defaultYPosBobObj = defaultLocalPosition.y;
         defaultXPosBobObj = defaultLocalPosition.x;
+        m_deathScreen = LevelManager.Instance.Player.GetComponentInChildren<DeathScreen>();
     }
 
     // Update is called once per frame
@@ -806,6 +809,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     {
         isDead = true;
         characterController.enabled = false;
+        m_deathScreen.StopTimeWhenDead();
     }
 
     public void Respawn()
