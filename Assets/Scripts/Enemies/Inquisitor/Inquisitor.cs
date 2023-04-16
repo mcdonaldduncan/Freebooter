@@ -93,11 +93,17 @@ public class Inquisitor : MonoBehaviour, IDamageable, IGroupable
 
     public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint = default(Vector3))
     {
-        if (damageTaken < 1) return; 
-        Health -= damageTaken;
-        Debug.Log(hitbox.ToString());
-        m_Damageable.InstantiateDamageNumber(damageTaken, hitbox);
-        CheckForDeath();
+        if (damageTaken < 1) return;
+        if (m_Shield.active)
+        {
+            m_Damageable.InstantiateDamageNumber(0, HitBoxType.armored);
+        }
+        else 
+        {
+            Health -= damageTaken;
+            m_Damageable.InstantiateDamageNumber(damageTaken, hitbox);
+            CheckForDeath();
+        }
     }
 
     public void CheckOrbits()

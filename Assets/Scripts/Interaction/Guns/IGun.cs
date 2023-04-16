@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
+
 public interface IGun
 {
+    string GunName { get; }
     GunHandler GunManager { get; set; }
     Transform ShootFrom { get; set; }
     LayerMask LayerToIgnore { get; set; }
@@ -32,9 +35,12 @@ public interface IGun
     float ShakeDuration { get; set; }
     float ShakeMagnitude { get; set; }
     float ShakeDampen { get; set; }
+    
 
     void ShootTriggered(InputAction.CallbackContext context);
     void AlternateTriggered(InputAction.CallbackContext context);
+
+    
     //void StartReload();
     //IEnumerator Reload(WaitForSeconds reloadWait);
 }

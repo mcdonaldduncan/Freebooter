@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using UnityEngine.AI;
 using UnityEngine;
 
-public class MeleeTank : NewAgentBase
+public class MeleeTank : NewAgentBase, IDissolvable
 {
     [Header("Shield GameObject")]
     public GameObject Shield; //for cycle
 
     [Header("Animator")]
     [SerializeField] Animator m_Animator;
+    [SerializeField] Rigidbody m_torsoRB;
+    [SerializeField] private float ragdollForce;
+    [SerializeField] private float ragdollForceScale;
 
     //[Header("ExplosiveGun")]
     //[SerializeField] protected GameObject m_ProjectilePrefabExplosive;
@@ -47,8 +50,8 @@ public class MeleeTank : NewAgentBase
     float lastChargeTime;
     float lastMeleeTime;
     float lastChargeHitTime;
-    bool shouldMelee => Time.time > m_TimeBetweenMeleeHits + lastMeleeTime && m_Tracking.DistanceToTarget < m_meleeRange;//timer for the melee
-    bool shouldCharge => Time.time > m_TimeBetweenCharges + lastChargeTime && m_Tracking.DistanceToTarget < m_chargeRange;//timer for the charge
+    bool shouldMelee => Time.time > m_TimeBetweenMeleeHits + lastMeleeTime && Tracking.DistanceToTarget < m_meleeRange;//timer for the melee
+    bool shouldCharge => Time.time > m_TimeBetweenCharges + lastChargeTime && Tracking.DistanceToTarget < m_chargeRange;//timer for the charge
     bool shouldDealDamageInCharge => Time.time > m_TimeBetweenChargeHits + lastChargeHitTime;
     bool charging; //Im using this to prevent melee atacking while charging
 
@@ -56,6 +59,10 @@ public class MeleeTank : NewAgentBase
     float originalchargetimer;
     float originalSpeed;
     float originalAccel;
+
+    public DissolvableDelegate EnemyDied { get; set; }
+    //public delegate void MetalonDelegate();
+    //public event MetalonDelegate MetalonDeath;
 
     private void Awake()
     {
@@ -73,6 +80,7 @@ public class MeleeTank : NewAgentBase
         originalchargetimer = m_ChargeLifeTime;
         originalAccel = Agent.acceleration;
         originalSpeed = Agent.speed;
+        DisableRagdoll();
     }
 
 
@@ -117,34 +125,36 @@ public class MeleeTank : NewAgentBase
 
     public override void HandleAgentState()
     {
-        switch (m_State)
+        if (IsDead) return;
+
+        switch (State)
         {
             case AgentState.GUARD:
-                m_Tracking.TrackTarget2D();
-                if (m_Tracking.CheckFieldOfView()) m_State = AgentState.CHASE;
+                Tracking.TrackTarget2D();
+                if (Tracking.CheckFieldOfView()) State = AgentState.CHASE;
                 if (IsInCombat) HandleCombatStateChange();
                 break;
             case AgentState.WANDER:
-                m_Navigation.Wander();
-                if (m_Tracking.CheckFieldOfView()) m_State = AgentState.CHASE;
+                Navigation.Wander();
+                if (Tracking.CheckFieldOfView()) State = AgentState.CHASE;
                 if (IsInCombat) HandleCombatStateChange();
                 break;
             case AgentState.CHASE:
-                m_Navigation.ChaseTarget();
-                m_Tracking.TrackTarget2D();
-                if (!m_Tracking.InRange) m_State = AgentState.RETURN;
+                Navigation.ChaseTarget();
+                Tracking.TrackTarget2D();
+                if (!Tracking.InRange) State = AgentState.RETURN;
                 if (!IsInCombat) HandleCombatStateChange();
                 if (shouldMelee) { MeleeHandler(); }
                 if (shouldCharge) { ChargeAttack(); }
                 break;
             case AgentState.RETURN:
-                m_Navigation.MoveToLocationDirect(m_StartingPosition);
-                if (m_Navigation.CheckReturned(m_StartingPosition)) m_State = m_StartingState;
-                if (m_Tracking.CheckFieldOfView()) m_State = AgentState.CHASE;
+                Navigation.MoveToLocationDirect(StartingPosition);
+                if (Navigation.CheckReturned(StartingPosition)) State = StartingState;
+                if (Tracking.CheckFieldOfView()) State = AgentState.CHASE;
                 if (IsInCombat) HandleCombatStateChange();
                 break;
             case AgentState.SLEEP:
-                m_Navigation.Sleep();
+                Navigation.Sleep();
                 if (IsInCombat) HandleCombatStateChange();
                 break;
             default:
@@ -196,6 +206,9 @@ public class MeleeTank : NewAgentBase
         Agent.acceleration = m_VelocityLimit;
         Agent.stoppingDistance = m_ChargeStoppingDistance;
 
+        // Dude, why do you keep copying and pasting code when you have access to it already
+        //Navigation.ChaseTargetDirect(); this is the exact same thing as what you copied and pasted below
+        
         //m_Agent.SetDestination(m_Target.transform.position);
         Vector3 FromPlayerToAgent = transform.position - LevelManager.Instance.Player.transform.position;
         Agent.SetDestination(LevelManager.Instance.Player.transform.position + FromPlayerToAgent.normalized * Agent.stoppingDistance);
@@ -239,6 +252,18 @@ public class MeleeTank : NewAgentBase
         m_Animator.SetBool("Charge", false);
     }
 
+    public override void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint = default(Vector3))
+    {
+        State = AgentState.CHASE;
+        Health -= damageTaken;
+        Damageable.InstantiateDamageNumber(damageTaken, hitbox);
+        if(Health <= 0)
+        {
+            IsDead = true;
+            OnDeathRagdoll(hitPoint);
+        }
+    }
+
     public override void CheckForDeath()
     {
         if (Health <= 0)
@@ -246,6 +271,59 @@ public class MeleeTank : NewAgentBase
             IsDead = true;
             m_Animator.SetBool("Death", true);
         }
+    }
+
+    private void OnDeathRagdoll(Vector3 hitPoint)
+    {
+        EnableRagdoll(hitPoint);
+        base.OnDeath();
+        gameObject.SetActive(true);
+        EnemyDied?.Invoke();
+    }
+
+    public override void OnPlayerRespawn()
+    {
+        IsDead = false;
+        DisableRagdoll();
+        base.OnPlayerRespawn();
+    }
+
+    private void DisableRagdoll()
+    {
+        Agent.speed = originalSpeed;
+        m_Animator.enabled = true;
+        BoxCollider[] boxColliders = GetComponentsInChildren<BoxCollider>();
+        Rigidbody[] rigidBones = GetComponentsInChildren<Rigidbody>();
+        
+        foreach (Collider c in boxColliders)
+        {
+            c.enabled = true;
+        }
+
+        foreach (Rigidbody r in rigidBones)
+        {
+            r.isKinematic = true;
+        }
+    }
+
+    private void EnableRagdoll(Vector3 hitPoint)
+    {
+        Agent.speed = 0;
+        m_Animator.enabled = false;
+        BoxCollider[] boxColliders = GetComponentsInChildren<BoxCollider>();
+        Rigidbody[] rigidBones = GetComponentsInChildren<Rigidbody>();
+        foreach(BoxCollider c in boxColliders)
+        {
+            c.enabled = false;
+        }
+
+        foreach(Rigidbody r in rigidBones)
+        {
+            r.isKinematic = false;
+        }
+        Vector3 forceDirection = m_torsoRB.position - hitPoint;
+
+        m_torsoRB.AddForce(forceDirection.normalized * ragdollForce * ragdollForceScale, ForceMode.Impulse);
     }
 
     public void DeathAnimationEnd()

@@ -1,12 +1,18 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 /// <summary>
 /// 
 /// </summary>
 /// Author: Duncan McDonald
-public sealed class LevelManager : MonoBehaviour
+public sealed class LevelManager : Singleton<LevelManager>
 {
     [SerializeField] public FirstPersonController Player;
     [SerializeField] public GameObject CheckPointPrefab;
@@ -21,11 +27,11 @@ public sealed class LevelManager : MonoBehaviour
     
     public CheckPoint CurrentCheckPoint { get { return m_CurrentCheckPoint; } set { m_CurrentCheckPoint = value; } }
 
-    public static LevelManager Instance { get; private set; }
+    //public static LevelManager Instance { get; private set; }
 
     public delegate void PlayerRespawnDelegate();
-    public static event PlayerRespawnDelegate PlayerRespawn;
-    public static event PlayerRespawnDelegate CheckPointReached;
+    public event PlayerRespawnDelegate PlayerRespawn;
+    public event PlayerRespawnDelegate CheckPointReached;
 
     public delegate void PlayerCombatDelegate(bool inCombat);
     public event PlayerCombatDelegate CombatStateChanged;
@@ -34,33 +40,55 @@ public sealed class LevelManager : MonoBehaviour
 
     private bool InCombat;
 
-    void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            Instance = this;
-        }
-    }
+    [SerializeField] private float TotalDamageTaken;
+    [SerializeField] private float TotalDamageDealt;
+    [SerializeField] private int EnemiesDefeated;
+    [SerializeField] private int PlayerDeaths;
+
+    [SerializeField] private GameObject ScorePanel;
+    [SerializeField] private GameObject UIPanel;
+    [SerializeField] private TextMeshProUGUI LevelTime;
+    [SerializeField] private TextMeshProUGUI DamageDealt;
+    [SerializeField] private TextMeshProUGUI DamageTaken;
+    [SerializeField] private TextMeshProUGUI EnemyKills;
+    [SerializeField] private TextMeshProUGUI PlayerDeath;
+    [SerializeField] private Image PanelImage;
+    
+
+    [SerializeField] float FadeSpeed;
+
+    float LevelStartTime;
+    float LevelEndTime;
+
+    float BackgroundPanelAlpha;
+    Coroutine FadeRoutineInstance;
 
     private void Start()
     {
-        if (Player == null)
-        {
-            Player = GameObject.FindGameObjectWithTag("Player").GetComponent<FirstPersonController>();
-        }
+        if (Player == null) Player = GameObject.FindGameObjectWithTag("Player").GetComponent<FirstPersonController>();
+
+        ScorePanel.SetActive(false);
+        BackgroundPanelAlpha = 0;
+        LevelStartTime = Time.unscaledTime;
+
+        
+
+        TotalDamageTaken = 0;
+        Player.PlayerDamaged += OnPlayerDamaged;
 
         timeStopped = false;
+        TogglePause(false);
         CombatantCount = 0;
 
-        var enemies = FindObjectsOfType<NewAgentBase>(true);
+        var baseEnemies = FindObjectsOfType<NewAgentBase>(true).ToArray<IEnemy>();
+        var swarmers = FindObjectsOfType<EnemySwarmerBehavior>(true).ToArray<IEnemy>();
+
+        var enemies = baseEnemies.Concat(swarmers).ToArray();
 
         foreach (var enemy in enemies)
         {
             enemy.CombatStateChanged += OnCombatStateChanged;
+            enemy.EnemyDefeated += OnEnemyDefeated;
         }
     }
 
@@ -75,6 +103,88 @@ public sealed class LevelManager : MonoBehaviour
             }
         }
     }
+
+    private void OnLevelEnd()
+    {
+        StopCoroutine(FadeRoutineInstance);
+
+        var totalTime = TimeSpan.FromSeconds(LevelEndTime - LevelStartTime);
+
+        StringBuilder sb = new StringBuilder();
+        sb.Append(totalTime.Minutes);
+        sb.Append(":");
+        sb.Append(totalTime.Seconds);
+
+        LevelTime.text = sb.ToString();
+
+        var temp = TotalDamageDealt.ToString("n");
+        var temp2 = TotalDamageTaken.ToString("n");
+
+        DamageDealt.text = temp.Substring(0, temp.Length - 3);
+        DamageTaken.text = temp2.Substring(0, temp2.Length - 3);
+
+        EnemyKills.text = EnemiesDefeated.ToString();
+        PlayerDeath.text = PlayerDeaths.ToString();
+
+        UIPanel.SetActive(true);
+    }
+
+    public void EndLevel()
+    {
+        Player.enabled = false;
+        Player.PlayerGun.CurrentGun.GunReticle.alpha = 0;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        CameraShake.ShakeCamera(0, 0, 0);
+        UIPanel.SetActive(false);
+        LevelEndTime = Time.unscaledTime;
+        BackgroundPanelAlpha = 0;
+        FadeRoutineInstance = StartCoroutine(FadeRoutine());
+        TogglePause(true);
+        ScorePanel.SetActive(true);
+    }
+
+    IEnumerator FadeRoutine()
+    {
+        while (true)
+        {
+            BackgroundPanelAlpha = Mathf.MoveTowards(BackgroundPanelAlpha, 1f, FadeSpeed * Time.unscaledDeltaTime);
+            var temp = PanelImage.color;
+            temp.a = BackgroundPanelAlpha;
+            PanelImage.color = temp;
+
+            if (BackgroundPanelAlpha >= 1f) OnLevelEnd();
+
+            yield return null;
+        }
+    }
+
+    public void RegisterDamageTracker(IDamageTracking tracker)
+    {
+        tracker.DamageDealt += OnDamageDealt;
+    }
+    
+    public void DeRegisterDamageTracker(IDamageTracking tracker)
+    {
+        tracker.DamageDealt -= OnDamageDealt;
+    }
+
+    private void OnDamageDealt(float damage)
+    {
+        TotalDamageDealt += damage;
+    }
+
+    private void OnEnemyDefeated(bool isDead)
+    {
+        EnemiesDefeated++;
+    }
+
+    private void OnPlayerDamaged(float damage)
+    {
+        TotalDamageTaken += damage;
+    }
+
+    
 
     private void OnCombatStateChanged(bool combatState)
     {
@@ -103,14 +213,7 @@ public sealed class LevelManager : MonoBehaviour
 
     public static void TogglePause(bool shouldPause)
     {
-        if (shouldPause == true)
-        {
-            Time.timeScale = 0.0f;
-        }
-        else
-        {
-            Time.timeScale = 1.0f;
-        }
+        Time.timeScale = shouldPause ? 0 : 1;  
     }
 
     public void FirePlayerRespawn()
@@ -118,6 +221,7 @@ public sealed class LevelManager : MonoBehaviour
         timeStopped = false;
         Time.timeScale = 1.0f;
         PlayerRespawn?.Invoke();
+        PlayerDeaths++;
     }
 
     public void UpdateCurrentCP(CheckPoint cp)
@@ -159,6 +263,13 @@ public sealed class LevelManager : MonoBehaviour
         //Debug.Log("");
     }
 
+    public void ReloadLevel()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        TogglePause(false);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
 }
 
 

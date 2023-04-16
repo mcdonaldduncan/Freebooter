@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class AutoGun : MonoBehaviour, IGun
+public class AutoGun : MonoBehaviour, IGun, IDamageTracking
 {
+    public string GunName { get { return "Rifle"; } }
     public GunHandler GunManager { get; set; }
     public Transform ShootFrom { get; set; }
     public LayerMask LayerToIgnore { get; set; }
@@ -37,6 +38,8 @@ public class AutoGun : MonoBehaviour, IGun
     public bool CanShoot => lastShotTime + FireRate < Time.time && CurrentAmmo > 0 && GunManager.CurrentGun is AutoGun;
     public bool FireRateCooldown => lastShotTime + FireRate > Time.time;
 
+    public PlayerDamageDelegate DamageDealt { get; set; }
+
     private bool holdingTrigger;
     private float lastShotTime;
     private float reloadStartTime;
@@ -55,6 +58,11 @@ public class AutoGun : MonoBehaviour, IGun
         //    Reload();
         //}
 
+    }
+
+    private void Start()
+    {
+        LevelManager.Instance.RegisterDamageTracker(this);
     }
 
     private void OnEnable()
@@ -96,6 +104,7 @@ public class AutoGun : MonoBehaviour, IGun
             {
                 CurrentAmmo--;
             }
+            GunManager.UpdateAmmoDisplay();
 
             GunAnimationHandler.RecoilAnim.SetTrigger("RecoilTrigger");
 
@@ -124,7 +133,7 @@ public class AutoGun : MonoBehaviour, IGun
 
                 trail.Launch(hitInfo.point);
                 HitEnemyBehavior(hitInfo, hitInfo.transform.GetComponent<IDamageable>());
-        CameraShake.ShakeCamera(ShakeDuration, ShakeMagnitude, ShakeDampen);
+                CameraShake.ShakeCamera(ShakeDuration, ShakeMagnitude, ShakeDampen);
 
 
                 //Instantiate a bulletFromPool trail
@@ -225,6 +234,7 @@ public class AutoGun : MonoBehaviour, IGun
         {
             bool breakableObject = hitInfo.transform.TryGetComponent<Fracture>(out Fracture component);
 
+            // Could we just use an if statement here? try catch is very inefficient
             //using a try catch to prevent destroyed enemies from throwing null reference exceptions
             try
             {
@@ -269,6 +279,7 @@ public class AutoGun : MonoBehaviour, IGun
 
                 //Damage the target
                 damageableTarget.TakeDamage(realDamage, HitBoxType.normal, hitInfo.point);
+                DamageDealt?.Invoke(realDamage);
             }
             catch
             {

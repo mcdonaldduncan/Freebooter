@@ -10,16 +10,16 @@ public class Singleton<T> : MonoBehaviour where T : Component
 {
     private static T _instance;
 
-    private static bool applicationIsQuitting = false;
+    //private static bool applicationIsQuitting = false;
 
     public static T Instance
     {
         get
         {
-            if (applicationIsQuitting)
-            {
-                return null;
-            }
+            //if (applicationIsQuitting)
+            //{
+            //    return null;
+            //}
 
             if (_instance == null)
             {
@@ -43,7 +43,7 @@ public class Singleton<T> : MonoBehaviour where T : Component
 
     private void OnDestroy()
     {
-        applicationIsQuitting = true;
+        //applicationIsQuitting = true;
         _instance = null;
     }
 
@@ -54,11 +54,11 @@ public class Singleton<T> : MonoBehaviour where T : Component
         {
             _instance = this as T;
         }
-        else
+        else if (_instance != this)
         {
             Destroy(gameObject);
         }
-        applicationIsQuitting = false;
+        //applicationIsQuitting = false;
     }
 
 }

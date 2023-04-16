@@ -64,6 +64,7 @@ public class HideBehavior : MonoBehaviour
 
     private IEnumerator Hide(Transform target)
     {
+        Debug.Log("Hiding");
         while (true)
         {
             for (int i = 0; i < m_Colliders.Length; i++)

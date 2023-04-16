@@ -7,7 +7,7 @@ using UnityEngine.AI;
 using UnityEngine.UIElements;
 using TMPro;
 
-public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
+public abstract class AgentBase : MonoBehaviour, IDamageable
 {
     [Header("Projectile Prefab and Projectile Spawn Point")]
     [SerializeField] GameObject m_ProjectilePrefab;
@@ -99,7 +99,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         m_State = m_ShouldSleep ? AgentState.SLEEP : AgentState.WANDER;
         m_StartingState = m_State;
 
-        LevelManager.PlayerRespawn += OnPlayerRespawn;
+        LevelManager.Instance.PlayerRespawn += OnPlayerRespawn;
 
         if (m_Activator == null) return;
 
@@ -292,7 +292,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
 
     public void OnCheckPointReached()
     {
-        LevelManager.PlayerRespawn -= OnPlayerRespawn;
+        LevelManager.Instance.PlayerRespawn -= OnPlayerRespawn;
     }
 
     public virtual void OnDeath()
@@ -303,7 +303,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
             LevelManager.Instance.Player.HealthRegen(LevelManager.Instance.Player.PercentToHeal * m_MaxHealth);
         }
         gameObject.SetActive(false);
-        LevelManager.CheckPointReached += OnCheckPointReached;
+        LevelManager.Instance.CheckPointReached += OnCheckPointReached;
     }
 
     public virtual void OnPlayerRespawn()
@@ -402,7 +402,7 @@ public abstract class AgentBase : MonoBehaviour, IDamageable, IEnemy
         {
             m_Agent.SetDestination(hit.position);
 
-            Debug.Log("Destination set to " + hit.position);
+            //Debug.Log("Destination set to " + hit.position);
         }
         else
         {

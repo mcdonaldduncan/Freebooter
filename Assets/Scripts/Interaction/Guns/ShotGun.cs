@@ -4,8 +4,9 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class ShotGun : MonoBehaviour, IGun
+public class ShotGun : MonoBehaviour, IGun, IDamageTracking
 {
+    public string GunName { get { return "Shotgun"; } }
     public GunHandler GunManager { get; set; }
     public Transform ShootFrom { get; set; }
     public LayerMask LayerToIgnore { get; set; }
@@ -36,6 +37,8 @@ public class ShotGun : MonoBehaviour, IGun
 
     public bool CanShoot => lastShotTime + FireRate < Time.time && CurrentAmmo > 0;
 
+    public PlayerDamageDelegate DamageDealt { get; set; }
+
     private float lastShotTime;
     private float reloadStartTime;
     private Coroutine reloadCo;
@@ -44,9 +47,15 @@ public class ShotGun : MonoBehaviour, IGun
     private int trailCounter;
     private bool hitOnce = false;
 
+    private void Start()
+    {
+        LevelManager.Instance.RegisterDamageTracker(this);
+    }
+
     private void OnEnable()
     {
         GunHandler.weaponSwitched += OnWeaponSwitch;
+        
     }
     private void OnDisable()
     {
@@ -252,7 +261,8 @@ public class ShotGun : MonoBehaviour, IGun
                 }
 
                 //Damage the target
-                damageableTarget.TakeDamage(realDamage, HitBoxType.normal);
+                damageableTarget.TakeDamage(realDamage, HitBoxType.normal, hitInfo.point);
+                DamageDealt?.Invoke(realDamage);
             }
             catch
             {

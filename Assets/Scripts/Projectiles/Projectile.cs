@@ -18,6 +18,7 @@ public class Projectile : MonoBehaviour, IPoolable
     [SerializeField] bool m_EnableGravity;
     [SerializeField] bool m_IsTracking;
     [SerializeField] bool m_IsExplosive;
+    [SerializeField] bool m_HasTrail;
     [SerializeField] float m_LaunchForce;
     [SerializeField] float m_TrackingForce;
     [SerializeField] float m_DamageAmount;
@@ -52,20 +53,24 @@ public class Projectile : MonoBehaviour, IPoolable
             m_RigidBody = GetComponent<Rigidbody>();
         }
 
-        if (trailRenderer == null)
+        if (m_Target == null)
+        {
+            m_Target = LevelManager.Instance.Player.transform;
+        }
+
+        if (trailRenderer == null && m_HasTrail)
         {
             trailRenderer = GetComponentInChildren<TrailRenderer>();
         }
 
-        trailRenderer.Clear();
+        if (m_HasTrail) trailRenderer.Clear();
 
-        LevelManager.PlayerRespawn += ResetProjectile;
+        LevelManager.Instance.PlayerRespawn += ResetProjectile;
 
         hasCollided = false;
 
         startTime = Time.time;
 
-        m_Target = LevelManager.Instance.Player.transform;
         m_Transform = transform;
         m_RigidBody.useGravity = m_EnableGravity;
         m_RigidBody.velocity = Vector3.zero;
@@ -75,9 +80,17 @@ public class Projectile : MonoBehaviour, IPoolable
         acceleration = Vector3.zero;
     }
 
+    private void Start()
+    {
+        if (m_Target == null)
+        {
+            m_Target = LevelManager.Instance.Player.transform;
+        }
+    }
+
     private void OnDisable()
     {
-        LevelManager.PlayerRespawn -= ResetProjectile;
+        LevelManager.Instance.PlayerRespawn -= ResetProjectile;
         m_RigidBody.velocity = Vector3.zero;
         m_RigidBody.angularVelocity = Vector3.zero;
 
@@ -179,6 +192,22 @@ public class Projectile : MonoBehaviour, IPoolable
 
     void TrackTarget()
     {
+        if (m_RigidBody == null)
+        {
+            Debug.Log("Rigidbody null");
+            return;
+        }
+        if (m_Target == null)
+        {
+            Debug.Log("Target null");
+            return;
+        }
+        if (transform == null)
+        {
+            Debug.Log("transform null");
+            return;
+        }
+
         if (m_RigidBody.velocity.magnitude > m_VelocityLimit) m_RigidBody.AddForce(-m_RigidBody.velocity.normalized * (m_RigidBody.velocity.magnitude - m_VelocityLimit), ForceMode.Impulse);
         m_RigidBody.AddForce((m_Target.position - transform.position).normalized * m_TrackingForce, ForceMode.Impulse);
         m_Transform.LookAt(transform.position + m_RigidBody.velocity);

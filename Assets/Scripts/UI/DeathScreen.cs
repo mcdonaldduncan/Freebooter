@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class DeathScreen : MonoBehaviour
 {
@@ -18,14 +19,8 @@ public class DeathScreen : MonoBehaviour
         UI.SetActive(false);
     }
 
-    private void Update()
-    {
-        StopTimeWhenDead();
-    }
-
     public void StopTimeWhenDead()
     {
-        if (FirstPersonController.isDead == false) return;
         if (called == true) return; 
         FirstPersonController.enabled = false;
         CameraShake.ShakeCamera(0, 0, 0);
@@ -34,18 +29,33 @@ public class DeathScreen : MonoBehaviour
         UI.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        called = true;
     }
 
     public void Respawn()
     {
-        LevelManager.TogglePause(false);
         gunHandler.CurrentGun.GunReticle.alpha = 1;
-        UI.SetActive(false);
-        FirstPersonController.enabled = true;
-        FirstPersonController.Respawn();
+        UI.SetActive(false);    
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        FirstPersonController.enabled = true;
+        FirstPersonController.Respawn();
+        LevelManager.TogglePause(false);
+        called = false;
     }
 
-    
+    public void OnLevelSelect()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        UI.gameObject.SetActive(false);
+        LevelManager.TogglePause(false);
+        SceneManager.LoadScene(0);
+        called = false;
+    }
+
+    public void OnQuit()
+    {
+        Application.Quit();
+    }
 }

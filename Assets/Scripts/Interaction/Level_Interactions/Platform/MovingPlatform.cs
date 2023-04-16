@@ -39,6 +39,8 @@ public class MovingPlatform : MonoBehaviour
     bool isLooping;
     bool isAttached;
 
+    bool lateActivate;
+
     int currentIndex = 0;
 
     float lastNodeTime;
@@ -65,7 +67,7 @@ public class MovingPlatform : MonoBehaviour
 
     private void OnEnable()
     {
-        LevelManager.PlayerRespawn += Reset;
+        
         m_IActivators = new List<IActivator>();
 
 
@@ -78,7 +80,7 @@ public class MovingPlatform : MonoBehaviour
                 IActivator temp = (IActivator)activator.GetComponent(typeof(IActivator));
 
                 m_IActivators.Add(temp);
-                temp.Activate += AgnosticActivate;
+                temp.Activate += m_ActivatePerNode ? OnActivate : AgnosticActivate;
                 //temp.Deactivate += OnDeactivate;
             }
             catch (System.Exception)
@@ -90,13 +92,13 @@ public class MovingPlatform : MonoBehaviour
 
     private void OnDisable()
     {
-        LevelManager.PlayerRespawn -= Reset;
+        //LevelManager.Instance.PlayerRespawn -= Reset;
 
 
         foreach (var Iactivator in m_IActivators)
         {
             if (Iactivator == null || m_MovementType != MovementType.ACTIVATE) return;
-            Iactivator.Activate -= AgnosticActivate;
+            Iactivator.Activate -= m_ActivatePerNode ? OnActivate : AgnosticActivate;
             //Iactivator.Deactivate -= OnDeactivate;
         }
     }
@@ -104,6 +106,7 @@ public class MovingPlatform : MonoBehaviour
 
     void Start()
     {
+        LevelManager.Instance.PlayerRespawn += Reset;
         //Player = GameObject.FindGameObjectWithTag("Player").GetComponent<FirstPersonController>();
         Platform = gameObject.FindChildWithTag("Platform");
         Base = Platform.GetComponent<PlatformBase>();
@@ -131,18 +134,37 @@ public class MovingPlatform : MonoBehaviour
 
     void AgnosticActivate()
     {
+        //if (lateActivate && isActivated)
+        //{
+        //    lateActivate = false;
+        //    return;
+        //}
+
+        //if (isActivated) { lateActivate = true; }
+
         isActivated = !isActivated;
         Base.SetState(isActivated);
     }
 
     void OnActivate()
     {
+        Debug.Log($"OnActivate Called {isActivated}");
+        if (isActivated) { lateActivate = true; }
+
         isActivated = true;
         Base.SetState(true);
     }
 
     void OnDeactivate()
     {
+        Debug.Log($"OnDeactivate Called {isActivated}");
+
+        if (lateActivate && isActivated)
+        {
+            lateActivate = false;
+            return;
+        }
+
         isActivated = false;
         Base.SetState(false);
     }
@@ -186,7 +208,7 @@ public class MovingPlatform : MonoBehaviour
                 
             }
             lastNodeTime = Time.time;
-            if (m_ActivatePerNode) OnDeactivate();
+            if (m_ActivatePerNode && currentIndex != 1) OnDeactivate();
         }
         else
         {
@@ -208,7 +230,7 @@ public class MovingPlatform : MonoBehaviour
                 Base.SetTargets(m_Nodes[currentIndex], m_Nodes[++currentIndex]);
             }
             lastNodeTime = Time.time;
-            if (m_ActivatePerNode) OnDeactivate();
+            if (m_ActivatePerNode && currentIndex != 1) OnDeactivate();
         }
     }
 

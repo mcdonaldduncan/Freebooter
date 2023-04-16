@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 public class GrenadeGun : MonoBehaviour, IGun
 {
+    public string GunName { get { return "Grenade Launcher"; } }
     public GunHandler GunManager { get; set; }
     public Transform ShootFrom { get; set; }
     public LayerMask LayerToIgnore { get; set; }
@@ -82,7 +83,7 @@ public class GrenadeGun : MonoBehaviour, IGun
         Ray ray = GunManager.FPSCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 
         //calculate the force of launching the grenade
-        Vector3 grenadeLaunchForce = (ray.direction + GrenadeLaunchArcVector) * GrenadeLaunchForce;
+        Vector3 grenadeLaunchForce = ray.direction * GrenadeLaunchForce;
 
         //Take a grenade from the grenade object pool
         GameObject newGrenade = ProjectileManager.Instance.TakeFromPool(Grenade, ShootFrom.position, out GrenadeBehavior grenade);

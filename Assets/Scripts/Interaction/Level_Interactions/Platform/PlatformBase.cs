@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 using static UtilityFunctions;
 
 /// <summary>
@@ -17,6 +18,9 @@ public class PlatformBase : MonoBehaviour
     [SerializeField] float m_MaxSpeed;
     [SerializeField] float m_LerpScale;
     [SerializeField] float m_Damping;
+
+    [SerializeField] bool m_TrackCurrentTarget;
+    [SerializeField] float m_RotationSpeed;
 
     [System.NonSerialized] public Transform m_Target;
     [System.NonSerialized] public Transform m_PreviousTarget;
@@ -39,6 +43,8 @@ public class PlatformBase : MonoBehaviour
 
     bool m_ShouldMove;
     //bool m_IsAttached;
+
+    public bool ShouldRotate => m_TrackCurrentTarget;
 
     void Start()
     {
@@ -72,6 +78,13 @@ public class PlatformBase : MonoBehaviour
         m_LastPos = m_CurrentPos;
     }
 
+    void TrackTarget()
+    {
+        Vector3 targetPosition = new Vector3(m_Target.position.x, m_Transform.position.y, m_Target.position.z);
+        Quaternion targetRotation = Quaternion.LookRotation(targetPosition - m_Transform.position);
+        m_Transform.rotation = Quaternion.RotateTowards(m_Transform.rotation, targetRotation, m_RotationSpeed * Time.deltaTime);
+    }
+
     public void SetMaterial(Material mat)
     {
         m_Renderer.material = mat;
@@ -80,6 +93,7 @@ public class PlatformBase : MonoBehaviour
     #region Movement Logic
     void HandleMovementState()
     {
+        if (m_TrackCurrentTarget) TrackTarget();
         switch (m_TranslationType)
         {
             case TranslationType.LINEAR:
@@ -112,6 +126,7 @@ public class PlatformBase : MonoBehaviour
         if (!m_ShouldMove) return;
         if (Time.time < m_Platform.NextMoveTime) return;
         m_Transform.position = Vector3.MoveTowards(m_Transform.position, m_Target.position, m_Speed * Time.deltaTime);
+        
     }
 
     private void CurveMotion()
@@ -120,6 +135,7 @@ public class PlatformBase : MonoBehaviour
         if (Time.time < m_Platform.NextMoveTime) return;
         m_LerpTime += Time.deltaTime / m_LerpScale;
         m_Transform.position = Vector3.Lerp(m_PreviousTarget.position, m_Target.position, m_AnimationCurve.Evaluate(m_LerpTime));
+        
     }
 
     private void DampMotion()

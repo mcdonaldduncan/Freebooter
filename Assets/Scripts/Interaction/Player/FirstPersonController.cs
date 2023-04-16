@@ -17,6 +17,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     public AudioClip LowHealthAudio { get { return lowHealthAudio; } }
     public AudioClip GunPickupAudio { get { return gunPickupAudio; } }
     public AudioClip KeyPickupAudio { get { return keyPickupAudio; } }
+    public Camera PlayerCamera { get { return playerCamera; } }
+    public GunHandler PlayerGun { get { return playerGun; } }
     public float MaxHealth { get { return maxHealth; } set { maxHealth = value; } }
     public float Health { get { return health; } set { health = value; } }
     public float DistanceToHeal { get { return distanceToHeal; } }
@@ -127,13 +129,19 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     private float wallRunTimer;
     private float verticalInput;
 
-    [Header("Headbob Parameters")]
+    [Header("Bob Parameters")]
     [SerializeField]
-    private float walkBobSpeed = 14f;
+    private Transform bobObjHolder;
     [SerializeField]
-    private float walkBobAmount = 0.05f;
-    private float defaultYPosCamera = 0;
+    private float bobSpeed = 14f;
+    [SerializeField]
+    private float yBobAmount = 0.05f;
+    [SerializeField]
+    private float xBobAmount = 0.05f;
+    private float defaultYPosBobObj = 0;
+    private float defaultXPosBobObj = 0;
     private float timer;
+    private Vector3 defaultLocalPosition;
 
     [Header("Dash Parameters")]
     [SerializeField]
@@ -206,9 +214,12 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     private MovementState state;
     
     public delegate void PlayerDelegate();
-    public event PlayerDelegate OnPlayerDashed;
+    public event PlayerDelegate PlayerDashed;
     //public event PlayerDelegate OnDashCooldown;  Unused!
     public event PlayerDelegate PlayerHealthChanged;
+
+    public delegate void DamageTrackingDelegate(float damage);
+    public event DamageTrackingDelegate PlayerDamaged;
 
     [NonSerialized] public Vector3 surfaceMotion;
 
@@ -232,6 +243,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     float originalSpeed, boostSpeedDuration, boostStartedTime;
     bool boostedSpeedEnabled;
 
+    private DeathScreen m_deathScreen;
+
     public enum MovementState
     {
         basic
@@ -249,8 +262,6 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         playerRB = GetComponent<Rigidbody>();
         playerGun = GetComponentInChildren<GunHandler>();
         pauseController = GetComponentInChildren<PauseController>();
-
-        defaultYPosCamera = playerCamera.transform.localPosition.y;
 
         //Lock and hide cursor
         Cursor.lockState = CursorLockMode.Locked;
@@ -272,6 +283,10 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     private void Start()
     {
         startingPos = transform.position;
+        defaultLocalPosition = bobObjHolder.localPosition;
+        defaultYPosBobObj = defaultLocalPosition.y;
+        defaultXPosBobObj = defaultLocalPosition.x;
+        m_deathScreen = GetComponentInChildren<DeathScreen>();
     }
 
     // Update is called once per frame
@@ -411,6 +426,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        LevelManager.TogglePause(false);
         SceneManager.LoadScene(0);
     }
 
@@ -460,7 +476,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     private IEnumerator Dash()
     {
         dashesRemaining--;
-        OnPlayerDashed?.Invoke();
+        PlayerDashed?.Invoke();
         float startTime = Time.time;
 
         moveDirection = (transform.TransformDirection(Vector3.right) * MoveInput.x) + (transform.TransformDirection(Vector3.forward) * MoveInput.y);
@@ -593,11 +609,15 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
         if (Mathf.Abs(moveDirection.x) > 0.1f || Mathf.Abs(moveDirection.z) > 0.1f)
         {
-            timer += Time.deltaTime * (walkBobSpeed);
-            playerCamera.transform.localPosition = new Vector3(
-                playerCamera.transform.localPosition.x,
-                defaultYPosCamera + Mathf.Sin(timer) * (walkBobAmount),
-                playerCamera.transform.localPosition.z);
+            timer += Time.deltaTime * (bobSpeed);
+            bobObjHolder.localPosition = new Vector3(
+                defaultXPosBobObj + Mathf.Sin(timer) * (xBobAmount),
+                defaultYPosBobObj + Mathf.Sin(timer) * (yBobAmount),
+                bobObjHolder.localPosition.z);
+        }
+        else
+        {
+            bobObjHolder.localPosition = defaultLocalPosition;
         }
     }
 
@@ -746,6 +766,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         {
             Health -= damageTaken;
             PlayerHealthChanged?.Invoke();
+            PlayerDamaged?.Invoke(damageTaken);
             playerAudioSource.PlayOneShot(playerHitAudio);
             //Debug.Log($"Player Health: { health }");
             CheckForDeath();
@@ -788,6 +809,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     {
         isDead = true;
         characterController.enabled = false;
+        m_deathScreen.StopTimeWhenDead();
     }
 
     public void Respawn()

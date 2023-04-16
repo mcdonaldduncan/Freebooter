@@ -22,7 +22,7 @@ public class SetGroupActive : MonoBehaviour
         try
         {
             m_IActivator = (IActivator)m_Activator.GetComponent(typeof(IActivator));
-            m_IActivator.Activate += Onactivate;
+            m_IActivator.Activate += OnActivate;
         }
         catch (System.Exception)
         {
@@ -34,15 +34,15 @@ public class SetGroupActive : MonoBehaviour
     private void OnDisable()
     {
         if (m_IActivator == null) return;
-        m_IActivator.Activate -= Onactivate;
+        m_IActivator.Activate -= OnActivate;
     }
 
     void Start()
     {
-        LevelManager.PlayerRespawn += OnPlayerRespawn;
+        LevelManager.Instance.PlayerRespawn += OnPlayerRespawn;
     }
 
-    void Onactivate()
+    void OnActivate()
     {
         if (m_UseChildren)
         {
@@ -62,7 +62,7 @@ public class SetGroupActive : MonoBehaviour
         }
 
         
-        LevelManager.CheckPointReached += OnCheckPointReached;
+        LevelManager.Instance.CheckPointReached += OnCheckPointReached;
     }
 
     void OnPlayerRespawn()
@@ -88,6 +88,6 @@ public class SetGroupActive : MonoBehaviour
 
     void OnCheckPointReached()
     {
-        LevelManager.PlayerRespawn -= OnPlayerRespawn;
+        LevelManager.Instance.PlayerRespawn -= OnPlayerRespawn;
     }
 }

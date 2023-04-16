@@ -7,7 +7,6 @@ public interface INavigation
 {
     NavMeshAgent Agent { get; set; }
 
-    LayerMask WalkableLayers { get; }
 
     float StoppingDistance { get; }
     float RotationSpeed { get; }
@@ -27,12 +26,30 @@ public interface INavigation
     /// </summary>
     void ChaseTarget()
     {
-        Vector3 FromPlayerToAgent = Agent.transform.position - LevelManager.Instance.Player.transform.position;
-        if (StoppingDistance <= FromPlayerToAgent.magnitude)
+        Agent.updateRotation = false;
+
+        float randomX = Random.Range(-1f, 1f);
+        float randomZ = Random.Range(-1f, 1f);
+
+        Vector3 playerToAgent = Agent.transform.position - LevelManager.Instance.Player.transform.position;
+        Vector3 randomOffset = new Vector3(randomX, 0, randomZ);
+
+        if (playerToAgent.magnitude >= StoppingDistance)
         {
-            MoveToLocation(LevelManager.Instance.Player.transform.position + FromPlayerToAgent.normalized * StoppingDistance);
+            MoveToLocation(LevelManager.Instance.Player.transform.position + randomOffset.normalized * StoppingDistance);
         }
-        
+    }
+
+    void ChaseTargetDirect()
+    {
+        Agent.updateRotation = false;
+
+        Vector3 playerToAgent = Agent.transform.position - LevelManager.Instance.Player.transform.position;
+
+        if (playerToAgent.magnitude >= StoppingDistance)
+        {
+            MoveToLocation(LevelManager.Instance.Player.transform.position + playerToAgent.normalized * StoppingDistance);
+        }
     }
 
     /// <summary>
@@ -133,7 +150,8 @@ public interface INavigation
     {
         if (!shouldWander) return;
 
-        MoveToLocation(RandomPosInSphere(Agent.transform.position, WanderDistance, WalkableLayers));
+        Agent.updateRotation = true;
+        Agent.SetDestination(RandomPosInSphere(Agent.transform.position, WanderDistance, NavMesh.AllAreas));
 
         LastWanderTime = Time.time;
     }

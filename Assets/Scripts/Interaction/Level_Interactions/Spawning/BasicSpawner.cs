@@ -26,19 +26,19 @@ public class BasicSpawner : MonoBehaviour, IRecipient, IRespawn
         Recipient.ActivatorSetUp();
         Respawn.SubscribeToRespawn();
         CollectAndPrepareChildren();
-        PrepareGroupForSpawn();
+        StartCoroutine(SetStateNextFrame());
     }
 
     void CollectAndPrepareChildren()
     {
         if (!m_UseChildren) return;
 
-        foreach (GameObject child in transform)
+        foreach (Transform child in transform)
         {
-            m_SpawnObjects.Add(child);
+            m_SpawnObjects.Add(child.gameObject);
         }
 
-        transform.DetachChildren();
+        //transform.DetachChildren();
     }
 
     private void OnDisable()

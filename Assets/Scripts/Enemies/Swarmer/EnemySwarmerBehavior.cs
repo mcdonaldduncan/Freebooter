@@ -3,8 +3,9 @@ using UnityEngine.AI;
 using TMPro;
 using Assets.Scripts.Enemies.Agent_Base.Interfaces;
 using Unity.VisualScripting;
+using System;
 
-public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupable
+public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupable, IDissolvable, IEnemy
 {
     public float Health { get { return health; } set { health = value; } }
     [SerializeField] Rigidbody TorsoRigidBody;
@@ -63,6 +64,8 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
     private bool hideFromPLayer;
     private bool attackingPlayer;
     private bool inAttackAnim;
+    private bool m_updateAnims;
+    private bool m_isDead;
 
     private Rigidbody[] rigidBones;
 
@@ -88,9 +91,13 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
     public TextMeshPro Text { get; set; }
 
     public bool IsDead { get; set; } = false;
+    public bool IsInCombat { get; set; }
 
-    public delegate void SwarmerDelegate();
-    public event SwarmerDelegate SwarmerDeath;
+    public CombatStateEventHandler CombatStateChanged { get; set; }
+    public CombatStateEventHandler EnemyDefeated { get; set; }
+    public DissolvableDelegate EnemyDied { get; set; }
+    //public delegate void DissolvableDelegate();
+    //public event DissolvableDelegate EnemyDied;
 
     AudioSource m_AudioSource;
 
@@ -107,6 +114,8 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
 
     private void Start()
     {
+        m_updateAnims = true;
+        m_isDead = false;
         defaultIgnorePlayer = ignorePlayer;
         m_StartingPosition = transform.position;
         Health = maxHealth;
@@ -114,7 +123,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
         animator.SetBool("PlayerTooFar", true);
         animator.SetBool("ChasePlayer", false);
         animator.SetBool("AttackPlayer", false);
-        LevelManager.PlayerRespawn += OnPlayerRespawn;
+        LevelManager.Instance.PlayerRespawn += OnPlayerRespawn;
         m_Target = LevelManager.Instance.Player.transform;
         //hideBehavior.enabled = false;
         m_IDamageable.SetupDamageText();
@@ -200,7 +209,13 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
             }
         }
 
-        UpdateAnimations();
+        if (m_updateAnims) UpdateAnimations();
+    }
+
+    public void HandleCombatStateChange()
+    {
+        IsInCombat = !IsInCombat;
+        CombatStateChanged?.Invoke(IsInCombat);
     }
 
     private void FacePlayer()
@@ -212,10 +227,10 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
     }
 
     private void UpdateAnimations()
-    {
-        //if the player is close enough to be attacked
+    {//if the player is close enough to be attacked
         if (distanceToPlayer <= distanceToAttack)
         {
+            if (!IsInCombat) HandleCombatStateChange();
             attackingPlayer = true;
             animator.SetBool("ChasePlayer", false);
             animator.SetBool("AttackPlayer", true);
@@ -225,19 +240,20 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
         //if the player is too far to be attacked but close enough to be chased
         if (distanceToPlayer >= distanceToAttack && distanceToPlayer <= distanceToFollow)
         {
+            if (!IsInCombat) HandleCombatStateChange();
             animator.SetBool("AttackPlayer", false);
             animator.SetBool("ChasePlayer", true);
             animator.SetBool("PlayerTooFar", false);
         }
-        
+
         //If the player is too far away from the enemy
         if (distanceToPlayer >= distanceToFollow)
         {
+            if (IsInCombat) HandleCombatStateChange();
             animator.SetBool("ChasePlayer", false);
             animator.SetBool("AttackPlayer", false);
             animator.SetBool("PlayerTooFar", true);
         }
-
     }
 
     private void AttackPlayer()
@@ -270,7 +286,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
 
     public void CheckForDeath()
     {
-        if (Health <= 0)
+        if (Health <= 0 && !m_isDead)
         {
             //dead = true;
             //if (animator.GetInteger("Death") != 0) return;
@@ -287,9 +303,13 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
 
     public void OnDeath()
     {
+        m_isDead = true;
         IsDead = true;
         ignorePlayer = true;
+        m_updateAnims = false;
         EnableRagdoll(Vector3.zero);
+
+        if (IsInCombat) HandleCombatStateChange();
 
         if (m_shouldHitStop) LevelManager.TimeStop(m_hitStopDuration);
 
@@ -301,12 +321,13 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
         }
 
         //if (fractureScript != null) fractureScript.Breakage();
-        SwarmerDeath?.Invoke();
+        EnemyDied?.Invoke();
+        EnemyDefeated?.Invoke(true);
         CycleAgent();
         //gameObject.SetActive(false);
         hideBehavior.EndHideProcessRemote();
         hideBehavior.enabled = false;
-        LevelManager.CheckPointReached += OnCheckPointReached;
+        LevelManager.Instance.CheckPointReached += OnCheckPointReached;
         //navMeshAgent.Warp(m_StartingPosition);
     }
 
@@ -314,11 +335,14 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
     {
         IsDead = true;
         ignorePlayer = true;
+        m_updateAnims = false;
         EnableRagdoll(hitPoint);
 
-        if (m_shouldHitStop) LevelManager.TimeStop(m_hitStopDuration);
+        if (IsInCombat && !m_isDead) HandleCombatStateChange();
 
-        if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
+        if (m_shouldHitStop && !m_isDead) LevelManager.TimeStop(m_hitStopDuration);
+
+        if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal && !m_isDead)
         {
             ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);
             //LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
@@ -326,20 +350,19 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
         }
 
         //if (fractureScript != null) fractureScript.Breakage();
-        SwarmerDeath?.Invoke();
+        EnemyDied?.Invoke();
         CycleAgent();
         //gameObject.SetActive(false);
         hideBehavior.EndHideProcessRemote();
         hideBehavior.enabled = false;
-        LevelManager.CheckPointReached += OnCheckPointReached;
+        LevelManager.Instance.CheckPointReached += OnCheckPointReached;
+        m_isDead = true;
         //navMeshAgent.Warp(m_StartingPosition);
     }
 
     private void DisableRagdoll()
     {
         animator.enabled = true;
-        gameObject.GetComponent<CapsuleCollider>().enabled = true;
-        checker.gameObject.GetComponent<SphereCollider>().enabled = true;
 
         foreach (Rigidbody r in rigidBones)
         {
@@ -353,7 +376,6 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
     {
         navMeshAgent.speed = 0;
         animator.enabled = false;
-        gameObject.GetComponent<CapsuleCollider>().enabled = false;
         checker.gameObject.GetComponent<SphereCollider>().enabled = false;
 
         foreach (Rigidbody r in rigidBones)
@@ -362,8 +384,10 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
             //r.AddExplosionForce(ragdollForce, gameObject.transform.position, 50, 70, ForceMode.Impulse);
             //r.AddForce(LevelManager.Instance.Player.transform.forward * ragdollForce, ForceMode.Impulse);
         }
-        Vector3 forceDirection = TorsoRigidBody.position - hitPoint;
 
+
+        Vector3 forceDirection = TorsoRigidBody.position - hitPoint;
+        
         TorsoRigidBody.AddForce(forceDirection.normalized * ragdollForce * ragdollForceScale, ForceMode.Impulse);
 
     }
@@ -371,6 +395,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
     public void OnPlayerRespawn()
     {
         IsDead = false;
+        m_isDead = false;
         DisableRagdoll();
         if (!gameObject.activeSelf)
         {
@@ -380,6 +405,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
         CycleAgent();
         Health = maxHealth;
         ignorePlayer = defaultIgnorePlayer;
+        m_updateAnims = true;
     }
 
     void CycleAgent()
@@ -404,7 +430,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
 
     public void OnCheckPointReached()
     {
-        LevelManager.PlayerRespawn -= OnPlayerRespawn;
+        LevelManager.Instance.PlayerRespawn -= OnPlayerRespawn;
     }
 
     public void ChangeIgnorePlayer(bool shouldIgnorePlayer)

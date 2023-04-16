@@ -31,7 +31,7 @@ public class DamageActivator : MonoBehaviour, IDamageable, IActivator
 
     private void Start()
     {
-        LevelManager.PlayerRespawn += SetUsable;
+        LevelManager.Instance.PlayerRespawn += SetUsable;
         SetUsable();
     }
 
@@ -69,12 +69,12 @@ public class DamageActivator : MonoBehaviour, IDamageable, IActivator
     void SetInactive()
     {
         gameObject.SetActive(false);
-        LevelManager.CheckPointReached += OnCheckPointReached;
+        LevelManager.Instance.CheckPointReached += OnCheckPointReached;
     }
 
     public void OnCheckPointReached()
     {
-        LevelManager.PlayerRespawn -= SetUsable;
+        LevelManager.Instance.PlayerRespawn -= SetUsable;
     }
 
     void HandleParticle()
