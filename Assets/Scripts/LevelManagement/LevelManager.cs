@@ -65,11 +65,13 @@ public sealed class LevelManager : Singleton<LevelManager>
 
     private void Start()
     {
+        if (Player == null) Player = GameObject.FindGameObjectWithTag("Player").GetComponent<FirstPersonController>();
+
         ScorePanel.SetActive(false);
         BackgroundPanelAlpha = 0;
         LevelStartTime = Time.unscaledTime;
 
-        if (Player == null) Player = GameObject.FindGameObjectWithTag("Player").GetComponent<FirstPersonController>();
+        
 
         TotalDamageTaken = 0;
         Player.PlayerDamaged += OnPlayerDamaged;

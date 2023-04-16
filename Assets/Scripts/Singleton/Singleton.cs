@@ -54,7 +54,7 @@ public class Singleton<T> : MonoBehaviour where T : Component
         {
             _instance = this as T;
         }
-        else
+        else if (_instance != this)
         {
             Destroy(gameObject);
         }
