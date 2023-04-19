@@ -302,13 +302,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e90b6d3c874647c46bd8c3b958239e1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Body: {fileID: 2851899924537539080}
-  prefab: {fileID: 2851899925944741657}
   explosionparticle: {fileID: 130090, guid: c89f79686d89e7841a3386694fb086e1, type: 3}
   m_Damage: 20
   m_Radius: 2
-  blinkrate: 0.3
-  fractureScript: {fileID: 0}
 --- !u!54 &8514649500959098150
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -684,20 +680,17 @@ MonoBehaviour:
   m_TextSpawnLocation: {fileID: 3907655064562151518}
   m_FontSize: 12
   m_ShowDamageNumbers: 1
-  m_WalkableLayers:
-    serializedVersion: 2
-    m_Bits: 129
   m_SightLayers:
     serializedVersion: 2
     m_Bits: 82881
   m_StoppingDistance: 5
   m_RotationSpeed: 20
-  m_MovementSampleRadius: 0
+  m_MovementSampleRadius: 10
   m_WanderDelay: 5
   m_WanderDistance: 5
   m_Range: 40
   m_TimeBetweenShots: 0.75
-  m_FieldOfView: 180
+  m_FieldOfView: 360
   m_MaxHealth: 75
   m_ShouldHitStop: 0
   m_HitStopDuration: 0
