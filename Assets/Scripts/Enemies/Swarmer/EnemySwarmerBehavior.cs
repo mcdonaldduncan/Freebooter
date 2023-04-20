@@ -4,11 +4,14 @@ using TMPro;
 using Assets.Scripts.Enemies.Agent_Base.Interfaces;
 using Unity.VisualScripting;
 using System;
+using System.Collections.Generic;
+using System.Collections;
 
 public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupable, IDissolvable, IEnemy
 {
     public float Health { get { return health; } set { health = value; } }
     [SerializeField] Rigidbody TorsoRigidBody;
+    [SerializeField] GameObject ragdollParent;
     [SerializeField] private bool ignorePlayer;
 
     IDamageable m_IDamageable;
@@ -82,6 +85,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
     private Vector3 m_StartingPosition;
 
     private Collider[] hits = new Collider[5];
+    private Dictionary<Transform, Vector3[]> ragdollLimbStartingVectors;
 
     public GameObject DamageTextPrefab => m_DamagePopUpPrefab;
     public Transform TextSpawnLocation => m_PopupFromHere;
@@ -110,10 +114,14 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
         animator = GetComponent<Animator>();
         m_IDamageable = this;
         m_AudioSource = GetComponent<AudioSource>();
+        rigidBones = gameObject.GetComponentsInChildren<Rigidbody>();
+        ragdollLimbStartingVectors = new Dictionary<Transform, Vector3[]>();
     }
 
     private void Start()
     {
+        m_Target = LevelManager.Instance.Player.transform;
+        checker = GetComponentInChildren<LineOfSightChecker>();
         m_updateAnims = true;
         m_isDead = false;
         defaultIgnorePlayer = ignorePlayer;
@@ -124,15 +132,11 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
         animator.SetBool("ChasePlayer", false);
         animator.SetBool("AttackPlayer", false);
         LevelManager.Instance.PlayerRespawn += OnPlayerRespawn;
-        m_Target = LevelManager.Instance.Player.transform;
         //hideBehavior.enabled = false;
         m_IDamageable.SetupDamageText();
         fractureScript = GetComponentInChildren<Fracture>();
         originalSpeed = navMeshAgent.speed;
-
-        checker = GetComponentInChildren<LineOfSightChecker>();
-
-        rigidBones = gameObject.GetComponentsInChildren<Rigidbody>();
+        GetRagdollLimbs();
         DisableRagdoll();
     }
 
@@ -212,6 +216,26 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
         if (m_updateAnims) UpdateAnimations();
     }
 
+    private void GetRagdollLimbs()
+    {
+        Transform[] ragdollLimbs = ragdollParent.GetComponentsInChildren<Transform>();
+
+        foreach(var limb in ragdollLimbs)
+        {
+            ragdollLimbStartingVectors.Add(limb, new Vector3[] {limb.transform.position, limb.transform.eulerAngles, limb.transform.localScale});
+        }
+    }
+
+    private void ResetLimbs()
+    {
+        foreach (var kvPair in ragdollLimbStartingVectors)
+        {
+            kvPair.Key.position = kvPair.Value[0];
+            kvPair.Key.rotation = Quaternion.Euler(kvPair.Value[1]);
+            kvPair.Key.localScale = kvPair.Value[2];
+        }
+    }
+
     public void HandleCombatStateChange()
     {
         IsInCombat = !IsInCombat;
@@ -227,7 +251,8 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
     }
 
     private void UpdateAnimations()
-    {//if the player is close enough to be attacked
+    {
+        //if the player is close enough to be attacked
         if (distanceToPlayer <= distanceToAttack)
         {
             if (!IsInCombat) HandleCombatStateChange();
@@ -362,6 +387,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
 
     private void DisableRagdoll()
     {
+        ResetLimbs();
         animator.enabled = true;
 
         foreach (Rigidbody r in rigidBones)
@@ -369,6 +395,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
             r.isKinematic = true;
         }
 
+        checker.gameObject.GetComponent<SphereCollider>().enabled = true;
         navMeshAgent.speed = originalSpeed;
     }
 
@@ -394,9 +421,9 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
 
     public void OnPlayerRespawn()
     {
+        DisableRagdoll();
         IsDead = false;
         m_isDead = false;
-        DisableRagdoll();
         if (!gameObject.activeSelf)
         {
             gameObject.SetActive(true);
