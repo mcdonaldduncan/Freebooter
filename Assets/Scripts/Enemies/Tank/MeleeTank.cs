@@ -42,6 +42,9 @@ public class MeleeTank : NewAgentBase, IDissolvable
     [SerializeField] float m_ChargeLifeTime = 5f;
     [SerializeField] float m_ChargeStoppingDistance = 1f;
 
+    [Header("Custom Behaviour")]
+    [SerializeField] bool shouldReturn = true;
+
     //possibly add a force variable for push back in the future
 
     protected float lastShotTimeExplosive; //made new timer for the explosive gun to shoot slower then normal guns
@@ -142,7 +145,7 @@ public class MeleeTank : NewAgentBase, IDissolvable
             case AgentState.CHASE:
                 Navigation.ChaseTarget();
                 Tracking.TrackTarget2D();
-                if (!Tracking.InRange) State = AgentState.RETURN;
+                if (!Tracking.InRange && shouldReturn == true) State = AgentState.RETURN;
                 if (!IsInCombat) HandleCombatStateChange();
                 if (shouldMelee) { MeleeHandler(); }
                 if (shouldCharge) { ChargeAttack(); }
