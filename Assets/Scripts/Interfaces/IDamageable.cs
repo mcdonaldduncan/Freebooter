@@ -13,7 +13,6 @@ public interface IDamageable
 
     public GameObject DamageTextPrefab { get; }
     public Transform TextSpawnLocation { get; }
-    public TextMeshPro Text { get; set; }
 
     public float FontSize { get; }
 
