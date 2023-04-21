@@ -38,11 +38,14 @@ public class ProximityActivator : MonoBehaviour, IActivator, IRespawn
 
     private void OnEnable()
     {
-        ((IRespawn)this).SubscribeToRespawn();
-
         m_BoxCollider = GetComponent<BoxCollider>();
         m_BoxCollider.isTrigger = true;
         m_isUsable = true;
+    }
+
+    private void Start()
+    {
+        ((IRespawn)this).SubscribeToRespawn();
     }
 
     private void OnTriggerEnter(Collider other)
