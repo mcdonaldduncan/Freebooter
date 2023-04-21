@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static GunHandler;
+using static UnityEngine.Rendering.DebugUI;
 
 /// <summary>
 /// 
 /// </summary>
 /// Author: Duncan McDonald
-public class BarrierAlertManager : Singleton<BarrierAlertManager>
+public class UIAlertManager : Singleton<UIAlertManager>
 {
     [Header("Alert Panel")]
     [SerializeField] GameObject m_BarrierAlertPanel;
@@ -24,8 +26,10 @@ public class BarrierAlertManager : Singleton<BarrierAlertManager>
     [SerializeField] string m_BarrierAlertContent;
 
     [Header("Ammo Alert Content")]
-    [SerializeField] string m_AmmoAlertContent;
-    [SerializeField] string m_AmmoPickupAlertContent;
+    [SerializeField] string m_AmmoEmptyAlertContent;
+    [SerializeField] string m_AmmoFullAlertContent;
+    [SerializeField] string m_MissingWeaponAlertContent;
+
 
     TextMeshProUGUI BarrierAlertText;
 
@@ -65,6 +69,12 @@ public class BarrierAlertManager : Singleton<BarrierAlertManager>
             barrier.LockedBarrierAccessed += OnBarrierAccessed;
         }
 
+        var ammoPickups = FindObjectsOfType<AmmoPickup>();
+        foreach (var ammoPickup in ammoPickups)
+        {
+            ammoPickup.AmmoPickupFailed += OnAmmoPickupFailed;
+        }
+
         m_GunHandler = LevelManager.Instance.Player.GetComponentInChildren<GunHandler>();
 
         m_GunHandler.AmmoEmpty += OnAmmoEmpty;
@@ -99,22 +109,27 @@ public class BarrierAlertManager : Singleton<BarrierAlertManager>
         }
     }
 
+    void OnAmmoPickupFailed(bool hasWeapon)
+    {
+        m_BarrierAlertPanel.SetActive(true);
+        BarrierAlertText.text = hasWeapon ? m_AmmoFullAlertContent : m_MissingWeaponAlertContent;
+        RefreshMessageState();
+    }
+
     void OnAmmoPickup(int value, IGun gun)
     {
         string gunType = gun.GunName;
 
         m_BarrierAlertPanel.SetActive(true);
         BarrierAlertText.text = $"Aqcuired {value} {gunType} ammo!" ;
-        LastMessageTime = Time.time;
-        IsActive = true;
+        RefreshMessageState();
     }
 
     void OnAmmoEmpty()
     {
         m_BarrierAlertPanel.SetActive(true);
-        BarrierAlertText.text = m_AmmoAlertContent;
-        LastMessageTime = Time.time;
-        IsActive = true;
+        BarrierAlertText.text = m_AmmoEmptyAlertContent;
+        RefreshMessageState();
     }
 
     /// <summary>
@@ -125,8 +140,7 @@ public class BarrierAlertManager : Singleton<BarrierAlertManager>
     {
         m_BarrierAlertPanel.SetActive(true);
         BarrierAlertText.text = m_PrependName ? $"{name} {m_KeyAlertContent}!" : m_KeyAlertContent;
-        LastMessageTime = Time.time;
-        IsActive = true;
+        RefreshMessageState();
     }
 
     /// <summary>
@@ -136,6 +150,12 @@ public class BarrierAlertManager : Singleton<BarrierAlertManager>
     {
         m_BarrierAlertPanel.SetActive(true);
         BarrierAlertText.text = m_BarrierAlertContent;
+        LastMessageTime = Time.time;
+        IsActive = true;
+    }
+
+    void RefreshMessageState()
+    {
         LastMessageTime = Time.time;
         IsActive = true;
     }
