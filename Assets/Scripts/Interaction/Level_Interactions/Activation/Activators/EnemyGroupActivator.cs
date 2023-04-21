@@ -100,10 +100,15 @@ public class EnemyGroupActivator : MonoBehaviour, IActivator
 
     void SetState()
     {
-        //m_IsActivated = !m_Inactive;
+        m_IsActivated = !m_AnyMemberActive;
+
         if (m_AnyMemberActive)
         {
             FireDeactivation();
+        }
+        else
+        {
+            FireActivation();
         }
     }
 
