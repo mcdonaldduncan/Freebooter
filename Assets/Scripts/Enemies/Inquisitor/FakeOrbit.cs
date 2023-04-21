@@ -1,3 +1,4 @@
+using Assets.Scripts.Enemies.Agent_Base.Interfaces;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,7 +8,7 @@ using UnityEngine;
 /// 
 /// </summary>
 /// Author: Duncan McDonald
-public class FakeOrbit : MonoBehaviour, IDamageable
+public class FakeOrbit : MonoBehaviour, IDamageable, IGroupable
 {
     [SerializeField] float StartingHealth;
     [SerializeField] Transform target;
@@ -33,7 +34,7 @@ public class FakeOrbit : MonoBehaviour, IDamageable
 
     public bool ShowDamageNumbers => throw new System.NotImplementedException();
 
-    public TextMeshPro Text { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public bool IsDead { get; set; }
 
     // Set starting angle and radius
     void Start()
@@ -44,6 +45,11 @@ public class FakeOrbit : MonoBehaviour, IDamageable
         radius = Random.Range(5f, 7f);
         angle = Mathf.Deg2Rad * Random.Range(0f, 360f);
         startY = transform.position.y - target.position.y;
+    }
+
+    private void OnEnable()
+    {
+        IsDead = false;
     }
 
     void Update()
@@ -79,6 +85,7 @@ public class FakeOrbit : MonoBehaviour, IDamageable
         {
             //Debug.Log("Orbit Destroyed");
             //_Inquisitor.orbits.Remove(this);
+            IsDead = true;
             gameObject.SetActive(false);
             _Inquisitor.CheckOrbits();
             
