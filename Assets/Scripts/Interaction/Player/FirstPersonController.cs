@@ -7,6 +7,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Composites;
 using UnityEngine.PlayerLoop;
 using UnityEngine.SceneManagement;
 
@@ -81,10 +82,12 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     [Header("Look Parameters")]
     [SerializeField]
     private bool restrictHorizontal;
+    [SerializeField]
+    private float controllerLookSensitivity = 2f;
     [SerializeField, Range(1, 10)]
-    private float lookSpeedX = 2f;
+    private float mouseLookSpeedX = 2f;
     [SerializeField, Range(1, 10)]
-    private float lookSpeedY = 2f;
+    private float mouseLookSpeedY = 2f;
     [SerializeField, Range(1, 100)]
     private float upperLookLimit = 80f;
     [SerializeField, Range(1, 100)]
@@ -191,6 +194,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     private Vector3 moveDirection;
     private Vector2 currentInput; //Whether player is moving vertically or horizontally along x and z planes
     private Vector2 dashInput;
+    private Vector2 lookDelta;
+    private Vector2 prevLookDelta;
 
     public Vector2 MoveInput { get; private set; }
 
@@ -198,9 +203,11 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     private float rotationY = 0f;
 
     private bool playerDashing;
+    private bool playerLooking;
     private bool dashOnCooldown;
     private bool playerShouldDash;
     private float adjustedCooldown;
+    private float lookAxisValue;
 
     private Coroutine dashRoutine;
 
@@ -210,6 +217,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     private WaitForSeconds dashBetweenWait;
 
     public static InputActions _input;
+    private InputDevice inputDevice;
 
     private MovementState state;
     
@@ -319,7 +327,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
             }
         }
 
-        HandleMouseLook();
+        HandleLook();
     }
 
     private void LateUpdate()
@@ -348,6 +356,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         //HumanoidLand
         _input.HumanoidLand.Walk.performed += HandleWalkInput;
         _input.HumanoidLand.Walk.canceled += HandleWalkInput;
+        _input.HumanoidLand.Look.performed += HandleLookInput;
+        _input.HumanoidLand.Look.canceled += HandleLookInput;
         _input.HumanoidLand.Dash.started += HandleDashInput;
         _input.HumanoidLand.Dash.canceled += HandleDashInput;
         _input.HumanoidLand.Jump.performed += HandleJump;
@@ -379,6 +389,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         //HumanoidLand
         _input.HumanoidLand.Walk.performed -= HandleWalkInput;
         _input.HumanoidLand.Walk.canceled -= HandleWalkInput;
+        _input.HumanoidLand.Look.performed -= HandleLookInput;
+        _input.HumanoidLand.Look.canceled -= HandleLookInput;
         _input.HumanoidLand.Dash.started -= HandleDashInput;
         _input.HumanoidLand.Dash.canceled -= HandleDashInput;
         _input.HumanoidLand.Jump.performed -= HandleJump;
@@ -535,22 +547,50 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         }
     }
 
-    private void HandleMouseLook()
+    private void HandleLookInput(InputAction.CallbackContext context)
     {
-        rotationX -= Input.GetAxis("Mouse Y") * lookSpeedY;
-        rotationX = Mathf.Clamp(rotationX, -upperLookLimit, lowerLookLimit);
+        inputDevice = context.control.device;
 
-        if (restrictHorizontal)
+        //if(inputDevice is Gamepad)
+        //{
+        //    lookAxisValue = context.ReadValue<float>();
+        //}
+    }
+
+    private void HandleLook()
+    {
+        //lookDelta = ApplyDeadzone(lookDelta, deadzone);
+
+        if (inputDevice is Mouse)
         {
-            //rotate camera around X and Y axis, and rotate player around x axis
-            rotationY += Input.GetAxis("Mouse X") * lookSpeedX;
-            rotationY = Mathf.Clamp(rotationY, -leftLookLimit, rightLookLimit);//clamp camera
-            playerCamera.transform.localRotation = Quaternion.Euler(rotationX, rotationY, 0);
-        }
-        else
-        {
+            rotationX -= Input.GetAxis("Mouse Y") * mouseLookSpeedY;
+            rotationX = Mathf.Clamp(rotationX, -upperLookLimit, lowerLookLimit); //clamp camera
             playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
-            transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeedX, 0);
+            transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * mouseLookSpeedX, 0);
+
+            //rotationX -= Input.GetAxis("Mouse Y") * mouseLookSpeedY;
+            //rotationX = Mathf.Clamp(rotationX, -upperLookLimit, lowerLookLimit);
+
+            //if (restrictHorizontal)
+            //{
+            //    //rotate camera around X and Y axis, and rotate player around x axis
+            //    rotationY += Input.GetAxis("Mouse X") * mouseLookSpeedX;
+            //    rotationY = Mathf.Clamp(rotationY, -leftLookLimit, rightLookLimit);//clamp camera
+            //    playerCamera.transform.localRotation = Quaternion.Euler(rotationX, rotationY, 0);
+            //}
+            //else
+            //{
+            //    playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
+            //    transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * mouseLookSpeedX, 0);
+            //}
+        }
+        else if (inputDevice is Gamepad)
+        {
+            Vector2 rightStickInput = Gamepad.current.rightStick.ReadValue();
+            rotationX -= rightStickInput.y * mouseLookSpeedY;
+            rotationX = Mathf.Clamp(rotationX, -upperLookLimit, lowerLookLimit); //clamp camera
+            playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
+            transform.rotation *= Quaternion.Euler(0, rightStickInput.x * mouseLookSpeedX, 0);
         }
     }
 

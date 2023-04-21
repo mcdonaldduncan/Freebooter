@@ -184,28 +184,6 @@
                 },
                 {
                     "name": "",
-                    "id": "3cc5fcf3-1c82-4de1-946f-b28303ad5d3a",
-                    "path": "<Gamepad>/rightStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Look",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "e919bd17-1d8b-4e55-b24d-b0ce1c37c919",
-                    "path": "<Mouse>/delta",
-                    "interactions": "",
-                    "processors": "ScaleVector2",
-                    "groups": "",
-                    "action": "Look",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "5b6781c1-02ff-4d54-b023-d42dcdecfa34",
                     "path": "<Keyboard>/shift",
                     "interactions": "",
@@ -218,7 +196,7 @@
                 {
                     "name": "",
                     "id": "fe4afdf4-913e-4357-9f75-46a62f39565d",
-                    "path": "<XInputController>/buttonEast",
+                    "path": "<Gamepad>/leftTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -228,8 +206,8 @@
                 },
                 {
                     "name": "",
-                    "id": "be80cc19-116c-4f5f-8b40-0a14f90d5c4c",
-                    "path": "<DualShockGamepad>/touchpadButton",
+                    "id": "f4c367f2-e8c0-4970-bb2b-12fefc424172",
+                    "path": "<Gamepad>/buttonEast",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -241,6 +219,17 @@
                     "name": "",
                     "id": "18b5159f-77d8-4e62-b24d-150d98e0bfde",
                     "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9f75c43f-2114-456e-a641-0ac6091d9a5d",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -267,6 +256,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e5e75ec8-e26f-4d41-848b-f387bc10ab2b",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4a33e32d-0c73-404d-afc7-4ec1ca3e97c4",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "389f0180-acae-49ad-a349-a6a842009814",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -386,6 +408,17 @@
                 },
                 {
                     "name": "",
+                    "id": "eeaeb296-a2ff-47ae-9101-427ebf8389df",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "e79d6955-37d6-4a32-9250-bd0b76936eae",
                     "path": "<Keyboard>/r",
                     "interactions": "",
@@ -408,8 +441,30 @@
                 },
                 {
                     "name": "",
+                    "id": "a061bcff-3f57-4eaf-b8c6-7e042d4afbdb",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchWeapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "6cb1951d-2830-43ac-8be5-45874043a789",
                     "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AlternateFire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c575e94c-e2c3-4035-8790-e9d5f32085d5",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
