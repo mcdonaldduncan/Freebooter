@@ -11,7 +11,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
 {
     public float Health { get { return health; } set { health = value; } }
     [SerializeField] Rigidbody TorsoRigidBody;
-    [SerializeField] GameObject ragdollParent;
+    [SerializeField] GameObject m_ragdollParent;
     [SerializeField] private bool ignorePlayer;
 
     IDamageable m_IDamageable;
@@ -85,7 +85,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
     private Vector3 m_StartingPosition;
 
     private Collider[] hits = new Collider[5];
-    private Dictionary<Transform, Vector3[]> ragdollLimbStartingVectors;
+    private Dictionary<Transform, Vector3[]> m_ragdollLimbStartingVectors;
 
     public GameObject DamageTextPrefab => m_DamagePopUpPrefab;
     public Transform TextSpawnLocation => m_PopupFromHere;
@@ -115,7 +115,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
         m_IDamageable = this;
         m_AudioSource = GetComponent<AudioSource>();
         rigidBones = gameObject.GetComponentsInChildren<Rigidbody>();
-        ragdollLimbStartingVectors = new Dictionary<Transform, Vector3[]>();
+        m_ragdollLimbStartingVectors = new Dictionary<Transform, Vector3[]>();
     }
 
     private void Start()
@@ -218,17 +218,17 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
 
     private void GetRagdollLimbs()
     {
-        Transform[] ragdollLimbs = ragdollParent.GetComponentsInChildren<Transform>();
+        Transform[] ragdollLimbs = m_ragdollParent.GetComponentsInChildren<Transform>();
 
         foreach(var limb in ragdollLimbs)
         {
-            ragdollLimbStartingVectors.Add(limb, new Vector3[] {limb.transform.position, limb.transform.eulerAngles, limb.transform.localScale});
+            m_ragdollLimbStartingVectors.Add(limb, new Vector3[] {limb.transform.position, limb.transform.eulerAngles, limb.transform.localScale});
         }
     }
 
     private void ResetLimbs()
     {
-        foreach (var kvPair in ragdollLimbStartingVectors)
+        foreach (var kvPair in m_ragdollLimbStartingVectors)
         {
             kvPair.Key.position = kvPair.Value[0];
             kvPair.Key.rotation = Quaternion.Euler(kvPair.Value[1]);

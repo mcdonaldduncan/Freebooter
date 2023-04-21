@@ -11,6 +11,7 @@ public class MeleeTank : NewAgentBase, IDissolvable
     [Header("Animator")]
     [SerializeField] Animator m_Animator;
     [SerializeField] Rigidbody m_torsoRB;
+    [SerializeField] GameObject m_ragdollParent;
     [SerializeField] private float ragdollForce;
     [SerializeField] private float ragdollForceScale;
 
@@ -63,6 +64,8 @@ public class MeleeTank : NewAgentBase, IDissolvable
     float originalSpeed;
     float originalAccel;
 
+    private Dictionary<Transform, Vector3[]> m_ragdollLimbStartingVectors;
+
     public DissolvableDelegate EnemyDied { get; set; }
     //public delegate void MetalonDelegate();
     //public event MetalonDelegate MetalonDeath;
@@ -70,6 +73,7 @@ public class MeleeTank : NewAgentBase, IDissolvable
     private void Awake()
     {
         AwakeSetup();
+        m_ragdollLimbStartingVectors = new Dictionary<Transform, Vector3[]>();
     }
 
     private void OnEnable()
@@ -83,6 +87,7 @@ public class MeleeTank : NewAgentBase, IDissolvable
         originalchargetimer = m_ChargeLifeTime;
         originalAccel = Agent.acceleration;
         originalSpeed = Agent.speed;
+        GetRagdollLimbs();
         DisableRagdoll();
     }
 
@@ -124,6 +129,25 @@ public class MeleeTank : NewAgentBase, IDissolvable
     {
         m_Animator.SetFloat("Blend", Agent.velocity.magnitude);
         HandleAgentState();
+    }
+    private void GetRagdollLimbs()
+    {
+        Transform[] ragdollLimbs = m_ragdollParent.GetComponentsInChildren<Transform>();
+
+        foreach (var limb in ragdollLimbs)
+        {
+            m_ragdollLimbStartingVectors.Add(limb, new Vector3[] { limb.transform.position, limb.transform.eulerAngles, limb.transform.localScale });
+        }
+    }
+
+    private void ResetLimbs()
+    {
+        foreach (var kvPair in m_ragdollLimbStartingVectors)
+        {
+            kvPair.Key.position = kvPair.Value[0];
+            kvPair.Key.rotation = Quaternion.Euler(kvPair.Value[1]);
+            kvPair.Key.localScale = kvPair.Value[2];
+        }
     }
 
     public override void HandleAgentState()
@@ -293,6 +317,7 @@ public class MeleeTank : NewAgentBase, IDissolvable
 
     private void DisableRagdoll()
     {
+        ResetLimbs();
         Agent.speed = originalSpeed;
         m_Animator.enabled = true;
         BoxCollider[] boxColliders = GetComponentsInChildren<BoxCollider>();

@@ -94,7 +94,7 @@ public class Inquisitor : MonoBehaviour, IDamageable, IGroupable
     public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint = default(Vector3))
     {
         if (damageTaken < 1) return;
-        if (m_Shield.active)
+        if (m_Shield.activeInHierarchy)
         {
             m_Damageable.InstantiateDamageNumber(0, HitBoxType.armored);
         }
