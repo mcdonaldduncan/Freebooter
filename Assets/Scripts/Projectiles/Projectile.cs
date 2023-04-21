@@ -90,6 +90,7 @@ public class Projectile : MonoBehaviour, IPoolable
 
     private void OnDisable()
     {
+        if (LevelManager.Instance == null) return;
         LevelManager.Instance.PlayerRespawn -= ResetProjectile;
         m_RigidBody.velocity = Vector3.zero;
         m_RigidBody.angularVelocity = Vector3.zero;
