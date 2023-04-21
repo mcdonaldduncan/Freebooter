@@ -847,11 +847,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TorsoRigidBody: {fileID: 5142284910596057870}
-  ragdollParent: {fileID: 3932152838354416841}
+  m_ragdollParent: {fileID: 2799796598495536121}
   ignorePlayer: 0
   hideThreshold: 0
-  maxHealth: 130
-  health: 130
+  maxHealth: 200
+  health: 200
   damageToDeal: 30
   m_shouldHitStop: 0
   m_hitStopDuration: 0
@@ -1906,7 +1906,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5599225128737241544}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.448, z: 0}
+  m_LocalPosition: {x: 0.0039996523, y: 0.5320006, z: 0.2909782}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
