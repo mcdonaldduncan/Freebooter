@@ -269,6 +269,10 @@ public class ShotGun : MonoBehaviour, IGun, IDamageTracking
                 ProjectileManager.Instance.TakeFromPool(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point);
             }
         }
+        else if (hitInfo.collider.gameObject.TryGetComponent(out Projectile projectile))
+        {
+            projectile.ProjectileHit();
+        }
         else
         {
             ProjectileManager.Instance.TakeFromPool(HitNonEnemy, hitInfo.point);

@@ -289,6 +289,10 @@ public class AutoGun : MonoBehaviour, IGun, IDamageTracking
                 ProjectileManager.Instance.TakeFromPool(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point);
             }
         }
+        else if (hitInfo.collider.gameObject.TryGetComponent(out Projectile projectile))
+        {
+            projectile.ProjectileHit();
+        }
         else
         {
             //var p = Instantiate(HitNonEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));

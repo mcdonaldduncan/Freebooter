@@ -14,6 +14,7 @@ public class Projectile : MonoBehaviour, IPoolable
 {
     [SerializeField] GameObject m_Prefab;
     [SerializeField] GameObject m_ExplosionPrefab;
+    [SerializeField] bool m_IsShootable;
     [SerializeField] bool m_DamageAll;
     [SerializeField] bool m_EnableGravity;
     [SerializeField] bool m_IsTracking;
@@ -132,7 +133,8 @@ public class Projectile : MonoBehaviour, IPoolable
         }
         else if (m_DamageAll || collision.gameObject.CompareTag("Player"))
         {
-            if (collision.gameObject.TryGetComponent(out IDamageable temp)) temp.TakeDamage(m_DamageAmount, HitBoxType.normal);
+            if (collision.gameObject.TryGetComponent(out IDamageable temp)) 
+                temp.TakeDamage(m_DamageAmount, HitBoxType.normal);
 
             //IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
             //if (damageable != null)
@@ -144,8 +146,17 @@ public class Projectile : MonoBehaviour, IPoolable
         hasCollided = true;
         ResetProjectile();
     }
-
     
+    public void ProjectileHit()
+    {
+        if (!m_IsShootable) return;
+
+        if (m_IsExplosive)
+        {
+            TriggerExplosion();
+        }
+        ResetProjectile();
+    }
 
     void ResetProjectile()
     {

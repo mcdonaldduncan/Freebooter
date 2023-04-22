@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class GrenadeBehavior : MonoBehaviour, IPoolable, IDamageTracking
@@ -139,6 +140,10 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable, IDamageTracking
                     {
                         continue;
                     }
+                }
+                else if (hit.gameObject.TryGetComponent(out Projectile projectile))
+                {
+                    projectile.ProjectileHit();
                 }
             }
         }

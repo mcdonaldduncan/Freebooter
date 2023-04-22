@@ -347,6 +347,18 @@ public sealed class GunHandler : MonoBehaviour
         currentGun.GunReticle.alpha = 0;
         currentGun.GunModel.SetActive(false);
 
+        if (context.control.device is Gamepad)
+        {
+            if (currentGunState != guns.Last())
+            {
+                currentGunState = guns[guns.IndexOf(currentGunState) + 1];
+            }
+            else
+            {
+                currentGunState = guns[0];
+            }
+        }
+
         //scroll down
         if (mouseScrollDirection < 0)
         {
@@ -372,7 +384,7 @@ public sealed class GunHandler : MonoBehaviour
                 currentGunState = guns.Last();
             }
         }
-        
+
         currentGun = gunDict[currentGunState];
         currentGun.GunReticle.alpha = 1;
         currentGun.GunModel.SetActive(true);
