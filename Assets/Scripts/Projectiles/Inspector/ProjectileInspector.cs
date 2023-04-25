@@ -26,10 +26,14 @@ public class ProjectileInspector : Editor
         VelocityLimit_Prop,
         LifeTime_Prop,
         ExplosionRadius_prop,
-        HasTrail_prop;
+        HasTrail_prop,
+        IsLaunched_Prop,
+        LaunchAngle_Prop;
 
     private void OnEnable()
     {
+        LaunchAngle_Prop = serializedObject.FindProperty("m_LaunchAngle");
+        IsLaunched_Prop = serializedObject.FindProperty("m_IsLobbed");
         HasTrail_prop = serializedObject.FindProperty("m_HasTrail");
         LifeTime_Prop = serializedObject.FindProperty("m_LifeTime");
         VelocityLimit_Prop = serializedObject.FindProperty("m_VelocityLimit");
@@ -53,7 +57,8 @@ public class ProjectileInspector : Editor
 
         EditorGUILayout.LabelField("Core Properties", EditorStyles.boldLabel);
         EditorGUILayout.PropertyField(Damage_prop);
-        EditorGUILayout.PropertyField(LaunchForce_prop);
+        if (!projectile.IsLobbed) EditorGUILayout.PropertyField(LaunchForce_prop);
+        else EditorGUILayout.PropertyField(LaunchAngle_Prop);
         EditorGUILayout.PropertyField(LifeTime_Prop);
         EditorGUILayout.PropertyField(HasTrail_prop);
         EditorGUILayout.LabelField(Environment.NewLine);
@@ -62,11 +67,10 @@ public class ProjectileInspector : Editor
         EditorGUILayout.PropertyField(DamageAll_Prop);
         EditorGUILayout.PropertyField(EnableGravity_prop);
         EditorGUILayout.PropertyField(IsExplosive_prop);
-        EditorGUILayout.PropertyField(IsTracking_prop);
-        EditorGUILayout.LabelField(Environment.NewLine);
-
-        EditorGUILayout.LabelField("Prefab Self Reference", EditorStyles.boldLabel);
-        EditorGUILayout.PropertyField(Prefab_prop);
+        if (!projectile.IsLobbed) EditorGUILayout.PropertyField(IsTracking_prop);
+        else projectile.IsTracking = false;
+        if (projectile.EnableGravity) EditorGUILayout.PropertyField(IsLaunched_Prop);
+        else projectile.IsLobbed = false;
         EditorGUILayout.LabelField(Environment.NewLine);
 
         if (projectile.IsExplosive)
@@ -84,6 +88,11 @@ public class ProjectileInspector : Editor
             EditorGUILayout.PropertyField(VelocityLimit_Prop);
             EditorGUILayout.LabelField(Environment.NewLine);
         }
+
+
+        EditorGUILayout.LabelField("Prefab Self Reference", EditorStyles.boldLabel);
+        EditorGUILayout.PropertyField(Prefab_prop);
+        EditorGUILayout.LabelField(Environment.NewLine);
 
         serializedObject.ApplyModifiedProperties();
     }
