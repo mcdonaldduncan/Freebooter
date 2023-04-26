@@ -36,12 +36,6 @@ public class PlayerFaceManager : MonoBehaviour
         };
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        //UpdateFace();
-    }
-
     private void UpdateFace()
     {
         m_currentHealthPercent = (float)Math.Round((m_player.Health / m_player.MaxHealth) * 5, MidpointRounding.AwayFromZero) / 5; //This is to make sure the decimal always rounds to a certain fifth of 1
