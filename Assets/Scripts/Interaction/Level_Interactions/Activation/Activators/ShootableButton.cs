@@ -18,7 +18,7 @@ public class ShootableButton : MonoBehaviour, IDamageable, IActivator
     bool isUsable;
 
     public float Health {get; set; }
-    public GameObject DamageTextPrefab { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public GameObject DamageTextPrefab { get { return null; } }
     public Transform TextSpawnLocation { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
     public float FontSize { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
     public bool ShowDamageNumbers { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }

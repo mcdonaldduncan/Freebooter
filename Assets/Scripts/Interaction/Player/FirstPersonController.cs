@@ -609,18 +609,18 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
     private void HandleJump(InputAction.CallbackContext context)
     {
+        inputDevice = context.control.device;
+
         if (context.canceled)
         {
             holdingJump = false;
             holdJumpTimer = 0;
             playerPaused = false;
         }
-        if (context.started && Time.timeScale > 0)
+        if (context.started && jumpsRemaining > 0)
         {
-            playerPaused = false;
-        }
-        if (context.started && jumpsRemaining > 0 && !playerPaused)
-        {
+            if (inputDevice is Gamepad && playerPaused) return;
+
             playerAudioSource.PlayOneShot(m_JumpAudio);
             jumpsRemaining--;
             holdingJump = true;
