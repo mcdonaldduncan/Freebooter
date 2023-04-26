@@ -7,7 +7,7 @@ using UnityEngine;
 /// Reusable, damageable activator
 /// </summary>
 /// Author: Duncan McDonald
-public class ShootableButton : MonoBehaviour, IDamageable, IActivator
+public class ShootableButton : MonoBehaviour, IDamageable, IActivator, IBloodless
 {
     [SerializeField] float m_Health;
     [SerializeField] float m_ResetDelay;
@@ -18,7 +18,7 @@ public class ShootableButton : MonoBehaviour, IDamageable, IActivator
     bool isUsable;
 
     public float Health {get; set; }
-    public GameObject DamageTextPrefab { get { return null; } }
+    public GameObject DamageTextPrefab { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
     public Transform TextSpawnLocation { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
     public float FontSize { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
     public bool ShowDamageNumbers { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }

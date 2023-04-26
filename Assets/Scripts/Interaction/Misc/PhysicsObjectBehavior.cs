@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PhysicsObjectBehavior : MonoBehaviour, IDamageable
+public class PhysicsObjectBehavior : MonoBehaviour, IDamageable, IBloodless
 {
     #region UnusedIDamageableStuff
     public float Health { get; set; }
 
-    public GameObject DamageTextPrefab { get { return null; } }
+    public GameObject DamageTextPrefab { get; }
 
     public Transform TextSpawnLocation { get; }
 

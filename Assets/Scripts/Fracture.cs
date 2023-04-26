@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.XR;
 
-public class Fracture : MonoBehaviour, IDamageable
+public class Fracture : MonoBehaviour, IDamageable, IBloodless
 {
     [SerializeField] private float m_health;
     [SerializeField] private float m_timeToDespawn;
@@ -22,7 +22,7 @@ public class Fracture : MonoBehaviour, IDamageable
 
     public float Health { get { return m_health; } set { m_health = value; } }
 
-    public GameObject DamageTextPrefab { get { return null; } }
+    public GameObject DamageTextPrefab => throw new System.NotImplementedException();
 
     public Transform TextSpawnLocation => throw new System.NotImplementedException();
 
