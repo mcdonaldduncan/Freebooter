@@ -1176,6 +1176,101 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Cgun: {fileID: 0}
+--- !u!1 &677937708805321071
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7021476319312338038}
+  - component: {fileID: 2228723634890156909}
+  - component: {fileID: 2009541874767930070}
+  - component: {fileID: 7337909953567678293}
+  m_Layer: 5
+  m_Name: PlayerFace
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &7021476319312338038
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 677937708805321071}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1.4498043}
+  m_LocalScale: {x: 0.9, y: 0.9, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7980806540722711590}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 44.999992, y: 44.999992}
+  m_SizeDelta: {x: 250, y: 150}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &2228723634890156909
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 677937708805321071}
+  m_CullTransparentMesh: 1
+--- !u!114 &2009541874767930070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 677937708805321071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 509dcdf4d868c8242bf19b2e0b0f870b, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7337909953567678293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 677937708805321071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 121659198ed4886449241b543c5570e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerFace100: {fileID: 21300000, guid: 509dcdf4d868c8242bf19b2e0b0f870b, type: 3}
+  PlayerFace80: {fileID: 21300000, guid: 4e518963d8fb195438d827dd545afaf1, type: 3}
+  PlayerFace60: {fileID: 21300000, guid: ba718beca9310ea47aabb5dbfa8d0394, type: 3}
+  PlayerFace40: {fileID: 21300000, guid: 9bcadffd6ef31a44d83122737dc68f51, type: 3}
+  PlayerFace20: {fileID: 21300000, guid: 1248d78b00608174b8b0ce5fac2c450e, type: 3}
+  PlayerFace0: {fileID: 21300000, guid: cf162f2bf51f53c4eac6beb9df72aeda, type: 3}
 --- !u!1 &834645104715201901
 GameObject:
   m_ObjectHideFlags: 0
@@ -2846,6 +2941,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4338178319294148014}
+  - {fileID: 7021476319312338038}
   - {fileID: 2935886582306021293}
   m_Father: {fileID: 4968496560471322740}
   m_RootOrder: 1
@@ -3520,6 +3616,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_gunHandler: {fileID: 0}
+  m_defaultSelectedButton: {fileID: 0}
 --- !u!1 &5580811431472444554
 GameObject:
   m_ObjectHideFlags: 0
@@ -5509,7 +5606,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7980806540722711590}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -5969,6 +6066,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UI: {fileID: 1136570030060958252}
   gunHandler: {fileID: 0}
+  m_defaultSelectedButton: {fileID: 0}
 --- !u!1 &8932173869694029762
 GameObject:
   m_ObjectHideFlags: 0
