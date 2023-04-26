@@ -44,8 +44,9 @@ public class PlayerFaceManager : MonoBehaviour
 
     private void UpdateFace()
     {
-        m_currentHealthPercent = (float)Math.Round(m_player.Health / m_player.MaxHealth, 1);
+        m_currentHealthPercent = (float)Math.Round((m_player.Health / m_player.MaxHealth) * 5, MidpointRounding.AwayFromZero) / 5; //This is to make sure the decimal always rounds to a certain fifth of 1
+        m_currentHealthPercent = m_currentHealthPercent == 0 && m_player.Health > 0 ? 0.2f : m_currentHealthPercent;
 
-        m_imageComponent.sprite = m_healthFaceDict[m_currentHealthPercent];
+        if (m_currentHealthPercent >= 0) m_imageComponent.sprite = m_healthFaceDict[m_currentHealthPercent];
     }
 }
