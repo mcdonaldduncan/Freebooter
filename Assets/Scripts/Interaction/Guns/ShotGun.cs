@@ -224,7 +224,7 @@ public class ShotGun : MonoBehaviour, IGun, IDamageTracking
             {
                 //Get the position of the hit enemy
                 Vector3 targetPosition = hitInfo.transform.position;
-                ProjectileManager.Instance.TakeFromPool(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point);
+                ProjectileManager.Instance.TakeFromPool(damageableTarget.DamageTextPrefab == null ? HitNonEnemy : HitEnemy, hitInfo.point);
                 //if (!hitOnce)
                 //{
                 //    LevelManager.TimeStop(HitStopDuration);

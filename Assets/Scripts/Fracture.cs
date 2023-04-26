@@ -22,7 +22,7 @@ public class Fracture : MonoBehaviour, IDamageable
 
     public float Health { get { return m_health; } set { m_health = value; } }
 
-    public GameObject DamageTextPrefab => throw new System.NotImplementedException();
+    public GameObject DamageTextPrefab { get { return null; } }
 
     public Transform TextSpawnLocation => throw new System.NotImplementedException();
 

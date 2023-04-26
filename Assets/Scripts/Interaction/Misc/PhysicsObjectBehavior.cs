@@ -7,7 +7,7 @@ public class PhysicsObjectBehavior : MonoBehaviour, IDamageable
     #region UnusedIDamageableStuff
     public float Health { get; set; }
 
-    public GameObject DamageTextPrefab { get; }
+    public GameObject DamageTextPrefab { get { return null; } }
 
     public Transform TextSpawnLocation { get; }
 

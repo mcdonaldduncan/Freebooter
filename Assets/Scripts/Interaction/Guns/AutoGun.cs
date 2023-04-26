@@ -245,7 +245,7 @@ public class AutoGun : MonoBehaviour, IGun, IDamageTracking
                 //var p = Instantiate(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
                 //Destroy(p, 1);
 
-                ProjectileManager.Instance.TakeFromPool(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point);
+                ProjectileManager.Instance.TakeFromPool(damageableTarget.DamageTextPrefab == null ? HitNonEnemy : HitEnemy, hitInfo.point);
                 //CameraShake.ShakeCamera();
 
                 //Get the distance between the enemy and the gun
