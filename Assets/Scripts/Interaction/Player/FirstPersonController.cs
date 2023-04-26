@@ -615,6 +615,10 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
             holdJumpTimer = 0;
             playerPaused = false;
         }
+        if (context.started && Time.timeScale > 0)
+        {
+            playerPaused = false;
+        }
         if (context.started && jumpsRemaining > 0 && !playerPaused)
         {
             playerAudioSource.PlayOneShot(m_JumpAudio);
