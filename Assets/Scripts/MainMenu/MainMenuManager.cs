@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -10,6 +11,8 @@ using UnityEngine.UI;
 /// Author: Duncan McDonald
 public class MainMenuManager : MonoBehaviour
 {
+    [SerializeField] EventSystem EventSystem;
+
     [Header("Level Images")]
     [SerializeField] Sprite[] Sprites;
     [SerializeField] Image Image;
@@ -17,6 +20,7 @@ public class MainMenuManager : MonoBehaviour
     [Header("Panel GameObjects")]
     [SerializeField] GameObject MainPanel;
     [SerializeField] GameObject LoadingPanel;
+    [SerializeField] GameObject DefaultSelectedButton;
 
     [Header("Loading Options")]
     [SerializeField] Image LoadingBar;
@@ -27,6 +31,7 @@ public class MainMenuManager : MonoBehaviour
 
     private void OnEnable()
     {
+        EventSystem.SetSelectedGameObject(DefaultSelectedButton);
         LoadingPanel.SetActive(false);
         LaunchButton.SetActive(false);
         LoadingBar.fillAmount = .25f;
@@ -69,6 +74,7 @@ public class MainMenuManager : MonoBehaviour
 
             if (operation.progress >= LoadThreshold)
             {
+                EventSystem.SetSelectedGameObject(LaunchButton);
                 LaunchButton.SetActive(true);
             }
             yield return null;

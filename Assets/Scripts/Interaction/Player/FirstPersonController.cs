@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Composites;
 using UnityEngine.PlayerLoop;
@@ -14,6 +15,7 @@ using UnityEngine.SceneManagement;
 //TODO Abstract into classes that are managed by this class (i.e. defualt movement, wallrun movement, etc.)
 public sealed class FirstPersonController : MonoBehaviour, IDamageable
 {
+    public EventSystem PlayerUIEventSystem { get { return playerUIEventSystem; } }
     public AudioSource PlayerAudioSource { get { return playerAudioSource; } }
     public AudioClip LowHealthAudio { get { return lowHealthAudio; } }
     public AudioClip GunPickupAudio { get { return gunPickupAudio; } }
@@ -55,6 +57,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     [Tooltip("Is the player in the middle of a special movement, i.e. ladder climbing?")]
     [SerializeField]
     public bool playerOnSpecialMovement = false;
+    [SerializeField]
+    private EventSystem playerUIEventSystem;
     //[SerializeField]
     //private bool playerCanDash = true; Unused!
     //[SerializeField]
@@ -206,6 +210,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     private bool playerLooking;
     private bool dashOnCooldown;
     private bool playerShouldDash;
+    private bool playerPaused;
     private float adjustedCooldown;
     private float lookAxisValue;
 
@@ -290,6 +295,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
     private void Start()
     {
+        playerPaused = false;
         startingPos = transform.position;
         defaultLocalPosition = bobObjHolder.localPosition;
         defaultYPosBobObj = defaultLocalPosition.y;
@@ -360,10 +366,10 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         _input.HumanoidLand.Look.canceled += HandleLookInput;
         _input.HumanoidLand.Dash.started += HandleDashInput;
         _input.HumanoidLand.Dash.canceled += HandleDashInput;
-        _input.HumanoidLand.Jump.performed += HandleJump;
+        _input.HumanoidLand.Jump.started += HandleJump;
         _input.HumanoidLand.Jump.canceled += HandleJump;
         _input.HumanoidLand.Restart.performed += ReloadScene;
-        _input.HumanoidLand.Pause.performed += pauseController.OnPause;
+        _input.HumanoidLand.Pause.performed += HandlePause;
 
         //HumanoidWall
         //_input.HumanoidWall.Forward.performed += HandleWallrunInput;
@@ -393,7 +399,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         _input.HumanoidLand.Look.canceled -= HandleLookInput;
         _input.HumanoidLand.Dash.started -= HandleDashInput;
         _input.HumanoidLand.Dash.canceled -= HandleDashInput;
-        _input.HumanoidLand.Jump.performed -= HandleJump;
+        _input.HumanoidLand.Jump.started -= HandleJump;
         _input.HumanoidLand.Jump.canceled -= HandleJump;
         _input.HumanoidLand.Restart.performed -= ReloadScene;
         _input.HumanoidLand.Pause.performed -= pauseController.OnPause;
@@ -432,6 +438,13 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         //    _input.HumanoidWall.Enable();
         //    ApplyFinalWallrunMovements();
         //}
+    }
+
+    private void HandlePause(InputAction.CallbackContext context)
+    {
+        pauseController.OnPause(context);
+
+        playerPaused = !playerPaused;
     }
 
     private void ReloadScene(InputAction.CallbackContext context)
@@ -600,8 +613,9 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         {
             holdingJump = false;
             holdJumpTimer = 0;
+            playerPaused = false;
         }
-        if (context.performed && jumpsRemaining > 0)
+        if (context.started && jumpsRemaining > 0 && !playerPaused)
         {
             playerAudioSource.PlayOneShot(m_JumpAudio);
             jumpsRemaining--;
