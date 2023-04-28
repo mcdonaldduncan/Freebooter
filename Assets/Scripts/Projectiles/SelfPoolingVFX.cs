@@ -23,7 +23,7 @@ public class SelfPoolingVFX : MonoBehaviour, IPoolable
         }
 
         var mainModule = m_ParticleSystem.main;
-        mainModule.stopAction = ParticleSystemStopAction.Disable;
+        mainModule.stopAction = mainModule.stopAction != ParticleSystemStopAction.Disable ? ParticleSystemStopAction.Disable : mainModule.stopAction;
     }
 
     private void OnDisable()
