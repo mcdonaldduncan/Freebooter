@@ -8,10 +8,10 @@ using UnityEngine;
 /// Author: Duncan McDonald
 public class BasicSpawner : MonoBehaviour, IRecipient, IRespawn
 {
+    [SerializeField] GameObject m_SpawnVFX;
     [SerializeField] GameObject m_Activator;
     [SerializeField] public bool m_UseChildren;
     [SerializeField] List<GameObject> m_SpawnObjects;
-    
 
     public GameObject ActivatorObject => m_Activator;
 
@@ -50,6 +50,7 @@ public class BasicSpawner : MonoBehaviour, IRecipient, IRespawn
     {
         foreach (var obj in m_SpawnObjects)
         {
+            _ = ProjectileManager.Instance.TakeFromPool(m_SpawnVFX, obj.transform.position);
             obj.SetActive(true);
         }
         Respawn.SubscribeToCheckpointReached();
