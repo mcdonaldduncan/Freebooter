@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 /// Author: Duncan McDonald
 [RequireComponent(typeof(ParticleSystem))]
-public class Explosion : MonoBehaviour, IPoolable
+public class SelfPoolingVFX : MonoBehaviour, IPoolable
 {
     [SerializeField] GameObject m_Prefab;
 
