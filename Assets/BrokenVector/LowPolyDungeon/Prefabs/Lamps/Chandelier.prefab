@@ -99,6 +99,7 @@ GameObject:
   - component: {fileID: 3626602601271656567}
   - component: {fileID: 324079205254573409}
   - component: {fileID: 7255535115426803687}
+  - component: {fileID: 3246430711045077378}
   m_Layer: 10
   m_Name: CandleLight (6)
   m_TagString: Untagged
@@ -195,6 +196,26 @@ Halo:
     serializedVersion: 2
     rgba: 4288406783
   m_Size: -0.05
+--- !u!114 &3246430711045077378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1138481573295946907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1 &1373816681327764510
 GameObject:
   m_ObjectHideFlags: 0
@@ -267,7 +288,7 @@ Transform:
   m_GameObject: {fileID: 1821300323071963912}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6247237286839153850}
@@ -409,6 +430,7 @@ GameObject:
   - component: {fileID: 679277012190580219}
   - component: {fileID: 1051536415177150971}
   - component: {fileID: 4340695101475551195}
+  - component: {fileID: 2063021847273860166}
   m_Layer: 10
   m_Name: CandleLight (7)
   m_TagString: Untagged
@@ -505,6 +527,26 @@ Halo:
     serializedVersion: 2
     rgba: 4288406783
   m_Size: -0.05
+--- !u!114 &2063021847273860166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2786600103483035112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1 &2962558388476945060
 GameObject:
   m_ObjectHideFlags: 0
@@ -560,6 +602,7 @@ GameObject:
   - component: {fileID: 7543147081001769468}
   - component: {fileID: 5853327309285647577}
   - component: {fileID: 7854596889599228772}
+  - component: {fileID: 8839556196959207128}
   m_Layer: 10
   m_Name: CandleLight (2)
   m_TagString: Untagged
@@ -656,6 +699,26 @@ Halo:
     serializedVersion: 2
     rgba: 4288406783
   m_Size: -0.05
+--- !u!114 &8839556196959207128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3660584054085580292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1 &4034299983055215339
 GameObject:
   m_ObjectHideFlags: 0
@@ -667,6 +730,7 @@ GameObject:
   - component: {fileID: 4024888555037360788}
   - component: {fileID: 3860938443833266901}
   - component: {fileID: 1284904995902344133}
+  - component: {fileID: 8785487786205756305}
   m_Layer: 10
   m_Name: CandleLight (5)
   m_TagString: Untagged
@@ -763,6 +827,26 @@ Halo:
     serializedVersion: 2
     rgba: 4288406783
   m_Size: -0.05
+--- !u!114 &8785487786205756305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4034299983055215339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1 &4559376532024242747
 GameObject:
   m_ObjectHideFlags: 0
@@ -774,6 +858,7 @@ GameObject:
   - component: {fileID: 6247237286839153850}
   - component: {fileID: 257036739135621294}
   - component: {fileID: 3008347107505688808}
+  - component: {fileID: 5099524771348729517}
   m_Layer: 10
   m_Name: CandleLight
   m_TagString: Untagged
@@ -870,6 +955,26 @@ Halo:
     serializedVersion: 2
     rgba: 4288406783
   m_Size: -0.05
+--- !u!114 &5099524771348729517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4559376532024242747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1 &5078532816604258152
 GameObject:
   m_ObjectHideFlags: 0
@@ -881,6 +986,7 @@ GameObject:
   - component: {fileID: 5302962342224270682}
   - component: {fileID: 8894861915914031824}
   - component: {fileID: 7968230179333093484}
+  - component: {fileID: 4910252512905309908}
   m_Layer: 10
   m_Name: CandleLight (1)
   m_TagString: Untagged
@@ -977,6 +1083,26 @@ Halo:
     serializedVersion: 2
     rgba: 4288406783
   m_Size: -0.05
+--- !u!114 &4910252512905309908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5078532816604258152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1 &5289299642118213962
 GameObject:
   m_ObjectHideFlags: 0
@@ -988,6 +1114,7 @@ GameObject:
   - component: {fileID: 5837853474842783219}
   - component: {fileID: 7614575370774986570}
   - component: {fileID: 5389017115152951580}
+  - component: {fileID: 1322740620293114631}
   m_Layer: 10
   m_Name: CandleLight (3)
   m_TagString: Untagged
@@ -1084,6 +1211,26 @@ Halo:
     serializedVersion: 2
     rgba: 4288406783
   m_Size: -0.05
+--- !u!114 &1322740620293114631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5289299642118213962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1 &5297330881077103595
 GameObject:
   m_ObjectHideFlags: 0
@@ -1095,6 +1242,7 @@ GameObject:
   - component: {fileID: 2988894778189656871}
   - component: {fileID: 6044979481632021707}
   - component: {fileID: 7623077450582884376}
+  - component: {fileID: 1978402438632399553}
   m_Layer: 10
   m_Name: CandleLight (4)
   m_TagString: Untagged
@@ -1191,6 +1339,26 @@ Halo:
     serializedVersion: 2
     rgba: 4288406783
   m_Size: -0.05
+--- !u!114 &1978402438632399553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5297330881077103595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1 &5866840724650261777
 GameObject:
   m_ObjectHideFlags: 0
