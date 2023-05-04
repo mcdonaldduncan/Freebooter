@@ -499,6 +499,7 @@ public sealed class GunHandler : MonoBehaviour
         autoGun.CurrentAmmo = autoGunAmmoCP;
         //shotGun.CurrentAmmo = shotGunAmmoCP;
         grenadeGun.CurrentAmmo = grenadeGunAmmoCP;
+        UpdateAmmoDisplay();
     }
 
     //public void Reload(InputAction.CallbackContext context)
