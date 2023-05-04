@@ -28,6 +28,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
     [Header("OnDeath Options")]
     [SerializeField] private bool m_shouldHitStop;
     [SerializeField] private float m_hitStopDuration;
+    [SerializeField] private AudioClip m_onDeathSFX;
 
     [Header("Attacks and Movement")]
     [SerializeField] private float distanceToFollow = 20;
@@ -457,6 +458,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
         IsDead = true;
         ignorePlayer = true;
         m_updateAnims = false;
+        m_AudioSource.PlayOneShot(m_onDeathSFX);
         EnableRagdoll(Vector3.zero);
 
         if (IsInCombat) HandleCombatStateChange();
@@ -465,9 +467,9 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
 
         if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
         {
-            ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);
+            //ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);
             //LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
-            LevelManager.Instance.Player.HealthRegen(LevelManager.Instance.Player.PercentToHeal * maxHealth);
+            LevelManager.Instance.Player.HealthRegen(LevelManager.Instance.Player.PercentToHeal * maxHealth, transform.position);
         }
 
         //if (fractureScript != null) fractureScript.Breakage();
@@ -486,6 +488,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
         IsDead = true;
         ignorePlayer = true;
         m_updateAnims = false;
+        m_AudioSource.PlayOneShot(m_onDeathSFX);
         EnableRagdoll(hitPoint);
 
         if (IsInCombat && !m_isDead) HandleCombatStateChange();
@@ -494,9 +497,9 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
 
         if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal && !m_isDead)
         {
-            ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);
+            //ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);
             //LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
-            LevelManager.Instance.Player.HealthRegen(LevelManager.Instance.Player.PercentToHeal * maxHealth);
+            LevelManager.Instance.Player.HealthRegen(LevelManager.Instance.Player.PercentToHeal * maxHealth, transform.position);
         }
 
         //if (fractureScript != null) fractureScript.Breakage();

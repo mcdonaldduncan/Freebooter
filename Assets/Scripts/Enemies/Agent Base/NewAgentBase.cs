@@ -209,8 +209,8 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
 
         if (Tracking.DistanceToTarget <= LevelManager.Instance.Player.DistanceToHeal)
         {
-            ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);
-            LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * m_MaxHealth);
+            //ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);
+            LevelManager.Instance.Player.HealthRegen(LevelManager.Instance.Player.PercentToHeal * m_MaxHealth, transform.position);
         }
 
         if (IsInCombat) CombatStateChanged?.Invoke(false);

@@ -59,6 +59,10 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     public bool playerOnSpecialMovement = false;
     [SerializeField]
     private EventSystem playerUIEventSystem;
+    [SerializeField]
+    private AudioClip playerHealSFX;
+    [SerializeField]
+    private GameObject onKillHealVFX;
     //[SerializeField]
     //private bool playerCanDash = true; Unused!
     //[SerializeField]
@@ -836,13 +840,14 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     /// For pick up system which is currently not in use
     /// </summary>
     /// <param name="heal"></param>
-    public void HealthRegen(float heal)
+    public void HealthRegen(float heal, Vector3 enemyPos)
     {
         if (health >= maxHealth) return;
-
+        ProjectileManager.Instance.TakeFromPool(onKillHealVFX, transform.position);
         health += heal;
 
         if (health >= maxHealth) health = maxHealth;
+        playerAudioSource.PlayOneShot(playerHealSFX);
 
         if (health > MaxHealth) health = MaxHealth;
         PlayerHealthChanged?.Invoke();

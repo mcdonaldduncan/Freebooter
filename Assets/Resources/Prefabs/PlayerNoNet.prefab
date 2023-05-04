@@ -866,7 +866,7 @@ MonoBehaviour:
   autoGunAimOffset: 15
   autoGunReticle: {fileID: 2291571642965968571}
   autoGunShotAudioList:
-  - {fileID: 8300000, guid: 03d0034205aa21843a815e30ac341699, type: 3}
+  - {fileID: 8300000, guid: 56a0b23e407fee54a95cb02e1f68b89e, type: 3}
   autoGunAnimationHandler: {fileID: 9051509140675119703}
   autoShakeDuration: 0.3
   autoShakeMagnitude: 0.5
@@ -1080,6 +1080,9 @@ MonoBehaviour:
   percentToHeal: 25
   playerOnSpecialMovement: 0
   playerUIEventSystem: {fileID: 7515291189772862139}
+  playerHealSFX: {fileID: 8300000, guid: f0ba4319e7fcef8418fe5e997cae4be4, type: 3}
+  onKillHealVFX: {fileID: 2748225569481887560, guid: de88dfbe0c34dad418728faa198b70e0,
+    type: 3}
   walkSpeed: 9
   wallRunSpeed: 12
   owalkspeed: 6
