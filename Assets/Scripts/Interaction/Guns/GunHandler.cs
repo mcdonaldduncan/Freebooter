@@ -52,6 +52,7 @@ public sealed class GunHandler : MonoBehaviour
     [SerializeField] private bool reloading;
     [SerializeField] private bool infiniteAmmo;
     [SerializeField] private LayerMask ignoreLayers;
+    [SerializeField] private AudioClip outOfAmmoAudioClip;
     private int currentGunAmmo;
     private AudioSource gunShotAudioSource;
 
@@ -473,9 +474,10 @@ public sealed class GunHandler : MonoBehaviour
 
     public void Shoot(InputAction.CallbackContext context)
     {
-        if (currentGun.CurrentAmmo <= 0)
+        if (currentGun.CurrentAmmo <= 0 && context.performed)
         {
             AmmoEmpty?.Invoke();
+            gunShotAudioSource.PlayOneShot(outOfAmmoAudioClip);
         }
         currentGun.ShootTriggered(context);
         UpdateAmmoDisplay();
