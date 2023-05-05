@@ -45,6 +45,11 @@ public class BarrierSegment : MonoBehaviour
 
 #endif
 
+    private void Awake()
+    {
+        m_Transform = transform;
+    }
+
     private void OnEnable()
     {
         m_ParentController = transform.parent.GetComponentInParent<Barrier>();
@@ -60,7 +65,6 @@ public class BarrierSegment : MonoBehaviour
 
     void Start()
     {
-        m_Transform = transform;
         m_Speed = m_ParentController.MoveSpeed;
     }
 
