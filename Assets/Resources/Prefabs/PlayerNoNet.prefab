@@ -1033,7 +1033,7 @@ Transform:
   m_GameObject: {fileID: 297426594678655177}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 2.838, z: 0}
-  m_LocalScale: {x: 1.0000001, y: 1, z: 1.0000001}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 297426593068676920}
@@ -1106,8 +1106,8 @@ MonoBehaviour:
   secondJumpForce: 14
   gravity: 30
   bobObjHolder: {fileID: 297426594336726724}
-  bobSpeed: 8
-  yBobAmount: 0.01
+  bobSpeed: 10
+  yBobAmount: 0.025
   xBobAmount: 0.05
   dashDamage: 5
   dashRayDistance: 1.5
@@ -4318,7 +4318,7 @@ PrefabInstance:
     - target: {fileID: 3354773748363385177, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3462600517137743998, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
@@ -4540,7 +4540,7 @@ PrefabInstance:
     - target: {fileID: 5943696835836141272, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6128056500783047253, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
