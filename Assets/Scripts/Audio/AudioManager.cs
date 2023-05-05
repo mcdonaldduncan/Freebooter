@@ -37,6 +37,7 @@ public class AudioManager : Singleton<AudioManager>
     AudioSource m_CurrentSecondary;
 
     Queue<AudioClip> m_ClipQueue; // A queue that stores audio clips to be played
+    Queue<Sprite> m_SpriteQueue;
 
     Coroutine m_CombatTransitionRoutine;
     WaitForSeconds m_CombatExitDelayWFS;
@@ -89,6 +90,7 @@ public class AudioManager : Singleton<AudioManager>
         if (!m_AudioSource.isPlaying && m_ClipQueue.Count > 0)
         {
             m_AudioSource.clip = m_ClipQueue.Dequeue();
+            EnableImage(m_SpriteQueue.Dequeue());
             m_AudioSource.Play();
         }
     }
@@ -101,7 +103,12 @@ public class AudioManager : Singleton<AudioManager>
     }
 
     // Method that enables the navigation image and sets its sprite
-    public void EnableNavImage(Sprite sprite)
+    public void QueueImage(Sprite sprite)
+    {
+        m_SpriteQueue.Enqueue(sprite);
+    }
+
+    public void EnableImage(Sprite sprite)
     {
         m_NavImage.sprite = sprite;
         m_NavImage.enabled = true;

@@ -47,8 +47,8 @@ public class AudioTrigger : MonoBehaviour
     {
         if (m_IsActive && !m_ActivateMultiple) return; // if this audio trigger is currently active and it's not set to activate multiple times, exit the function
 
-        AudioManager.Instance.PlayClip(m_Clip); // play the audio clip
-        AudioManager.Instance.EnableNavImage(m_Sprite); // enable the navigation image
+        AudioManager.Instance.QueueSound(m_Clip); // play the audio clip
+        AudioManager.Instance.QueueImage(m_Sprite); // enable the navigation image
 
         m_IsActive = true; // set the flag to indicate that this audio trigger is currently active
     }
@@ -59,6 +59,7 @@ public class AudioTrigger : MonoBehaviour
         if (AudioManager.Instance.ClearCheck(m_Clip))
         {
             AudioManager.Instance.DisableNavImage(); // if the audio clip has finished playing, disable the navigation image
+            m_IsActive = false;
         }
     }
 
