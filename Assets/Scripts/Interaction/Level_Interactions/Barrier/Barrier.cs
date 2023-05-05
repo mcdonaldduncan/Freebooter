@@ -137,6 +137,7 @@ public class Barrier : MonoBehaviour, IRespawn
 
     void OnActivation()
     {
+        if (!m_ShouldClose && m_State == BarrierState.OPEN) return;
         // switch the state of the barrier between open and closed
         m_State = m_State == BarrierState.OPEN ? BarrierState.CLOSED : BarrierState.OPEN;
     }
@@ -193,10 +194,12 @@ public class Barrier : MonoBehaviour, IRespawn
 
     private void OnTriggerExit(Collider other)
     {
+        if (m_AccessType == AccessType.ACTIVATE) return;
         if (!m_InTrigger) return;
         if (!other.gameObject.CompareTag("Player")) return;
         m_InTrigger = false;
         if (m_State == BarrierState.CLOSED) return;
+        if (m_State == BarrierState.OPEN && !m_ShouldClose) return;
         OnActivate();
     }
 

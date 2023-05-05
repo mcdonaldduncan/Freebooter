@@ -854,6 +854,11 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         //Debug.Log($"Player healed. Current health is {health}");
     }
 
+    public void HealthRegen(float heal)
+    {
+        HealthRegen(heal, transform.position);
+    }
+
     public void CheckForDeath()
     {
         if (Health <= 0)
