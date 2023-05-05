@@ -55,9 +55,6 @@ public class AudioManager : Singleton<AudioManager>
     // On start, the AudioSource component is assigned to the Player game object's AudioSource component
     private void Start()
     {
-        m_ClipQueue = new Queue<AudioClip>();
-        m_SpriteQueue = new Queue<Sprite>();
-
         m_CombatExitDelayWFS = new WaitForSeconds(m_CombatExitDelay);
         LevelManager.Instance.CombatStateChanged += OnCombatStateChanged;
 
