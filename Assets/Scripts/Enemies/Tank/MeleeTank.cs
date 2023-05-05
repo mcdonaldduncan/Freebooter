@@ -201,10 +201,9 @@ public class MeleeTank : NewAgentBase, IDissolvable
         NavMeshHit hit;
         if (NavMesh.SamplePosition(pos, out hit, 1.2f, NavMesh.AllAreas))
         {
-            Debug.Log("true");
             return true;
         }
-        else { Debug.Log("false"); return false; }
+        else { return false; }
     }
 
     public void AttackEnded()
