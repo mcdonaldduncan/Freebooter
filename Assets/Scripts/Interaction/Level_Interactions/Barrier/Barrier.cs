@@ -194,6 +194,7 @@ public class Barrier : MonoBehaviour, IRespawn
 
     private void OnTriggerExit(Collider other)
     {
+        if (m_AccessType == AccessType.ACTIVATE) return;
         if (!m_InTrigger) return;
         if (!other.gameObject.CompareTag("Player")) return;
         m_InTrigger = false;
