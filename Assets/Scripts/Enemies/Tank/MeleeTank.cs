@@ -87,6 +87,7 @@ public class MeleeTank : NewAgentBase, IDissolvable
 
     private void Start()
     {
+        StartSetup();
         Agent = gameObject.GetComponent<NavMeshAgent>();
         originalchargetimer = m_ChargeLifeTime;
         originalAccel = Agent.acceleration;
