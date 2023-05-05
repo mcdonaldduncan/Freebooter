@@ -82,7 +82,7 @@ public interface ITracking
     {
         if (Target == null) return;
 
-        Quaternion targetRotation = Quaternion.LookRotation(TargetDirection);
+        Quaternion targetRotation = Quaternion.LookRotation(RayTargetDirection);
         TrackingTransform.rotation = Quaternion.RotateTowards(TrackingTransform.rotation, targetRotation, MaxRotationDelta);
 
     }
