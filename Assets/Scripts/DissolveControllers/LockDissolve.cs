@@ -27,11 +27,13 @@ public class LockDissolve : MonoBehaviour
     private void OnEnable()
     {
         barrier.LockedBarrierOpened += StartDissolve;
+        barrier.Activation += StartDissolve;
     }
 
     private void OnDisable()
     {
         barrier.LockedBarrierOpened -= StartDissolve;
+        barrier.Activation -= StartDissolve;
     }
 
     private void Start()
