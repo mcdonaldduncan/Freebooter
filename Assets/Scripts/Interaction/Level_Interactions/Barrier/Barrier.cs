@@ -137,6 +137,7 @@ public class Barrier : MonoBehaviour, IRespawn
 
     void OnActivation()
     {
+        if (!m_ShouldClose && m_State == BarrierState.OPEN) return;
         // switch the state of the barrier between open and closed
         m_State = m_State == BarrierState.OPEN ? BarrierState.CLOSED : BarrierState.OPEN;
     }
