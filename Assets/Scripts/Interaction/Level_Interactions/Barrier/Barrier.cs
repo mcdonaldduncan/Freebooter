@@ -7,7 +7,7 @@ using UnityEngine;
 /// 
 /// </summary>
 /// Author: Duncan McDonald
-public class Barrier : MonoBehaviour
+public class Barrier : MonoBehaviour, IRespawn
 {
     // State options
     [Header("State Options")]
@@ -38,6 +38,9 @@ public class Barrier : MonoBehaviour
     public event ActionDelegate SetState; // Event for when the barrier's state is set
 
     IActivator m_IActivator; // Interface for the activator object
+    IRespawn m_IRespawn;
+
+    BarrierState m_StartingState;
 
     // Determines if the player has all the required keys
     bool HasKeys => KeyManager.Instance.KeyInventory.Intersect(m_RequiredKeys).Count() == m_RequiredKeys.Count;
@@ -64,6 +67,9 @@ public class Barrier : MonoBehaviour
     private void OnEnable()
     {
         Activation += OnActivation;
+        m_StartingState = m_State;
+        m_IRespawn = this;
+
 
         // If no activator is set or the access type is not activate, return
         if (m_Activator == null || m_AccessType != AccessType.ACTIVATE) return;
@@ -95,6 +101,8 @@ public class Barrier : MonoBehaviour
 
     void Start()
     {
+        m_IRespawn.SubscribeToRespawn();
+
         // if the initial state of the barrier is open, invoke the SetState event
         if (m_State == BarrierState.OPEN)
         {
@@ -109,6 +117,7 @@ public class Barrier : MonoBehaviour
 
         // invoke the Activation event
         Activation?.Invoke();
+        m_IRespawn.SubscribeToCheckpointReached();
 
         // if AutoClose is enabled, invoke the OnActivate method after the specified delay
         if (AutoClose)
@@ -189,6 +198,15 @@ public class Barrier : MonoBehaviour
         m_InTrigger = false;
         if (m_State == BarrierState.CLOSED) return;
         OnActivate();
+    }
+
+    public void OnPlayerRespawn()
+    {
+        m_State = m_StartingState;
+        if (m_State == BarrierState.OPEN)
+        {
+            SetState?.Invoke();
+        }
     }
 }
 
