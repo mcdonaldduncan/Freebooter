@@ -48,6 +48,8 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
     [SerializeField] bool m_ShouldSleep;
     //[SerializeField] GameObject m_Activator;
 
+    FirstPersonController m_Player;
+
     protected AgentState State;
     protected AgentState StartingState;
 
@@ -138,6 +140,7 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
 
     protected void StartSetup()
     {
+        m_Player = LevelManager.Instance.Player;
         Respawn.SubscribeToRespawn();
     }
 
@@ -207,10 +210,10 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
     {
         if (m_ShouldHitStop) LevelManager.TimeStop(m_HitStopDuration);
 
-        if (Tracking.DistanceToTarget <= LevelManager.Instance.Player.DistanceToHeal)
+        if (Tracking.DistanceToTarget <= m_Player.DistanceToHeal)
         {
             //ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);
-            LevelManager.Instance.Player.HealthRegen(LevelManager.Instance.Player.PercentToHeal * m_MaxHealth, transform.position);
+            m_Player.HealthRegen(m_Player.PercentToHeal * m_MaxHealth, transform.position);
         }
 
         if (IsInCombat) CombatStateChanged?.Invoke(false);

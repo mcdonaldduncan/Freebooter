@@ -57,7 +57,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
     [SerializeField] private LayerMask enemies;
     [SerializeField] private GameObject m_OnKillHealFVX;
 
-    //private FirstPersonController playerController;
+    private FirstPersonController m_Player;
     //private GameObject player;
     private Transform m_Target;
     private HideBehavior hideBehavior;
@@ -146,7 +146,8 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
 
     private void Start()
     {
-        m_Target = LevelManager.Instance.Player.transform;
+        m_Player = LevelManager.Instance.Player;
+        m_Target = m_Player.transform;
         checker = GetComponentInChildren<LineOfSightChecker>();
         m_updateAnims = true;
         m_isDead = false;
@@ -230,7 +231,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
                 {
                     navMeshAgent.ResetPath();
                 }
-                Vector3 targetDest = LevelManager.Instance.Player.transform.position;
+                Vector3 targetDest = m_Target.position;
                 navMeshAgent.SetDestination(targetDest);
                 //StartCoroutine(WaitForPathProcessing()); - LOBBING BEHAVIOR
                 //prevPos = transform.position;
@@ -334,7 +335,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
 
     private void FacePlayer()
     {
-        Vector3 lookPos = LevelManager.Instance.Player.transform.position - transform.position;
+        Vector3 lookPos = m_Target.position - transform.position;
         lookPos.y = 0;
         Quaternion rotation = Quaternion.LookRotation(lookPos);
         transform.rotation = Quaternion.Slerp(transform.rotation, rotation, attackRotateSpeed * Time.deltaTime);
@@ -431,7 +432,7 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
 
     private void GiveDamage(float damageToDeal)
     {
-        LevelManager.Instance.Player.TakeDamage(damageToDeal, HitBoxType.normal);
+        m_Player.TakeDamage(damageToDeal, HitBoxType.normal);
         mostRecentHit = Time.time;
     }
 
@@ -465,11 +466,11 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
 
         if (m_shouldHitStop) LevelManager.TimeStop(m_hitStopDuration);
 
-        if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
+        if (distanceToPlayer <= m_Player.DistanceToHeal)
         {
             //ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);
             //LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
-            LevelManager.Instance.Player.HealthRegen(LevelManager.Instance.Player.PercentToHeal * maxHealth, transform.position);
+            m_Player.HealthRegen(m_Player.PercentToHeal * maxHealth, transform.position);
         }
 
         //if (fractureScript != null) fractureScript.Breakage();
@@ -495,11 +496,11 @@ public sealed class EnemySwarmerBehavior : MonoBehaviour, IDamageable, IGroupabl
 
         if (m_shouldHitStop && !m_isDead) LevelManager.TimeStop(m_hitStopDuration);
 
-        if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal && !m_isDead)
+        if (distanceToPlayer <= m_Player.DistanceToHeal && !m_isDead)
         {
             //ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);
             //LevelManager.Instance.Player.Health += (LevelManager.Instance.Player.PercentToHeal * maxHealth);
-            LevelManager.Instance.Player.HealthRegen(LevelManager.Instance.Player.PercentToHeal * maxHealth, transform.position);
+            m_Player.HealthRegen(m_Player.PercentToHeal * maxHealth, transform.position);
         }
 
         //if (fractureScript != null) fractureScript.Breakage();
