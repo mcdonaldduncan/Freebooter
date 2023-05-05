@@ -869,7 +869,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 56a0b23e407fee54a95cb02e1f68b89e, type: 3}
   autoGunAnimationHandler: {fileID: 9051509140675119703}
   autoShakeDuration: 0.3
-  autoShakeMagnitude: 0.5
+  autoShakeMagnitude: 0.35
   autoShakeDampen: 0.5
   grenadeObject: {fileID: 2469417936984378629, guid: 8178c7fb6a6b5ce46ad893fc448533fe,
     type: 3}
@@ -4070,6 +4070,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 297426594678655179}
     m_Modifications:
+    - target: {fileID: 599653281, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 599653281, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -15
+      objectReference: {fileID: 0}
+    - target: {fileID: 599653281, guid: 0fb508bd654404f498649d3da33487b1, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -15
+      objectReference: {fileID: 0}
     - target: {fileID: 482498792921940971, guid: 0fb508bd654404f498649d3da33487b1,
         type: 3}
       propertyPath: m_Navigation.m_Mode
