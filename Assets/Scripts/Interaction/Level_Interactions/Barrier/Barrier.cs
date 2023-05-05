@@ -198,6 +198,7 @@ public class Barrier : MonoBehaviour, IRespawn
         if (!other.gameObject.CompareTag("Player")) return;
         m_InTrigger = false;
         if (m_State == BarrierState.CLOSED) return;
+        if (m_State == BarrierState.OPEN && !m_ShouldClose) return;
         OnActivate();
     }
 
