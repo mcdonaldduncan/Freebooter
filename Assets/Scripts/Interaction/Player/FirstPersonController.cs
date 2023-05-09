@@ -301,9 +301,10 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     {
         playerPaused = false;
         startingPos = transform.position;
-        defaultLocalPosition = bobObjHolder.localPosition;
-        defaultYPosBobObj = defaultLocalPosition.y;
-        defaultXPosBobObj = defaultLocalPosition.x;
+        OnWeaponSwitch();
+        //defaultLocalPosition = bobObjHolder.localPosition;
+        //defaultYPosBobObj = defaultLocalPosition.y;
+        //defaultXPosBobObj = defaultLocalPosition.x;
         m_deathScreen = GetComponentInChildren<DeathScreen>();
     }
 
@@ -389,6 +390,9 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
         //if (LevelManager.Instance.Player == null) LevelManager.Instance.Player = this;
         UpdateDash.DashCooldownCompleted += DashCooldown;
+
+        //Subscribe to weapon switch event
+        GunHandler.weaponSwitched += OnWeaponSwitch;
     }
 
     private void OnDisable()
@@ -421,6 +425,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         _input.Gun.AlternateFire.performed -= playerGun.AlternateShoot;
 
         UpdateDash.DashCooldownCompleted -= DashCooldown;
+
+        GunHandler.weaponSwitched -= OnWeaponSwitch;
     }
 
     private void StateHandler()
@@ -660,6 +666,14 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     {
         walkSpeed = originalSpeed;
         boostedSpeedEnabled = false;
+    }
+
+    private void OnWeaponSwitch()
+    {
+        bobObjHolder = playerGun.CurrentGun.GunModel.transform;
+        defaultLocalPosition = bobObjHolder.localPosition;
+        defaultYPosBobObj = defaultLocalPosition.y;
+        defaultXPosBobObj = defaultLocalPosition.x;
     }
 
     private void HandleHeadbob()
