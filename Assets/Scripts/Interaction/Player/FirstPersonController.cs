@@ -896,6 +896,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
     public void Respawn()
     {
+        transform.SetParent(null, true);
+
         transform.position = LevelManager.Instance.CurrentCheckPoint?.transform.position ?? startingPos;
         transform.rotation = LevelManager.Instance.CurrentCheckPoint?.transform.rotation ?? Quaternion.identity;
 
