@@ -301,7 +301,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     {
         playerPaused = false;
         startingPos = transform.position;
-        OnWeaponSwitch();
+        //OnWeaponSwitch();
         //defaultLocalPosition = bobObjHolder.localPosition;
         //defaultYPosBobObj = defaultLocalPosition.y;
         //defaultXPosBobObj = defaultLocalPosition.x;
