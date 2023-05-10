@@ -24,6 +24,7 @@ public class UIAlertManager : Singleton<UIAlertManager>
 
     [Header("Barrier Alert Content")]
     [SerializeField] string m_BarrierAlertContent;
+    [SerializeField] string m_BarrierOpenContent;
 
     [Header("Ammo Alert Content")]
     [SerializeField] string m_AmmoEmptyAlertContent;
@@ -73,6 +74,12 @@ public class UIAlertManager : Singleton<UIAlertManager>
         foreach (var ammoPickup in ammoPickups)
         {
             ammoPickup.AmmoPickupFailed += OnAmmoPickupFailed;
+        }
+
+        var barrierSegments = FindObjectsOfType<BarrierSegment>();
+        foreach (var barrierSegment in barrierSegments)
+        {
+            barrierSegment.BarrierOpen += OnBarrierOpened;
         }
 
         m_GunHandler = LevelManager.Instance.Player.GetComponentInChildren<GunHandler>();
@@ -140,6 +147,13 @@ public class UIAlertManager : Singleton<UIAlertManager>
     {
         m_BarrierAlertPanel.SetActive(true);
         BarrierAlertText.text = m_PrependName ? $"{name} {m_KeyAlertContent}!" : m_KeyAlertContent;
+        RefreshMessageState();
+    }
+
+    void OnBarrierOpened()
+    {
+        m_BarrierAlertPanel.SetActive(true);
+        BarrierAlertText.text = m_BarrierOpenContent;
         RefreshMessageState();
     }
 
