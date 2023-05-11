@@ -107,6 +107,8 @@ public abstract class NewAgentBase : MonoBehaviour, IDamageable, INavigation, IT
 
     public float FontSize => m_FontSize;
 
+    public bool ShowDamageNumbers => m_ShowDamageNumbers;
+
     public bool IsInCombat { get; set; }
 
     public bool AltShootFrom { get; set; }

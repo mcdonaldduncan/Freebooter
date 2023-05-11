@@ -27,6 +27,8 @@ public class FakeOrbit : MonoBehaviour, IDamageable, IGroupable
 
     public float FontSize => m_FontSize;
 
+    public bool ShowDamageNumbers => m_ShowDamageNumbers;
+
     float radius;
     float angle;
 
