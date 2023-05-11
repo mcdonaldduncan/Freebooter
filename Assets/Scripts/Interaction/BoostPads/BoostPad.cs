@@ -31,6 +31,10 @@ public class BoostPad : MonoBehaviour
 
         if (Vertical)
         {
+            if (Controller.jumpsRemaining == 0)
+            {
+                Controller.jumpsRemaining = Controller.jumpsAllowed;
+            }
             Controller.BoostJump(VericalForce);
         }
     }

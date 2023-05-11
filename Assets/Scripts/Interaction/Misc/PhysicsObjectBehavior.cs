@@ -13,6 +13,8 @@ public class PhysicsObjectBehavior : MonoBehaviour, IDamageable, IBloodless
 
     public float FontSize { get; }
 
+    public bool ShowDamageNumbers { get; }
+
     public void CheckForDeath()
     {
         throw new System.NotImplementedException();

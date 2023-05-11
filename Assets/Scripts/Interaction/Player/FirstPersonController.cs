@@ -109,7 +109,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     [Header("Jumping Parameters")]
     [Tooltip("How many jumps are allowed after the inital one?")]
     [SerializeField]
-    private int jumpsAllowed = 1;
+    public int jumpsAllowed = 1;
     [SerializeField]
     private float maxJumpTime;
     [SerializeField]
@@ -119,7 +119,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     [SerializeField]
     private float gravity = 30f;
     private float finalJumpForce;
-    private int jumpsRemaining;
+    public int jumpsRemaining;
     private bool jumpedOnce;
     private bool jumpStarted;
     private bool holdingJump;

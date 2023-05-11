@@ -44,7 +44,8 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable
 
     public GameObject DamageTextPrefab { get => damageable.DamageTextPrefab; }
     public Transform TextSpawnLocation { get => damageable.TextSpawnLocation; }
-    public float FontSize { get => damageable.FontSize; } 
+    public float FontSize { get => damageable.FontSize; }
+    public bool ShowDamageNumbers { get; }
 
     public GameObject Prefab { get => m_Prefab; set => m_Prefab = value; }
     public TextMeshPro Text { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }

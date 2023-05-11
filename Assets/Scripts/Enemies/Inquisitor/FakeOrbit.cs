@@ -15,6 +15,20 @@ public class FakeOrbit : MonoBehaviour, IDamageable, IGroupable
     [SerializeField] float rotationSpeed;
     //[SerializeField] bool direction;
 
+    [Header("Damage Display Options")]
+    [SerializeField] GameObject m_DamageTextPrefab;
+    [SerializeField] Transform m_TextSpawnLocation;
+    [SerializeField] float m_FontSize;
+    [SerializeField] bool m_ShowDamageNumbers;
+
+    public GameObject DamageTextPrefab => m_DamageTextPrefab;
+
+    public Transform TextSpawnLocation => m_TextSpawnLocation;
+
+    public float FontSize => m_FontSize;
+
+    public bool ShowDamageNumbers => m_ShowDamageNumbers;
+
     float radius;
     float angle;
 
@@ -26,15 +40,10 @@ public class FakeOrbit : MonoBehaviour, IDamageable, IGroupable
 
     public float Health { get; set; }
 
-    public GameObject DamageTextPrefab => throw new System.NotImplementedException();
-
-    public Transform TextSpawnLocation => throw new System.NotImplementedException();
-
-    public float FontSize => throw new System.NotImplementedException();
-
-    public bool ShowDamageNumbers => throw new System.NotImplementedException();
 
     public bool IsDead { get; set; }
+
+    IDamageable damageable;
 
     // Set starting angle and radius
     void Start()
@@ -45,6 +54,7 @@ public class FakeOrbit : MonoBehaviour, IDamageable, IGroupable
         radius = Random.Range(5f, 7f);
         angle = Mathf.Deg2Rad * Random.Range(0f, 360f);
         startY = transform.position.y - target.position.y;
+        damageable = this;
     }
 
     private void OnEnable()
@@ -75,7 +85,7 @@ public class FakeOrbit : MonoBehaviour, IDamageable, IGroupable
     public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint = default(Vector3))
     {
         Health -= damageTaken;
-        //Debug.Log("Orbit Damaged");
+        damageable.InstantiateDamageNumber(damageTaken, hitbox);
         CheckForDeath();
     }
 
