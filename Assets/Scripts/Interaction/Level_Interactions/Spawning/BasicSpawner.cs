@@ -57,11 +57,13 @@ public class BasicSpawner : MonoBehaviour, IRecipient, IRespawn
             _ = ProjectileManager.Instance.TakeFromPool(m_SpawnVFX, obj.transform.position);
             obj.SetActive(true);
         }
+        beenActivatedOnce = true;
         Respawn.SubscribeToCheckpointReached();
     }
 
     void PrepareGroupForSpawn()
     {
+        if (beenActivatedOnce && shouldRemainActive && m_ShouldActivate) return;
         foreach (var obj in m_SpawnObjects)
         {
             obj.SetActive(false);
@@ -79,6 +81,11 @@ public class BasicSpawner : MonoBehaviour, IRecipient, IRespawn
         StartCoroutine(SetStateNextFrame());
     }
 
+    [SerializeField] bool shouldRemainActive = false;
+    bool beenActivatedOnce = false;
+    // Joseph: Because the set state next frame code happens at the same frame for both the spawner and the enemy group activator,
+    // the enemy group activator fires first and then the spawner which causes enemies that should be active to be deactivated.
+    // My messy temporary solution is to add lines 60, 66, 84, and 85, feel free to fix this problem in a better way later.
     IEnumerator SetStateNextFrame()
     {
         yield return null;
