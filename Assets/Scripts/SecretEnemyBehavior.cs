@@ -40,11 +40,9 @@ public class SecretEnemyBehavior : MonoBehaviour
         }
 
         var distance = Vector3.Distance(transform.position, m_Target.position);
-        Debug.Log(distance);
         if (distance <= m_DistanceToKill)
         {
             m_Player.TakeDamage(m_Player.MaxHealth, HitBoxType.normal);
-            Debug.Log("Take Damage");
         }
     }
 
