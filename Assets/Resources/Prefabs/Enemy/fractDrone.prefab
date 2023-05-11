@@ -175,13 +175,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e90b6d3c874647c46bd8c3b958239e1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Body: {fileID: 1232864601328918988}
-  prefab: {fileID: 0}
   explosionparticle: {fileID: 130090, guid: c89f79686d89e7841a3386694fb086e1, type: 3}
   m_Damage: 20
   m_Radius: 2
-  blinkrate: 0.3
-  fractureScript: {fileID: 239239676540955880}
 --- !u!64 &2929363831507131925
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -324,6 +320,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac513bfe5bcea934aa777d72448aa7d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_dissolveTime: 0.025
+  m_dissolveRate: 0.0125
+  m_dissolveWidth: 0.02
 --- !u!1 &1465237223249514666
 GameObject:
   m_ObjectHideFlags: 0
@@ -452,6 +451,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac513bfe5bcea934aa777d72448aa7d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_dissolveTime: 0.025
+  m_dissolveRate: 0.0125
+  m_dissolveWidth: 0.02
 --- !u!1 &1712572248913316179
 GameObject:
   m_ObjectHideFlags: 0
@@ -580,6 +582,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac513bfe5bcea934aa777d72448aa7d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_dissolveTime: 0.025
+  m_dissolveRate: 0.0125
+  m_dissolveWidth: 0.02
 --- !u!1 &1746844207633023240
 GameObject:
   m_ObjectHideFlags: 0
@@ -708,6 +713,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac513bfe5bcea934aa777d72448aa7d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_dissolveTime: 0.025
+  m_dissolveRate: 0.0125
+  m_dissolveWidth: 0.02
 --- !u!1 &2920814358102475208
 GameObject:
   m_ObjectHideFlags: 0
@@ -836,6 +844,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac513bfe5bcea934aa777d72448aa7d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_dissolveTime: 0.025
+  m_dissolveRate: 0.0125
+  m_dissolveWidth: 0.02
 --- !u!1 &2970159325875821826
 GameObject:
   m_ObjectHideFlags: 0
@@ -964,6 +975,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac513bfe5bcea934aa777d72448aa7d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_dissolveTime: 0.025
+  m_dissolveRate: 0.0125
+  m_dissolveWidth: 0.02
 --- !u!1 &3693926611175024370
 GameObject:
   m_ObjectHideFlags: 0
@@ -1092,6 +1106,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac513bfe5bcea934aa777d72448aa7d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_dissolveTime: 0.025
+  m_dissolveRate: 0.0125
+  m_dissolveWidth: 0.02
 --- !u!1 &3948396316759810791
 GameObject:
   m_ObjectHideFlags: 0
@@ -1511,6 +1528,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac513bfe5bcea934aa777d72448aa7d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_dissolveTime: 0.025
+  m_dissolveRate: 0.0125
+  m_dissolveWidth: 0.02
 --- !u!1 &6286257986717630741
 GameObject:
   m_ObjectHideFlags: 0
@@ -1684,13 +1704,10 @@ MonoBehaviour:
     type: 3}
   m_TextSpawnLocation: {fileID: 2395463109260809112}
   m_FontSize: 0
-  m_ShowDamageNumbers: 0
-  m_WalkableLayers:
+  m_ShowDamageNumbers: 1
+  m_SightLayers:
     serializedVersion: 2
-    m_Bits: 2147483647
-  m_PlayerLayer:
-    serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 0
   m_StoppingDistance: 5
   m_RotationSpeed: 30
   m_MovementSampleRadius: 0
@@ -1700,8 +1717,8 @@ MonoBehaviour:
   m_TimeBetweenShots: 0.35
   m_FieldOfView: 0
   m_MaxHealth: 100
-  m_shouldHitStop: 0
-  m_hitStopDuration: 0
+  m_ShouldHitStop: 0
+  m_HitStopDuration: 0
   m_ShouldSleep: 0
   m_Body: {fileID: 1232864601328918988}
 --- !u!136 &7938525674378545813
@@ -1846,3 +1863,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac513bfe5bcea934aa777d72448aa7d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_dissolveTime: 0.025
+  m_dissolveRate: 0.0125
+  m_dissolveWidth: 0.02
