@@ -80,7 +80,7 @@ public class GrenadeGun : MonoBehaviour, IGun
         GunManager.GunShotAudioSource.PlayOneShot(GunShotAudio);
 
         //Get the direction that the player is aiming
-        Ray ray = GunManager.FPSCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        Ray ray = GunManager.FPSCam.ViewportPointToRay(new Vector3(.5f, .5f, 0));
 
         //calculate the force of launching the grenade
         Vector3 grenadeLaunchForce = ray.direction * GrenadeLaunchForce;
