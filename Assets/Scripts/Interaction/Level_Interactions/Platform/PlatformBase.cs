@@ -30,7 +30,7 @@ public class PlatformBase : MonoBehaviour
     MeshRenderer m_Renderer;
 
     MovingPlatform m_Platform;
-    //FirstPersonController m_Player;
+    FirstPersonController m_Player;
 
     Vector3 m_Velocity;
     Vector3 m_Acceleration;
@@ -42,13 +42,13 @@ public class PlatformBase : MonoBehaviour
     float m_LerpTime;
 
     bool m_ShouldMove;
-    //bool m_IsAttached;
+    bool m_IsAttached;
 
     public bool ShouldRotate => m_TrackCurrentTarget;
 
     void Start()
     {
-        //m_Player = GameObject.FindWithTag("Player").GetComponent<FirstPersonController>();
+        m_Player = LevelManager.Instance.Player;
         m_Renderer = GetComponent<MeshRenderer>();
         m_Platform = GetComponentInParent<MovingPlatform>();
         m_Navigator = m_Platform.gameObject.FindChildWithTag("Navigator").transform;
@@ -213,21 +213,23 @@ public class PlatformBase : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player") && !m_IsAttached)
         {
             m_Platform.OnPlayerContact();
-            collision.transform.SetParent(transform);
-            //m_IsAttached = true;
+            if (!m_Player.isAttached) collision.transform.SetParent(transform);
+            m_IsAttached = true;
+            m_Player.isAttached = true;
         }
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player") && m_IsAttached)
         {
             m_Platform.OnPlayerExit();
             collision.transform.SetParent(null, true);
-            //m_IsAttached = false;
+            m_IsAttached = false;
+            m_Player.isAttached = false;
         }
     }
 
