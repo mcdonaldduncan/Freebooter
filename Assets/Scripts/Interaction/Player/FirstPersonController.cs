@@ -262,6 +262,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
     private DeathScreen m_deathScreen;
 
+    public bool isAttached;
+
     public enum MovementState
     {
         basic
