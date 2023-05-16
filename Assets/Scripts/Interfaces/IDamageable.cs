@@ -13,8 +13,7 @@ public interface IDamageable
 
     public GameObject DamageTextPrefab { get; }
     public Transform TextSpawnLocation { get; }
-    public TextMeshPro Text { get; set; }
-
+    public bool ShowDamageNumbers { get; }
     public float FontSize { get; }
 
     //void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3? hitPoint = null);
@@ -54,8 +53,11 @@ public interface IDamageable
 
     public void InstantiateDamageNumber(float damageTaken, HitBoxType hitType)
     {
-        var obj = ProjectileManager.Instance.TakeFromPool(DamageTextPrefab, new Vector3(TextSpawnLocation.transform.position.x + Random.Range(-1f, 1f), TextSpawnLocation.transform.position.y, TextSpawnLocation.transform.position.z + Random.Range(-1f, 1f)));
-        GenerateDamageInfo(damageTaken, hitType, obj.GetComponent<TextMeshPro>());
+        if (ShowDamageNumbers == true)
+        {
+            var obj = ProjectileManager.Instance.TakeFromPool(DamageTextPrefab, new Vector3(TextSpawnLocation.transform.position.x + Random.Range(-1f, 1f), TextSpawnLocation.transform.position.y, TextSpawnLocation.transform.position.z + Random.Range(-1f, 1f)));
+            GenerateDamageInfo(damageTaken, hitType, obj.GetComponent<TextMeshPro>());
+        }
     }
 
     public void CheckForDeath();

@@ -94,7 +94,7 @@ public class Inquisitor : MonoBehaviour, IDamageable, IGroupable
     public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint = default(Vector3))
     {
         if (damageTaken < 1) return;
-        if (m_Shield.active)
+        if (m_Shield.activeInHierarchy)
         {
             m_Damageable.InstantiateDamageNumber(0, HitBoxType.armored);
         }
@@ -267,7 +267,7 @@ public class Inquisitor : MonoBehaviour, IDamageable, IGroupable
             normalCross = Vector3.zero;
         }
         Vector3 adjustedLook = (m_Target.position + normalCross * 30f) - transform.position;
-        var rotGoal = Quaternion.LookRotation(new Vector3(adjustedLook.x, transform.position.y, adjustedLook.z));
+        var rotGoal = Quaternion.LookRotation(new Vector3(adjustedLook.x, /*transform.position.y*/0, adjustedLook.z));
         transform.rotation = Quaternion.RotateTowards(transform.rotation, rotGoal, m_RotSpeed * Time.deltaTime);
         
         m_AttackSpawn.transform.LookAt(m_TargetPosition);

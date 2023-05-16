@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PauseController : MonoBehaviour
 {
     [SerializeField] private GunHandler m_gunHandler;
+    [SerializeField] private Button m_defaultSelectedButton;
 
     private bool m_isPaused;
     private CanvasGroup m_ui;
@@ -25,6 +27,7 @@ public class PauseController : MonoBehaviour
 
         if (!m_isPaused)
         {
+            m_fpsController.PlayerUIEventSystem.SetSelectedGameObject(m_defaultSelectedButton.gameObject);
             m_gunHandler.CurrentGun.GunReticle.alpha = 0;
             m_fpsController.enabled = false;
             LevelManager.TogglePause(true);
@@ -70,7 +73,7 @@ public class PauseController : MonoBehaviour
         m_ui.gameObject.SetActive(false);
         LevelManager.TogglePause(false);
         m_isPaused = false;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void OnLevelSelect()

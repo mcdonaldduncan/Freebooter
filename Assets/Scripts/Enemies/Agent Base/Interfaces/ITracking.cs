@@ -11,19 +11,7 @@ public interface ITracking
     float RotationSpeed { get; }
     float FOV { get; }
 
-    private Transform Target
-    {
-        get
-        {
-            if (LevelManager.Instance.Player == null)
-            {
-                return GameObject.FindGameObjectWithTag("Player").GetComponent<FirstPersonController>().transform;
-                //return GameObject.FindGameObjectWithTag("Player").transform; might be able to just do this but wanted to be sure
-            }
-
-            return LevelManager.Instance.Player.transform;
-        }
-    }
+    private Transform Target => LevelManager.Instance.Player.transform;
     private Vector3 TargetDirection => Target.position - TrackingTransform.position;
     private Vector3 RayTargetDirection => Target.position - RayPoint.position;
     public float DistanceToTarget => Vector3.Distance(TrackingTransform.position, Target.position);
@@ -94,7 +82,7 @@ public interface ITracking
     {
         if (Target == null) return;
 
-        Quaternion targetRotation = Quaternion.LookRotation(TargetDirection);
+        Quaternion targetRotation = Quaternion.LookRotation(RayTargetDirection);
         TrackingTransform.rotation = Quaternion.RotateTowards(TrackingTransform.rotation, targetRotation, MaxRotationDelta);
 
     }

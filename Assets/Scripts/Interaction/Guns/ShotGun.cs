@@ -217,14 +217,14 @@ public class ShotGun : MonoBehaviour, IGun, IDamageTracking
 
         if (damageableTarget != null)
         {
-            bool breakableObject = hitInfo.transform.TryGetComponent<Fracture>(out Fracture component);
+            bool bloodlessObj = hitInfo.transform.TryGetComponent<IBloodless>(out IBloodless component);
 
             //using a try catch to prevent destroyed enemies from throwing null reference exceptions
             try
             {
                 //Get the position of the hit enemy
                 Vector3 targetPosition = hitInfo.transform.position;
-                ProjectileManager.Instance.TakeFromPool(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point);
+                ProjectileManager.Instance.TakeFromPool(bloodlessObj ? HitNonEnemy : HitEnemy, hitInfo.point);
                 //if (!hitOnce)
                 //{
                 //    LevelManager.TimeStop(HitStopDuration);
@@ -266,8 +266,12 @@ public class ShotGun : MonoBehaviour, IGun, IDamageTracking
             }
             catch
             {
-                ProjectileManager.Instance.TakeFromPool(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point);
+                ProjectileManager.Instance.TakeFromPool(bloodlessObj ? HitNonEnemy : HitEnemy, hitInfo.point);
             }
+        }
+        else if (hitInfo.collider.gameObject.TryGetComponent(out Projectile projectile))
+        {
+            projectile.ProjectileHit();
         }
         else
         {

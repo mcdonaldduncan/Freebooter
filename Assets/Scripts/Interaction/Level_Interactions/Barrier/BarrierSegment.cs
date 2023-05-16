@@ -21,13 +21,18 @@ public class BarrierSegment : MonoBehaviour
 
     Barrier m_ParentController;
 
+    UIAlertManager m_AlertManager;
+
     float m_Speed;
 
     int m_CurrentIndex;
     int m_LastIndex;
 
     bool m_ShouldMove;
+    bool m_NotificationFired;
 
+    public delegate void BarrierOpenNotificationDelegate();
+    public event BarrierOpenNotificationDelegate BarrierOpen;
 
 #if UNITY_EDITOR
 
@@ -45,6 +50,11 @@ public class BarrierSegment : MonoBehaviour
 
 #endif
 
+    private void Awake()
+    {
+        m_Transform = transform;
+    }
+
     private void OnEnable()
     {
         m_ParentController = transform.parent.GetComponentInParent<Barrier>();
@@ -60,7 +70,6 @@ public class BarrierSegment : MonoBehaviour
 
     void Start()
     {
-        m_Transform = transform;
         m_Speed = m_ParentController.MoveSpeed;
     }
 
@@ -76,6 +85,9 @@ public class BarrierSegment : MonoBehaviour
     {
         if (!m_ShouldMove) return;
         m_Transform.position = Vector3.MoveTowards(m_Transform.position, m_Nodes[m_CurrentIndex].position, m_Speed * Time.deltaTime);
+        if (m_NotificationFired) return;
+        m_NotificationFired = true;
+        BarrierOpen?.Invoke();
     }
 
     void HandleOpen()

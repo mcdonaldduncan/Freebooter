@@ -148,7 +148,6 @@ public class MovingPlatform : MonoBehaviour
 
     void OnActivate()
     {
-        Debug.Log($"OnActivate Called {isActivated}");
         if (isActivated) { lateActivate = true; }
 
         isActivated = true;
@@ -157,8 +156,6 @@ public class MovingPlatform : MonoBehaviour
 
     void OnDeactivate()
     {
-        Debug.Log($"OnDeactivate Called {isActivated}");
-
         if (lateActivate && isActivated)
         {
             lateActivate = false;

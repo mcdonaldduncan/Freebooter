@@ -179,7 +179,7 @@ public class PowerUpManager : Singleton<PowerUpManager>
     void Heal()
     {
         //Debug.Log("healed for " + healAmmount);
-        firstPersonController.HealthRegen(healAmmount);
+        //firstPersonController.HealthRegen(healAmmount);
     }
     void RemoveHealing()
     {

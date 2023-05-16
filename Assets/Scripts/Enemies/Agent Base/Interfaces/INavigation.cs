@@ -62,11 +62,6 @@ public interface INavigation
         {
             Agent.SetDestination(hit.position);
         }
-        else
-        {
-            Debug.LogWarning($"The position {location.position} is a location with no navmesh");
-        }
-
     }
 
     /// <summary>
@@ -79,11 +74,6 @@ public interface INavigation
         {
             Agent.SetDestination(hit.position);
         }
-        else
-        {
-            Debug.LogWarning($"The position {location} is a location with no navmesh");
-        }
-
     }
 
     /// <summary>

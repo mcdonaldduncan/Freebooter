@@ -56,6 +56,7 @@ public sealed class LevelManager : Singleton<LevelManager>
     
 
     [SerializeField] float FadeSpeed;
+    [SerializeField] private Button m_defaultSelectedButton;
 
     float LevelStartTime;
     float LevelEndTime;
@@ -126,6 +127,7 @@ public sealed class LevelManager : Singleton<LevelManager>
         EnemyKills.text = EnemiesDefeated.ToString();
         PlayerDeath.text = PlayerDeaths.ToString();
 
+        Player.PlayerUIEventSystem.SetSelectedGameObject(m_defaultSelectedButton.gameObject);
         UIPanel.SetActive(true);
     }
 

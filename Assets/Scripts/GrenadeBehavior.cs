@@ -46,7 +46,8 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable, IDamageTracking
         if (grenadeAudioSource == null) grenadeAudioSource = GetComponent<AudioSource>();
         if (grenadeRenderer == null) grenadeRenderer = GetComponent<Renderer>();
         grenadeGun.remoteDetonationEvent += Explode;
-        
+        //get the rigidbody of the grenade
+        if (grenadeRB == null) grenadeRB = GetComponent<Rigidbody>();
         startTime = Time.time;
         timerStarted = true;
         collided = false;
@@ -84,7 +85,9 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable, IDamageTracking
 
     private void OnDisable()
     {
-        LevelManager.Instance.DeRegisterDamageTracker(this);
+        grenadeRB.velocity = Vector3.zero;
+        grenadeRB.angularVelocity = Vector3.zero;
+        if (LevelManager.Instance != null) LevelManager.Instance.DeRegisterDamageTracker(this);
     }
 
     void RegisterWithLevelManager()
@@ -95,9 +98,6 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable, IDamageTracking
 
     public void Launch(Vector3 direction)
     {
-        //get the rigidbody of the grenade
-        grenadeRB = GetComponent<Rigidbody>();
-
         //reset the constraints of the grenade, so that it doesn't freeze after being respawned from object pool
         grenadeRB.constraints = RigidbodyConstraints.None;
 
@@ -105,7 +105,7 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable, IDamageTracking
         grenadeRB.AddForce(direction);
 
         //Add torque for a little stylish spinning :)
-        grenadeRB.AddTorque(direction * 0.01f);
+        grenadeRB.AddTorque(direction * 0.005f);
     }
 
     private void Explode()
@@ -139,6 +139,10 @@ public class GrenadeBehavior : MonoBehaviour, IPoolable, IDamageTracking
                     {
                         continue;
                     }
+                }
+                else if (hit.gameObject.TryGetComponent(out Projectile projectile))
+                {
+                    projectile.ProjectileHit();
                 }
             }
         }

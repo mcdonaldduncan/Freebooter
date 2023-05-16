@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.XR;
 
-public class Fracture : MonoBehaviour, IDamageable
+public class Fracture : MonoBehaviour, IDamageable, IBloodless
 {
     [SerializeField] private float m_health;
     [SerializeField] private float m_timeToDespawn;

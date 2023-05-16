@@ -1,3 +1,4 @@
+using Assets.Scripts.Enemies.Agent_Base.Interfaces;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,12 +8,26 @@ using UnityEngine;
 /// 
 /// </summary>
 /// Author: Duncan McDonald
-public class FakeOrbit : MonoBehaviour, IDamageable
+public class FakeOrbit : MonoBehaviour, IDamageable, IGroupable
 {
     [SerializeField] float StartingHealth;
     [SerializeField] Transform target;
     [SerializeField] float rotationSpeed;
     //[SerializeField] bool direction;
+
+    [Header("Damage Display Options")]
+    [SerializeField] GameObject m_DamageTextPrefab;
+    [SerializeField] Transform m_TextSpawnLocation;
+    [SerializeField] float m_FontSize;
+    [SerializeField] bool m_ShowDamageNumbers;
+
+    public GameObject DamageTextPrefab => m_DamageTextPrefab;
+
+    public Transform TextSpawnLocation => m_TextSpawnLocation;
+
+    public float FontSize => m_FontSize;
+
+    public bool ShowDamageNumbers => m_ShowDamageNumbers;
 
     float radius;
     float angle;
@@ -25,15 +40,10 @@ public class FakeOrbit : MonoBehaviour, IDamageable
 
     public float Health { get; set; }
 
-    public GameObject DamageTextPrefab => throw new System.NotImplementedException();
 
-    public Transform TextSpawnLocation => throw new System.NotImplementedException();
+    public bool IsDead { get; set; }
 
-    public float FontSize => throw new System.NotImplementedException();
-
-    public bool ShowDamageNumbers => throw new System.NotImplementedException();
-
-    public TextMeshPro Text { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    IDamageable damageable;
 
     // Set starting angle and radius
     void Start()
@@ -44,6 +54,12 @@ public class FakeOrbit : MonoBehaviour, IDamageable
         radius = Random.Range(5f, 7f);
         angle = Mathf.Deg2Rad * Random.Range(0f, 360f);
         startY = transform.position.y - target.position.y;
+        damageable = this;
+    }
+
+    private void OnEnable()
+    {
+        IsDead = false;
     }
 
     void Update()
@@ -69,7 +85,7 @@ public class FakeOrbit : MonoBehaviour, IDamageable
     public void TakeDamage(float damageTaken, HitBoxType hitbox, Vector3 hitPoint = default(Vector3))
     {
         Health -= damageTaken;
-        //Debug.Log("Orbit Damaged");
+        damageable.InstantiateDamageNumber(damageTaken, hitbox);
         CheckForDeath();
     }
 
@@ -79,6 +95,7 @@ public class FakeOrbit : MonoBehaviour, IDamageable
         {
             //Debug.Log("Orbit Destroyed");
             //_Inquisitor.orbits.Remove(this);
+            IsDead = true;
             gameObject.SetActive(false);
             _Inquisitor.CheckOrbits();
             

@@ -11,6 +11,7 @@ public class MeleeTank : NewAgentBase, IDissolvable
     [Header("Animator")]
     [SerializeField] Animator m_Animator;
     [SerializeField] Rigidbody m_torsoRB;
+    [SerializeField] GameObject m_ragdollParent;
     [SerializeField] private float ragdollForce;
     [SerializeField] private float ragdollForceScale;
 
@@ -24,6 +25,7 @@ public class MeleeTank : NewAgentBase, IDissolvable
 
     [Header("Melee parameters")]
     [SerializeField] Transform m_raycastSource;
+    [SerializeField] Transform m_lobSource;
     [SerializeField] float m_meleeRange;
     [SerializeField] float m_meleeDamage;
     [SerializeField] float m_animationSpeed;
@@ -42,6 +44,9 @@ public class MeleeTank : NewAgentBase, IDissolvable
     [SerializeField] float m_ChargeLifeTime = 5f;
     [SerializeField] float m_ChargeStoppingDistance = 1f;
 
+    [Header("Custom Behaviour")]
+    [SerializeField] bool shouldReturn = true;
+
     //possibly add a force variable for push back in the future
 
     protected float lastShotTimeExplosive; //made new timer for the explosive gun to shoot slower then normal guns
@@ -51,14 +56,18 @@ public class MeleeTank : NewAgentBase, IDissolvable
     float lastMeleeTime;
     float lastChargeHitTime;
     bool shouldMelee => Time.time > m_TimeBetweenMeleeHits + lastMeleeTime && Tracking.DistanceToTarget < m_meleeRange;//timer for the melee
+    bool shouldShoot => Time.time > m_TimeBetweenMeleeHits + lastMeleeTime && !charging;//timer for the ranged
     bool shouldCharge => Time.time > m_TimeBetweenCharges + lastChargeTime && Tracking.DistanceToTarget < m_chargeRange;//timer for the charge
     bool shouldDealDamageInCharge => Time.time > m_TimeBetweenChargeHits + lastChargeHitTime;
     bool charging; //Im using this to prevent melee atacking while charging
+    bool shooting;
 
     bool resetChargeParam = false;
     float originalchargetimer;
     float originalSpeed;
     float originalAccel;
+
+    private Dictionary<Transform, Vector3[]> m_ragdollLimbStartingVectors;
 
     public DissolvableDelegate EnemyDied { get; set; }
     //public delegate void MetalonDelegate();
@@ -67,19 +76,23 @@ public class MeleeTank : NewAgentBase, IDissolvable
     private void Awake()
     {
         AwakeSetup();
+        m_ragdollLimbStartingVectors = new Dictionary<Transform, Vector3[]>();
     }
 
     private void OnEnable()
     {
         EnableSetup();
+        Shooting.AltShootFrom = m_lobSource.transform;
     }
 
     private void Start()
     {
+        StartSetup();
         Agent = gameObject.GetComponent<NavMeshAgent>();
         originalchargetimer = m_ChargeLifeTime;
         originalAccel = Agent.acceleration;
         originalSpeed = Agent.speed;
+        GetRagdollLimbs();
         DisableRagdoll();
     }
 
@@ -122,6 +135,25 @@ public class MeleeTank : NewAgentBase, IDissolvable
         m_Animator.SetFloat("Blend", Agent.velocity.magnitude);
         HandleAgentState();
     }
+    private void GetRagdollLimbs()
+    {
+        Transform[] ragdollLimbs = m_ragdollParent.GetComponentsInChildren<Transform>();
+
+        foreach (var limb in ragdollLimbs)
+        {
+            m_ragdollLimbStartingVectors.Add(limb, new Vector3[] { limb.transform.position, limb.transform.eulerAngles, limb.transform.localScale });
+        }
+    }
+
+    private void ResetLimbs()
+    {
+        foreach (var kvPair in m_ragdollLimbStartingVectors)
+        {
+            kvPair.Key.position = kvPair.Value[0];
+            kvPair.Key.rotation = Quaternion.Euler(kvPair.Value[1]);
+            kvPair.Key.localScale = kvPair.Value[2];
+        }
+    }
 
     public override void HandleAgentState()
     {
@@ -140,12 +172,14 @@ public class MeleeTank : NewAgentBase, IDissolvable
                 if (IsInCombat) HandleCombatStateChange();
                 break;
             case AgentState.CHASE:
-                Navigation.ChaseTarget();
+                if (NavmeshOnPlayer()) { Navigation.ChaseTarget(); }
                 Tracking.TrackTarget2D();
-                if (!Tracking.InRange) State = AgentState.RETURN;
+                if (!Tracking.InRange && shouldReturn == true) State = AgentState.RETURN;
                 if (!IsInCombat) HandleCombatStateChange();
-                if (shouldMelee) { MeleeHandler(); }
+                if (shouldMelee && NavmeshOnPlayer()) { AttackHandler(true); }
+                if (shouldShoot && !NavmeshOnPlayer()) { AttackHandler(false); }
                 if (shouldCharge) { ChargeAttack(); }
+                if (charging) {  }
                 break;
             case AgentState.RETURN:
                 Navigation.MoveToLocationDirect(StartingPosition);
@@ -162,22 +196,44 @@ public class MeleeTank : NewAgentBase, IDissolvable
         }
     }
 
-    private void MeleeHandler()
+    bool NavmeshOnPlayer()
+    {
+        var pos = LevelManager.Instance.Player.transform.position;
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(pos, out hit, 1.2f, NavMesh.AllAreas))
+        {
+            return true;
+        }
+        else { return false; }
+    }
+
+    public void AttackEnded()
+    {
+        ResetBashParam();
+        ResetLobParam();
+    }
+
+    private void AttackHandler(bool attacktype) // true  = melee, false = ranged
     {
         if (Shield != null)
         {
             if (Shield.gameObject.activeSelf == false) { return; }
         }
         if (charging) { return; }
-        if (bashOnce != true)
+        if (bashOnce != true && attacktype == true)
         {
             bashOnce = true;
-            m_Animator.SetTrigger("Bash");
-            Invoke("RestBashParam", m_TimeBetweenMeleeHits);
+            m_Animator.SetBool("Bash", true);
+        }
+        if (bashOnce != true && attacktype == false)
+        {
+            bashOnce = true;
+            m_Animator.SetBool("Lob", true);
         }
     }
 
-    void RestBashParam() { bashOnce = false; }
+    public void ResetBashParam() { bashOnce = false; m_Animator.SetBool("Bash", false); }
+    public void ResetLobParam() { bashOnce = false; m_Animator.SetBool("Lob", false); }
 
     public void MeleeAttack()
     {
@@ -193,6 +249,11 @@ public class MeleeTank : NewAgentBase, IDissolvable
         lastMeleeTime = Time.time;
     }
 
+    public void LobAttack()
+    {
+        Shooting.Shoot(m_lobSource);
+    }
+
     private void GiveDamage(float damageToDeal)
     {
         LevelManager.Instance.Player.TakeDamage(damageToDeal, HitBoxType.normal);
@@ -200,29 +261,22 @@ public class MeleeTank : NewAgentBase, IDissolvable
 
     private void ChargeAttack()
     {
-        if (!shouldCharge) { return; }
+        if (!shouldCharge  && !shooting) { return; }
         charging = true;
         Agent.speed = m_VelocityLimit / 2;
         Agent.acceleration = m_VelocityLimit;
         Agent.stoppingDistance = m_ChargeStoppingDistance;
 
-        // Dude, why do you keep copying and pasting code when you have access to it already
-        //Navigation.ChaseTargetDirect(); this is the exact same thing as what you copied and pasted below
+        m_ChargeLifeTime -= Time.deltaTime;
         
-        //m_Agent.SetDestination(m_Target.transform.position);
-        Vector3 FromPlayerToAgent = transform.position - LevelManager.Instance.Player.transform.position;
-        Agent.SetDestination(LevelManager.Instance.Player.transform.position + FromPlayerToAgent.normalized * Agent.stoppingDistance);
+        Navigation.ChaseTargetDirect();
+        
         m_Animator.SetBool("Charge", true);
 
-        //if (m_RigidBody.velocity.magnitude > m_VelocityLimit) m_RigidBody.AddForce(-m_RigidBody.velocity.normalized * (m_RigidBody.velocity.magnitude - m_VelocityLimit), ForceMode.Impulse);
-        //m_RigidBody.AddForce((m_Target.position - transform.position) * m_TrackingForce, ForceMode.Impulse);
-        //transform.LookAt(m_Target.transform.position);
-
         ChargingRayCast();
-
-        m_ChargeLifeTime -= Time.deltaTime;
         if (resetChargeParam == false && m_ChargeLifeTime < 0) { ChangeChargingToFalse(); }
         resetChargeParam = false;
+
     }
 
     void ChargingRayCast()
@@ -290,6 +344,7 @@ public class MeleeTank : NewAgentBase, IDissolvable
 
     private void DisableRagdoll()
     {
+        ResetLimbs();
         Agent.speed = originalSpeed;
         m_Animator.enabled = true;
         BoxCollider[] boxColliders = GetComponentsInChildren<BoxCollider>();

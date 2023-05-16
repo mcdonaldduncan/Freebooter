@@ -52,6 +52,7 @@ public sealed class GunHandler : MonoBehaviour
     [SerializeField] private bool reloading;
     [SerializeField] private bool infiniteAmmo;
     [SerializeField] private LayerMask ignoreLayers;
+    [SerializeField] private AudioClip outOfAmmoAudioClip;
     private int currentGunAmmo;
     private AudioSource gunShotAudioSource;
 
@@ -323,6 +324,7 @@ public sealed class GunHandler : MonoBehaviour
         currentGun.GunReticle.alpha = 1;
         currentGun.GunModel.SetActive(true);
         currentGun.GunAnimationHandler.RecoilAnim.SetFloat("RecoilSpeed", currentGun.GunAnimationHandler.RecoilAnimClip.length / currentGun.FireRate);
+        weaponSwitched?.Invoke();
 
         LevelManager.Instance.CheckPointReached += OnCheckpointReached;
         LevelManager.Instance.PlayerRespawn += OnPlayerRespawn;
@@ -346,6 +348,18 @@ public sealed class GunHandler : MonoBehaviour
         //if (!IsOwner) return;
         currentGun.GunReticle.alpha = 0;
         currentGun.GunModel.SetActive(false);
+
+        if (context.control.device is Gamepad)
+        {
+            if (currentGunState != guns.Last())
+            {
+                currentGunState = guns[guns.IndexOf(currentGunState) + 1];
+            }
+            else
+            {
+                currentGunState = guns[0];
+            }
+        }
 
         //scroll down
         if (mouseScrollDirection < 0)
@@ -372,7 +386,7 @@ public sealed class GunHandler : MonoBehaviour
                 currentGunState = guns.Last();
             }
         }
-        
+
         currentGun = gunDict[currentGunState];
         currentGun.GunReticle.alpha = 1;
         currentGun.GunModel.SetActive(true);
@@ -461,9 +475,10 @@ public sealed class GunHandler : MonoBehaviour
 
     public void Shoot(InputAction.CallbackContext context)
     {
-        if (currentGun.CurrentAmmo <= 0)
+        if (currentGun.CurrentAmmo <= 0 && context.performed)
         {
             AmmoEmpty?.Invoke();
+            gunShotAudioSource.PlayOneShot(outOfAmmoAudioClip);
         }
         currentGun.ShootTriggered(context);
         UpdateAmmoDisplay();
@@ -487,6 +502,7 @@ public sealed class GunHandler : MonoBehaviour
         autoGun.CurrentAmmo = autoGunAmmoCP;
         //shotGun.CurrentAmmo = shotGunAmmoCP;
         grenadeGun.CurrentAmmo = grenadeGunAmmoCP;
+        UpdateAmmoDisplay();
     }
 
     //public void Reload(InputAction.CallbackContext context)

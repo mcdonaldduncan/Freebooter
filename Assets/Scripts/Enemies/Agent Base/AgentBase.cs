@@ -299,8 +299,8 @@ public abstract class AgentBase : MonoBehaviour, IDamageable
     {
         if (distanceToPlayer <= LevelManager.Instance.Player.DistanceToHeal)
         {
-            ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);
-            LevelManager.Instance.Player.HealthRegen(LevelManager.Instance.Player.PercentToHeal * m_MaxHealth);
+            //ProjectileManager.Instance.TakeFromPool(m_OnKillHealFVX, transform.position);
+            //LevelManager.Instance.Player.HealthRegen(LevelManager.Instance.Player.PercentToHeal * m_MaxHealth);
         }
         gameObject.SetActive(false);
         LevelManager.Instance.CheckPointReached += OnCheckPointReached;

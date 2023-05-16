@@ -14,12 +14,15 @@ public class Projectile : MonoBehaviour, IPoolable
 {
     [SerializeField] GameObject m_Prefab;
     [SerializeField] GameObject m_ExplosionPrefab;
+    [SerializeField] bool m_IsShootable;
     [SerializeField] bool m_DamageAll;
     [SerializeField] bool m_EnableGravity;
     [SerializeField] bool m_IsTracking;
     [SerializeField] bool m_IsExplosive;
+    [SerializeField] bool m_IsLobbed;
     [SerializeField] bool m_HasTrail;
     [SerializeField] float m_LaunchForce;
+    [SerializeField] float m_LaunchAngle;
     [SerializeField] float m_TrackingForce;
     [SerializeField] float m_DamageAmount;
     [SerializeField] float m_ExplosionRadius;
@@ -36,18 +39,23 @@ public class Projectile : MonoBehaviour, IPoolable
     public bool EnableGravity { get { return m_EnableGravity; } set { m_EnableGravity = value; } }
     public bool IsTracking { get { return m_IsTracking; } set { m_IsTracking = value; } }
     public bool IsExplosive { get { return m_IsExplosive; } set { m_IsExplosive = value; } }
+    public bool IsLobbed { get { return m_IsLobbed; } set { m_IsLobbed = value; } }
 
     public GameObject Prefab { get { return m_Prefab; } set { m_Prefab = value; } }
 
     Rigidbody m_RigidBody;
 
     float startTime;
-    
 
     bool hasCollided;
 
     private void OnEnable()
     {
+        if (m_Transform == null || m_Transform != transform)
+        {
+            m_Transform = transform;
+        }
+
         if (m_RigidBody == null)
         {
             m_RigidBody = GetComponent<Rigidbody>();
@@ -58,7 +66,7 @@ public class Projectile : MonoBehaviour, IPoolable
             m_Target = LevelManager.Instance.Player.transform;
         }
 
-        if (trailRenderer == null && m_HasTrail)
+        if (m_HasTrail && trailRenderer == null)
         {
             trailRenderer = GetComponentInChildren<TrailRenderer>();
         }
@@ -71,7 +79,7 @@ public class Projectile : MonoBehaviour, IPoolable
 
         startTime = Time.time;
 
-        m_Transform = transform;
+        
         m_RigidBody.useGravity = m_EnableGravity;
         m_RigidBody.velocity = Vector3.zero;
         m_RigidBody.angularVelocity = Vector3.zero;
@@ -90,6 +98,7 @@ public class Projectile : MonoBehaviour, IPoolable
 
     private void OnDisable()
     {
+        if (LevelManager.Instance == null) return;
         LevelManager.Instance.PlayerRespawn -= ResetProjectile;
         m_RigidBody.velocity = Vector3.zero;
         m_RigidBody.angularVelocity = Vector3.zero;
@@ -116,8 +125,36 @@ public class Projectile : MonoBehaviour, IPoolable
     /// <param name="direction">direction to launch, direction is normalized before application</param>
     public void Launch(Vector3 direction)
     {
-        transform.LookAt(transform.position + direction);
-        m_RigidBody.AddForce(m_LaunchForce * direction.normalized);
+        if (m_EnableGravity && m_IsLobbed)
+        {
+            Vector3 targetPos = m_Target.position;
+
+            float gravity = Physics.gravity.magnitude;
+            float angle = m_LaunchAngle * Mathf.Deg2Rad;
+
+            Vector3 planarTarget = new Vector3(targetPos.x, 0, targetPos.z);
+            Vector3 planarPostion = new Vector3(transform.position.x, 0, transform.position.z);
+
+            float distance = Vector3.Distance(planarTarget, planarPostion);
+            float yOffset = transform.position.y - targetPos.y;
+
+            // Original equation https://physics.stackexchange.com/questions/27992/solving-for-initial-velocity-required-to-launch-a-projectile-to-a-given-destinat?rq=1
+            float initialVelocity = (1 / Mathf.Cos(angle)) * Mathf.Sqrt((0.5f * gravity * Mathf.Pow(distance, 2)) / (distance * Mathf.Tan(angle) + yOffset));
+
+            Vector3 velocity = new Vector3(0, initialVelocity * Mathf.Sin(angle), initialVelocity * Mathf.Cos(angle));
+
+            float angleBetweenObjects = Vector3.Angle(Vector3.forward, planarTarget - planarPostion);
+            if (targetPos.x < transform.position.x) angleBetweenObjects *= -1;
+            Vector3 finalVelocity = Quaternion.AngleAxis(angleBetweenObjects, Vector3.up) * velocity;
+
+            m_RigidBody.useGravity = true;
+            m_RigidBody.velocity = finalVelocity;
+        }
+        else
+        {
+            transform.LookAt(transform.position + direction);
+            m_RigidBody.AddForce(m_LaunchForce * direction.normalized);
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -131,7 +168,8 @@ public class Projectile : MonoBehaviour, IPoolable
         }
         else if (m_DamageAll || collision.gameObject.CompareTag("Player"))
         {
-            if (collision.gameObject.TryGetComponent(out IDamageable temp)) temp.TakeDamage(m_DamageAmount, HitBoxType.normal);
+            if (collision.gameObject.TryGetComponent(out IDamageable temp)) 
+                temp.TakeDamage(m_DamageAmount, HitBoxType.normal);
 
             //IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
             //if (damageable != null)
@@ -143,8 +181,17 @@ public class Projectile : MonoBehaviour, IPoolable
         hasCollided = true;
         ResetProjectile();
     }
-
     
+    public void ProjectileHit()
+    {
+        if (!m_IsShootable) return;
+
+        if (m_IsExplosive)
+        {
+            TriggerExplosion();
+        }
+        ResetProjectile();
+    }
 
     void ResetProjectile()
     {
@@ -192,22 +239,6 @@ public class Projectile : MonoBehaviour, IPoolable
 
     void TrackTarget()
     {
-        if (m_RigidBody == null)
-        {
-            Debug.Log("Rigidbody null");
-            return;
-        }
-        if (m_Target == null)
-        {
-            Debug.Log("Target null");
-            return;
-        }
-        if (transform == null)
-        {
-            Debug.Log("transform null");
-            return;
-        }
-
         if (m_RigidBody.velocity.magnitude > m_VelocityLimit) m_RigidBody.AddForce(-m_RigidBody.velocity.normalized * (m_RigidBody.velocity.magnitude - m_VelocityLimit), ForceMode.Impulse);
         m_RigidBody.AddForce((m_Target.position - transform.position).normalized * m_TrackingForce, ForceMode.Impulse);
         m_Transform.LookAt(transform.position + m_RigidBody.velocity);

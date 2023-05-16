@@ -7,7 +7,7 @@ using UnityEngine;
 /// Reusable, damageable activator
 /// </summary>
 /// Author: Duncan McDonald
-public class ShootableButton : MonoBehaviour, IDamageable, IActivator
+public class ShootableButton : MonoBehaviour, IDamageable, IActivator, IBloodless
 {
     [SerializeField] float m_Health;
     [SerializeField] float m_ResetDelay;

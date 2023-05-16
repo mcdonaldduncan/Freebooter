@@ -192,7 +192,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 34585bdbdcd7aef4597605fb8b3e711f, type: 3}
+  m_audioClip: {fileID: 8300000, guid: f33c67c60b6ba2944ba5aa58e0b5bfa6, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.4
   m_Pitch: 0.2
@@ -5072,12 +5072,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Prefab: {fileID: 428014662662161016}
   m_ExplosionPrefab: {fileID: 122632, guid: 47a6eaf00da4f324a9167c487dff2f4c, type: 3}
+  m_IsShootable: 0
   m_DamageAll: 0
   m_EnableGravity: 1
   m_IsTracking: 0
   m_IsExplosive: 1
+  m_IsLobbed: 0
   m_HasTrail: 1
   m_LaunchForce: 1000
+  m_LaunchAngle: 5
   m_TrackingForce: 0
   m_DamageAmount: 5
   m_ExplosionRadius: 1

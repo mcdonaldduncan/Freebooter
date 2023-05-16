@@ -33,7 +33,7 @@ public class ContactHazard : MonoBehaviour
         if (!m_IsLive) return;
 
         IDamageable damageable = collider.gameObject.GetComponent<IDamageable>();
-        if (damageable != null)
+        if (damageable != null && damageable.Health > 0)
         {
             if (m_InstantKill) damageable.TakeDamage(damageable.Health + 1, HitBoxType.normal);
             else damageable.TakeDamage(m_DamageAmount, HitBoxType.normal);

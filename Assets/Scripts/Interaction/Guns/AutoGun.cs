@@ -232,7 +232,7 @@ public class AutoGun : MonoBehaviour, IGun, IDamageTracking
     {
         if (damageableTarget != null)
         {
-            bool breakableObject = hitInfo.transform.TryGetComponent<Fracture>(out Fracture component);
+            bool bloodlessObj = hitInfo.transform.TryGetComponent<IBloodless>(out IBloodless component);
 
             // Could we just use an if statement here? try catch is very inefficient
             //using a try catch to prevent destroyed enemies from throwing null reference exceptions
@@ -245,7 +245,7 @@ public class AutoGun : MonoBehaviour, IGun, IDamageTracking
                 //var p = Instantiate(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
                 //Destroy(p, 1);
 
-                ProjectileManager.Instance.TakeFromPool(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point);
+                ProjectileManager.Instance.TakeFromPool(bloodlessObj ? HitNonEnemy : HitEnemy, hitInfo.point);
                 //CameraShake.ShakeCamera();
 
                 //Get the distance between the enemy and the gun
@@ -286,8 +286,12 @@ public class AutoGun : MonoBehaviour, IGun, IDamageTracking
                 //var p = Instantiate(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
                 //Destroy(p, 1);
 
-                ProjectileManager.Instance.TakeFromPool(breakableObject ? HitNonEnemy : HitEnemy, hitInfo.point);
+                ProjectileManager.Instance.TakeFromPool(bloodlessObj ? HitNonEnemy : HitEnemy, hitInfo.point);
             }
+        }
+        else if (hitInfo.collider.gameObject.TryGetComponent(out Projectile projectile))
+        {
+            projectile.ProjectileHit();
         }
         else
         {

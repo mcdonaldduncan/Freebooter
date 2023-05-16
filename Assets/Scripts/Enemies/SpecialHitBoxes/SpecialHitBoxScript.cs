@@ -7,6 +7,7 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable
 {
     private IDamageable damageable;
     private ParticleSystem m_ParticleSystem;
+    private AudioSource m_AudioSource;
 
     [Header("SetUp")]
     public GameObject m_Prefab;
@@ -15,11 +16,13 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable
     [Header("HitBox Type")]
     public HitBoxType hitboxtype;
 
-    [Header("CriticalVFX")]
+    [Header("Critical")]
     public GameObject critVFX;
+    [SerializeField] private AudioClip critSFX;
 
-    [Header("ArmoredVFX")]
+    [Header("Armored")]
     public GameObject armorVFX;
+    [SerializeField] private AudioClip armorSFX;
 
     [Header("ShieldVFX")]
     public GameObject shieldVFXBlue;
@@ -41,7 +44,8 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable
 
     public GameObject DamageTextPrefab { get => damageable.DamageTextPrefab; }
     public Transform TextSpawnLocation { get => damageable.TextSpawnLocation; }
-    public float FontSize { get => damageable.FontSize; } 
+    public float FontSize { get => damageable.FontSize; }
+    public bool ShowDamageNumbers { get; }
 
     public GameObject Prefab { get => m_Prefab; set => m_Prefab = value; }
     public TextMeshPro Text { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
@@ -65,11 +69,13 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable
         {
             PlayVFX(critVFX, VFXTransform.position);
             damageable.TakeDamage(damageTaken * CriticalDamageMultiplier, HitBoxType.critical, hitPoint);
+            if (m_AudioSource != null) m_AudioSource.PlayOneShot(critSFX);
         }
         if (hitboxtype == HitBoxType.armored)
         {
             PlayVFX(armorVFX, VFXTransform.position);
             damageable.TakeDamage(damageTaken * ArmorDamageReductionMultiplier, HitBoxType.armored, hitPoint);
+            if (m_AudioSource != null) m_AudioSource.PlayOneShot(armorSFX);
         }
         if (hitboxtype == HitBoxType.shield)
         {
@@ -103,6 +109,7 @@ public class SpecialHitBoxScript : MonoBehaviour, IDamageable
         damageable = Prefab.GetComponent<IDamageable>();
         _health = maxHealth;
         m_ParticleSystem = GetComponentInChildren<ParticleSystem>();
+        m_AudioSource = Prefab.GetComponent<AudioSource>();
     }
 
     // what do you even think you are doing here?

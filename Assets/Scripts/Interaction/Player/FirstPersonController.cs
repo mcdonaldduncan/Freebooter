@@ -6,13 +6,16 @@ using System.Runtime.CompilerServices;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Composites;
 using UnityEngine.PlayerLoop;
 using UnityEngine.SceneManagement;
 
 //TODO Abstract into classes that are managed by this class (i.e. defualt movement, wallrun movement, etc.)
 public sealed class FirstPersonController : MonoBehaviour, IDamageable
 {
+    public EventSystem PlayerUIEventSystem { get { return playerUIEventSystem; } }
     public AudioSource PlayerAudioSource { get { return playerAudioSource; } }
     public AudioClip LowHealthAudio { get { return lowHealthAudio; } }
     public AudioClip GunPickupAudio { get { return gunPickupAudio; } }
@@ -54,6 +57,12 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     [Tooltip("Is the player in the middle of a special movement, i.e. ladder climbing?")]
     [SerializeField]
     public bool playerOnSpecialMovement = false;
+    [SerializeField]
+    private EventSystem playerUIEventSystem;
+    [SerializeField]
+    private AudioClip playerHealSFX;
+    [SerializeField]
+    private GameObject onKillHealVFX;
     //[SerializeField]
     //private bool playerCanDash = true; Unused!
     //[SerializeField]
@@ -81,10 +90,12 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     [Header("Look Parameters")]
     [SerializeField]
     private bool restrictHorizontal;
+    [SerializeField]
+    private float controllerLookSensitivity = 2f;
     [SerializeField, Range(1, 10)]
-    private float lookSpeedX = 2f;
+    private float mouseLookSpeedX = 2f;
     [SerializeField, Range(1, 10)]
-    private float lookSpeedY = 2f;
+    private float mouseLookSpeedY = 2f;
     [SerializeField, Range(1, 100)]
     private float upperLookLimit = 80f;
     [SerializeField, Range(1, 100)]
@@ -98,7 +109,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     [Header("Jumping Parameters")]
     [Tooltip("How many jumps are allowed after the inital one?")]
     [SerializeField]
-    private int jumpsAllowed = 1;
+    public int jumpsAllowed = 1;
     [SerializeField]
     private float maxJumpTime;
     [SerializeField]
@@ -108,7 +119,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     [SerializeField]
     private float gravity = 30f;
     private float finalJumpForce;
-    private int jumpsRemaining;
+    public int jumpsRemaining;
     private bool jumpedOnce;
     private bool jumpStarted;
     private bool holdingJump;
@@ -191,6 +202,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     private Vector3 moveDirection;
     private Vector2 currentInput; //Whether player is moving vertically or horizontally along x and z planes
     private Vector2 dashInput;
+    private Vector2 lookDelta;
+    private Vector2 prevLookDelta;
 
     public Vector2 MoveInput { get; private set; }
 
@@ -198,9 +211,12 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     private float rotationY = 0f;
 
     private bool playerDashing;
+    private bool playerLooking;
     private bool dashOnCooldown;
     private bool playerShouldDash;
+    private bool playerPaused;
     private float adjustedCooldown;
+    private float lookAxisValue;
 
     private Coroutine dashRoutine;
 
@@ -210,6 +226,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     private WaitForSeconds dashBetweenWait;
 
     public static InputActions _input;
+    private InputDevice inputDevice;
 
     private MovementState state;
     
@@ -244,6 +261,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     bool boostedSpeedEnabled;
 
     private DeathScreen m_deathScreen;
+
+    public bool isAttached;
 
     public enum MovementState
     {
@@ -282,10 +301,12 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
     private void Start()
     {
+        playerPaused = false;
         startingPos = transform.position;
-        defaultLocalPosition = bobObjHolder.localPosition;
-        defaultYPosBobObj = defaultLocalPosition.y;
-        defaultXPosBobObj = defaultLocalPosition.x;
+        //OnWeaponSwitch();
+        //defaultLocalPosition = bobObjHolder.localPosition;
+        //defaultYPosBobObj = defaultLocalPosition.y;
+        //defaultXPosBobObj = defaultLocalPosition.x;
         m_deathScreen = GetComponentInChildren<DeathScreen>();
     }
 
@@ -319,7 +340,7 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
             }
         }
 
-        HandleMouseLook();
+        HandleLook();
     }
 
     private void LateUpdate()
@@ -348,12 +369,14 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         //HumanoidLand
         _input.HumanoidLand.Walk.performed += HandleWalkInput;
         _input.HumanoidLand.Walk.canceled += HandleWalkInput;
+        _input.HumanoidLand.Look.performed += HandleLookInput;
+        _input.HumanoidLand.Look.canceled += HandleLookInput;
         _input.HumanoidLand.Dash.started += HandleDashInput;
         _input.HumanoidLand.Dash.canceled += HandleDashInput;
-        _input.HumanoidLand.Jump.performed += HandleJump;
+        _input.HumanoidLand.Jump.started += HandleJump;
         _input.HumanoidLand.Jump.canceled += HandleJump;
         _input.HumanoidLand.Restart.performed += ReloadScene;
-        _input.HumanoidLand.Pause.performed += pauseController.OnPause;
+        _input.HumanoidLand.Pause.performed += HandlePause;
 
         //HumanoidWall
         //_input.HumanoidWall.Forward.performed += HandleWallrunInput;
@@ -369,6 +392,9 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
         //if (LevelManager.Instance.Player == null) LevelManager.Instance.Player = this;
         UpdateDash.DashCooldownCompleted += DashCooldown;
+
+        //Subscribe to weapon switch event
+        GunHandler.weaponSwitched += OnWeaponSwitch;
     }
 
     private void OnDisable()
@@ -379,9 +405,11 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         //HumanoidLand
         _input.HumanoidLand.Walk.performed -= HandleWalkInput;
         _input.HumanoidLand.Walk.canceled -= HandleWalkInput;
+        _input.HumanoidLand.Look.performed -= HandleLookInput;
+        _input.HumanoidLand.Look.canceled -= HandleLookInput;
         _input.HumanoidLand.Dash.started -= HandleDashInput;
         _input.HumanoidLand.Dash.canceled -= HandleDashInput;
-        _input.HumanoidLand.Jump.performed -= HandleJump;
+        _input.HumanoidLand.Jump.started -= HandleJump;
         _input.HumanoidLand.Jump.canceled -= HandleJump;
         _input.HumanoidLand.Restart.performed -= ReloadScene;
         _input.HumanoidLand.Pause.performed -= pauseController.OnPause;
@@ -399,6 +427,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         _input.Gun.AlternateFire.performed -= playerGun.AlternateShoot;
 
         UpdateDash.DashCooldownCompleted -= DashCooldown;
+
+        GunHandler.weaponSwitched -= OnWeaponSwitch;
     }
 
     private void StateHandler()
@@ -420,6 +450,13 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         //    _input.HumanoidWall.Enable();
         //    ApplyFinalWallrunMovements();
         //}
+    }
+
+    private void HandlePause(InputAction.CallbackContext context)
+    {
+        pauseController.OnPause(context);
+
+        playerPaused = !playerPaused;
     }
 
     private void ReloadScene(InputAction.CallbackContext context)
@@ -535,34 +572,67 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
         }
     }
 
-    private void HandleMouseLook()
+    private void HandleLookInput(InputAction.CallbackContext context)
     {
-        rotationX -= Input.GetAxis("Mouse Y") * lookSpeedY;
-        rotationX = Mathf.Clamp(rotationX, -upperLookLimit, lowerLookLimit);
+        inputDevice = context.control.device;
 
-        if (restrictHorizontal)
+        //if(inputDevice is Gamepad)
+        //{
+        //    lookAxisValue = context.ReadValue<float>();
+        //}
+    }
+
+    private void HandleLook()
+    {
+        //lookDelta = ApplyDeadzone(lookDelta, deadzone);
+
+        if (inputDevice is Mouse)
         {
-            //rotate camera around X and Y axis, and rotate player around x axis
-            rotationY += Input.GetAxis("Mouse X") * lookSpeedX;
-            rotationY = Mathf.Clamp(rotationY, -leftLookLimit, rightLookLimit);//clamp camera
-            playerCamera.transform.localRotation = Quaternion.Euler(rotationX, rotationY, 0);
-        }
-        else
-        {
+            rotationX -= Input.GetAxis("Mouse Y") * mouseLookSpeedY;
+            rotationX = Mathf.Clamp(rotationX, -upperLookLimit, lowerLookLimit); //clamp camera
             playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
-            transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeedX, 0);
+            transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * mouseLookSpeedX, 0);
+
+            //rotationX -= Input.GetAxis("Mouse Y") * mouseLookSpeedY;
+            //rotationX = Mathf.Clamp(rotationX, -upperLookLimit, lowerLookLimit);
+
+            //if (restrictHorizontal)
+            //{
+            //    //rotate camera around X and Y axis, and rotate player around x axis
+            //    rotationY += Input.GetAxis("Mouse X") * mouseLookSpeedX;
+            //    rotationY = Mathf.Clamp(rotationY, -leftLookLimit, rightLookLimit);//clamp camera
+            //    playerCamera.transform.localRotation = Quaternion.Euler(rotationX, rotationY, 0);
+            //}
+            //else
+            //{
+            //    playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
+            //    transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * mouseLookSpeedX, 0);
+            //}
+        }
+        else if (inputDevice is Gamepad)
+        {
+            Vector2 rightStickInput = Gamepad.current.rightStick.ReadValue();
+            rotationX -= rightStickInput.y * mouseLookSpeedY;
+            rotationX = Mathf.Clamp(rotationX, -upperLookLimit, lowerLookLimit); //clamp camera
+            playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
+            transform.rotation *= Quaternion.Euler(0, rightStickInput.x * mouseLookSpeedX, 0);
         }
     }
 
     private void HandleJump(InputAction.CallbackContext context)
     {
+        inputDevice = context.control.device;
+
         if (context.canceled)
         {
             holdingJump = false;
             holdJumpTimer = 0;
+            playerPaused = false;
         }
-        if (context.performed && jumpsRemaining > 0)
+        if (context.started && jumpsRemaining > 0)
         {
+            if (inputDevice is Gamepad && playerPaused) return;
+
             playerAudioSource.PlayOneShot(m_JumpAudio);
             jumpsRemaining--;
             holdingJump = true;
@@ -598,6 +668,14 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     {
         walkSpeed = originalSpeed;
         boostedSpeedEnabled = false;
+    }
+
+    private void OnWeaponSwitch()
+    {
+        bobObjHolder = playerGun.CurrentGun.GunModel.transform;
+        defaultLocalPosition = bobObjHolder.localPosition;
+        defaultYPosBobObj = defaultLocalPosition.y;
+        defaultXPosBobObj = defaultLocalPosition.x;
     }
 
     private void HandleHeadbob()
@@ -778,17 +856,23 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
     /// For pick up system which is currently not in use
     /// </summary>
     /// <param name="heal"></param>
-    public void HealthRegen(float heal)
+    public void HealthRegen(float heal, Vector3 enemyPos)
     {
         if (health >= maxHealth) return;
-
+        ProjectileManager.Instance.TakeFromPool(onKillHealVFX, transform.position);
         health += heal;
 
         if (health >= maxHealth) health = maxHealth;
+        playerAudioSource.PlayOneShot(playerHealSFX);
 
         if (health > MaxHealth) health = MaxHealth;
         PlayerHealthChanged?.Invoke();
         //Debug.Log($"Player healed. Current health is {health}");
+    }
+
+    public void HealthRegen(float heal)
+    {
+        HealthRegen(heal, transform.position);
     }
 
     public void CheckForDeath()
@@ -814,6 +898,8 @@ public sealed class FirstPersonController : MonoBehaviour, IDamageable
 
     public void Respawn()
     {
+        transform.SetParent(null, true);
+
         transform.position = LevelManager.Instance.CurrentCheckPoint?.transform.position ?? startingPos;
         transform.rotation = LevelManager.Instance.CurrentCheckPoint?.transform.rotation ?? Quaternion.identity;
 

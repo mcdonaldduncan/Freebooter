@@ -10,6 +10,8 @@ public class DeathScreen : MonoBehaviour
     private GameObject UI; //ChildObject called UI 
     [SerializeField]
     private GunHandler gunHandler;
+    [SerializeField]
+    private Button m_defaultSelectedButton;
 
     bool called = false;
 
@@ -23,6 +25,7 @@ public class DeathScreen : MonoBehaviour
     {
         if (called == true) return; 
         FirstPersonController.enabled = false;
+        FirstPersonController.PlayerUIEventSystem.SetSelectedGameObject(m_defaultSelectedButton.gameObject);
         CameraShake.ShakeCamera(0, 0, 0);
         LevelManager.TogglePause(true);
         gunHandler.CurrentGun.GunReticle.alpha = 0;
